@@ -1,0 +1,13 @@
+.venv/
+.uv-cache/
+vendor/
+__pycache__/
+outputs/
+.DS_Store
+.tools/
+android/build/
+android/assets/
+android/generated/
+
+recordings/
+*.keystore

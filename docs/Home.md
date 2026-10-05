@@ -28,9 +28,12 @@ robot can execute the reference under contact and balance constraints.
 | Proposed | A FURRY hypothesis, contract, or experiment awaiting implementation and validation. |
 | Locally reproduced | Linked commands, environment, inputs and results support a repeatable local run. |
 
-This foundation includes source inspection and documentation-tool tests only.
-**There are no locally reproduced robotics results yet.** Promote claims between
-these categories only when the corresponding evidence is linked.
+The foundation began with source inspection and documentation-tool tests.
+The [Quest/G1 prototype](../prototypes/quest_g1/README.md#review-verification)
+now has locally reproduced desktop physics and native recording/replay checks.
+Headset measurements in its original report remain author-reported for this
+review; these checks do not establish human-motion fidelity or complete M0/M1.
+Promote claims only when the corresponding evidence is linked.
 
 ## Milestones And Workstreams
 
