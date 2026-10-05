@@ -218,3 +218,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# FURRY documentation tooling and local research artifacts
+node_modules/
+/data/
+/recordings/
+/checkpoints/
+/third_party/
+/wiki-preview/
+.DS_Store

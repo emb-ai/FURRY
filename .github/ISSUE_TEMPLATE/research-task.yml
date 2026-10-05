@@ -1,0 +1,31 @@
+name: Research or implementation task
+description: A bounded task under a FURRY workstream umbrella
+body:
+  - type: input
+    id: umbrella
+    attributes:
+      label: Parent umbrella
+      description: Link the relevant workstream issue, not just the project roadmap.
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Question and scope
+      description: State the question, expected artifact, baseline, and what is out of scope.
+    validations:
+      required: true
+  - type: textarea
+    id: investigation
+    attributes:
+      label: First investigation and dependencies
+      description: Include pinned sources, required inputs, assumptions, and reuse candidates.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Acceptance evidence
+      description: Specify tests, metrics, tolerances, failure cases, and the decision this enables. No private data or credentials.
+    validations:
+      required: true

@@ -1,0 +1,27 @@
+{
+  "name": "furry-research-docs",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Documentation checks and explicit Wiki mirroring, not application runtime",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "docs:lint": "node tools/docs.mjs lint",
+    "docs:check": "node tools/docs.mjs check",
+    "wiki:sync": "node tools/docs.mjs wiki",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "devDependencies": {
+    "github-slugger": "2.0.0",
+    "markdownlint": "0.41.1",
+    "mdast-util-to-string": "4.0.0",
+    "remark-gfm": "4.0.1",
+    "remark-parse": "11.0.0",
+    "remark-stringify": "11.0.0",
+    "unified": "11.0.5",
+    "unist-util-visit": "5.0.0"
+  }
+}
