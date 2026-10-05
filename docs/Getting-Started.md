@@ -13,7 +13,7 @@ For a new checkout:
 ```bash
 git clone https://github.com/emb-ai/FURRY.git
 cd FURRY
-git switch codex/20261005-project-foundation
+git switch main
 npm ci --ignore-scripts
 npm run docs:lint
 npm run docs:check
@@ -21,8 +21,7 @@ npm test
 git diff --check
 ```
 
-The bootstrap documentation is on that branch while its PR awaits review; after
-merge, start new work from the repository's current default branch. In the
+Start new work from the repository's current default branch. In the
 owner's existing workspace, do not clone again. Inspect `git status --short
 --branch` and the current worktree before editing.
 
@@ -60,9 +59,11 @@ Do not delete existing Conda environments to follow a README verbatim. Keep
 Redis on loopback for an offline baseline. Remote streaming requires a separate
 network-access decision, not disabling protected mode or the firewall.
 
-A macOS/CPU runtime is an investigation, not a supported platform declaration.
-The low-level loop's CPU option is only one piece; a portable reference generator,
-viewer invocation and dependency set still need validation. MuJoCo's macOS
+A bounded [Quest/G1 prototype](../prototypes/quest_g1/README.md) now provides
+a macOS/CPU loop and a standalone Quest runtime. It is not the full upstream
+pipeline or an accepted final architecture. Follow its own setup from
+`prototypes/quest_g1/`; Python dependencies and runtime assets are separate from
+the documentation tooling. MuJoCo's macOS
 passive viewer has specific launch requirements documented by
 [MuJoCo](https://mujoco.readthedocs.io/en/stable/python.html#passive-viewer).
 
@@ -72,6 +73,10 @@ Store third-party checkouts beside FURRY, not inside it. Put private recordings,
 models, calibration captures and participant data outside the repository;
 reserved local `data/`, `recordings/`, `checkpoints/` and `third_party/` directories
 are ignored as an additional guard, not permission to redistribute their contents.
+
+The standalone prototype is an explicit local-build exception: its documented
+`vendor/`, `.venv/`, `.tools/` and `outputs/` directories are ignored beneath
+`prototypes/quest_g1/`. Never stage their models, SDKs or recordings.
 
 Do not commit headset serials, local network addresses, access tokens or private
 student identifiers. Obtain permission before collecting identifiable footage.

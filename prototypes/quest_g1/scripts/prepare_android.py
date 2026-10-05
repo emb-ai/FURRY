@@ -121,12 +121,14 @@ for name in names:
     if name == 'options.h':
         text = text.replace('AppSpace{"Local"}', 'AppSpace{"Stage"}')
     if name == 'main.cpp':
-        text = text.replace('#include "pch.h"', '#include "pch.h"\n#include "quest_runtime.h"')
+        text = text.replace('#include "pch.h"', '#include "pch.h"\n#include "quest_runtime.h"\n#include <exception>')
         text = text.replace('ALooper_pollAll(', 'ALooper_pollOnce(')
-        text = text.replace('program->CreateSwapchains();', 'program->CreateSwapchains();\n        G1Initialize(app);')
+        text = text.replace('program->CreateSwapchains();', '''program->CreateSwapchains();
+        // Stop the worker before XR/graphics teardown, including exception paths.
+        struct RuntimeGuard { ~RuntimeGuard(){ G1Shutdown(std::uncaught_exceptions() > 0); } } runtimeGuard;
+        G1Initialize(app);''')
         text = text.replace('program->PollActions();', 'G1SetActive(program->IsSessionFocused());\n            program->PollActions();')
         text = text.replace('if (!program->IsSessionRunning()) {', 'if (!program->IsSessionRunning()) {\n                G1SetActive(false);')
-        text = text.replace('app->activity->vm->DetachCurrentThread();', 'G1Shutdown();\n        app->activity->vm->DetachCurrentThread();')
     if name == 'openxr_program.cpp':
         text = text.replace('#include "pch.h"', '#include "pch.h"\n#include "quest_runtime.h"\n#include "passthrough.h"')
         text = text.replace('struct OpenXrProgram : IOpenXrProgram {',
@@ -169,6 +171,12 @@ for name in names:
         }
         // There were no subaction paths specified for the quit action,''')
         text = text.replace('~OpenXrProgram() override {', '~OpenXrProgram() override {\n        passthrough.Shutdown();')
+        text = text.replace('case XR_TYPE_EVENT_DATA_REFERENCE_SPACE_CHANGE_PENDING:', '''case XR_TYPE_EVENT_DATA_REFERENCE_SPACE_CHANGE_PENDING: {
+                    const auto& change = *reinterpret_cast<const XrEventDataReferenceSpaceChangePending*>(event);
+                    if(change.session == m_session && change.referenceSpaceType == XR_REFERENCE_SPACE_TYPE_STAGE)
+                        G1ReferenceSpaceChange(change.changeTime);
+                    break;
+                }''')
         text = text.replace('std::vector<const char*> extensions;',
                             'std::vector<const char*> extensions{XR_FB_PASSTHROUGH_EXTENSION_NAME};')
         text = text.replace('CHECK_XRCMD(xrCreateSession(m_instance, &createInfo, &m_session));',

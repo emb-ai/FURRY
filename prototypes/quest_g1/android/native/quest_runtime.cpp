@@ -2,6 +2,7 @@
 #include "simulation.h"
 #include "legend.h"
 #include "recording.h"
+#include "tracking_space.h"
 #include <android_native_app_glue.h>
 #include <android/asset_manager.h>
 #include <android/log.h>
@@ -20,6 +21,7 @@ namespace {
 std::unique_ptr<Simulation> sim;
 std::unique_ptr<ArmRetargeter> retarget;
 TrackingFrame latestTracking;
+TrackingSpaceChanges spaceChanges;
 EpisodeRecorder recorder;
 std::atomic<int> recordingStatus{0};
 std::atomic<bool> toggleRecording{false};
@@ -176,7 +178,12 @@ void G1Initialize(android_app* app){
                 Record([]{
                     if(toggleRecording.exchange(false)){
                         if(recorder.active){recorder.Stop();__android_log_print(ANDROID_LOG_INFO,"G1Quest","Recording saved: %s",recorder.path().c_str());}
-                        else{recorder.Start(assetsPath,sim->model);recorder.Input(latestTracking,grip[0],grip[1],EpisodeRecorder::Now());__android_log_print(ANDROID_LOG_INFO,"G1Quest","Recording started: %s",recorder.path().c_str());}
+                        else{
+                            recorder.Start(assetsPath,sim->model);
+                            auto received=std::chrono::duration_cast<std::chrono::nanoseconds>(trackingTime.time_since_epoch()).count();
+                            recorder.Input(latestTracking,grip[0],grip[1],received);
+                            __android_log_print(ANDROID_LOG_INFO,"G1Quest","Recording started: %s",recorder.path().c_str());
+                        }
                     }
                     recorder.Tick();
                 });
@@ -224,14 +231,30 @@ void G1Initialize(android_app* app){
     });
     __android_log_print(ANDROID_LOG_INFO,"G1Quest","Initialized autonomous MuJoCo %s, %d actuators",mj_versionString(),sim->model->nu);
 }
-void G1Shutdown(){running=false;if(worker.joinable())worker.join();Record([]{recorder.Stop("app_shutdown");});trace.close();mjv_freeScene(&scene);retarget.reset();sim.reset();}
+void G1Shutdown(bool interrupted){
+    running=false;if(worker.joinable())worker.join();
+    Record([&]{
+        if(interrupted){recorder.Event("app_error",latestTracking.sequence);recorder.Flush();recorder.Abort();}
+        else recorder.Stop("app_shutdown");
+    });
+    trace.close();mjv_freeScene(&scene);retarget.reset();sim.reset();
+}
 void G1SetActive(bool value){
     if(active.exchange(value)!=value){std::lock_guard<std::mutex> guard(mutex);Record([&]{recorder.Event(value?"focus_resume":"focus_pause",latestTracking.sequence);});}
 }
 void G1Grip(int hand,float value){if(hand>=0 && hand<2)grip[hand]=value;}
 void G1Reset(){reset=true;placeScene=true;}
+void G1ReferenceSpaceChange(int64_t changeTime){
+    std::lock_guard<std::mutex> guard(mutex);
+    spaceChanges.Schedule(changeTime);
+}
 void G1SubmitTracking(const TrackingFrame& input){
     std::lock_guard<std::mutex> guard(mutex);latestTracking=input;trackingTime=std::chrono::steady_clock::now();
+    if(spaceChanges.Advance(input.xr_time_ns)){
+        trackingEnabled=false;retarget->calibrated=false;calibrate=false;toggleTracking=false;
+        trackingStatus=faulted?4:0;placeScene=true;
+        Record([&]{recorder.Event("reference_space_change",input.sequence);});
+    }
     Record([&]{recorder.Input(input,grip[0],grip[1],EpisodeRecorder::Now());});
     if((input.location_flags[0]&3)==3 && placeScene.exchange(false)){
         double rotation[9];mju_quat2Mat(rotation,input.head.quaternion.data());

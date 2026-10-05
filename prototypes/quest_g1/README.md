@@ -93,3 +93,32 @@ Launcher учитывает пробелы/кириллицу в пути и р�
 - `--fixed-hands` использует исходную модель с 29 приводами без подвижных пальцев.
 
 Исходная лицензия TWIST2 — MIT, Copyright (c) 2025 Yanjie Ze; см. `vendor/TWIST2/LICENSE` и `THIRD_PARTY_NOTICES.txt`.
+
+## Review Verification
+
+Locally reproduced on Apple Silicon macOS, Python 3.12, on 2026-10-05 from a
+fresh environment with `requirements.lock` and the pinned vendor revisions:
+
+- `python -m unittest discover -s tests -v`: 13 tests, including the 60-second balance/reset/contact checks and synthetic recording-corruption regressions.
+- `./android/check_recording_mac.sh`: 500 input/state rows, 20 invalid inputs, two calibrations and one reset; 430 references replayed with zero divergence. The interrupted-recorder check passed.
+- `./android/check_tracking_mac.sh`: native controller/IK regression; results are synthetic, not a human-fidelity measurement.
+- `python scripts/prepare_android.py`: regenerated assets and XR lifecycle; 68,091 triangles per eye, below the 100,000 budget.
+- `tests/check_tracking_space.cpp`: reference-space changes apply at their announced XR time, including delayed, duplicate and multiple pending events.
+- Repository Markdown/link checks and all 16 documentation-tool tests passed.
+
+Commands above use `.venv/bin/python`; on this host the native checks use
+`DEVELOPER_DIR=/Library/Developer/CommandLineTools` because the selected Xcode
+installation requires license acceptance. No license was accepted by automation.
+The `Quest G1 Prototype` CI workflow covers the Python checks and native
+reference-space timing test independently of headset hardware.
+
+Review adaptations invalidate calibration on headset recenter, stop the worker
+on XR exception paths, preserve incomplete recordings after errors, retain the
+original receive time of the recording's initial input, and reject inconsistent
+recording schemas/validity/completion markers. Recalibrate with A after recenter.
+
+An Android APK rebuild and in-headset controls, recentering, performance and
+thermal behavior have **not** been reproduced in this review. Earlier headset
+measurements above are the contributor's report, not new review measurements.
+The prototype's CSV format does not resolve ADR-005 or complete the research
+data contract. Private recordings stay local; no Wiki publication is performed.
