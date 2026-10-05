@@ -23,10 +23,14 @@ deployment is outside this project's scope.
 
 ## Status
 
-This repository currently contains the research foundation and documentation
-tooling, not a runnable teleoperation application. No TWIST2, Quest, or MuJoCo
-runtime has been reproduced by this bootstrap. Architecture choices remain
-explicit research decisions, not implied by the documentation tools.
+The repository includes the research foundation and an experimental
+[standalone Quest 3 / macOS G1 prototype](prototypes/quest_g1/README.md).
+The prototype runs MuJoCo and a TWIST2 policy locally on the headset, with
+passthrough, controller wrist IK, simulation reset and local motion recording.
+It is not a complete reproduction of TWIST2: operator-reported arm correspondence
+remains poor, and cup lifting, Kick-T, walking and optical-hand tracking are not
+validated. See [implementation task #11](https://github.com/emb-ai/FURRY/issues/11).
+Architecture choices remain provisional research decisions.
 
 `docs/` is authoritative; the Wiki is a manually published mirror. See the
 [publishing procedure](docs/Contributing.md#wiki-publication).
