@@ -46,6 +46,21 @@ int main(int argc,char**argv){
     auto ground=[&]{mj_forward(m,d);double ankle=std::min(d->xpos[3*mj_name2id(m,mjOBJ_BODY,"left_ankle_roll_link")+2],d->xpos[3*mj_name2id(m,mjOBJ_BODY,"right_ankle_roll_link")+2]);d->qpos[2]+=restAnkle-ankle;mj_forward(m,d);};
     ground();fill(false);meta.Calibrate(physics.model(),physics.data(),input);
     std::array<double,36> base;std::copy_n(d->qpos,36,base.begin());
+    // Head motion relative to a planted body is not room locomotion. This
+    // previously shifted every target and commanded a false base velocity.
+    double maxHeadDrift=0,maxHeadVelocity=0;
+    auto neutral=input;
+    for(int n=0;n<100;n++){
+        input=neutral;input.body.time_ns=input.xr_time_ns=1000000000LL+n*14000000LL;
+        input.head.position[0]+=.2*std::sin(n*.1);
+        input.head.position[2]+=.2*std::cos(n*.1);
+        auto command=meta.Solve(input);
+        maxHeadDrift=std::max(maxHeadDrift,std::hypot(g.data()->qpos[0],g.data()->qpos[1]));
+        maxHeadVelocity=std::max(maxHeadVelocity,double(std::hypot(command[0],command[1])));
+    }
+    std::printf("head sway: root drift=%.9f m, velocity=%.9f m/s\n",maxHeadDrift,maxHeadVelocity);
+    if(maxHeadDrift>.002 || maxHeadVelocity>.002)throw std::runtime_error("Head sway translated planted feet");
+    input=neutral;meta.Calibrate(physics.model(),physics.data(),input);
     double maxJointError=0,maxRootError=0,translationError=0;
     for(int n=0;n<501;n++){
         std::copy(base.begin(),base.end(),d->qpos);

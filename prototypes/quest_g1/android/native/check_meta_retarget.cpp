@@ -17,7 +17,7 @@ int main(int argc,char**argv){
             if(i==8||i==9)b=mj_name2id(m,mjOBJ_BODY,i==8?"left_shoulder_pitch_link":"right_shoulder_pitch_link");
             // Robot +X,+Y,+Z -> XR -Z,-X,+Y, with a taller source skeleton.
             auto*p=d->xpos+3*b;poses[i].position={-p[1]*1.25,p[2]*1.25,-p[0]*1.25};
-            double basis[9]={0,-1,0,0,0,1,-1,0,0},r[9];mju_mulMatMat(r,basis,d->xmat+9*b,3,3,3);mju_mat2Quat(poses[i].quaternion.data(),r);f.body.flags[i]=15;
+            double basis[9]={0,-1,0,0,0,1,-1,0,0},r[9];mju_mulMatMat(r,basis,d->xmat+9*oracle.tasks()[i].body,3,3,3);mju_mat2Quat(poses[i].quaternion.data(),r);f.body.flags[i]=15;
         }
     };
     TrackingFrame input;input.valid=input.body.valid=input.body.supported=true;input.location_flags={15,15,15};input.hand_active={true,true};input.body.confidence=1;input.head.position={0,1.65,0};

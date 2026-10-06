@@ -6,7 +6,7 @@
 class MetaRetargeter {
     GmrRetargeter gmr;
     double basis[9]{},basisQuat[4]{};
-    std::array<double,3> headOrigin{},rootOrigin{};
+    std::array<double,3> translationOrigin{},rootOrigin{};
     std::array<TrackedPose,14> offsets{};
     std::array<double,14> scales{};
     double rootScale=1,footHeight=0;

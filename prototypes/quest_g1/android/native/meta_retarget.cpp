@@ -70,14 +70,19 @@ void MetaRetargeter::Calibrate(const mjModel* model,const mjData* data,const Tra
         const char* name=mj_id2name(gm,mjOBJ_JOINT,j);int source=mj_name2id(model,mjOBJ_JOINT,name);
         if(source<0)throw std::runtime_error("GMR/physics joint mapping mismatch");initial[gm->jnt_qposadr[j]]=data->qpos[model->jnt_qposadr[source]];
     }
-    gmr.Reset(initial.data());headOrigin=input.head.position;rootOrigin={data->qpos[0],data->qpos[1],data->qpos[2]};
+    gmr.Reset(initial.data());translationOrigin=input.body.joints[0].position;rootOrigin={data->qpos[0],data->qpos[1],data->qpos[2]};
     skeletonVersion=input.body.skeleton_version;lastTime=0;calibrated=true;
 }
 const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& input){
     if(!calibrated || !input.body.valid)throw std::runtime_error("No calibrated full body sample");
     if(input.body.skeleton_version!=skeletonVersion){calibrated=false;throw std::runtime_error("Body proportions changed: press A to recalibrate");}
     if(lastTime && input.body.time_ns<=lastTime)return mimic;
-    std::vector<TrackedPose> targets(14);double headDelta[3],translation[3];mju_sub3(headDelta,input.head.position.data(),headOrigin.data());mju_mulMatVec(translation,basis,headDelta,3,3);
+    std::vector<TrackedPose> targets(14);double pelvisDelta[3],translation[3];
+    // Whole-body translation belongs to the pelvis. Adding HMD displacement
+    // here also translates planted feet when the head moves relative to the
+    // torso, and mixes predicted head time with the returned body timestamp.
+    mju_sub3(pelvisDelta,input.body.joints[0].position.data(),translationOrigin.data());
+    mju_mulMatVec(translation,basis,pelvisDelta,3,3);
     double root[3]={rootOrigin[0]+rootScale*translation[0],rootOrigin[1]+rootScale*translation[1],0};
     // Grounded GMR mode: preserve pelvis height above the lower foot. Estimated
     // feet are used explicitly; there is no hidden generated gait in this app.

@@ -6,6 +6,10 @@ two falls), plus two older wrist-IK episodes. Only the full-body episode is used
 for this gait comparison. Raw tracking, logs and identifying device data remain
 local under ignored `outputs/`; this report contains aggregate results only.
 
+This report describes the first Y-up correction. The subsequent paired
+[walking/arms ablation](GAIT_ABLATION.md) changes room translation from HMD
+to the body pelvis after identifying head-relative drift of planted feet.
+
 ## Findings
 
 - Physics was keeping up during the recorded tracking intervals: median cycle
