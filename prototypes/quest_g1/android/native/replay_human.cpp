@@ -13,6 +13,10 @@ static std::vector<double> Row(const std::string& line){
 int main(int argc,char** argv){
     if(argc!=3){std::cerr<<"Usage: g1_replay_human ASSETS EPISODE\n";return 2;}
     try{
+        std::ifstream manifest(std::string(argv[2])+"/manifest.json");
+        std::string metadata((std::istreambuf_iterator<char>(manifest)),std::istreambuf_iterator<char>());
+        if(metadata.find("native_gmr_meta_full_body")!=std::string::npos)
+            throw std::runtime_error("This is a GMR recording: use g1_replay_gmr instead of legacy wrist replay");
         char error[1024];auto* m=mj_loadXML((std::string(argv[1])+"/scene.xml").c_str(),nullptr,error,sizeof(error));
         if(!m)throw std::runtime_error(error);
         auto* d=mj_makeData(m);

@@ -27,6 +27,12 @@ def read_stream(path, fields):
     return rows
 
 
+BODY_FIELDS = ['sequence', 'time_ns', 'supported', 'valid', 'confidence', 'skeleton_version'] + [
+    name for j in range(14) for name in ([f'flags_{j}'] +
+    [f'{kind}_{j}_{k}' for kind in ('pose', 'rest') for k in range(7)])]
+MIMIC_FIELDS = ['sequence', 'step', 'sim_time'] + [f'mimic_{k}' for k in range(35)]
+
+
 def inspect(path):
     path = Path(path)
     manifest = json.loads((path / 'manifest.json').read_text())
@@ -41,7 +47,21 @@ def inspect(path):
     inputs = read_stream(path / 'input.csv', INPUT_FIELDS)
     frames = read_stream(path / 'frames.csv', fields)
     events = read_stream(path / 'events.csv', ['receive_ns', 'sequence', 'event'])
-    for row in inputs + frames:
+    is_gmr = manifest.get('retargeting') == 'native_gmr_meta_full_body'
+    bodies = read_stream(path / 'body.csv', BODY_FIELDS) if is_gmr else []
+    commands = read_stream(path / 'mimic.csv', MIMIC_FIELDS) if is_gmr else []
+    if is_gmr:
+        if [r['sequence'] for r in bodies] != [r['sequence'] for r in inputs]:
+            raise ValueError('Body stream does not match input sequence')
+        if len(commands) != len(frames) or any(any(a[k] != b[k] for k in ('sequence', 'step', 'sim_time')) for a,b in zip(commands,frames)):
+            raise ValueError('Mimic stream does not match state frames')
+        for body, source in zip(bodies, inputs):
+            if body['valid'] not in ('0','1') or body['supported'] not in ('0','1'):
+                raise ValueError('Invalid body boolean')
+            if body['valid']=='1' and (body['supported']!='1' or not 0<float(body['confidence'])<=1 or int(body['time_ns'])<=0 or
+                    any(int(body[f'flags_{j}']) & 3 != 3 for j in range(14))):
+                raise ValueError('Valid body lacks valid skeleton')
+    for row in inputs + frames + bodies + commands:
         if None in row or any(v is None or not math.isfinite(float(v)) for v in row.values()):
             raise ValueError('Incomplete/nonfinite row')
     for rows, names in ((inputs, ('valid', 'left_active', 'right_active')),
@@ -62,13 +82,18 @@ def inspect(path):
         if row['valid'] == '1' and (any(int(row[f'{p}_flags']) & 3 != 3 for p in ('head', 'left', 'right'))
                                     or any(row[f'{p}_active'] != '1' for p in ('left', 'right'))):
             raise ValueError('Valid input lacks valid poses or active controllers')
+    body_by_sequence = {int(r['sequence']):r for r in bodies}
     calibrated = False
     replayable = 0
     for row in frames:
         source = known[int(row['sequence'])]
         if row['reset'] == '1':
             calibrated = False
-        if row['valid'] == '1' and source['valid'] != '1':
+        source_valid = source['valid']=='1'
+        if is_gmr:
+            body = body_by_sequence[int(row['sequence'])]
+            source_valid = body['valid']=='1' and int(source['head_flags']) & 3 == 3 and abs(int(source['xr_time_ns'])-int(body['time_ns']))<200_000_000
+        if row['valid'] == '1' and not source_valid:
             raise ValueError('Valid state references invalid input')
         if (row['calibrate'] == '1' or row['apply_reference'] == '1') and row['valid'] != '1':
             raise ValueError('Calibration/reference used invalid or stale tracking')

@@ -1,5 +1,7 @@
 # Аудит соответствия движений рук
 
+> Исторический аудит прежнего wrist-IK. Production-путь заменён нативным GMR и Meta full-body input; см. [текущий отчёт](GMR_PORT.md). Старые измерения не характеризуют новую сборку.
+
 Дата: 2026-10-06. Связанные задачи: [ретаргетинг #5](https://github.com/emb-ai/FURRY/issues/5), [входные данные #3](https://github.com/emb-ai/FURRY/issues/3), [запись #8](https://github.com/emb-ai/FURRY/issues/8).
 
 ## Вывод

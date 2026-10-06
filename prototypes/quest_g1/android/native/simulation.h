@@ -19,6 +19,9 @@ public:
     double inference_ms = 0;
     int steps = 0;
     void SetArmReference(const std::array<float,29>& joints);
+    void SetWholeBodyReference(const std::array<float,35>& reference);
+    void PauseWholeBodyReference();
+    const std::array<float,35>& WholeBodyReference()const{return whole_reference;}
     void ClearArmReference(){has_reference=false;}
 private:
     Ort::Env env{ORT_LOGGING_LEVEL_WARNING, "G1Quest"};
@@ -30,6 +33,8 @@ private:
     std::array<float,1270> history{};
     std::vector<int> hands;
     std::array<double,2> hand_grip{};
+    bool has_whole_reference=false;
+    std::array<float,35> whole_reference{};
     bool has_reference=false;
     std::array<float,14> arm_reference{};
 };

@@ -23,3 +23,15 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+Native GMR retargeting port (android/native/gmr.*), G1 kinematic model exporter
+and android/config/gmr_xrobot_g1.json adapt General Motion Retargeting (GMR):
+https://github.com/YanjieZe/GMR
+Commit: bb1bbe40774794fceb2a7c579a3464a28e68c844
+Copyright 2025 Yanjieze; MIT License: third_party/GMR_LICENSE.txt.
+
+SE(3) residual/Jacobian and task/configuration-limit math in the native port
+adapt Mink 0.0.13 (https://github.com/kevinzakka/mink), Apache-2.0.
+License: third_party/MINK_LICENSE.txt. This is a modified C++ implementation
+using MuJoCo math and box-QP in place of Python/Mink/DAQP.
