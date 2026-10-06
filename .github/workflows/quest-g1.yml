@@ -23,6 +23,12 @@ jobs:
           cache: pip
           cache-dependency-path: prototypes/quest_g1/requirements.lock
       - run: python -m pip install -r requirements.lock
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Check recording ZIP export through JNI
+        run: python scripts/check_recording_export.py
       - name: Fetch pinned simulation assets
         run: |
           git init vendor/TWIST2

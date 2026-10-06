@@ -6,6 +6,7 @@
 #include "tracking_space.h"
 #include "runtime_stats.h"
 #include "stats_hud.h"
+#include "recording_export.h"
 #include <deque>
 #include <set>
 #include <android_native_app_glue.h>
@@ -42,6 +43,7 @@ double ClockSeconds(){return std::chrono::duration<double>(std::chrono::steady_c
 std::ofstream telemetry;
 TrackingSpaceChanges spaceChanges;
 EpisodeRecorder recorder;
+std::unique_ptr<RecordingExport> exporter;
 std::atomic<int> recordingStatus{0};
 std::atomic<bool> toggleRecording{false};
 std::chrono::steady_clock::time_point trackingTime;
@@ -190,6 +192,8 @@ void G1Initialize(android_app* app){
     mjv_defaultScene(&scene);mjv_makeScene(sim->model,&scene,2048);
     telemetry.open(assets+"/runtime_stats.csv",std::ios::trunc);
     telemetry<<"wall_s,sim_s,cycle_ms,physics_ms,gmr_ms,inference_ms,rtf,contacts,overlap_points,pairs,max_depth_mm,solver_iterations,constraints,body_gap_ms,input_age_ms,body_confidence,body_version,state,reason,target_x,target_y,actual_x,actual_y,cmd_vx,cmd_vy,actual_vx,actual_vy,root_error,height,tilt,gmr_residual,gmr_iterations,overruns,dropped_inputs,left_foot_contacts,right_foot_contacts,leg_error_deg\n";
+    try{exporter=std::make_unique<RecordingExport>(app->activity->vm,app->activity->clazz);exporter->Latest(assets+"/recordings");}
+    catch(const std::exception& e){__android_log_print(ANDROID_LOG_ERROR,"G1Quest","Recording export unavailable: %s",e.what());}
     running=true;
     worker=std::thread([]{
         double rateWall=ClockSeconds(),rateSim=0,lastTelemetry=0;RuntimeStats sample;
@@ -213,7 +217,7 @@ void G1Initialize(android_app* app){
                 Record([&]{
                     for(const auto& entry:inputs)recorder.Input(entry.frame,entry.left,entry.right,entry.received);
                     if(toggleRecording.exchange(false)){
-                        if(recorder.active){recorder.Stop();__android_log_print(ANDROID_LOG_INFO,"G1Quest","Recording saved: %s",recorder.path().c_str());}
+                        if(recorder.active){recorder.Stop();if(exporter)exporter->Queue(recorder.path());__android_log_print(ANDROID_LOG_INFO,"G1Quest","Recording saved: %s",recorder.path().c_str());}
                         else{
                             recorder.Start(assetsPath,sim->model);
                             auto received=std::chrono::duration_cast<std::chrono::nanoseconds>(receivedAt.time_since_epoch()).count();
@@ -336,8 +340,9 @@ void G1Shutdown(bool interrupted){
     running=false;if(worker.joinable())worker.join();
     Record([&]{
         if(interrupted){recorder.Event("app_error",latestTracking.sequence);recorder.Flush();recorder.Abort();}
-        else recorder.Stop("app_shutdown");
+        else {bool wasRecording=recorder.active;recorder.Stop("app_shutdown");if(wasRecording && exporter)exporter->Queue(recorder.path());}
     });
+    exporter.reset();
     telemetry.close();trace.close();mjv_freeScene(&scene);retarget.reset();sim.reset();
 }
 void G1SetActive(bool value){
@@ -427,7 +432,7 @@ void G1Render(const float* vp,const float* projection){
     DrawLegend(cardVP.m,assetsPath,trackingStatus.load()+6*recordingStatus.load());
     static RuntimeStats visible;
     {std::unique_lock<std::mutex> guard(statsMutex,std::try_to_lock);if(guard.owns_lock())visible=stats;}
-    renderedTriangles+=DrawStatsHud(projection,assetsPath,visible,renderFps,renderMs,skippedSceneUpdates,ClockSeconds(),trackingStatus.load(),active.load(),latestTracking,
+    renderedTriangles+=DrawStatsHud(projection,assetsPath,visible,renderFps,renderMs,skippedSceneUpdates,ClockSeconds(),trackingStatus.load(),active.load(),exporter?exporter->status.load():3,latestTracking,
         std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-trackingTime).count());
     if(renderedTriangles>100000)throw std::runtime_error("Scene and HUD exceed triangle budget");
     renderMs=.9*renderMs+.1*(ClockSeconds()-renderStart)*1000;
