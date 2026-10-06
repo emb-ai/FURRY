@@ -27,7 +27,7 @@ int main(int argc,char**argv){
             if(i==6||i==7)b=mj_name2id(m,mjOBJ_BODY,i==6?"left_ankle_roll_link":"right_ankle_roll_link");
             if(i==8||i==9)b=mj_name2id(m,mjOBJ_BODY,i==8?"left_shoulder_pitch_link":"right_shoulder_pitch_link");
             auto*p=d->xpos+3*b;poses[i].position={-p[1]*humanScale,p[2]*humanScale,-p[0]*humanScale};
-            double xr[9]={0,-1,0,0,0,1,-1,0,0},r[9];mju_mulMatMat(r,xr,d->xmat+3*3*b,3,3,3);mju_mat2Quat(poses[i].quaternion.data(),r);input.body.flags[i]=15;
+            double xr[9]={0,-1,0,0,0,1,-1,0,0},r[9];mju_mulMatMat(r,xr,d->xmat+9*g.tasks()[i].body,3,3,3);mju_mat2Quat(poses[i].quaternion.data(),r);input.body.flags[i]=15;
         }
     };
     mj_resetData(m,d);d->qpos[2]=.8;
@@ -37,6 +37,10 @@ int main(int argc,char**argv){
         d->qpos[joint("_elbow_joint")]=1.5707963267948966;
     }
     mj_forward(m,d);fill(true);
+    // A neutral human spine need not be a vertical line. A 4 cm chest depth
+    // offset must not rotate gravity or introduce a false lean into the legs.
+    // This is independent of the robot-generated limb fixture above.
+    input.body.rest[1].position[2]+=.04;
     double restAnkle=d->xpos[3*mj_name2id(m,mjOBJ_BODY,"right_ankle_roll_link")+2];
     for(int j=1;j<m->njnt;j++){int source=mj_name2id(physics.model(),mjOBJ_JOINT,mj_id2name(m,mjOBJ_JOINT,j));d->qpos[m->jnt_qposadr[j]]=physics.data()->qpos[physics.model()->jnt_qposadr[source]];}
     auto ground=[&]{mj_forward(m,d);double ankle=std::min(d->xpos[3*mj_name2id(m,mjOBJ_BODY,"left_ankle_roll_link")+2],d->xpos[3*mj_name2id(m,mjOBJ_BODY,"right_ankle_roll_link")+2]);d->qpos[2]+=restAnkle-ankle;mj_forward(m,d);};

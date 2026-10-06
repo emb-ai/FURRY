@@ -21,11 +21,12 @@ void MetaRetargeter::Calibrate(const mjModel* model,const mjData* data,const Tra
     std::array<TrackedPose,14> robot;
     for(int i=0;i<14;i++){int b=gmr.tasks()[i].body;std::copy_n(gd->xpos+3*b,3,robot[i].position.begin());mju_mat2Quat(robot[i].quaternion.data(),gd->xmat+9*b);}
     const auto& rest=input.body.rest;
-    // Rest-skeleton forward/left/up, independent of Meta's bone local axes.
-    double left[3],up[3],forward[3],restBasis[9];
-    mju_sub3(left,rest[8].position.data(),rest[9].position.data());Normalize(left);
-    mju_sub3(up,rest[1].position.data(),rest[0].position.data());Normalize(up);
-    mju_cross(forward,left,up);Normalize(forward);mju_cross(up,forward,left);
+    // Meta's T-pose is Y-up. Spine curvature is anatomy, not a reference-space
+    // tilt: deriving up from pelvis->chest tilts every limb's bind correction.
+    // Use the horizontal shoulder axis only for the neutral heading.
+    double left[3],up[3]={0,1,0},forward[3],restBasis[9];
+    mju_sub3(left,rest[8].position.data(),rest[9].position.data());left[1]=0;Normalize(left);
+    mju_cross(forward,left,up);Normalize(forward);
     std::copy_n(forward,3,restBasis);std::copy_n(left,3,restBasis+3);std::copy_n(up,3,restBasis+6);
     double headRotation[9];mju_quat2Mat(headRotation,input.head.quaternion.data());
     double fx=-headRotation[2],fz=-headRotation[8],length=std::hypot(fx,fz);if(length<.2)throw std::runtime_error("Look forward to calibrate");fx/=length;fz/=length;
