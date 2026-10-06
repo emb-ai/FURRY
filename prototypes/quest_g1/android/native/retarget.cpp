@@ -55,8 +55,11 @@ std::array<float,29> ArmRetargeter::Solve(const TrackingFrame& input){
     if(!calibrated || !input.valid)throw std::runtime_error("No valid calibrated tracking");
     error_m=0;limited=false;
     for(int h=0;h<2;h++){
+        // Standing mode: anchor hand translation to STAGE at calibration.
+        // HMD bobbing is not torso motion; it must not move stationary hands.
+        // Locomotion/room recenter requires a separate body reference or recalibration.
         double delta[3],local[3],target[3];
-        for(int a=0;a<3;a++)delta[a]=(input.hands[h].position[a]-input.head.position[a])-(origin.hands[h].position[a]-origin.head.position[a]);
+        for(int a=0;a<3;a++)delta[a]=input.hands[h].position[a]-origin.hands[h].position[a];
         mju_mulMatVec(local,basis,delta,3,3);
         double length=mju_norm3(local),scale=.8*(length>.45?.45/length:1);
         for(int a=0;a<3;a++)target[a]=initialPosition[h][a]+scale*local[a];
