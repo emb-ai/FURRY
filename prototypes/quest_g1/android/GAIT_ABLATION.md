@@ -154,6 +154,15 @@ fail during entry into that pose, before there is a warmed walking interval.
 All nine are reported; none is silently excluded. These results support fixing
 head-relative target drift, but do not establish reliable walking in general.
 
+## Changes outside this comparison
+
+The former wrist-only IK has no full-body walking reference, so it is not scored
+as a locomotion baseline. GMR is tested against the pinned numerical oracle and
+against direct-to-policy robot-motion controls; this does not constitute a
+paired human comparison of old wrist IK and Meta full-body tracking.
+Visual mesh simplification, passthrough and HUD placement do not enter offline
+physics state; their device timing still requires a separate Quest measurement.
+
 ## Reproduction
 
 Export the exact baseline adapter from the FURRY Git checkout into ignored output
@@ -184,6 +193,8 @@ holdout command, or use `--prepare` to normalize the nine pinned public fixtures
 ignored `outputs/`; they are not build options in the Quest app. Aggregated
 results are committed in `gait_ablation_results.json`. Native replay CSVs contain
 compact robot qpos/qvel, GMR references, segment/applying flags and foot contacts.
+Saved-command mode has no full GMR qpos: `ref_available=0` and NaN reference
+columns explicitly mark that limitation; paired pose metrics require retarget mode.
 
 Next unresolved work is support/contact consistency of Meta's estimated legs and
 policy tracking during turns/leaning; startup from deep poses is a separate

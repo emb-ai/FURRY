@@ -35,7 +35,7 @@ int Run(int argc,char**argv){
   double err=0,cmdErr=0;for(int k=0;k<sim.model->nq;k++)err=std::max(err,std::abs(sim.data->qpos[k]-r[42+k]));for(int k=0;k<35;k++)cmdErr=std::max(cmdErr,std::abs(double(cmd[k])-c[k+3]));maxError=std::max(maxError,err);
   if(r[6])sim.SetWholeBodyReference(cmd);else sim.PauseWholeBodyReference();
   double tilt=std::acos(std::clamp(1-2*(std::pow(sim.data->qpos[4],2)+std::pow(sim.data->qpos[5],2)),-1.,1.))*180/3.141592653589793;
-  out<<(r[0]-firstWall)*1e-9<<','<<sim.data->time<<','<<sim.data->qpos[2]<<','<<tilt<<','<<err<<','<<cmdErr;for(auto v:cmd)out<<','<<v;AblationRow(out,sim,meta.solver(),segment,r[6]);out<<'\n';
+  out<<(r[0]-firstWall)*1e-9<<','<<sim.data->time<<','<<sim.data->qpos[2]<<','<<tilt<<','<<err<<','<<cmdErr;for(auto v:cmd)out<<','<<v;AblationRow(out,sim,meta.solver(),segment,r[6],mode!="saved");out<<'\n';
   try{for(int k=0;k<10;k++)sim.Step(false,r[8],r[9]);}catch(const std::exception&e){if(std::string(e.what()).rfind("G1 fell",0)!=0)throw;fell=true;std::cout<<"fall wall="<<(r[0]-firstWall)*1e-9<<" sim="<<sim.data->time<<"\n";}minz=std::min(minz,sim.data->qpos[2]);
  }
  if(std::getline(commands,command))throw std::runtime_error("Extra mimic row");

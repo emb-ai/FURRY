@@ -161,6 +161,10 @@ def summarize(path, base, m):
     a = np.atleast_1d(np.genfromtxt(path, delimiter=',', names=True))
     b = np.atleast_1d(np.genfromtxt(base, delimiter=',', names=True))
     result = full_outcomes(a, path.with_suffix('.log').read_text())
+    for trace in (a,b):
+        if 'ref_available' in trace.dtype.names and not np.all(trace['ref_available']):
+            result.update(samples=0, failure='Saved commands do not include full GMR qpos; use retarget mode for paired pose metrics')
+            return result
     ai, bi = align_pair(a, b)
     good = active_mask(a)[ai] & active_mask(b)[bi]
     ai, bi = ai[good], bi[good]
