@@ -34,3 +34,16 @@ jobs:
         run: |
           c++ -std=c++17 -Wall -Wextra -Werror -Iandroid/native tests/check_tracking_space.cpp -o /tmp/check-tracking-space
           /tmp/check-tracking-space
+      - name: Install GMR numerical oracle dependencies
+        run: python -m pip install -r android/requirements-gmr-test.txt
+      - name: Fetch pinned GMR source
+        run: |
+          git init vendor/GMR
+          git -C vendor/GMR remote add origin https://github.com/YanjieZe/GMR.git
+          git -C vendor/GMR fetch --depth 1 origin bb1bbe40774794fceb2a7c579a3464a28e68c844
+          git -C vendor/GMR checkout --detach FETCH_HEAD
+      - name: Compare native retargeter with upstream GMR
+        run: |
+          python scripts/export_gmr.py
+          python scripts/build_gmr_oracle.py
+          python scripts/check_gmr_parity.py

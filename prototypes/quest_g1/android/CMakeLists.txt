@@ -20,7 +20,7 @@ add_library(g1_quest SHARED
     generated/xr/main.cpp generated/xr/openxr_program.cpp generated/xr/logger.cpp
     generated/xr/platformplugin_factory.cpp generated/xr/platformplugin_android.cpp
     generated/xr/graphicsplugin_factory.cpp
-    native/graphics.cpp native/simulation.cpp native/retarget.cpp native/quest_runtime.cpp
+    native/graphics.cpp native/simulation.cpp native/gmr.cpp native/meta_retarget.cpp native/quest_runtime.cpp
     "${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c")
 target_compile_definitions(g1_quest PRIVATE XR_USE_PLATFORM_ANDROID XR_USE_GRAPHICS_API_OPENGL_ES DEFAULT_GRAPHICS_PLUGIN_OPENGLES)
 target_include_directories(g1_quest PRIVATE
@@ -52,3 +52,13 @@ target_link_libraries(g1_tracking_frames_check PRIVATE mujoco onnxruntime log)
 add_executable(g1_tracking_audit native/audit_tracking.cpp native/simulation.cpp native/retarget.cpp)
 target_include_directories(g1_tracking_audit PRIVATE "${G1_ROOT}/vendor/onnxruntime-android/headers")
 target_link_libraries(g1_tracking_audit PRIVATE mujoco onnxruntime log)
+
+add_executable(g1_gmr_oracle native/gmr_oracle.cpp native/gmr.cpp)
+target_link_libraries(g1_gmr_oracle PRIVATE mujoco)
+add_executable(g1_meta_check native/check_meta_retarget.cpp native/gmr.cpp native/meta_retarget.cpp native/simulation.cpp)
+target_include_directories(g1_meta_check PRIVATE "${G1_ROOT}/vendor/onnxruntime-android/headers")
+target_link_libraries(g1_meta_check PRIVATE mujoco onnxruntime log)
+
+add_executable(g1_replay_gmr native/replay_gmr.cpp native/gmr.cpp native/meta_retarget.cpp native/simulation.cpp)
+target_include_directories(g1_replay_gmr PRIVATE "${G1_ROOT}/vendor/onnxruntime-android/headers")
+target_link_libraries(g1_replay_gmr PRIVATE mujoco onnxruntime log)
