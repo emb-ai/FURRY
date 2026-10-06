@@ -7,11 +7,12 @@ mkdir -p android/build outputs/gmr-recording
 .venv/bin/python scripts/export_gmr.py
 clang++ -O2 -std=c++17 -Ivendor/mujoco/include android/native/gmr.cpp android/native/gmr_oracle.cpp "$G1_PACKAGES/mujoco/libmujoco.3.3.7.dylib" -o android/build/gmr-oracle
 .venv/bin/python scripts/check_gmr_parity.py
-for G1_TOOL in check_meta_retarget replay_gmr; do
+for G1_TOOL in check_meta_retarget check_leg_mapping replay_gmr; do
   clang++ -O2 -std=c++17 -Ivendor/mujoco/include -Ivendor/onnxruntime-android/headers \
     "android/native/$G1_TOOL.cpp" android/native/gmr.cpp android/native/meta_retarget.cpp android/native/simulation.cpp \
     "$G1_PACKAGES/mujoco/libmujoco.3.3.7.dylib" "$G1_PACKAGES/onnxruntime/capi/libonnxruntime.1.23.2.dylib" -o "android/build/$G1_TOOL"
 done
+android/build/check_leg_mapping android/assets
 cp android/assets/recording_metadata.json outputs/gmr-recording/recording_metadata.json
 android/build/check_meta_retarget android/assets outputs/gmr-recording > outputs/gmr-meta-check.log
 cat outputs/gmr-meta-check.log

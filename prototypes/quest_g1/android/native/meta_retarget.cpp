@@ -38,7 +38,11 @@ void MetaRetargeter::Calibrate(const mjModel* model,const mjData* data,const Tra
     if(humanLeg<.3 || humanLeg>1.5 || humanArm<.25 || humanArm>1.1)throw std::runtime_error("Invalid body scale; wait for body calibration");
     double restFoot=.5*(rest[6].position[1]+rest[7].position[1]);
     double humanPelvisHeight=rest[0].position[1]-restFoot;
-    double robotPelvisHeight=robot[0].position[2]-.5*(robot[6].position[2]+robot[7].position[2]);
+    // Meta samples FOOT_ANKLE; GMR foot tasks are toe frames 2 cm lower.
+    // Scale matching anatomical landmarks, then apply ankle->toe offsets below.
+    int leftAnkle=mj_name2id(gm,mjOBJ_BODY,"left_ankle_roll_link"),rightAnkle=mj_name2id(gm,mjOBJ_BODY,"right_ankle_roll_link");
+    double ankleHeight=.5*(gd->xpos[3*leftAnkle+2]+gd->xpos[3*rightAnkle+2]);
+    double robotPelvisHeight=robot[0].position[2]-ankleHeight;
     if(humanPelvisHeight<.3)throw std::runtime_error("Invalid skeleton up axis/height");
     rootScale=robotPelvisHeight/humanPelvisHeight;
     // The GMR shoulder-yaw task frame lies below the anatomical shoulder pivot.
@@ -50,7 +54,7 @@ void MetaRetargeter::Calibrate(const mjModel* model,const mjData* data,const Tra
         robotReach+=(mju_norm3(upper)+Distance(robot[10+h],robot[12+h]))*.5;
     }
     double armScale=robotReach/humanArm;
-    footHeight=std::min(robot[6].position[2],robot[7].position[2]);
+    footHeight=ankleHeight;
     for(int i=0;i<14;i++){
         scales[i]=i>=8?armScale:rootScale;
         double restR[9],aligned[9],robotR[9],offsetR[9];mju_quat2Mat(restR,rest[i].quaternion.data());mju_mulMatMat(aligned,restBasis,restR,3,3,3);mju_quat2Mat(robotR,robot[i].quaternion.data());

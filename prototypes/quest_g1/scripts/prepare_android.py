@@ -15,11 +15,14 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from g1_sim.scene import make_model
+from g1_sim.collisions import primitive_collisions
 from g1_sim.controller import UPSTREAM
 
 assets = ROOT / 'android/assets'
 assets.mkdir(parents=True, exist_ok=True)
 model, xml = make_model('lab', hands=True)
+xml, collision_report = primitive_collisions(xml)
+(assets/'collision_budget.json').write_text(json.dumps(collision_report, indent=2)+'\n')
 root = ET.fromstring(xml)
 root.find('compiler').set('meshdir', 'meshes')
 # Hide duplicate collision geometry in the GLES renderer, retain physical shape.
@@ -57,7 +60,7 @@ targets = [min(int(n), max(200, min(1800, int(n*.12)))) for n in model.mesh_face
 weighted = sum(targets[i]*uses for i, uses in mesh_usage.items())
 ratio = min(1., (90000-primitive_triangles)/max(weighted,1))
 targets = [max(4, int(n*ratio)) for n in targets]
-# A separate visual mesh stream leaves MuJoCo's collision meshes untouched.
+# Visual simplification is independent of the primitive collision model.
 triangles = 0
 mesh_counts = []
 with (assets/'visual_meshes.bin').open('wb') as out:
@@ -80,11 +83,13 @@ with (assets/'visual_meshes.bin').open('wb') as out:
         mesh_counts.append(len(faces))
 print('Visual mesh triangles:', model.nmeshface, '->',triangles)
 scene_triangles = primitive_triangles + sum(mesh_counts[i]*uses for i, uses in mesh_usage.items())
-assert scene_triangles <= 100000, f'Scene exceeds polygon budget: {scene_triangles}'
+hud_max_triangles = 8192  # bounded text buffer plus raw skeleton inset/labels
+assert scene_triangles + hud_max_triangles <= 100000, f'Scene exceeds polygon budget: {scene_triangles}'
 budget = dict(maximum_triangles_per_eye=100000, scene_triangles_per_eye=scene_triangles,
+              hud_max_triangles=hud_max_triangles, total_max_triangles_per_eye=scene_triangles+hud_max_triangles,
               primitive_triangles=primitive_triangles, unique_visual_mesh_triangles=triangles,
               original_mesh_triangles=int(model.nmeshface), method='quadric edge collapse',
-              mesh_instances=sum(mesh_usage.values()), physics_meshes_unchanged=True)
+              mesh_instances=sum(mesh_usage.values()), physics_meshes_unchanged=False, robot_collision_meshes=0)
 (assets/'mesh_budget.json').write_text(json.dumps(budget, indent=2)+'\n')
 print('Complete rendered scene triangles per eye:', scene_triangles, '/ 100000')
 font_path = '/System/Library/Fonts/Supplemental/Arial.ttf'
@@ -107,6 +112,15 @@ for state in range(18):
         draw.text((40,125+y*58),line,font=body_font,fill=(228,236,245))
     (assets/f'controls_{state}.rgba').write_bytes(panel.tobytes())
 (assets/'controls.rgba').unlink(missing_ok=True)
+# Fixed native HUD glyph atlas. Runtime only changes a small vertex buffer.
+font = ImageFont.truetype('/System/Library/Fonts/Menlo.ttc', 26)
+atlas = Image.new('L', (512, 240), 0)
+draw = ImageDraw.Draw(atlas)
+for code in range(32, 127):
+    i=code-32;draw.text(((i%16)*32+2, (i//16)*40+2), chr(code), font=font, fill=255)
+draw.rectangle((15*32,5*40,512,240),fill=255)
+(assets/'stats_font.bin').write_bytes(atlas.tobytes())
+
 
 src = ROOT/'vendor/OpenXR-SDK-Source/src/tests/hello_xr'
 dest = ROOT/'android/generated/xr'
@@ -260,7 +274,7 @@ export_gmr()
 
 for file in ['gmr_model.xml','gmr_config.txt']:
     metadata['sha256'][file]=hashlib.sha256((assets/file).read_bytes()).hexdigest()
-for file in ['gmr.cpp','gmr.h','meta_retarget.cpp','meta_retarget.h','body_tracking.h']:
+for file in ['gmr.cpp','gmr.h','meta_retarget.cpp','meta_retarget.h','body_tracking.h','quest_runtime.cpp','runtime_stats.h','stats_hud.h']:
     metadata['sha256']['android/native/'+file]=hashlib.sha256((ROOT/'android/native'/file).read_bytes()).hexdigest()
 metadata['ik_error_semantics']='unweighted GMR stage-2 SE3 residual norm; mixed metres/radians, not wrist distance'
 metadata['body_tracking']={'source':'XR_FB_body_tracking + XR_META_body_tracking_full_body','lower_body':'runtime-estimated, not measured foot trackers','retargeting':'GMR two-stage SE3 box QP; Meta bind-skeleton adapter','root_xy':'HMD displacement from A, scaled to robot proportions','scaling':'leg height and arm lengths from Meta bind skeleton; source-specific bone-axis offsets','joints':['Pelvis','Spine3','Left_Hip','Right_Hip','Left_Knee','Right_Knee','Left_Foot','Right_Foot','Left_Shoulder','Right_Shoulder','Left_Elbow','Right_Elbow','Left_Wrist','Right_Wrist']}

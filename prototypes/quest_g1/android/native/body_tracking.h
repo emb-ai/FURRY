@@ -17,7 +17,14 @@ class BodyTracking {
     std::array<TrackedPose,14> bindSelected{};
     uint32_t version=~0u;
     bool haveSkeleton=false;
-    static constexpr int indices[14]={1,5,70,77,71,78,73,80,10,15,11,16,19,45};
+    static constexpr int indices[14]={
+        XR_FULL_BODY_JOINT_HIPS_META,XR_FULL_BODY_JOINT_CHEST_META,
+        XR_FULL_BODY_JOINT_LEFT_UPPER_LEG_META,XR_FULL_BODY_JOINT_RIGHT_UPPER_LEG_META,
+        XR_FULL_BODY_JOINT_LEFT_LOWER_LEG_META,XR_FULL_BODY_JOINT_RIGHT_LOWER_LEG_META,
+        XR_FULL_BODY_JOINT_LEFT_FOOT_ANKLE_META,XR_FULL_BODY_JOINT_RIGHT_FOOT_ANKLE_META,
+        XR_FULL_BODY_JOINT_LEFT_ARM_UPPER_META,XR_FULL_BODY_JOINT_RIGHT_ARM_UPPER_META,
+        XR_FULL_BODY_JOINT_LEFT_ARM_LOWER_META,XR_FULL_BODY_JOINT_RIGHT_ARM_LOWER_META,
+        XR_FULL_BODY_JOINT_LEFT_HAND_WRIST_META,XR_FULL_BODY_JOINT_RIGHT_HAND_WRIST_META};
     static TrackedPose Pose(const XrPosef&p){return {{p.position.x,p.position.y,p.position.z},{p.orientation.w,p.orientation.x,p.orientation.y,p.orientation.z}};}
 public:
     bool enabled=false;

@@ -73,7 +73,7 @@ public:
         XrMatrix4x4f_CreateFromRigidTransform(&toView,&view.pose);
         XrMatrix4x4f_InvertRigidBody(&viewMatrix,&toView);
         XrMatrix4x4f_Multiply(&vp,&projection,&viewMatrix);
-        G1Render(vp.m);
+        G1Render(vp.m,projection.m);
         G1CaptureFrame(rect.extent.width,rect.extent.height);
         glBindFramebuffer(GL_FRAMEBUFFER,0);
     }
