@@ -10,6 +10,7 @@ VENDOR = ROOT / 'vendor'
 VENDOR.mkdir(exist_ok=True)
 for name, url, rev in [
     ('TWIST2', 'https://github.com/amazon-far/TWIST2.git', 'b06178f19a22f2138cbd31f60c6d494bc263f67d'),
+    ('GMR', 'https://github.com/YanjieZe/GMR.git', 'bb1bbe40774794fceb2a7c579a3464a28e68c844'),
     ('mujoco', 'https://github.com/google-deepmind/mujoco.git', 'f1d45bd5422c74beddfb0d1deb590a02583d21de'),
     ('OpenXR-SDK-Source', 'https://github.com/KhronosGroup/OpenXR-SDK-Source.git', '47c4761d05b27f884247480ac3fb8a6657907325'),
 ]:

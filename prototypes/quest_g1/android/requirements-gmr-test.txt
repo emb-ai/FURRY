@@ -1,0 +1,6 @@
+# Desktop numerical oracle only; none of these Python packages run in the APK.
+mink==0.0.13
+daqp==0.7.2
+qpsolvers==4.11.0
+scipy==1.15.3
+rich==14.0.0

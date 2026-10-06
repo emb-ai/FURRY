@@ -5,6 +5,8 @@
   <uses-feature android:name="android.hardware.vr.headtracking" android:version="1" android:required="true"/>
   <uses-feature android:name="com.oculus.feature.PASSTHROUGH" android:required="true"/>
   <uses-permission android:name="android.permission.VIBRATE"/>
+  <uses-permission android:name="com.oculus.permission.BODY_TRACKING"/>
+  <uses-feature android:name="com.oculus.software.body_tracking" android:required="false"/>
   <uses-permission android:name="org.khronos.openxr.permission.OPENXR"/>
   <uses-permission android:name="org.khronos.openxr.permission.OPENXR_SYSTEM"/>
   <queries>

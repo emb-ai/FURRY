@@ -1,8 +1,13 @@
 #include "quest_runtime.h"
 #include "simulation.h"
+#include "meta_retarget.h"
 #include "legend.h"
 #include "recording.h"
 #include "tracking_space.h"
+#include "runtime_stats.h"
+#include "stats_hud.h"
+#include <deque>
+#include <set>
 #include <android_native_app_glue.h>
 #include <android/asset_manager.h>
 #include <android/log.h>
@@ -19,8 +24,22 @@
 
 namespace {
 std::unique_ptr<Simulation> sim;
-std::unique_ptr<ArmRetargeter> retarget;
+std::unique_ptr<MetaRetargeter> retarget;
+std::array<float,35> blendOrigin{};
+double blendStarted=0;
+bool wasApplying=false;
 TrackingFrame latestTracking;
+struct InputSample{TrackingFrame frame;float left,right;int64_t received;};
+std::mutex inputMutex,statsMutex;
+std::deque<InputSample> pendingInputs;
+std::vector<std::string> pendingEvents;
+std::atomic<bool> spaceInvalidated{false};
+std::atomic<uint64_t> droppedInputs{0};
+RuntimeStats stats;
+int pauseReason=0;
+double renderFps=0,renderMs=0;uint64_t skippedSceneUpdates=0;
+double ClockSeconds(){return std::chrono::duration<double>(std::chrono::steady_clock::now().time_since_epoch()).count();}
+std::ofstream telemetry;
 TrackingSpaceChanges spaceChanges;
 EpisodeRecorder recorder;
 std::atomic<int> recordingStatus{0};
@@ -153,7 +172,7 @@ void G1Initialize(android_app* app){
     CopyAssets(app->activity->assetManager,"",assets);
     CopyAssets(app->activity->assetManager,"meshes",assets+"/meshes");
     sim=std::make_unique<Simulation>(assets);
-    retarget=std::make_unique<ArmRetargeter>(sim->model);
+    retarget=std::make_unique<MetaRetargeter>(assets);
     if(std::filesystem::exists(assets+"/teleop_trace.csv"))
         std::filesystem::rename(assets+"/teleop_trace.csv",assets+"/teleop_trace_previous.csv");
     trace.open(assets+"/teleop_trace.csv",std::ios::trunc);traceRows=0;
@@ -169,19 +188,36 @@ void G1Initialize(android_app* app){
     for(auto& mesh:visualMeshes){uint32_t n=0;visual.read(reinterpret_cast<char*>(&n),4);if(n>3000000)throw std::runtime_error("Invalid visual mesh");mesh.resize(size_t(n)*6);visual.read(reinterpret_cast<char*>(mesh.data()),mesh.size()*sizeof(float));}
     if(!visual)throw std::runtime_error("Truncated visual mesh asset");
     mjv_defaultScene(&scene);mjv_makeScene(sim->model,&scene,2048);
+    telemetry.open(assets+"/runtime_stats.csv",std::ios::trunc);
+    telemetry<<"wall_s,sim_s,cycle_ms,physics_ms,gmr_ms,inference_ms,rtf,contacts,overlap_points,pairs,max_depth_mm,solver_iterations,constraints,body_gap_ms,input_age_ms,body_confidence,body_version,state,reason,target_x,target_y,actual_x,actual_y,cmd_vx,cmd_vy,actual_vx,actual_vy,root_error,height,tilt,gmr_residual,gmr_iterations,overruns,dropped_inputs,left_foot_contacts,right_foot_contacts,leg_error_deg\n";
     running=true;
     worker=std::thread([]{
+        double rateWall=ClockSeconds(),rateSim=0,lastTelemetry=0;RuntimeStats sample;
         auto next=std::chrono::steady_clock::now();
         while(running){
+            double cycleStart=ClockSeconds();
+            TrackingFrame input;std::chrono::steady_clock::time_point receivedAt;
+            std::deque<InputSample> inputs;std::vector<std::string> events;
+            {std::lock_guard<std::mutex> guard(inputMutex);input=latestTracking;receivedAt=trackingTime;inputs.swap(pendingInputs);events.swap(pendingEvents);}
             {
                 std::lock_guard<std::mutex> guard(mutex);
-                Record([]{
+                for(const auto& event:events){
+                    if(event=="focus_pause"){wasApplying=false;retarget->Pause();sim->PauseWholeBodyReference();}
+                    Record([&]{recorder.Event(event.c_str(),input.sequence);});
+                }
+                if(spaceInvalidated.exchange(false)){
+                    trackingEnabled=false;retarget->calibrated=false;calibrate=false;toggleTracking=false;
+                    wasApplying=false;retarget->Pause();sim->PauseWholeBodyReference();pauseReason=1;
+                    Record([&]{recorder.Event("reference_space_change",input.sequence);});
+                }
+                Record([&]{
+                    for(const auto& entry:inputs)recorder.Input(entry.frame,entry.left,entry.right,entry.received);
                     if(toggleRecording.exchange(false)){
                         if(recorder.active){recorder.Stop();__android_log_print(ANDROID_LOG_INFO,"G1Quest","Recording saved: %s",recorder.path().c_str());}
                         else{
                             recorder.Start(assetsPath,sim->model);
-                            auto received=std::chrono::duration_cast<std::chrono::nanoseconds>(trackingTime.time_since_epoch()).count();
-                            recorder.Input(latestTracking,grip[0],grip[1],received);
+                            auto received=std::chrono::duration_cast<std::chrono::nanoseconds>(receivedAt.time_since_epoch()).count();
+                            recorder.Input(input,grip[0],grip[1],received);
                             __android_log_print(ANDROID_LOG_INFO,"G1Quest","Recording started: %s",recorder.path().c_str());
                         }
                     }
@@ -192,38 +228,103 @@ void G1Initialize(android_app* app){
             try{
                 std::lock_guard<std::mutex> guard(mutex);
                 bool resetNow=reset.exchange(false);
-                if(resetNow){sim->Reset();trackingEnabled=false;retarget->calibrated=false;trackingStatus=0;calibrate=false;toggleTracking=false;faulted=false;lastReference={};grip[0]=0;grip[1]=0;Record([]{recorder.Event("reset",latestTracking.sequence);});}
-                bool valid=latestTracking.valid && std::chrono::steady_clock::now()-trackingTime<std::chrono::milliseconds(200);
+                if(resetNow){pauseReason=0;sim->Reset();wasApplying=false;trackingEnabled=false;retarget->calibrated=false;trackingStatus=0;calibrate=false;toggleTracking=false;faulted=false;lastReference={};grip[0]=0;grip[1]=0;Record([&]{recorder.Event("reset",input.sequence);});}
+                bool valid=input.body.valid && (input.location_flags[0]&3)==3 && std::abs(input.xr_time_ns-input.body.time_ns)<200000000LL && std::chrono::steady_clock::now()-receivedAt<std::chrono::milliseconds(200);
                 bool calibratedNow=false;
                 if(calibrate.load() && valid){
-                    calibratedNow=true;Record([]{recorder.Event("calibrate",latestTracking.sequence);});
-                    retarget->Calibrate(sim->data,latestTracking);trackingEnabled=true;calibrate=false;
-                    __android_log_print(ANDROID_LOG_INFO,"G1Quest","Tracking calibrated: head + two controllers -> wrist IK -> TWIST2");
+                    pauseReason=0;calibratedNow=true;Record([&]{recorder.Event("calibrate",input.sequence);});
+                    retarget->Calibrate(sim->model,sim->data,input);trackingEnabled=true;calibrate=false;
+                    __android_log_print(ANDROID_LOG_INFO,"G1Quest","Tracking calibrated: Meta full body -> native GMR -> TWIST2");
                 }
-                if(toggleTracking.exchange(false) && retarget->calibrated){trackingEnabled=!trackingEnabled;Record([]{recorder.Event(trackingEnabled?"tracking_resume":"tracking_pause",latestTracking.sequence);});}
-                bool applyReference=trackingEnabled && valid;
+                if(toggleTracking.exchange(false) && retarget->calibrated){trackingEnabled=!trackingEnabled;Record([&]{recorder.Event(trackingEnabled?"tracking_resume":"tracking_pause",input.sequence);});}
+                if(retarget->calibrated && valid && !retarget->Compatible(input)){
+                    trackingEnabled=false;retarget->calibrated=false;pauseReason=2;
+                    Record([&]{recorder.Event("body_skeleton_changed",input.sequence);});
+                }
+                bool applyReference=trackingEnabled && valid && retarget->calibrated;
                 float leftGrip=grip[0].load(),rightGrip=grip[1].load();
-                if(applyReference){lastReference=retarget->Solve(latestTracking);sim->SetArmReference(lastReference);}
-                trackingStatus=retarget->calibrated?(trackingEnabled?(valid?(retarget->limited?5:1):3):2):0;
-                Record([&]{recorder.Frame(sim->model,sim->data,sim->steps,latestTracking,resetNow,calibratedNow,applyReference,valid,
-                    leftGrip,rightGrip,trackingStatus,retarget->error_m,retarget->limited,lastReference);});
+                if(applyReference){
+                    if(calibratedNow || !wasApplying){
+                        blendOrigin.fill(0);blendOrigin[2]=sim->data->qpos[2];blendStarted=sim->data->time;
+                        auto* gm=retarget->solver().model();
+                        for(int j=1;j<gm->njnt;j++){
+                            int source=mj_name2id(sim->model,mjOBJ_JOINT,mj_id2name(gm,mjOBJ_JOINT,j));
+                            blendOrigin[6+gm->jnt_qposadr[j]-7]=sim->data->qpos[sim->model->jnt_qposadr[source]];
+                        }
+                    }
+                    double gmrStart=ClockSeconds();
+                    auto whole=retarget->Solve(input);sample.gmrMs=(ClockSeconds()-gmrStart)*1000;
+                    double u=std::clamp((sim->data->time-blendStarted)/.5,0.,1.);
+                    for(int j=0;j<35;j++)whole[j]=blendOrigin[j]+u*(whole[j]-blendOrigin[j]);
+                    sim->SetWholeBodyReference(whole);std::copy_n(whole.begin()+6,29,lastReference.begin());
+                }else{sample.gmrMs=0;sim->PauseWholeBodyReference();retarget->Pause();}
+                wasApplying=applyReference;
+                trackingStatus=!valid?3:retarget->calibrated?(trackingEnabled?(valid?(retarget->error>.3?5:1):3):2):0;
+                Record([&]{recorder.Frame(sim->model,sim->data,sim->steps,input,resetNow,calibratedNow,applyReference,valid,
+                    leftGrip,rightGrip,trackingStatus,retarget->error,(retarget->error>.3),lastReference);});
+                Record([&]{recorder.Mimic(input,sim->steps,sim->data->time,sim->WholeBodyReference());});
                 // Keep the actual input episode for deterministic policy replay.
                 if(trace && traceRows++<60000){
                     trace<<sim->steps<<","<<sim->data->time<<","<<resetNow<<","<<applyReference<<","<<leftGrip<<","<<rightGrip;
                     for(auto q:lastReference)trace<<","<<q;
-                    trace<<","<<valid<<","<<trackingStatus.load()<<","<<retarget->error_m<<","<<retarget->limited<<","<<sim->data->qpos[2];
+                    trace<<","<<valid<<","<<trackingStatus.load()<<","<<retarget->error<<","<<(retarget->error>.3)<<","<<sim->data->qpos[2];
                     for(int i=3;i<7;i++)trace<<","<<sim->data->qpos[i];
-                    for(const auto& pose:{latestTracking.head,latestTracking.hands[0],latestTracking.hands[1]}){
+                    for(const auto& pose:{input.head,input.hands[0],input.hands[1]}){
                         for(auto p:pose.position)trace<<","<<p;for(auto q:pose.quaternion)trace<<","<<q;
                     }
                     trace<<"\n";if(sim->steps%1000==0)trace.flush();
                 }
+                double physicsStart=ClockSeconds();
                 for(int i=0;i<10;i++)sim->Step(false,leftGrip,rightGrip);
+                sample.physicsMs=std::max(0.,(ClockSeconds()-physicsStart)*1000-sim->inference_ms);
+                sample.inferenceMs=sim->inference_ms;sample.cycleMs=(ClockSeconds()-cycleStart)*1000;
+                if(sample.cycleMs>10)sample.overruns++;
+                sample.published=ClockSeconds();sample.simTime=sim->data->time;
+                if(sample.simTime<rateSim){rateSim=sample.simTime;rateWall=sample.published;}
+                if(sample.published-rateWall>=.5){sample.realTimeFactor=(sample.simTime-rateSim)/(sample.published-rateWall);rateSim=sample.simTime;rateWall=sample.published;}
+                sample.contacts=sim->data->ncon;sample.constraints=sim->data->nefc;sample.overlaps=0;sample.depthMm=0;
+                std::set<std::pair<int,int>> contactPairs;
+                for(int i=0;i<sim->data->ncon;i++){const auto& c=sim->data->contact[i];contactPairs.emplace(std::min(c.geom1,c.geom2),std::max(c.geom1,c.geom2));if(c.dist<0){sample.overlaps++;sample.depthMm=std::max(sample.depthMm,-1000*c.dist);}}
+                sample.footContacts={};
+                for(int i=0;i<sim->data->ncon;i++){
+                    const auto& c=sim->data->contact[i];
+                    for(int side=0;side<2;side++){
+                        int foot=mj_name2id(sim->model,mjOBJ_BODY,side?"right_ankle_roll_link":"left_ankle_roll_link");
+                        int a=sim->model->geom_bodyid[c.geom1],b=sim->model->geom_bodyid[c.geom2];
+                        if(c.efc_address>=0 && ((a==foot && b==0)||(b==foot && a==0)))sample.footContacts[side]++;
+                    }
+                }
+                double legError=0;auto* gm=retarget->solver().model();
+                for(int j=1;j<=12;j++){
+                    int actual=mj_name2id(sim->model,mjOBJ_JOINT,mj_id2name(gm,mjOBJ_JOINT,j));
+                    double e=sim->data->qpos[sim->model->jnt_qposadr[actual]]-sim->WholeBodyReference()[6+gm->jnt_qposadr[j]-7];
+                    legError+=e*e;
+                }
+                sample.legErrorDegrees=std::sqrt(legError/12)*180/3.141592653589793;
+                sample.pairs=contactPairs.size();sample.solverIterations=0;
+                for(int i=0;i<std::min(mjNISLAND,std::max(1,sim->data->nisland));i++)sample.solverIterations+=sim->data->solver_niter[i];
+                sample.warnings=0;for(const auto& w:sim->data->warning)sample.warnings+=w.number;
+                sample.height=sim->data->qpos[2];double qx=sim->data->qpos[4],qy=sim->data->qpos[5];sample.tilt=std::acos(std::clamp(1-2*(qx*qx+qy*qy),-1.,1.))*180/3.141592653589793;
+                sample.inputAgeMs=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-receivedAt).count();
+                sample.bodyGapMs=(input.xr_time_ns-input.body.time_ns)*1e-6;sample.confidence=input.body.confidence;sample.bodyVersion=input.body.skeleton_version;
+                sample.residual=retarget->error;sample.gmrIterations=retarget->solver().iterations;
+                for(int a=0;a<2;a++){sample.targetXY[a]=retarget->solver().data()->qpos[a];sample.actualXY[a]=sim->data->qpos[a];sample.commandXY[a]=sim->WholeBodyReference()[a];sample.velocityXY[a]=sim->data->qvel[a];}
+                sample.positionError=std::hypot(sample.targetXY[0]-sample.actualXY[0],sample.targetXY[1]-sample.actualXY[1]);sample.status=trackingStatus;sample.reason=pauseReason;sample.droppedInputs=droppedInputs;
+                {std::lock_guard<std::mutex> guard(statsMutex);stats=sample;}
+                if(sample.published-lastTelemetry>.1){
+                    const auto& x=sample;
+                    telemetry<<x.published<<','<<x.simTime<<','<<x.cycleMs<<','<<x.physicsMs<<','<<x.gmrMs<<','<<x.inferenceMs<<','<<x.realTimeFactor<<','<<x.contacts<<','<<x.overlaps<<','<<x.pairs<<','<<x.depthMm<<','<<x.solverIterations<<','<<x.constraints<<','<<x.bodyGapMs<<','<<x.inputAgeMs<<','<<x.confidence<<','<<x.bodyVersion<<','<<x.status<<','<<x.reason;
+                    for(const auto& values:{x.targetXY,x.actualXY,x.commandXY,x.velocityXY})for(double v:values)telemetry<<','<<v;
+                    telemetry<<','<<x.positionError<<','<<x.height<<','<<x.tilt<<','<<x.residual<<','<<x.gmrIterations<<','<<x.overruns<<','<<x.droppedInputs<<','<<x.footContacts[0]<<','<<x.footContacts[1]<<','<<x.legErrorDegrees<<'\n';lastTelemetry=x.published;
+                    if(sim->steps%1000==0)telemetry.flush();
+                }
                 if(sim->steps%5000==0)__android_log_print(ANDROID_LOG_INFO,"G1Quest","sim=%.2fs height=%.3f inference=%.3fms",sim->data->time,sim->data->qpos[2],sim->inference_ms);
-                if(sim->steps%5000==0)__android_log_print(ANDROID_LOG_INFO,"G1Quest","tracking state=%d wrist IK error=%.3fm",trackingStatus.load(),retarget->error_m);
+                if(sim->steps%5000==0)__android_log_print(ANDROID_LOG_INFO,"G1Quest","tracking state=%d GMR task residual=%.3f",trackingStatus.load(),retarget->error);
             }catch(const std::exception& e){
                 __android_log_print(ANDROID_LOG_ERROR,"G1Quest","Simulation paused at %.3fs: %s; trace saved",sim->data->time,e.what());
-                std::lock_guard<std::mutex> guard(mutex);trace.flush();Record([]{recorder.Event("simulation_fault",latestTracking.sequence);recorder.Flush();});faulted=true;trackingEnabled=false;calibrate=false;trackingStatus=4;
+                std::lock_guard<std::mutex> guard(mutex);trace.flush();Record([&]{recorder.Event("simulation_fault",input.sequence);recorder.Flush();});faulted=true;trackingEnabled=false;calibrate=false;trackingStatus=4;pauseReason=3;
+                {std::lock_guard<std::mutex> statsGuard(statsMutex);stats.status=4;stats.reason=3;}
+                telemetry.flush();
             }
             next+=std::chrono::milliseconds(10);std::this_thread::sleep_until(next);
             if(std::chrono::steady_clock::now()-next>std::chrono::milliseconds(100))next=std::chrono::steady_clock::now();
@@ -237,32 +338,30 @@ void G1Shutdown(bool interrupted){
         if(interrupted){recorder.Event("app_error",latestTracking.sequence);recorder.Flush();recorder.Abort();}
         else recorder.Stop("app_shutdown");
     });
-    trace.close();mjv_freeScene(&scene);retarget.reset();sim.reset();
+    telemetry.close();trace.close();mjv_freeScene(&scene);retarget.reset();sim.reset();
 }
 void G1SetActive(bool value){
-    if(active.exchange(value)!=value){std::lock_guard<std::mutex> guard(mutex);Record([&]{recorder.Event(value?"focus_resume":"focus_pause",latestTracking.sequence);});}
+    if(active.exchange(value)!=value){std::lock_guard<std::mutex> guard(inputMutex);pendingEvents.emplace_back(value?"focus_resume":"focus_pause");}
 }
 void G1Grip(int hand,float value){if(hand>=0 && hand<2)grip[hand]=value;}
 void G1Reset(){reset=true;placeScene=true;}
 void G1ReferenceSpaceChange(int64_t changeTime){
-    std::lock_guard<std::mutex> guard(mutex);
+    std::lock_guard<std::mutex> guard(inputMutex);
     spaceChanges.Schedule(changeTime);
 }
 void G1SubmitTracking(const TrackingFrame& input){
-    std::lock_guard<std::mutex> guard(mutex);latestTracking=input;trackingTime=std::chrono::steady_clock::now();
-    if(spaceChanges.Advance(input.xr_time_ns)){
-        trackingEnabled=false;retarget->calibrated=false;calibrate=false;toggleTracking=false;
-        trackingStatus=faulted?4:0;placeScene=true;
-        Record([&]{recorder.Event("reference_space_change",input.sequence);});
+    {std::lock_guard<std::mutex> guard(inputMutex);latestTracking=input;trackingTime=std::chrono::steady_clock::now();
+        if(spaceChanges.Advance(input.xr_time_ns)){spaceInvalidated=true;placeScene=true;}
+        if(pendingInputs.size()>=512){pendingInputs.pop_front();droppedInputs++;}
+        pendingInputs.push_back({input,grip[0].load(),grip[1].load(),EpisodeRecorder::Now()});
     }
-    Record([&]{recorder.Input(input,grip[0],grip[1],EpisodeRecorder::Now());});
     if((input.location_flags[0]&3)==3 && placeScene.exchange(false)){
         double rotation[9];mju_quat2Mat(rotation,input.head.quaternion.data());
         double fx=-rotation[2],fz=-rotation[8],norm=std::hypot(fx,fz);
         if(norm<.2){fx=0;fz=-1;norm=1;}fx/=norm;fz/=norm;
         sceneTransform={float(-fx),0,float(-fz),0, float(-fz),0,float(fx),0, 0,1,0,0,
-                        float(input.head.position[0]+2.1*fx),0,float(input.head.position[2]+2.1*fz),1};
-        __android_log_print(ANDROID_LOG_INFO,"G1Quest","Scene placed 2.1m ahead of headset on stage floor");
+                        float(input.head.position[0]+3.0*fx),0,float(input.head.position[2]+3.0*fz),1};
+        __android_log_print(ANDROID_LOG_INFO,"G1Quest","Scene placed 3.0m ahead of headset on stage floor");
     }
 }
 void G1Calibrate(){calibrate=true;}
@@ -280,16 +379,16 @@ void G1CaptureFrame(int width,int height){
 }
 void G1PrepareFrame(){
     if(!sim)return;
-    std::lock_guard<std::mutex> guard(mutex);
+    static double last=ClockSeconds();static int frames=0;
+    frames++;double now=ClockSeconds();if(now-last>=.5){renderFps=frames/(now-last);frames=0;last=now;}
+    std::unique_lock<std::mutex> guard(mutex,std::try_to_lock);
+    if(!guard.owns_lock()){skippedSceneUpdates++;return;}
     mjvOption opt;mjv_defaultOption(&opt);opt.geomgroup[3]=0;
     mjvCamera cam;mjv_defaultCamera(&cam);
     mjv_updateScene(sim->model,sim->data,&opt,nullptr,&cam,mjCAT_ALL,&scene);
-    static auto last=std::chrono::steady_clock::now();static int frames=0;
-    frames++;
-    double elapsed=std::chrono::duration<double>(std::chrono::steady_clock::now()-last).count();
-    if(elapsed>=5){__android_log_print(ANDROID_LOG_INFO,"G1Quest","render %.1f fps, sim %.2fs",frames/elapsed,sim->data->time);frames=0;last=std::chrono::steady_clock::now();}
 }
-void G1Render(const float* vp){
+void G1Render(const float* vp,const float* projection){
+    double renderStart=ClockSeconds();
     if(!sim)return;
     InitGraphics();glUseProgram(program);glDisable(GL_CULL_FACE);glEnable(GL_DEPTH_TEST);
     glUniformMatrix4fv(vpLocation,1,GL_FALSE,vp);
@@ -326,4 +425,10 @@ void G1Render(const float* vp){
     XrMatrix4x4f_Multiply(&cardWorld,&world,&originalInverse);
     XrMatrix4x4f_Multiply(&cardVP,&viewProjection,&cardWorld);
     DrawLegend(cardVP.m,assetsPath,trackingStatus.load()+6*recordingStatus.load());
+    static RuntimeStats visible;
+    {std::unique_lock<std::mutex> guard(statsMutex,std::try_to_lock);if(guard.owns_lock())visible=stats;}
+    renderedTriangles+=DrawStatsHud(projection,assetsPath,visible,renderFps,renderMs,skippedSceneUpdates,ClockSeconds(),trackingStatus.load(),active.load(),latestTracking,
+        std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-trackingTime).count());
+    if(renderedTriangles>100000)throw std::runtime_error("Scene and HUD exceed triangle budget");
+    renderMs=.9*renderMs+.1*(ClockSeconds()-renderStart)*1000;
 }

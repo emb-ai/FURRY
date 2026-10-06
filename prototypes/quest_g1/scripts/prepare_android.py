@@ -15,11 +15,14 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from g1_sim.scene import make_model
+from g1_sim.collisions import primitive_collisions
 from g1_sim.controller import UPSTREAM
 
 assets = ROOT / 'android/assets'
 assets.mkdir(parents=True, exist_ok=True)
 model, xml = make_model('lab', hands=True)
+xml, collision_report = primitive_collisions(xml)
+(assets/'collision_budget.json').write_text(json.dumps(collision_report, indent=2)+'\n')
 root = ET.fromstring(xml)
 root.find('compiler').set('meshdir', 'meshes')
 # Hide duplicate collision geometry in the GLES renderer, retain physical shape.
@@ -57,7 +60,7 @@ targets = [min(int(n), max(200, min(1800, int(n*.12)))) for n in model.mesh_face
 weighted = sum(targets[i]*uses for i, uses in mesh_usage.items())
 ratio = min(1., (90000-primitive_triangles)/max(weighted,1))
 targets = [max(4, int(n*ratio)) for n in targets]
-# A separate visual mesh stream leaves MuJoCo's collision meshes untouched.
+# Visual simplification is independent of the primitive collision model.
 triangles = 0
 mesh_counts = []
 with (assets/'visual_meshes.bin').open('wb') as out:
@@ -80,26 +83,28 @@ with (assets/'visual_meshes.bin').open('wb') as out:
         mesh_counts.append(len(faces))
 print('Visual mesh triangles:', model.nmeshface, '->',triangles)
 scene_triangles = primitive_triangles + sum(mesh_counts[i]*uses for i, uses in mesh_usage.items())
-assert scene_triangles <= 100000, f'Scene exceeds polygon budget: {scene_triangles}'
+hud_max_triangles = 8192  # bounded text buffer plus raw skeleton inset/labels
+assert scene_triangles + hud_max_triangles <= 100000, f'Scene exceeds polygon budget: {scene_triangles}'
 budget = dict(maximum_triangles_per_eye=100000, scene_triangles_per_eye=scene_triangles,
+              hud_max_triangles=hud_max_triangles, total_max_triangles_per_eye=scene_triangles+hud_max_triangles,
               primitive_triangles=primitive_triangles, unique_visual_mesh_triangles=triangles,
               original_mesh_triangles=int(model.nmeshface), method='quadric edge collapse',
-              mesh_instances=sum(mesh_usage.values()), physics_meshes_unchanged=True)
+              mesh_instances=sum(mesh_usage.values()), physics_meshes_unchanged=False, robot_collision_meshes=0)
 (assets/'mesh_budget.json').write_text(json.dumps(budget, indent=2)+'\n')
 print('Complete rendered scene triangles per eye:', scene_triangles, '/ 100000')
 font_path = '/System/Library/Fonts/Supplemental/Arial.ttf'
 title_font = ImageFont.truetype(font_path, 48)
 body_font = ImageFont.truetype(font_path, 36)
-states = ['G1 · Для калибровки нажмите A', 'G1 · Трекинг рук включён',
-                              'G1 · Трекинг на паузе', 'G1 · Не видны оба контроллера',
-                              'G1 · Робот упал. X → рестарт', 'G1 · Цель руки ограничена']
+states = ['G1 · Для калибровки нажмите A', 'G1 · GMR: полный скелет',
+                              'G1 · Трекинг на паузе', 'G1 · Нет полного скелета',
+                              'G1 · Робот упал. X → рестарт', 'G1 · GMR: большая ошибка позы']
 for state in range(18):
     title = states[state % 6]
     panel = Image.new('RGBA', (1024, 512), (18, 28, 43, 255))
     draw = ImageDraw.Draw(panel)
     draw.text((40, 28), title, font=title_font, fill=(107,217,234))
-    for y,line in enumerate(['Смотрите вперёд, согните локти, руки перед собой',
-                            'A → калибровка и включение трекинга',
+    for y,line in enumerate(['Встаньте прямо, смотрите вперёд',
+                            'A → начало координат и калибровка тела',
                             'B → пауза / продолжение трекинга',
                             'Grip слева / справа → сжать свою кисть',
                             'X → рестарт; Y → начать / закончить запись',
@@ -107,6 +112,15 @@ for state in range(18):
         draw.text((40,125+y*58),line,font=body_font,fill=(228,236,245))
     (assets/f'controls_{state}.rgba').write_bytes(panel.tobytes())
 (assets/'controls.rgba').unlink(missing_ok=True)
+# Fixed native HUD glyph atlas. Runtime only changes a small vertex buffer.
+font = ImageFont.truetype('/System/Library/Fonts/Menlo.ttc', 26)
+atlas = Image.new('L', (512, 240), 0)
+draw = ImageDraw.Draw(atlas)
+for code in range(32, 127):
+    i=code-32;draw.text(((i%16)*32+2, (i//16)*40+2), chr(code), font=font, fill=255)
+draw.rectangle((15*32,5*40,512,240),fill=255)
+(assets/'stats_font.bin').write_bytes(atlas.tobytes())
+
 
 src = ROOT/'vendor/OpenXR-SDK-Source/src/tests/hello_xr'
 dest = ROOT/'android/generated/xr'
@@ -130,9 +144,9 @@ for name in names:
         text = text.replace('program->PollActions();', 'G1SetActive(program->IsSessionFocused());\n            program->PollActions();')
         text = text.replace('if (!program->IsSessionRunning()) {', 'if (!program->IsSessionRunning()) {\n                G1SetActive(false);')
     if name == 'openxr_program.cpp':
-        text = text.replace('#include "pch.h"', '#include "pch.h"\n#include "quest_runtime.h"\n#include "passthrough.h"')
+        text = text.replace('#include "pch.h"', '#include "pch.h"\n#include "quest_runtime.h"\n#include "passthrough.h"\n#include "body_tracking.h"')
         text = text.replace('struct OpenXrProgram : IOpenXrProgram {',
-                            'struct OpenXrProgram : IOpenXrProgram {\n    Passthrough passthrough; uint64_t trackingSequence=0;')
+                            'struct OpenXrProgram : IOpenXrProgram {\n    Passthrough passthrough; BodyTracking bodyTracking; uint64_t trackingSequence=0;')
         text = text.replace('XrAction quitAction{XR_NULL_HANDLE};',
                             'XrAction quitAction{XR_NULL_HANDLE};\n        XrAction calibrateAction{XR_NULL_HANDLE}, pauseAction{XR_NULL_HANDLE}, resetAction{XR_NULL_HANDLE}, recordAction{XR_NULL_HANDLE};')
         text = text.replace('CHECK_XRCMD(xrCreateAction(m_input.actionSet, &actionInfo, &m_input.quitAction));', '''CHECK_XRCMD(xrCreateAction(m_input.actionSet, &actionInfo, &m_input.quitAction));
@@ -170,7 +184,7 @@ for name in names:
             }
         }
         // There were no subaction paths specified for the quit action,''')
-        text = text.replace('~OpenXrProgram() override {', '~OpenXrProgram() override {\n        passthrough.Shutdown();')
+        text = text.replace('~OpenXrProgram() override {', '~OpenXrProgram() override {\n        bodyTracking.Shutdown(); passthrough.Shutdown();')
         text = text.replace('case XR_TYPE_EVENT_DATA_REFERENCE_SPACE_CHANGE_PENDING:', '''case XR_TYPE_EVENT_DATA_REFERENCE_SPACE_CHANGE_PENDING: {
                     const auto& change = *reinterpret_cast<const XrEventDataReferenceSpaceChangePending*>(event);
                     if(change.session == m_session && change.referenceSpaceType == XR_REFERENCE_SPACE_TYPE_STAGE)
@@ -178,9 +192,9 @@ for name in names:
                     break;
                 }''')
         text = text.replace('std::vector<const char*> extensions;',
-                            'std::vector<const char*> extensions{XR_FB_PASSTHROUGH_EXTENSION_NAME};')
+                            'std::vector<const char*> extensions{XR_FB_PASSTHROUGH_EXTENSION_NAME}; bodyTracking.enabled=BodyTracking::Enable(extensions);')
         text = text.replace('CHECK_XRCMD(xrCreateSession(m_instance, &createInfo, &m_session));',
-                            'CHECK_XRCMD(xrCreateSession(m_instance, &createInfo, &m_session));\n            passthrough.Initialize(m_instance, m_session);')
+                            'CHECK_XRCMD(xrCreateSession(m_instance, &createInfo, &m_session));\n            passthrough.Initialize(m_instance, m_session); bodyTracking.Initialize(m_instance, m_systemId, m_session);')
         text = text.replace('if (frameState.shouldRender == XR_TRUE) {',
                             'if (frameState.shouldRender == XR_TRUE) {\n            layers.push_back(passthrough.Layer());')
         a = text.index('        layer.layerFlags =')
@@ -229,6 +243,7 @@ for name in names:
             tracking.hand_active[hand]=m_input.handActive[hand];
             tracking.hands[hand]=trackedPose(location.pose);
         }
+        bodyTracking.Sample(m_appSpace,predictedDisplayTime,tracking);
         G1SubmitTracking(tracking);
         G1PrepareFrame();
 
@@ -242,13 +257,28 @@ hashes = {}
 for path in sorted([assets/'scene.xml', assets/'policy.onnx', *meshdir.glob('*'),
                     ROOT/'android/native/retarget.cpp', ROOT/'android/native/simulation.cpp']):
     hashes[str(path.relative_to(assets) if path.is_relative_to(assets) else path.relative_to(ROOT))] = hashlib.sha256(path.read_bytes()).hexdigest()
-metadata = dict(schema_version=1, input_mode='openxr_touch_grip', pose_frame='OpenXR STAGE; metres; quaternion wxyz',
+metadata = dict(schema_version=1, retargeting='native_gmr_meta_full_body', input_mode='meta_full_body_hmd_touch_grip', pose_frame='OpenXR STAGE; metres; quaternion wxyz',
                 head_pose='mean stereo-eye position; left-eye orientation',
                 physics_hz=1000, policy_hz=100, nq=model.nq, nv=model.nv, nu=model.nu,
                 joints=[mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_JOINT, i) for i in range(model.njnt)],
-                source_twist2='b06178f19a22f2138cbd31f60c6d494bc263f67d', sha256=hashes,
+                source_twist2='b06178f19a22f2138cbd31f60c6d494bc263f67d',
+                source_gmr='bb1bbe40774794fceb2a7c579a3464a28e68c844', sha256=hashes,
                 state_phase='before next 10 physics steps; ctrl is last physics-step output',
                 clocks='xr_time_ns is predicted display time; receive_ns is steady_clock, no clock-offset fit',
                 missing_data='valid and per-pose OpenXR flags are authoritative; invalid numerical poses must not be used',
                 limitations=['no measured elbows, legs or finger skeleton', 'no video', 'no complete controller hidden state for dynamic restart'])
 (assets/'recording_metadata.json').write_text(json.dumps(metadata, indent=2)+'\n')
+
+from export_gmr import export as export_gmr
+export_gmr()
+
+for file in ['gmr_model.xml','gmr_config.txt']:
+    metadata['sha256'][file]=hashlib.sha256((assets/file).read_bytes()).hexdigest()
+for file in ['gmr.cpp','gmr.h','meta_retarget.cpp','meta_retarget.h','body_tracking.h','quest_runtime.cpp','runtime_stats.h','stats_hud.h']:
+    metadata['sha256']['android/native/'+file]=hashlib.sha256((ROOT/'android/native'/file).read_bytes()).hexdigest()
+metadata['ik_error_semantics']='unweighted GMR stage-2 SE3 residual norm; mixed metres/radians, not wrist distance'
+metadata['body_tracking']={'source':'XR_FB_body_tracking + XR_META_body_tracking_full_body','lower_body':'runtime-estimated, not measured foot trackers','retargeting':'GMR two-stage SE3 box QP; Meta bind-skeleton adapter','root_xy':'HMD displacement from A, scaled to robot proportions','scaling':'leg height and arm lengths from Meta bind skeleton; source-specific bone-axis offsets','joints':['Pelvis','Spine3','Left_Hip','Right_Hip','Left_Knee','Right_Knee','Left_Foot','Right_Foot','Left_Shoulder','Right_Shoulder','Left_Elbow','Right_Elbow','Left_Wrist','Right_Wrist']}
+metadata['limitations']=['Meta lower-body poses are estimates','no video','no complete policy hidden state for dynamic restart','Meta source adapter requires hardware validation']
+(assets/'recording_metadata.json').write_text(json.dumps(metadata,indent=2)+'\n')
+for name in ['GMR','MINK']:
+    shutil.copy2(ROOT/'third_party'/f'{name}_LICENSE.txt',assets/f'{name}_LICENSE.txt')
