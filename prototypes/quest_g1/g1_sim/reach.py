@@ -19,6 +19,7 @@ import numpy as np
 from .controller import DEFAULT, JOINTS, Controller, standing_command
 from .scene import make_model
 from .state import convert_recording
+from .tasks import cup_picked, fell
 
 SCENE = "cup"
 TIP = "right_hand_middle_finger_tip"
@@ -110,6 +111,8 @@ def run_episode(seed, seconds=DURATION, record=None, source_factory=None):
     source = ScriptedReach(model, cup) if source_factory is None else source_factory(model, cup)
     distances = [tip_distance(data)]
     min_height, max_tilt = float(data.qpos[2]), 0.0
+    picked = cup_picked(model, data, controller.grip)
+    fallen = fell(model, data)
     recording = []
     while data.time < seconds:
         command, grip = source(model, data, controller)
@@ -117,6 +120,8 @@ def run_episode(seed, seconds=DURATION, record=None, source_factory=None):
         grip = float(grip)
         controller.step(data, command, grip)
         distances.append(tip_distance(data))
+        picked = picked or cup_picked(model, data, controller.grip)
+        fallen = fallen or fell(model, data)
         min_height = min(min_height, float(data.qpos[2]))
         max_tilt = max(max_tilt, float(np.arccos(np.clip(data.xmat[model.body("pelvis").id, 8], -1, 1))))
         if not np.isfinite(data.qpos).all() or data.qpos[2] < 0.35:
@@ -135,6 +140,8 @@ def run_episode(seed, seconds=DURATION, record=None, source_factory=None):
         "minimum_pelvis_height_m": min_height,
         "maximum_pelvis_tilt_deg": float(np.degrees(max_tilt)),
         "mujoco_warnings": int(sum(w.number for w in data.warning)),
+        "pickup": bool(picked),
+        "fell": bool(fallen),
     }
     if record is not None:
         record = Path(record)

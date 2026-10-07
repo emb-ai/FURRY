@@ -59,6 +59,8 @@ class ReachRolloutTests(unittest.TestCase):
         self.assertGreater(row["minimum_pelvis_height_m"], 0.70)
         self.assertLess(row["maximum_pelvis_tilt_deg"], 15)
         self.assertEqual(row["mujoco_warnings"], 0)
+        self.assertFalse(row["pickup"])
+        self.assertFalse(row["fell"])
         self.assertEqual(row["state_dim"], 48)
         self.assertEqual(row["state_rows"], 60)
 

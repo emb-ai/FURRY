@@ -4,9 +4,11 @@
 
 **Status: proposed.** Written 2026-10-07. This page plans a state-based
 high-level policy in the spirit of the TWIST2 Diffusion Policy. A scripted
-cup reach and a small low-dimensional policy that drives it are
-[locally reproduced](#reach-loop). Pickup, Kick-T, and image observations are
-not. The [desktop NPZ contract](#desktop-recording-contract)
+cup reach, a small low-dimensional policy that drives it, and automatic
+[task checks](#task-checks) for `cup` and `push_t` are locally reproduced.
+Scored rollouts time out: the scripted arm leaves the cup on the table, and a
+standing command leaves the T short of its mark. Quest demonstrations and
+image observations remain open. The [desktop NPZ contract](#desktop-recording-contract)
 and the [state contract](#state-contract) below are locally reproduced. Statements about TWIST2 are author-reported
 or inspected at the [pinned revision](TWIST2-Baseline.md).
 
@@ -85,7 +87,7 @@ a planned ablation.
 | Scene state | `qpos` and `qvel` include the robot and the `cup_free` and `t_box_free` bodies from [`g1_sim/scene.py`](../prototypes/quest_g1/g1_sim/scene.py) | Recorded as flat scene-dependent vectors; read them by joint name |
 | Policy observation | [`g1_sim/state.py`](../prototypes/quest_g1/g1_sim/state.py) builds `state-v1` from a desktop NPZ | Derived export; the raw episode stays untouched |
 | High-level policy | [`g1_sim/diffusion.py`](../prototypes/quest_g1/g1_sim/diffusion.py) reads that export and passes `p_cmd` to `Controller.step` | Reach loop locally reproduced |
-| Tasks | `cup` (similar to WB-Dex) and `push_t` (similar to Kick-T) scenes | Reach reports fingertip distance; no success criteria yet |
+| Tasks | [`g1_sim/tasks.py`](../prototypes/quest_g1/g1_sim/tasks.py) scores `cup` and `push_t` | Pickup and coverage rules, timeout, fall, seeded resets |
 
 The policy becomes a third command source next to the scripted arm demo and the
 standing command in [`g1_sim/__main__.py`](../prototypes/quest_g1/g1_sim/__main__.py).
@@ -306,8 +308,75 @@ standing command saw the same cup.
 No trial fell. The pelvis stayed above 0.782 m, tilt stayed under 3.3 degrees,
 and MuJoCo reported no warnings. The policy matched the script to about 2 mm.
 Standing stayed near its initial distance. The state is still privileged.
-The hand stops short of the cup. Success criteria, randomization beyond this
-cup box, and Quest demonstrations remain open.
+The hand stops short of the cup. The 3 s generator records `pickup` and
+`fell` from the [task checks](#task-checks). Its unit test rolls seed 2 and
+records both false. Wider starts and the 8 s horizon are scored in that
+section. Quest demonstrations remain open.
+
+## Task Checks
+
+**Status: locally reproduced** on 2026-10-07, on the same host and with the
+same MuJoCo, NumPy, and ONNX Runtime versions as the reach loop. PyTorch is
+not used. The low-level weights are still `twist2_1017_20k.onnx`. Repeat from
+`prototypes/quest_g1`:
+
+```sh
+.venv/bin/python -m g1_sim.tasks --task cup --distribution demo --source script --seed 0 1 2 3 --seconds 8
+.venv/bin/python -m g1_sim.tasks --task cup --distribution eval --source script --seed 0 1 2 3 --seconds 8
+.venv/bin/python -m g1_sim.tasks --task cup --distribution eval --source standing --seed 0 1 2 3 --seconds 8
+.venv/bin/python -m g1_sim.tasks --task push_t --distribution eval --source standing --seed 0 1 2 3 --seconds 8
+.venv/bin/python -m unittest tests.test_tasks tests.test_reach -v
+```
+
+[`g1_sim/tasks.py`](../prototypes/quest_g1/g1_sim/tasks.py) writes schema
+`task-v1`. The TWIST2 paper describes a cup pickup and a kick onto the mark,
+and it does not state a tolerance. These rules are the FURRY checks. A fall
+or a timeout stays that outcome.
+
+| Rule | Criterion |
+| --- | --- |
+| Cup pickup | Cup center at least 0.788 m high, right middle fingertip within 0.12 m, achieved grip at least 0.5, all at the same step |
+| Push-T coverage | At least half of the target footprint lies inside the T, on a 2 cm grid |
+| Fall | Pelvis height below 0.55 m, tilt past 45 degrees, or a non-finite pose. Checked before success |
+| Timeout | 8 s. The episode stops at the first success or fall |
+
+The cup center settles at 0.748 m on the table, so 0.788 m is a 4 cm lift.
+Achieved grip is the value the tracker has slewed toward the command, 0.002
+per physics step. The scripted reach commands grip 0, so the slewed grip stays
+0. Coverage is the fraction of target-footprint samples that fall inside the
+T's two rectangles. Matched poses score 1. The mark has no joint, so a reset
+writes `model.body_pos` and `model.body_quat` for `t_target` and overwrites
+them on the next reset.
+
+`demo` for the cup is the reach box from [Reach Loop](#reach-loop), yaw 0, and
+the standing root. `eval` draws cup x from [0.43, 0.87] m and y from
+[-0.35, 0.35] m, then yaw from [-π, π], then root x, root y from [-0.05, 0.05] m
+and root yaw from [-0.15, 0.15] rad. The inset is 0.10 m inside the table top,
+so a yawed cup stays on it. That region is wider than the reach box and drops
+the 0.38–0.43 m strip next to the near edge. `demo` for push-T is the scene
+pose: the T at (0.65, 0, 0.101) m and the mark at (1.55, 0, 0.002) m. `eval`
+draws the T from x [0.55, 0.95] m, y [-0.25, 0.25] m and yaw [-0.4, 0.4] rad,
+then places the mark 0.60–0.90 m ahead and within 0.20 m laterally, with its
+own yaw in [-0.4, 0.4] rad, then the same root shift. Draw order is the seed
+contract. `reset` calls `Controller.initialize` and then applies that pose, so
+the same seed returns the same `qpos` after the episode has moved.
+
+| Set | Outcome | Motion |
+| --- | --- | --- |
+| Cup, demo box, script, seeds 0–3 | 0/4 timeout | Fingertip minimum 0.102–0.131 m, final 0.287–0.320 m. Cup center stayed at or below the 0.754 m drop |
+| Cup, eval, script, seeds 0–3 | 0/4 timeout | Fingertip minimum 0.063 m on seed 3 and 0.185–0.329 m on the others. Seed 3 raised the cup center to 0.857 m |
+| Cup, eval, standing, seeds 0–3 | 0/4 timeout | Final fingertip distance 0.408–0.811 m. Cup center stayed at or below the drop |
+| Push-T, eval, standing, seeds 0–3 | 0/4 timeout | Coverage stayed 0 |
+
+Demo seed 1 brought the fingertip to 0.102 m, inside the 0.12 m hold radius.
+The cup center never cleared 0.788 m and the grip stayed 0, so the pickup rule
+did not fire. On eval seed 3 the arm did knock the cup up to 0.857 m. The
+commanded grip was still 0, and the trial timed out. The 3 s reach hold does
+not stay put through 8 s: those demo seeds ended 0.287–0.320 m away after
+having been as close as 0.102 m. The lowest pelvis was 0.777 m and the largest
+tilt was 6.03 degrees, both on the demo script. No trial fell. MuJoCo reported
+no warnings. The same checks are what a later Quest demonstration will have to
+pass. No cup-pickup or Kick-T Quest episode is in the tree.
 
 ## Open Work
 
@@ -317,8 +386,8 @@ cup box, and Quest demonstrations remain open.
   ([ADR-005](Architecture-and-Decisions.md#decision-register)).
 - **Demonstrations:** scripted simulator reaches are locally reproduced.
   Quest demos of cup pickup and Kick-T are not yet validated.
-- **Tasks:** success criteria, timeouts, fall detection, randomized starts and
-  seeded resets for `cup` and `push_t`.
+- **Tasks:** [`task-v1`](#task-checks) is locally reproduced. The reported
+  seeds time out. A policy that meets the pickup or coverage rule is still open.
 - **Runtime:** interpolate chunk steps to the 100 Hz tracker, start smoothly
   from the current pose and blend consecutive chunks. Root velocity errors
   accumulate, so the policy must observe the robot's pose relative to objects.
@@ -337,8 +406,11 @@ cup box, and Quest demonstrations remain open.
 3. Done. A scripted cup reach, sixteen demonstrations, and a small
    low-dimensional Diffusion Policy close the loop through `Controller.step`.
    See [Reach Loop](#reach-loop).
-4. Add success criteria and randomization to `cup` and `push_t`, then move to
-   Quest demonstrations.
+4. Done. [`g1_sim/tasks.py`](../prototypes/quest_g1/g1_sim/tasks.py) scores
+   `cup` and `push_t` with a pickup rule, a coverage rule, an 8 s timeout, a
+   fall rule, and seeded resets. See [Task Checks](#task-checks).
+5. Quest demonstrations of cup pickup and Kick-T, scored with those checks.
+   No such episode is in the tree, so this step has not started.
 
 ## Background
 
