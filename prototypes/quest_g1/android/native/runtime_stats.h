@@ -1,7 +1,9 @@
 #pragma once
 #include <array>
+#include "camera_fusion.h"
 #include <cstdint>
 struct RuntimeStats {
+    CameraOverlay cameraOverlay;
     int physicsWorkers=0;
     int cameraState=0,cameraLegs=0;bool cameraConnected=false,cameraClockSynced=false;
     double cameraClockOffsetMs=0,cameraClockRttMs=-1;

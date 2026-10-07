@@ -377,6 +377,8 @@ void G1Initialize(android_app* app){
                 sample.bodyGapMs=(input.xr_time_ns-input.body.time_ns)*1e-6;sample.confidence=input.body.confidence;sample.bodyVersion=input.body.skeleton_version;
                 sample.residual=retarget->error;sample.gmrIterations=retarget->solver().iterations;
                 for(int a=0;a<2;a++){sample.targetXY[a]=retarget->solver().data()->qpos[a];sample.actualXY[a]=sim->data->qpos[a];sample.commandXY[a]=sim->WholeBodyReference()[a];sample.velocityXY[a]=sim->data->qvel[a];}
+                CameraSkeleton displayCamera;bool haveDisplayCamera=cameraStream->Latest(displayCamera);
+                sample.cameraOverlay=cameraFusion.MapForDisplay(haveDisplayCamera?&displayCamera:nullptr,input,CameraEpochMs());
                 sample.cameraState=cameraFusion.stats.state;sample.cameraLegs=cameraFusion.stats.legs;
                 sample.cameraAgeMs=cameraFusion.stats.ageMs;sample.cameraFitMm=cameraFusion.stats.fitMm;
                 sample.cameraWeight=cameraFusion.stats.weight;sample.cameraConnected=cameraStream->connected;

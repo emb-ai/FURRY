@@ -8,6 +8,10 @@ struct CameraSkeleton {
  std::array<CameraJoint,11> joints{};CameraJoint pelvis;
  uint64_t sequence=0;double sourceMs=0,receivedMs=0;std::string frame;
 };
+struct CameraOverlay {
+ std::array<std::array<double,3>,12> points{}; // camera joints, then pelvis
+ std::array<bool,12> valid{};bool aligned=false;double ageMs=-1;
+};
 struct CameraFusionStats {int state=0,legs=0;double ageMs=-1,fitMm=-1,weight=0;};
 class CameraFusion {
  struct Sample{double ms;TrackingFrame frame;};
@@ -25,5 +29,6 @@ public:
  void Reset();
  void Observe(const TrackingFrame&,double epochMs);
  TrackingFrame Apply(const TrackingFrame&,const CameraSkeleton*,double epochMs);
+ CameraOverlay MapForDisplay(const CameraSkeleton*,const TrackingFrame&,double epochMs)const;
  bool Aligned()const{return aligned;}
 };

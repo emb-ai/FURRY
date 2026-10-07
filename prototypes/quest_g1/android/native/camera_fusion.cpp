@@ -129,3 +129,17 @@ TrackingFrame CameraFusion::Apply(const TrackingFrame&raw,const CameraSkeleton*c
  }
  return out;
 }
+
+CameraOverlay CameraFusion::MapForDisplay(const CameraSkeleton*c,const TrackingFrame&raw,double now)const{
+ CameraOverlay out;if(!c)return out;
+ out.ageMs=std::max(now-c->sourceMs,now-c->receivedMs);
+ bool relative=c->frame=="pelvis-relative";
+ out.aligned=(aligned && c->frame=="camera") || (relative && raw.body.valid);
+ if(!out.aligned || out.ageMs<0 || out.ageMs>=500)return out;
+ for(int i=0;i<12;i++){
+  const auto&j=i==11?c->pelvis:c->joints[i];if(!Good(j))continue;
+  out.points[i]=relative?Add(raw.body.joints[0].position,i==11?V{}:j.p):Add(Rotate(rotation,j.p),translation);
+  out.valid[i]=true;
+ }
+ return out;
+}

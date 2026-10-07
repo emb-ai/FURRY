@@ -24,6 +24,12 @@ int main(){
   c.sourceMs=c.receivedMs=t;c.sequence=n+1;fusion.Observe(raw,t);fusion.Apply(raw,&c,t);
  }
  Require(fusion.Aligned(),"Rigid fit did not converge");Require(fusion.stats.fitMm<.001,"Rigid fit wrong / reflected");
+ auto display=fusion.MapForDisplay(&c,raw,c.sourceMs);
+ Require(display.aligned && display.valid[4],"Mapped overlay missing");
+ for(int a=0;a<3;a++)Require(std::abs(display.points[4][a]-raw.body.joints[6].position[a])<1e-7,"Overlay is not in Meta STAGE coordinates");
+ Require(!display.valid[9],"Overlay invents missing wrist");
+ auto expired=fusion.MapForDisplay(&c,raw,c.sourceMs+501);
+ for(bool v:expired.valid)Require(!v,"Expired camera overlay still drawn");
  double t=c.sourceMs+80;c.sourceMs=c.receivedMs=t;c.sequence++;
  c.joints[4].p[2]-=.12;c.joints[2].p[2]-=.08;raw.body.time_ns=raw.xr_time_ns=int64_t(t*1e6);fusion.Observe(raw,t);
  auto moved=fusion.Apply(raw,&c,t);Require(moved.body.joints[6].position[2]>.005,"Camera leg correction absent");
@@ -35,5 +41,6 @@ int main(){
  c.sequence++;c.sourceMs=c.receivedMs=t+600;c.pelvis.confidence=0;fusion.Apply(raw,&c,t+600);Require(fusion.stats.legs==0,"Invalid heartbeat repeats corrections");
  fusion.Reset();for(int n=0;n<50;n++){c.sourceMs=c.receivedMs=t+n*80;c.sequence++;c.pelvis.confidence=1;raw.body.time_ns=raw.xr_time_ns=int64_t(c.sourceMs*1e6);fusion.Observe(raw,c.sourceMs);fusion.Apply(raw,&c,c.sourceMs);}
  Require(!fusion.Aligned(),"Static shoulders silently accepted ambiguous alignment");
+ auto unaligned=fusion.MapForDisplay(&c,raw,c.sourceMs);Require(!unaligned.aligned,"Uncalibrated overlay pretends to be mapped");
  puts("Camera rigid fit, bone projection, stale, expiry, invalid heartbeat and degeneracy checks passed");
 }

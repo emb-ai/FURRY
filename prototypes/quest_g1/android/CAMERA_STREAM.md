@@ -101,3 +101,15 @@ when camera goals conflict with foot support, body tracking or policy capability
   pose servo makes only limited progress. Walking convergence is not established.
 - Live camera-to-Meta alignment still requires a visible, tracked person; empty
   server heartbeat frames verify transport only.
+
+## Camera skeleton overlay
+
+The miniature body display overlays measured camera landmarks in pink on the
+raw Meta skeleton (orange estimated legs). Both use the same STAGE coordinates,
+projection and display scale. The camera overlay uses the calibrated rigid
+rotation and translation, without re-centering its pelvis on Meta; registration
+errors remain visible. Leg fusion separately uses pelvis-relative corrections.
+Camera nose is a nose landmark, not an HMD origin. Missing elbows are not drawn.
+Only measured points with confidence at least 0.55 are shown; absent joints and
+uncalibrated camera-space packets are hidden. The overlay fades after 150 ms
+and disappears at 500 ms, including when physics publishing stalls.

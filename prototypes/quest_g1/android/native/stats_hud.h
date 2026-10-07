@@ -64,8 +64,8 @@ void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
         for(char c:value){if(c>=32 && c<127)quad(x,y,.024f,.040f,c);x+=.022f;}
         batch(begin,color);
     };
-    label(.945f,"RAW META / BEFORE GMR",{.8f,1.f,.95f,1.f});
-    label(.911f,"ORANGE LEGS = ESTIMATED",{1.f,.65f,.25f,1.f});
+    label(.945f,"META + ALIGNED CAMERA",{.8f,1.f,.95f,1.f});
+    label(.911f,"ORANGE: META  PINK: CAM",{1.f,.65f,.25f,1.f});
     bool fresh=raw.body.valid && rawAgeMs<200 && std::abs(raw.xr_time_ns-raw.body.time_ns)<200000000LL;
     char sourceText[100];std::snprintf(sourceText,sizeof(sourceText),"%s  conf %.2f  age %.0f ms",fresh?"LIVE":"STALE/INVALID",raw.body.confidence,rawAgeMs);
     label(.157f,sourceText,fresh?std::array<float,4>{.8f,1.f,.95f,1.f}:std::array<float,4>{1.f,.4f,.4f,1.f});
@@ -92,9 +92,9 @@ void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
         const float uvx=15.5f/16,uvy=5.5f/6;
         const float t[]={ax,ay,uvx,uvy,bx,by,uvx,uvy,cx,cy,uvx,uvy};vertices.insert(vertices.end(),t,t+12);
     };
-    auto line=[&](int a,int b){if(!valid[a]||!valid[b])return;
+    auto line=[&](int a,int b,float width=.003f){if(!valid[a]||!valid[b])return;
         float ax=points[a][0],ay=points[a][1],bx=points[b][0],by=points[b][1];
-        float len=std::hypot(bx-ax,by-ay);if(len<1e-6)return;float nx=-(by-ay)/len*.003f,ny=(bx-ax)/len*.003f;
+        float len=std::hypot(bx-ax,by-ay);if(len<1e-6)return;float nx=-(by-ay)/len*width,ny=(bx-ax)/len*width;
         solidTriangle(ax+nx,ay+ny,ax-nx,ay-ny,bx+nx,by+ny);solidTriangle(ax-nx,ay-ny,bx-nx,by-ny,bx+nx,by+ny);
     };
     const std::pair<int,int> edges[]={{0,1},{1,8},{8,10},{10,12},{1,9},{9,11},{11,13},{1,14},
@@ -108,6 +108,31 @@ void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
                 solidTriangle(points[j][0],points[j][1],points[j][0]+r*std::cos(a),points[j][1]+r*std::sin(a),points[j][0]+r*std::cos(b),points[j][1]+r*std::sin(b));}
         }
         batch(first,fresh?(group?std::array<float,4>{1.f,.65f,.25f,1.f}:std::array<float,4>{.3f,.85f,1.f,1.f}):std::array<float,4>{.5f,.5f,.5f,.7f});
+    }
+    // Project measured camera landmarks through exactly the same miniature
+    // frame and scale as Meta. No separate auto-fit or pelvis re-centering.
+    const auto& optical=s.cameraOverlay;
+    double opticalAge=optical.ageMs+std::max(0.,now-s.published)*1000;
+    if(optical.aligned && optical.ageMs>=0 && opticalAge<500){
+        valid.fill(false);
+        for(int j=0;j<12;j++)if(optical.valid[j]){
+            const auto& p=optical.points[j];
+            double dx=p[0]-raw.body.joints[0].position[0],dz=p[2]-raw.body.joints[0].position[2];
+            double horizontal=.94*(-fz*dx+fx*dz)+.34*(fx*dx+fz*dz);
+            points[j]={float(.765+scale*horizontal),float(.20+scale*p[1])};
+            valid[j]=std::isfinite(points[j][0]) && std::isfinite(points[j][1]) &&
+                points[j][0]>.37 && points[j][0]<1.16 && points[j][1]>.19 && points[j][1]<.875;
+        }
+        first=vertices.size()/4;
+        const std::pair<int,int> cameraEdges[]={{0,2},{2,4},{1,3},{3,5},{0,1},{7,8},{7,0},{8,1},{6,7},{6,8}};
+        for(auto e:cameraEdges)line(e.first,e.second,.0018f);
+        for(int j=0;j<12;j++)if(valid[j])for(int k=0;k<12;k++){
+            float a=k*6.2831853f/12,b=(k+1)*6.2831853f/12,x=points[j][0],y=points[j][1];
+            float ax=x+.011f*std::cos(a),ay=y+.011f*std::sin(a),bx=x+.011f*std::cos(b),by=y+.011f*std::sin(b);
+            float cx=x+.007f*std::cos(a),cy=y+.007f*std::sin(a),dx=x+.007f*std::cos(b),dy=y+.007f*std::sin(b);
+            solidTriangle(ax,ay,cx,cy,bx,by);solidTriangle(cx,cy,dx,dy,bx,by);
+        }
+        float alpha=float(std::clamp((500-opticalAge)/350.,0.,1.));batch(first,{1.f,.25f,.85f,alpha});
     }
     // Shared metre coordinates in the central head frame, not per-eye NDC.
     // The real eye poses and asymmetric FOVs provide the stereo disparity.
