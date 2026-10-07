@@ -12,7 +12,7 @@ build.mkdir(parents=True, exist_ok=True)
 env = dict(os.environ)
 if sys.platform == 'darwin':
     env['DYLD_LIBRARY_PATH'] = str(package)+':'+env.get('DYLD_LIBRARY_PATH', '')
-for name, sources in [('camera_fusion', ['android/native/camera_fusion.cpp']), ('camera_servo', [])]:
+for name, sources in [('camera_fusion', ['android/native/camera_fusion.cpp']), ('camera_servo', []), ('button_latch', [])]:
     target = build/f'check_{name}'
     subprocess.run([os.environ.get('CXX', 'c++'), '-O2', '-std=c++17',
         '-I'+str(root/'android/native'), '-I'+str(package/'include'),

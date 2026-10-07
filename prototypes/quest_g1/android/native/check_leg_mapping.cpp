@@ -70,6 +70,7 @@ int main(int argc,char**argv){
             int j=mj_name2id(m,mjOBJ_JOINT,(std::string(side)+delta.first).c_str());d->qpos[m->jnt_qposadr[j]]+=delta.second;
         }
         d->qpos[0]=.4*n/500.;ground();fill(false);input.head.position[2]=-d->qpos[0]*humanScale;
+        input.body.skeleton_version=n+1; // unchanged bind pose with a new runtime counter
         input.body.time_ns=input.xr_time_ns=1000000000LL+n*10000000LL;auto cmd=meta.Solve(input);
         if(n>30){for(int k=0;k<12;k++)maxJointError=std::max(maxJointError,std::abs(double(cmd[6+k])-d->qpos[7+k]));maxRootError=std::max(maxRootError,std::abs(double(cmd[2])-d->qpos[2]));}
         if(n==500)translationError=std::abs(g.data()->qpos[0]-.4);
@@ -81,6 +82,11 @@ int main(int argc,char**argv){
     meta.Pause();input.body.time_ns+=1000000000LL;
     auto resumed=meta.Solve(input);
     if(resumed[0]!=0 || resumed[1]!=0 || resumed[5]!=0)throw std::runtime_error("Resume differentiated across pause");
+    auto changed=input;changed.body.skeleton_version++;
+    for(auto& p:changed.body.rest)for(double& q:p.quaternion)q=-q;
+    if(!meta.Compatible(changed))throw std::runtime_error("Quaternion sign / counter invalidated identical skeleton");
+    changed.body.rest[6].position[1]+=.02;
+    if(meta.Compatible(changed))throw std::runtime_error("Changed anatomical bind pose accepted");
     mj_deleteData(d);
     return maxJointError<.03 && maxRootError<.003 && translationError<.002?0:1;
 }

@@ -142,9 +142,9 @@ for name in names:
         text = text.replace('program->PollActions();', 'G1SetActive(program->IsSessionFocused());\n            program->PollActions();')
         text = text.replace('if (!program->IsSessionRunning()) {', 'if (!program->IsSessionRunning()) {\n                G1SetActive(false);')
     if name == 'openxr_program.cpp':
-        text = text.replace('#include "pch.h"', '#include "pch.h"\n#include "quest_runtime.h"\n#include "passthrough.h"\n#include "body_tracking.h"')
+        text = text.replace('#include "pch.h"', '#include "pch.h"\n#include "quest_runtime.h"\n#include "passthrough.h"\n#include "body_tracking.h"\n#include "button_latch.h"')
         text = text.replace('struct OpenXrProgram : IOpenXrProgram {',
-                            'struct OpenXrProgram : IOpenXrProgram {\n    Passthrough passthrough; BodyTracking bodyTracking; uint64_t trackingSequence=0;')
+                            'struct OpenXrProgram : IOpenXrProgram {\n    Passthrough passthrough; BodyTracking bodyTracking; uint64_t trackingSequence=0; ButtonLatch recordLatch;')
         text = text.replace('XrAction quitAction{XR_NULL_HANDLE};',
                             'XrAction quitAction{XR_NULL_HANDLE};\n        XrAction calibrateAction{XR_NULL_HANDLE}, pauseAction{XR_NULL_HANDLE}, resetAction{XR_NULL_HANDLE}, recordAction{XR_NULL_HANDLE}, viewAction{XR_NULL_HANDLE};')
         text = text.replace('CHECK_XRCMD(xrCreateAction(m_input.actionSet, &actionInfo, &m_input.quitAction));', '''CHECK_XRCMD(xrCreateAction(m_input.actionSet, &actionInfo, &m_input.quitAction));
@@ -182,7 +182,8 @@ for name in names:
             info.action=buttons[button];
             XrActionStateBoolean state{XR_TYPE_ACTION_STATE_BOOLEAN};
             CHECK_XRCMD(xrGetActionStateBoolean(m_session,&info,&state));
-            if(state.isActive && state.changedSinceLastSync && state.currentState){
+            bool press=button==3?recordLatch.Update(state.isActive,state.currentState):(state.isActive && state.changedSinceLastSync && state.currentState);
+            if(press){
                 if(button==0)G1Calibrate();else if(button==1)G1ToggleTracking();
                 else if(button==2)G1Reset();else if(button==3)G1ToggleRecording();else G1ToggleView();
             }

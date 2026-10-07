@@ -4,6 +4,7 @@
 #include <cstdint>
 struct RuntimeStats {
     CameraOverlay cameraOverlay;
+    double ikPositionCm=0,ikOrientationDeg=0;
     int physicsWorkers=0;
     int cameraState=0,cameraLegs=0;bool cameraConnected=false,cameraClockSynced=false;
     double cameraClockOffsetMs=0,cameraClockRttMs=-1;

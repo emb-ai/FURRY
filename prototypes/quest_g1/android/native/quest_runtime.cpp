@@ -51,6 +51,7 @@ TrackingSpaceChanges spaceChanges;
 EpisodeRecorder recorder;
 std::unique_ptr<RecordingExport> exporter;
 std::atomic<int> recordingStatus{0};
+std::atomic<double> recordingStarted{0};
 std::atomic<bool> toggleRecording{false};
 std::chrono::steady_clock::time_point trackingTime;
 std::atomic<bool> calibrate{false},toggleTracking{false};
@@ -238,7 +239,7 @@ void G1Initialize(android_app* app){
     if(egoCamera<0)throw std::runtime_error("Missing ego camera");
     publishedGeometry.reserve(2048);PublishGeometry();
     telemetry.open(assets+"/runtime_stats.csv",std::ios::trunc);
-    telemetry<<"wall_s,sim_s,cycle_ms,physics_ms,gmr_ms,inference_ms,rtf,contacts,overlap_points,pairs,max_depth_mm,solver_iterations,constraints,body_gap_ms,input_age_ms,body_confidence,body_version,state,reason,target_x,target_y,actual_x,actual_y,cmd_vx,cmd_vy,actual_vx,actual_vy,root_error,height,tilt,gmr_residual,gmr_iterations,overruns,dropped_inputs,left_foot_contacts,right_foot_contacts,leg_error_deg,physics_workers,camera_error_m,camera_error_deg,visual_scale,camera_connected,camera_state,camera_age_ms,camera_fit_mm,camera_legs,camera_weight,camera_clock_synced,camera_clock_offset_ms,camera_clock_rtt_ms\n";
+    telemetry<<"wall_s,sim_s,cycle_ms,physics_ms,gmr_ms,inference_ms,rtf,contacts,overlap_points,pairs,max_depth_mm,solver_iterations,constraints,body_gap_ms,input_age_ms,body_confidence,body_version,state,reason,target_x,target_y,actual_x,actual_y,cmd_vx,cmd_vy,actual_vx,actual_vy,root_error,height,tilt,gmr_residual,gmr_iterations,overruns,dropped_inputs,left_foot_contacts,right_foot_contacts,leg_error_deg,physics_workers,camera_error_m,camera_error_deg,visual_scale,camera_connected,camera_state,camera_age_ms,camera_fit_mm,camera_legs,camera_weight,camera_clock_synced,camera_clock_offset_ms,camera_clock_rtt_ms,ik_position_cm,ik_orientation_deg\n";
     try{exporter=std::make_unique<RecordingExport>(app->activity->vm,app->activity->clazz);exporter->Latest(assets+"/recordings");}
     catch(const std::exception& e){__android_log_print(ANDROID_LOG_ERROR,"G1Quest","Recording export unavailable: %s",e.what());}
     running=true;
@@ -264,9 +265,9 @@ void G1Initialize(android_app* app){
                 Record([&]{
                     for(const auto& entry:inputs)recorder.Input(entry.frame,entry.left,entry.right,entry.received);
                     if(toggleRecording.exchange(false)){
-                        if(recorder.active){cameraRecording.close();recorder.Stop();if(exporter)exporter->Queue(recorder.path());__android_log_print(ANDROID_LOG_INFO,"G1Quest","Recording saved: %s",recorder.path().c_str());}
+                        if(recorder.active){recorder.Event("record_button_stop",input.sequence);cameraRecording.close();recorder.Stop();if(exporter)exporter->Queue(recorder.path());__android_log_print(ANDROID_LOG_INFO,"G1Quest","Recording saved: %s",recorder.path().c_str());}
                         else{
-                            recorder.Start(assetsPath,sim->model);
+                            recorder.Start(assetsPath,sim->model);recordingStarted=ClockSeconds();recorder.Event("record_button_start",input.sequence);
                             cameraRecording.open(std::filesystem::path(recorder.path())/"camera.jsonl");cameraRecordedSequence=~0ull;
                             recorder.Event(firstPerson?"ego_world":"observer_view",input.sequence);
                             auto received=std::chrono::duration_cast<std::chrono::nanoseconds>(receivedAt.time_since_epoch()).count();
@@ -332,15 +333,16 @@ void G1Initialize(android_app* app){
                     sim->SetWholeBodyReference(whole);std::copy_n(whole.begin()+6,29,lastReference.begin());
                 }else{sample.gmrMs=0;sim->PauseWholeBodyReference();retarget->Pause();}
                 wasApplying=applyReference;
-                trackingStatus=!valid?3:retarget->calibrated?(trackingEnabled?(valid?(retarget->error>.3?5:1):3):2):0;
+                bool poseMismatch=retarget->solver().positionRms>.10 || retarget->solver().orientationRms>.78539816339;
+                trackingStatus=!valid?3:retarget->calibrated?(trackingEnabled?(valid?(poseMismatch?5:1):3):2):0;
                 Record([&]{recorder.Frame(sim->model,sim->data,sim->steps,input,resetNow,calibratedNow,applyReference,valid,
-                    leftGrip,rightGrip,trackingStatus,retarget->error,(retarget->error>.3),lastReference);});
+                    leftGrip,rightGrip,trackingStatus,retarget->error,(poseMismatch),lastReference);});
                 Record([&]{recorder.Mimic(input,sim->steps,sim->data->time,sim->WholeBodyReference());});
                 // Keep the actual input episode for deterministic policy replay.
                 if(trace && traceRows++<60000){
                     trace<<sim->steps<<","<<sim->data->time<<","<<resetNow<<","<<applyReference<<","<<leftGrip<<","<<rightGrip;
                     for(auto q:lastReference)trace<<","<<q;
-                    trace<<","<<valid<<","<<trackingStatus.load()<<","<<retarget->error<<","<<(retarget->error>.3)<<","<<sim->data->qpos[2];
+                    trace<<","<<valid<<","<<trackingStatus.load()<<","<<retarget->error<<","<<(poseMismatch)<<","<<sim->data->qpos[2];
                     for(int i=3;i<7;i++)trace<<","<<sim->data->qpos[i];
                     for(const auto& pose:{input.head,input.hands[0],input.hands[1]}){
                         for(auto p:pose.position)trace<<","<<p;for(auto q:pose.quaternion)trace<<","<<q;
@@ -381,6 +383,7 @@ void G1Initialize(android_app* app){
                 sample.height=sim->data->qpos[2];double qx=sim->data->qpos[4],qy=sim->data->qpos[5];sample.tilt=std::acos(std::clamp(1-2*(qx*qx+qy*qy),-1.,1.))*180/3.141592653589793;
                 sample.inputAgeMs=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-receivedAt).count();
                 sample.bodyGapMs=(input.xr_time_ns-input.body.time_ns)*1e-6;sample.confidence=input.body.confidence;sample.bodyVersion=input.body.skeleton_version;
+                sample.ikPositionCm=100*retarget->solver().positionRms;sample.ikOrientationDeg=retarget->solver().orientationRms*180/3.141592653589793;
                 sample.residual=retarget->error;sample.gmrIterations=retarget->solver().iterations;
                 for(int a=0;a<2;a++){sample.targetXY[a]=retarget->solver().data()->qpos[a];sample.actualXY[a]=sim->data->qpos[a];sample.commandXY[a]=sim->WholeBodyReference()[a];sample.velocityXY[a]=sim->data->qvel[a];}
                 CameraSkeleton displayCamera;bool haveDisplayCamera=cameraStream->Latest(displayCamera);
@@ -405,7 +408,7 @@ void G1Initialize(android_app* app){
                     const auto& x=sample;
                     telemetry<<x.published<<','<<x.simTime<<','<<x.cycleMs<<','<<x.physicsMs<<','<<x.gmrMs<<','<<x.inferenceMs<<','<<x.realTimeFactor<<','<<x.contacts<<','<<x.overlaps<<','<<x.pairs<<','<<x.depthMm<<','<<x.solverIterations<<','<<x.constraints<<','<<x.bodyGapMs<<','<<x.inputAgeMs<<','<<x.confidence<<','<<x.bodyVersion<<','<<x.status<<','<<x.reason;
                     for(const auto& values:{x.targetXY,x.actualXY,x.commandXY,x.velocityXY})for(double v:values)telemetry<<','<<v;
-                    telemetry<<','<<x.positionError<<','<<x.height<<','<<x.tilt<<','<<x.residual<<','<<x.gmrIterations<<','<<x.overruns<<','<<x.droppedInputs<<','<<x.footContacts[0]<<','<<x.footContacts[1]<<','<<x.legErrorDegrees<<','<<x.physicsWorkers<<','<<x.cameraPositionError<<','<<x.cameraOrientationError<<','<<x.visualScale<<','<<x.cameraConnected<<','<<x.cameraState<<','<<x.cameraAgeMs<<','<<x.cameraFitMm<<','<<x.cameraLegs<<','<<x.cameraWeight<<','<<x.cameraClockSynced<<','<<x.cameraClockOffsetMs<<','<<x.cameraClockRttMs<<'\n';lastTelemetry=x.published;
+                    telemetry<<','<<x.positionError<<','<<x.height<<','<<x.tilt<<','<<x.residual<<','<<x.gmrIterations<<','<<x.overruns<<','<<x.droppedInputs<<','<<x.footContacts[0]<<','<<x.footContacts[1]<<','<<x.legErrorDegrees<<','<<x.physicsWorkers<<','<<x.cameraPositionError<<','<<x.cameraOrientationError<<','<<x.visualScale<<','<<x.cameraConnected<<','<<x.cameraState<<','<<x.cameraAgeMs<<','<<x.cameraFitMm<<','<<x.cameraLegs<<','<<x.cameraWeight<<','<<x.cameraClockSynced<<','<<x.cameraClockOffsetMs<<','<<x.cameraClockRttMs<<','<<x.ikPositionCm<<','<<x.ikOrientationDeg<<'\n';lastTelemetry=x.published;
                     if(sim->steps%1000==0)telemetry.flush();
                 }
                 if(sim->steps%5000==0)__android_log_print(ANDROID_LOG_INFO,"G1Quest","sim=%.2fs height=%.3f inference=%.3fms",sim->data->time,sim->data->qpos[2],sim->inference_ms);
@@ -534,7 +537,7 @@ void G1Render(const float* vp,const float* projection){
     if(!firstPerson)DrawLegend(cardVP.m,assetsPath,frameStatus+6*recordingStatus.load());
     XrMatrix4x4f viewProjectionHud,hudVP;std::copy_n(vp,16,viewProjectionHud.m);
     XrMatrix4x4f_Multiply(&hudVP,&viewProjectionHud,&headMatrix);
-    renderedTriangles+=DrawStatsHud(hudVP.m,assetsPath,frameStats,renderFps,frameDrawMs,skippedSceneUpdates,frameNow,frameStatus,active.load(),frameExportStatus,frameTracking,frameAgeMs,firstPerson.load(),firstPerson?frameEgoScale:1.f);
+    renderedTriangles+=DrawStatsHud(hudVP.m,assetsPath,frameStats,renderFps,frameDrawMs,skippedSceneUpdates,frameNow,frameStatus,active.load(),frameExportStatus,frameTracking,frameAgeMs,firstPerson.load(),firstPerson?frameEgoScale:1.f,recordingStatus.load(),recordingStarted.load());
     if(renderedTriangles>100000)throw std::runtime_error("Scene and HUD exceed triangle budget");
     renderMs=.9*renderMs+.1*(ClockSeconds()-renderStart)*1000;
 }

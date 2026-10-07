@@ -91,3 +91,24 @@ OpenXR определяет [grip pose относительно ладони](ht
 ## Следующий шаг
 
 Проверить отдельно готовую позу, персональное преобразование grip → кисть и масштаб длины руки; добавить ориентир локтя с явным обозначением его оценённого характера. Визуально разделить сырую цель, ограниченную цель и фактическую кисть. Затем повторить небольшие движения по одной оси на записи оператора и сравнить точность с устойчивостью. Не снимать ограничения столкновений ради внешне похожего движения.
+
+## Runtime skeleton revisions and recording feedback
+
+A Meta skeleton revision counter can advance while all selected bind poses
+remain unchanged. The adapter now compares bind positions and quaternion
+rotations (including equivalent quaternion signs) before invalidating the
+calibration. Counter-only updates keep reference streaming active; an actual
+bind-pose change still requests calibration. Synthetic moving-leg checks vary
+the counter every frame and retain the expected joint/translation trajectory.
+
+The upstream solver residual is retained for parity and recorded diagnostics.
+HUD mismatch detection uses separate RMS position and orientation errors on
+active final-stage tasks (10 cm / 45 degrees), shown in cm and degrees, rather
+than thresholding the mixed unweighted residual norm.
+
+Recording state and elapsed wall time are visible in the HUD in either view,
+with REC taking precedence over an earlier ZIP export notification. Y uses a
+press latch: holding the button or losing controller activity cannot trigger a
+second toggle; rearming requires 100 ms of active released input. Start/stop
+button events are logged with the input sequence. Finished recordings retain
+the existing complete.json marker and Download/G1Quest export.

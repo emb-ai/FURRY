@@ -78,11 +78,12 @@ void MetaRetargeter::Calibrate(const mjModel* model,const mjData* data,const Tra
     cameraScale=cameraOrigin.position[2]/eyeHeight;
     double alignedHead[4],inverse[4];mju_mulQuat(alignedHead,basisQuat,input.head.quaternion.data());
     mju_negQuat(inverse,alignedHead);mju_mulQuat(cameraRotationOffset.data(),inverse,cameraOrigin.quaternion.data());
-    skeletonVersion=input.body.skeleton_version;lastTime=0;calibrated=true;
+    calibrationRest=input.body.rest;skeletonVersion=input.body.skeleton_version;lastTime=0;calibrated=true;
 }
 const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& input){
     if(!calibrated || !input.body.valid)throw std::runtime_error("No calibrated full body sample");
-    if(input.body.skeleton_version!=skeletonVersion){calibrated=false;throw std::runtime_error("Body proportions changed: press A to recalibrate");}
+    if(!Compatible(input)){calibrated=false;throw std::runtime_error("Body proportions changed: press A to recalibrate");}
+    skeletonVersion=input.body.skeleton_version;
     if(lastTime && input.body.time_ns<=lastTime)return mimic;
     std::vector<TrackedPose> targets(14);double pelvisDelta[3],translation[3];
     // Whole-body translation belongs to the pelvis. Adding HMD displacement
@@ -128,4 +129,21 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& input){
     double w=q[3],x=q[4],y=q[5],z=q[6];mimic[3]=std::atan2(2*(w*x+y*z),1-2*(x*x+y*y));mimic[4]=std::asin(std::clamp(2*(w*y-z*x),-1.,1.));mimic[5]=delta[5];
     for(int i=0;i<29;i++)mimic[6+i]=q[7+i];
     std::copy_n(q,36,lastQ.begin());lastTime=input.body.time_ns;return mimic;
+}
+
+bool MetaRetargeter::Compatible(const TrackingFrame& f)const{
+ if(!calibrated)return false;
+ if(f.body.skeleton_version==skeletonVersion)return true;
+ // Meta can advance skeletonChangedCount without changing any bind pose.
+ // A different counter alone must not interrupt an otherwise valid motion.
+ for(int j=0;j<14;j++){
+  double dp[3];mju_sub3(dp,f.body.rest[j].position.data(),calibrationRest[j].position.data());
+  if(mju_norm3(dp)>1e-5)return false;
+  double plus=0,minus=0;for(int k=0;k<4;k++){
+   double a=f.body.rest[j].quaternion[k],b=calibrationRest[j].quaternion[k];
+   plus+=(a-b)*(a-b);minus+=(a+b)*(a+b);
+  }
+  if(std::min(plus,minus)>1e-10)return false;
+ }
+ return true;
 }

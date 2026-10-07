@@ -7,7 +7,7 @@ class MetaRetargeter {
     GmrRetargeter gmr;
     double basis[9]{},basisQuat[4]{};
     std::array<double,3> translationOrigin{},rootOrigin{};
-    std::array<TrackedPose,14> offsets{};
+    std::array<TrackedPose,14> offsets{},calibrationRest{};
     std::array<double,14> scales{};
     double rootScale=1,footHeight=0,cameraScale=1;
     TrackedPose cameraOrigin,cameraHeadOrigin;
@@ -29,6 +29,6 @@ public:
     const TrackedPose& CameraCalibrationPose()const{return cameraOrigin;}
     const TrackedPose& HeadCalibrationPose()const{return cameraHeadOrigin;}
     void Pause(){lastTime=0;}
-    bool Compatible(const TrackingFrame& f)const{return calibrated && f.body.skeleton_version==skeletonVersion;}
+    bool Compatible(const TrackingFrame& f)const;
     GmrRetargeter& solver(){return gmr;}
 };

@@ -13,7 +13,7 @@
 // Lightweight native glyph atlas; drawn every eye even when physics is stalled.
 inline int DrawStatsHud(const float* headViewProjection,const std::string& assets,const RuntimeStats& s,
                          double fps,double drawMs,uint64_t skipped,double now,int status,bool active,int exportStatus,
-                         const TrackingFrame& raw,double rawAgeMs,bool firstPerson,float visualScale){
+                         const TrackingFrame& raw,double rawAgeMs,bool firstPerson,float visualScale,int recording,double recordingStarted){
     static GLuint program=0,texture=0,vao=0,vbo=0;
     if(!program){
         auto shader=[](GLenum type,const char* source){GLuint h=glCreateShader(type);glShaderSource(h,1,&source,nullptr);glCompileShader(h);GLint ok;glGetShaderiv(h,GL_COMPILE_STATUS,&ok);if(!ok)throw std::runtime_error("Stats shader failed");return h;};
@@ -33,21 +33,25 @@ void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
         glEnableVertexAttribArray(0);glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,4*sizeof(float),nullptr);
         glEnableVertexAttribArray(1);glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,4*sizeof(float),(void*)(2*sizeof(float)));
     }
-    const char* states[]={"CALIBRATE A","TRACKING","PAUSED B","BODY INVALID","PHYSICS FAULT: X","TRACKING / POSE ERROR"};
+    const char* states[]={"CALIBRATE A","TRACKING","PAUSED B","BODY INVALID","PHYSICS FAULT: X","TRACKING / IK MISMATCH"};
     const char* exports[]={"Y: RECORD / SAVE ZIP","ZIP: COPYING TO DOWNLOADS","ZIP: Download/G1Quest","ZIP EXPORT FAILED (data kept)"};
     const char* reasons[]={"-","STAGE RECENTER: A","BODY RECALIBRATED: A","FALL/EXCEPTION: X"};
-    char text[2048],cameraText[80],opticalText[100];
+    char text[2048],cameraText[80],opticalText[100],recordText[100];
+    int duration=int(std::max(0.,now-recordingStarted));
+    if(recording==1)std::snprintf(recordText,sizeof(recordText),"REC %02d:%02d  Y: STOP",duration/60,duration%60);
+    else if(recording==2)std::snprintf(recordText,sizeof(recordText),"RECORD FAILED / DATA KEPT");
+    else std::snprintf(recordText,sizeof(recordText),"%s",exports[std::clamp(exportStatus,0,3)]);
     const char* opticalStates[]={"META","ALIGN","FUSE","STALE"};
     std::snprintf(opticalText,sizeof(opticalText),"CAM %s %.0fms FIT %.0fmm %dL",s.cameraConnected?(s.cameraClockSynced?opticalStates[std::clamp(s.cameraState,0,3)]:"SYNC"):"OFF",s.cameraAgeMs,s.cameraFitMm,s.cameraLegs);
     if(s.cameraPositionError>=0)std::snprintf(cameraText,sizeof(cameraText),"HEAD %.1f cm / %.1f deg",100*s.cameraPositionError,s.cameraOrientationError);
     else std::snprintf(cameraText,sizeof(cameraText),"HEAD target: OFF");
     std::snprintf(text,sizeof(text),
-        "VIEW %s [L-stick]\nFPS %4.0f  CPU %.1f ms\nSIM %.2fx  MT %d  WARN %d\nPHYS %.1f GMR %.1f NN %.1f ms\nCONTACT %d  DEPTH %.1f mm\n%s\nINPUT %.0f  AGE %.0f ms\nROOT %.2f m  LEG %.0f deg\n%s\nSCALE %.2fx  TILT %.0f deg\nCMD %+.2f / %+.2f m/s\n%s\n%s\n%s",
+        "VIEW %s [L-stick]\nFPS %4.0f  CPU %.1f ms\nSIM %.2fx  MT %d  WARN %d\nPHYS %.1f GMR %.1f NN %.1f ms\nCONTACT %d  DEPTH %.1f mm\n%s\nINPUT %.0f  AGE %.0f ms\nROOT %.2f m LEG %.0f deg\nIK %.1f cm / %.0f deg\n%s\nSCALE %.2fx  TILT %.0f deg\nCMD %+.2f / %+.2f m/s\n%s\n%s\n%s",
         firstPerson?"EGO":"OBSERVER",fps,drawMs,active?s.realTimeFactor:0.,s.physicsWorkers,s.warnings,
         s.physicsMs,s.gmrMs,s.inferenceMs,s.contacts,s.depthMm,opticalText,
-        s.inputAgeMs,s.published>0?std::max(0.,now-s.published)*1000:0.,s.positionError,s.legErrorDegrees,
+        s.inputAgeMs,s.published>0?std::max(0.,now-s.published)*1000:0.,s.positionError,s.legErrorDegrees,s.ikPositionCm,s.ikOrientationDeg,
         cameraText,visualScale,s.tilt,s.commandXY[0],s.commandXY[1],
-        active?states[std::clamp(status,0,5)]:"XR FOCUS PAUSED",reasons[std::clamp(s.reason,0,3)],exports[std::clamp(exportStatus,0,3)]);
+        active?states[std::clamp(status,0,5)]:"XR FOCUS PAUSED",reasons[std::clamp(s.reason,0,3)],recordText);
     std::vector<float> vertices;vertices.reserve(24000);
     auto quad=[&](float x,float y,float w,float h,int code){int cell=code-32;float u=(cell%16)/16.f,v=(cell/16)/6.f;
         const float q[]={x,y,u,v, x+w,y-h,u+20/512.f,v+1/6.f, x+w,y,u+20/512.f,v,
@@ -67,8 +71,11 @@ void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
     label(.945f,"META + ALIGNED CAMERA",{.8f,1.f,.95f,1.f});
     label(.911f,"ORANGE: META  PINK: CAM",{1.f,.65f,.25f,1.f});
     bool fresh=raw.body.valid && rawAgeMs<200 && std::abs(raw.xr_time_ns-raw.body.time_ns)<200000000LL;
-    char sourceText[100];std::snprintf(sourceText,sizeof(sourceText),"%s  conf %.2f  age %.0f ms",fresh?"LIVE":"STALE/INVALID",raw.body.confidence,rawAgeMs);
-    label(.157f,sourceText,fresh?std::array<float,4>{.8f,1.f,.95f,1.f}:std::array<float,4>{1.f,.4f,.4f,1.f});
+    const char* cameraHint=!s.cameraConnected?"CAM OFF":!s.cameraClockSynced?"CAM SYNC":
+        !s.cameraOverlay.aligned?"CAM ALIGN: MOVE SLOWLY":
+        s.cameraOverlay.ageMs+std::max(0.,now-s.published)*1000>=500?"CAM STALE":
+        std::none_of(s.cameraOverlay.valid.begin(),s.cameraOverlay.valid.end(),[](bool v){return v;})?"CAM NO VISIBLE POINTS":"CAM MAPPED / PINK";
+    label(.157f,cameraHint,{1.f,.45f,.85f,1.f});
     // Uniform miniature display scale only: input joints are the untouched
     // STAGE poses, before anatomical scaling, ankle offsets or GMR solving.
     // Keep STAGE floor at the bottom; do not auto-fit current pose (squats must

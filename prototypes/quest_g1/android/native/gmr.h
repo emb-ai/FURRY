@@ -42,6 +42,6 @@ public:
     const TrackedPose& CameraTarget()const{return cameraTarget;}
     bool HasCameraTarget()const{return cameraEnabled;}
     void Solve();
-    double error=0;
+    double error=0,positionRms=0,orientationRms=0;
     int iterations=0;
 };

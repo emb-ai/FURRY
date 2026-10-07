@@ -147,4 +147,16 @@ void GmrRetargeter::Solve(){
         while(before-after>.001 && repeat<10){before=after;Step(stage);after=Error(stage);repeat++;}
     }
     error=Error(1);
+    double positions=0,angles=0;int np=0,nr=0;
+    auto metric=[&](const TrackedPose& actual,const TrackedPose& target,bool pc,bool rc){
+        if(pc){double d[3];mju_sub3(d,actual.position.data(),target.position.data());positions+=mju_dot3(d,d);np++;}
+        if(rc){double inv[4],q[4],v[3];mju_negQuat(inv,actual.quaternion.data());mju_mulQuat(q,inv,target.quaternion.data());mju_quat2Vel(v,q,1);angles+=mju_dot3(v,v);nr++;}
+    };
+    for(size_t i=0;i<tasks_.size();i++){
+        TrackedPose actual;auto&t=tasks_[i];std::copy_n(data_->xpos+3*t.body,3,actual.position.begin());mju_mat2Quat(actual.quaternion.data(),data_->xmat+9*t.body);
+        metric(actual,targets[i],t.costs[2]>0,t.costs[3]>0);
+    }
+    if(cameraEnabled)metric(CameraPose(),cameraTarget,true,true);
+    positionRms=np?std::sqrt(positions/np):0;orientationRms=nr?std::sqrt(angles/nr):0;
+
 }

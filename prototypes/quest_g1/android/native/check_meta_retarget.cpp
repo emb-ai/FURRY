@@ -54,7 +54,9 @@ int main(int argc,char**argv){
             for(int k=0;k<35;k++)maxCoordinateError=std::max(maxCoordinateError,std::abs(double(ra[k]-rb[k])));
         }
         auto changed=input;changed.body.skeleton_version++;
-        if(a.Compatible(changed)){std::puts("FAIL skeleton version invalidation");return 1;}
+        if(!a.Compatible(changed)){std::puts("FAIL unchanged bind skeleton invalidation");return 1;}
+        changed.body.rest[6].position[1]+=.02;
+        if(a.Compatible(changed)){std::puts("FAIL changed bind skeleton accepted");return 1;}
         a.Pause();auto resumed=input;resumed.body.time_ns=5000000000LL;auto cmd=a.Solve(resumed);
         if(cmd[0]!=0 || cmd[1]!=0 || cmd[5]!=0){std::puts("FAIL resume reference velocity");return 1;}
     }
