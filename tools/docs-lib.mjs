@@ -16,6 +16,7 @@ export const PAGES = [
   ["Architecture-and-Decisions", "Architecture And Decisions"],
   ["Common-Ground", "Common Ground"],
   ["Data-and-Evaluation", "Data And Evaluation"],
+  ["Policy-Learning", "Policy Learning"],
   ["Contributing", "Contributing"],
 ].map(([slug, title]) => ({ slug, title, source: `docs/${slug}.md` }));
 
