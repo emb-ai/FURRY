@@ -1,0 +1,16 @@
+# Базовый стек (кросс-платформенный)
+numpy
+opencv-python
+ultralytics          # тянет torch; на macOS torch умеет MPS
+mediapipe            # бейзлайн-детектор для analyze_bag.py
+
+# RealSense: колёса только под Windows/Linux (под macOS их нет на PyPI —
+# проверено 07.10; захват D435i на маке не работает из коробки, см. PIPELINE.md)
+pyrealsense2; sys_platform != "darwin"
+
+# Бекенды инференса (OpenVINO под Apple Silicon не существует)
+onnxruntime; sys_platform != "darwin"
+openvino;     sys_platform != "darwin"
+# macOS вместо них: torch-MPS (ставится с ultralytics) и CoreML —
+#   pip install coremltools
+#   yolo export model=models/yolo11s-pose.pt format=coreml   # на маке, даст .mlpackage

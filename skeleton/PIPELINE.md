@@ -91,13 +91,36 @@
 | `record_bag.py` | Запись `.db3` (color+depth) с фазами в оверлее: GET READY → STATIC → T-POSE → FREE. `.venv/Scripts/python record_bag.py 35 data/name.db3` |
 | `analyze_bag.py` | Бенчмарк качества фьюжна по записи: **тот же фьюжн, что в live** (`fusion.py`), детектор на выбор `yolo\|mediapipe`, фазы/dt по реальным таймстампам бага, A/B temporal (`--no-temporal`). Метрики: длины костей (статика/движение), джиттер, дропауты, T-поза. `.venv/Scripts/python analyze_bag.py data/name.db3 [yolo\|mediapipe] [s\|m\|l] [--no-temporal]` |
 | `realsense_test.py`, `realsense_probe.py` | Диагностика камеры (линк USB, доступные конфигурации стримов) |
-| `models/` | `pose_landmarker_{lite,full}.task` (MediaPipe), `yolo11s-pose.pt` |
+| `bench_onnx.py` | Бенчмарк бекендов инференса на кадрах бага (Win: torch/ort/openvino; macOS: mps/coreml, кадр из `.npy` без камеры), каждый в своём процессе. `python bench_onnx.py [кадры] [all\|torch\|ort\|ov\|mps\|coreml]` |
+| `requirements.txt` | Зависимости с платформенными маркерами (pyrealsense2/openvino/onnxruntime — не macOS) |
+| `AGENT.md` | Инструкции для агента: установка софта камеры (Win/mac), подъём скелетона, контракт передачи координат на шлем (WS, pelvis-relative, Kabsch, приёмка) |
+| `models/` | `pose_landmarker_{lite,full}.task` (MediaPipe), `yolo11s-pose.pt`, экспорты: `yolo11s-pose.onnx`, `yolo11s-pose_openvino_model/` |
 | `tools/RealSense.Viewer.exe` | Официальный Viewer (v2.58.4, репо переехал на `realsenseai/librealsense`) |
 | `.venv/` | Python 3.12: pyrealsense2, numpy, opencv, mediapipe, ultralytics+torch-cpu |
 
 **Окружение:** Windows 11, **без NVIDIA GPU** (весь инференс CPU), Anaconda base
 3.12.7. Отдельная conda-среда `nuitrack` (py3.10) осталась от эксперимента с
 Nuitrack — можно удалить.
+
+**macOS (M4, подготовлено 07.10):** из коробки (pip) — нет: колёс `pyrealsense2`
+под macOS на PyPI не существует (только Windows/Linux). Но **подключить D435i
+к маку можно**: librealsense собирается на macOS из исходников, включая Apple
+Silicon (`brew install librealsense libusb` или cmake-сборка репо;
+pyrealsense2 — только собрать из репо, `-DBUILD_PYTHON_BINDINGS=true`).
+Ограничения macOS-бэкенда (installation_osx.md): Viewer не работает, **IMU
+отключён**, на macOS 12+ USB-инструментам нужен sudo, поддержка официально
+«неполная» → IMU-лог для PICO-синка возможен только на Win-машине. Роли:
+рабочая конфигурация — Win+OpenVINO (прозаично, но бенчмаркнуто); M4 — самый
+быстрый инференс и кандидат на однобоксовый вариант после ручной сборки.
+Подготовлено: `requirements.txt` (платформенные маркеры), `load_model()` в
+pose_yolo (дарвин: CoreML→MPS, иначе OpenVINO→cpu), `bench_onnx.py` работает
+без камеры (кадр из `data/_bench_frame.npy`, бекенды `mps`/`coreml`).
+Установка на маке: `python3.12 -m venv .venv && .venv/bin/python -m pip install
+-r requirements.txt`; экспорт CoreML: `.venv/bin/yolo export model=models/
+yolo11s-pose.pt format=coreml` (+ `pip install coremltools`).
+Пути: `.venv/bin/python` (не `Scripts`), `PYTHONIOENCODING` не нужен.
+Ожидания по M4 (оценки, проверить `bench_onnx.py 200 all`): torch-MPS 15–25 мс,
+CoreML(GPU) 8–15 мс, CoreML(ANE) 4–8 мс — против 38 мс OpenVINO на i5-12450H.
 
 ---
 
@@ -154,17 +177,14 @@ std(см)           static: v1 / mp+v2 / yolo      free: v1 / mp+v2 / yolo
 
 1. **Фон-захват рук убран** (foreground-гейт работает): плечо П в движении
    65.7 → 2.1–2.2 см; предплечья 10–87 → 2.9–7.7 см.
-
 2. **YOLO vs MediaPipe** (один фьюжн): дропауты верха 4–8% против 19–29%,
    «плечо Л 30% CV» у MediaPipe осталось (std плечей 13.4), у YOLO ушло (0.41).
    Обратная сторона: **бёдра у YOLO шумят** (std 1.04 против 0.38, CV 4.6%,
    разброс таза X 1.6 против 0.2 см) — слабое место COCO-hip; для GT ждём RTMW.
-
 3. **A/B temporal-фильтра** (yolo): статика-джиттер медиана 18.2 (вкл) против
    31.1 (выкл), хвост и длины костей не изменились → temporal пока оставляем;
    финальный вердикт после записи с быстрыми махами (шлейф глубины не виден
    на статике/медленных движениях этого бага).
-
 4. Джиттер в статике: yolo 36.7 см/с средн. (95% — 131), mp 39.6 (145) —
    уровень v1 (34.9/113); цели §4 ещё не достигнуты → слой 3 (RTS/кинематика).
 
@@ -182,6 +202,7 @@ std(см)           static: v1 / mp+v2 / yolo      free: v1 / mp+v2 / yolo
 | PCT (compositional tokens) — не детектор | мёртвый репо, COCO-17, Swin+mmcv; идеи → прайор регрессора и completion окклюзий |
 | SDK depth-фильтры + foreground-гейт | лечат фон-захват (руки 65 см) и дыры — дешевле deep completion |
 | One-Euro live / RTS офлайн | адаптивный jitter↔lag; офлайн-смузер без лага |
+| OpenVINO IR как бекенд инференса (бенч 07.10, i5-12450H, 200 кадров бага) | ×2.2: 25.7 fps / 39 мс медиана / p95 44 против torch-cpu 11.6 fps; onnxruntime-CPU оказался *медленнее* torch (9.4). Кейпоинты совпадают <1 px. Нельзя держать torch и OV в одном процессе — взаимная деградация (хвосты 500+ мс) |
 
 **Кандидаты, отвергнутые по лицензиям:** YOLO как GT-детектор (AGPL — только
 превью, осознанно), Sapiens (CC BY-NC), ED-Pose (IDEA-лицензия), TRAM/GVHMR
@@ -195,30 +216,29 @@ std(см)           static: v1 / mp+v2 / yolo      free: v1 / mp+v2 / yolo
 1. **USB-кабель**: D435i требует USB 3.x; «зарядные» USB-C кабели дают линк 2.1 →
    цвет не стримит вообще. Симптом виден в `realsense_probe.py` и в
    `usb_type_descriptor`. Сейчас: USB 3.2.
-
 2. **Запись .db3**: пишутся только кадры, которые приложение **забирает**
    (`get_color_frame()` + `get_depth_frame()` оба обязательны) — иначе нули.
-
 3. **Плейбэк .db3**: экстринсики не сериализуются (мусор ~1e10) → `rs.align()` на
    плейбэке отдаёт нулевую глубину. Лечение: заводские экстринсики живой камеры
    (захардкожены в `analyze_bag.py`) + `rs2_project_color_pixel_to_depth_pixel`.
-
 4. **MediaPipe VIDEO-режим** требует реалистичные таймстампы (~33 мс между кадрами);
    с `ts=1,2,3...` молча возвращает пустоту.
-
 5. **Консоль Windows**: python-скрипты запускать с `PYTHONIOENCODING=utf-8`.
 6. **Сеть**: pypi/github рвут SSL — pip с `--default-timeout=120 --retries=5`,
    curl с `--retry 8 --retry-all-errors --continue-at -`.
-
 7. **Реалтайм-инстансы держат камеру**: перед скриптами закрывать Viewer/другие
    окна превью.
-
 8. **Плейбэк .db3 дублирует color-кадры**: если color-кадр терялся при записи
    (USB), плейбэк подставляет дубль прошлого color к осиротевшему depth —
    frameset'ов больше, чем color-кадров (в benchmark3: 1119 против 1036).
    Пара «тот же 2D-скелет × другой depth» с dt≈0 даёт ложно-гигантские
    скорости суставов. Лечение: дедуп по `color_frame.get_timestamp()`
    (в `analyze_bag.py`); количество color-кадров в записи = мерило потерь.
+9. **Плейбэк .db3 замирает, если удерживать вьюшки кадров**: `np.asanyarray(frame.get_data())`
+   без `.copy()` при накоплении кадров в список подвешивает плейбэк (~36 кадров
+   и timeout). Лечение: `.copy()` (в `bench_onnx.py`); пофреймовые скрипты не страдают.
+10. **torch и OpenVINO в одном процессе душат друг друга** (оверсабскрипшн потоков):
+   честные числа — только каждый бекенд в своём процессе (`bench_onnx.py ... torch|ov`).
 
 ---
 
@@ -227,6 +247,7 @@ std(см)           static: v1 / mp+v2 / yolo      free: v1 / mp+v2 / yolo
 - [x] Реалтайм v1 (MediaPipe) + бенчмарк наивного фьюжна — **сделано**
 - [x] Реалтайм v2 (YOLO + depth-фильтры + гейт + One-Euro) — **сделано**, ждёт бенчмарка
 - [x] Рефакторинг: общий модуль фьюжна `fusion.py` (live и analyze считают одинаково) + реальные таймстампы бага в analyze (фазы/dt не съезжают на дропнутых кадрах) — **сделано**
+- [x] Бекенд инференса: OpenVINO вместо torch-cpu — **11.6 → 25.7 fps** чистого predict (×2.2, p95 44 мс), см. §5 и `bench_onnx.py`; `pose_yolo.py` переключён (автовыбор OV-экспорта с фолбеком на .pt), ждёт живой проверки камерой
 - [ ] Бенчмарк v2: `analyze_bag.py` (код готов: yolo/mediapipe, `--no-temporal` для A/B temporal-фильтра; предварительный прогон на старом баге — §4a), перезапись сцены (2.5–3 м, стопы в кадре), таблица «до/после»
 - [ ] Слой 3: кинематический фильтр (лимиты + FABRIK-проекция + synthetic-флаги), RTS-смузер офлайн
 - [ ] Офлайн-GT: rtmlib + RTMW-x 133 кт + RTMW3D/MotionBERT как второй 3D-источник
