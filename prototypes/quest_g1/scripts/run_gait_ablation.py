@@ -15,6 +15,7 @@ import xml.etree.ElementTree as ET
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
+OPTIONAL_VARIANTS = {'floor_1_6'}
 
 def replace(text,old,new):
     assert text.count(old)==1, f'Expected one source anchor: {old[:100]}'
@@ -54,11 +55,17 @@ def sources(source_path=None):
     mimic[0]=localVel[0];mimic[1]=localVel[1];mimic[2]=q[2];''')
     for name in ['meshes','no_drivetrain','no_self_contacts','blend2s','head_body_sync']:
         variants[name]=base
+    # Separate sensitivity cohort, explicitly selected with --variants. This
+    # retains the caller's adapter; by default that is current pelvis tracking.
+    variants['floor_1_6']=base
     return variants
+
+def default_variant_names(variants):
+    return [name for name in variants if name not in OPTIONAL_VARIANTS]
 
 def asset_variant(name,out):
     assets=ROOT/'android/assets'
-    if name not in ('meshes','no_drivetrain','no_self_contacts'):return assets
+    if name not in ('meshes','no_drivetrain','no_self_contacts','floor_1_6'):return assets
     target=out/name/'assets';target.mkdir(parents=True,exist_ok=True)
     for f in assets.iterdir():
         if f.name=='scene.xml':continue
@@ -67,6 +74,15 @@ def asset_variant(name,out):
         from g1_sim.scene import make_model
         _,xml=make_model('lab',hands=True)
         tree=ET.fromstring(xml)
+    elif name=='floor_1_6':
+        tree=ET.parse(assets/'scene.xml').getroot()
+        floor=tree.find(".//geom[@name='floor']")
+        if floor is None:raise ValueError('Missing named floor geometry')
+        friction=floor.get('friction','').split()
+        # MJCF permits omitted trailing components; preserve their inherited
+        # defaults rather than introducing additional friction changes.
+        if not 1<=len(friction)<=3:raise ValueError('Expected explicit floor friction')
+        friction[0]='1.6';floor.set('friction',' '.join(friction))
     elif name=='no_self_contacts':
         tree=ET.parse(assets/'scene.xml').getroot()
         for geom in tree.find(".//body[@name='pelvis']").iter('geom'):
@@ -125,7 +141,9 @@ if __name__=='__main__':
     args.output=args.output.resolve();args.output.mkdir(parents=True,exist_ok=True)
     if args.episode:args.episode=args.episode.resolve()
     if args.walk:args.walk=args.walk.resolve()
-    variants=sources(args.baseline_source);names=args.variants or list(variants)
+    variants=sources(args.baseline_source);names=args.variants or default_variant_names(variants)
+    unknown=set(names)-variants.keys()
+    if unknown:p.error('Unknown variant(s): '+', '.join(sorted(unknown)))
     manifest=json.loads((args.output/'manifest.json').read_text()) if (args.output/'manifest.json').exists() else {}
     manifest.update({name:hashlib.sha256(variants[name].encode()).hexdigest() for name in names})
     (args.output/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')

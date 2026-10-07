@@ -13,6 +13,26 @@
 // state at an arbitrary frame, nor guarantee bit-identical cross-device dynamics.
 // Raw participant data is supplied locally and must not be committed.
 static std::vector<double> Row(const std::string& line){std::stringstream s(line);std::string item;std::vector<double> row;while(std::getline(s,item,',')){double value=std::stod(item);if(!std::isfinite(value))throw std::runtime_error("Nonfinite recording");row.push_back(value);}return row;}
+static void CheckPhysicsNumerics(const Simulation& sim, double previousTime) {
+ // Numerical recovery can silently reset mjData. Never count that as a valid
+ // replay or a physical fall, even when the restored pelvis height is normal.
+ for(auto warning:{mjWARN_BADQPOS,mjWARN_BADQVEL,mjWARN_BADQACC,mjWARN_BADCTRL}) {
+  if(sim.data->warning[warning].number) {
+   const char* name=warning==mjWARN_BADQPOS?"BADQPOS":warning==mjWARN_BADQVEL?"BADQVEL":warning==mjWARN_BADQACC?"BADQACC":"BADCTRL";
+   throw std::runtime_error(std::string("Invalid physics replay: MuJoCo ")+name+" at index "+std::to_string(sim.data->warning[warning].lastinfo));
+  }
+ }
+ if(!std::isfinite(sim.data->time)||std::abs(sim.data->time-previousTime-sim.model->opt.timestep)>1e-9)
+  throw std::runtime_error("Invalid physics replay: simulation time did not advance by one timestep");
+ for(int k=0;k<sim.model->nq;k++)if(!std::isfinite(sim.data->qpos[k]))throw std::runtime_error("Invalid physics replay: nonfinite qpos");
+ for(int k=0;k<sim.model->nv;k++)if(!std::isfinite(sim.data->qvel[k])||!std::isfinite(sim.data->qacc[k]))throw std::runtime_error("Invalid physics replay: nonfinite qvel or qacc");
+}
+static void CheckedStep(Simulation& sim,double leftGrip,double rightGrip) {
+ double previousTime=sim.data->time;
+ try{sim.Step(false,leftGrip,rightGrip);}
+ catch(const std::exception& error){if(std::string(error.what()).rfind("G1 fell:",0)==0)CheckPhysicsNumerics(sim,previousTime);throw;}
+ CheckPhysicsNumerics(sim,previousTime);
+}
 int Run(int argc,char**argv){
  if(argc!=5){std::cerr<<"Usage: replay_gmr_dynamics assets episode saved|retarget output.csv\n";return 2;}std::string folder=argv[2],mode=argv[3];if(mode!="saved"&&mode!="retarget")throw std::runtime_error("Unknown replay mode");Simulation sim(argv[1]);MetaRetargeter meta(argv[1]);std::string line;
  std::map<uint64_t,TrackingFrame> poses;std::ifstream inputs(folder+"/input.csv"),bodies(folder+"/body.csv"),frames(folder+"/frames.csv"),commands(folder+"/mimic.csv");
@@ -36,7 +56,7 @@ int Run(int argc,char**argv){
   if(r[6])sim.SetWholeBodyReference(cmd);else sim.PauseWholeBodyReference();
   double tilt=std::acos(std::clamp(1-2*(std::pow(sim.data->qpos[4],2)+std::pow(sim.data->qpos[5],2)),-1.,1.))*180/3.141592653589793;
   out<<(r[0]-firstWall)*1e-9<<','<<sim.data->time<<','<<sim.data->qpos[2]<<','<<tilt<<','<<err<<','<<cmdErr;for(auto v:cmd)out<<','<<v;AblationRow(out,sim,meta.solver(),segment,r[6],mode!="saved");out<<'\n';
-  try{for(int k=0;k<10;k++)sim.Step(false,r[8],r[9]);}catch(const std::exception&e){if(std::string(e.what()).rfind("G1 fell",0)!=0)throw;fell=true;std::cout<<"fall wall="<<(r[0]-firstWall)*1e-9<<" sim="<<sim.data->time<<"\n";}minz=std::min(minz,sim.data->qpos[2]);
+  try{for(int k=0;k<10;k++)CheckedStep(sim,r[8],r[9]);}catch(const std::exception&e){if(std::string(e.what()).rfind("G1 fell:",0)!=0)throw;fell=true;std::cout<<"fall wall="<<(r[0]-firstWall)*1e-9<<" sim="<<sim.data->time<<"\n";}minz=std::min(minz,sim.data->qpos[2]);
  }
  if(std::getline(commands,command))throw std::runtime_error("Extra mimic row");
  std::cout<<"segment="<<segment<<" fell="<<fell<<" minz="<<minz<<" max_q_error="<<maxError<<"\n";return started?0:2;

@@ -152,6 +152,45 @@ double TiltDegrees(const mjData* data) {
     double y = data->qpos[4], z = data->qpos[5];
     return std::acos(std::clamp(1-2*(y*y+z*z), -1., 1.))*180/kPi;
 }
+
+void CheckPhysicsNumerics(const Simulation& sim, double previousTime) {
+    // MuJoCo may recover from invalid state by resetting mjData internally.
+    // Such a rollout is invalid even when the recovered robot has not fallen.
+    for (auto warning : {mjWARN_BADQPOS, mjWARN_BADQVEL, mjWARN_BADQACC, mjWARN_BADCTRL}) {
+        if (sim.data->warning[warning].number) {
+            const char* name = warning == mjWARN_BADQPOS ? "BADQPOS" :
+                               warning == mjWARN_BADQVEL ? "BADQVEL" :
+                               warning == mjWARN_BADQACC ? "BADQACC" : "BADCTRL";
+            throw std::runtime_error(std::string("Invalid physics rollout: MuJoCo ") + name +
+                                     " at index " + std::to_string(sim.data->warning[warning].lastinfo));
+        }
+    }
+    if (!std::isfinite(sim.data->time) ||
+        std::abs(sim.data->time - previousTime - sim.model->opt.timestep) > 1e-9)
+        throw std::runtime_error("Invalid physics rollout: simulation time did not advance by one timestep");
+    for (int k = 0; k < sim.model->nq; k++) {
+        if (!std::isfinite(sim.data->qpos[k]))
+            throw std::runtime_error("Invalid physics rollout: nonfinite qpos");
+    }
+    for (int k = 0; k < sim.model->nv; k++) {
+        if (!std::isfinite(sim.data->qvel[k]) || !std::isfinite(sim.data->qacc[k]))
+            throw std::runtime_error("Invalid physics rollout: nonfinite qvel or qacc");
+    }
+}
+
+void CheckedStep(Simulation& sim) {
+    double previousTime = sim.data->time;
+    try {
+        sim.Step(false);
+    } catch (const std::exception& error) {
+        // The known height threshold is a physical failure only if the step
+        // remained numerically valid. Policy/asset errors retain their cause.
+        if (std::string(error.what()).rfind("G1 fell:", 0) == 0)
+            CheckPhysicsNumerics(sim, previousTime);
+        throw;
+    }
+    CheckPhysicsNumerics(sim, previousTime);
+}
 } // namespace
 
 int main(int argc, char** argv) {
@@ -254,8 +293,9 @@ int main(int argc, char** argv) {
             for (int k = 0; k < 35; k++) blended[k] = initial[k] + u*(command[k]-initial[k]);
             sim.SetWholeBodyReference(blended);
             try {
-                for (int k = 0; k < 10; k++) sim.Step(false);
-            } catch (const std::exception&) {
+                for (int k = 0; k < 10; k++) CheckedStep(sim);
+            } catch (const std::exception& error) {
+                if (std::string(error.what()).rfind("G1 fell:", 0) != 0) throw;
                 fell = true;
                 break;
             }
