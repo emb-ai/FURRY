@@ -15,8 +15,11 @@ One-Euro берёт фактический dt (CPU даёт 8-15 fps, не 30) �
 состояние при дропауте сустава.
 
 Управление: q/Esc — выход, крестик — выход, стрелки — вращение 3D.
-Запуск: .venv/Scripts/python pose_yolo.py [s|m|l]   (yolo11{s|m|l}-pose)
+Запуск: .venv/Scripts/python pose_yolo.py [s|m|l] [full|min|off]
+  второй аргумент — режим depth-фильтров (min по умолчанию, см. main()).
+Превью — в полразмера панелей (экономия ~15 мс/кадр на imshow).
 """
+import os
 import sys
 import time
 
@@ -106,10 +109,33 @@ class View3D:
 
 
 # ---- main ---------------------------------------------------------------------
+def load_model(size):
+    """Платформенный выбор бекенда (см. bench_onnx.py — тайминги):
+      Windows/Linux: OpenVINO-экспорт (x2.2 к torch-cpu), фолбек .pt+cpu;
+      macOS:         CoreML .mlpackage (GPU/ANE), фолбек .pt+mps.
+    Возвращает (модель, device|None): OV/CoreML игнорируют device."""
+    pt = f"models/yolo11{size}-pose.pt"
+    if sys.platform == "darwin":
+        ml = f"models/yolo11{size}-pose.mlpackage"
+        if os.path.isdir(ml):
+            print(f"YOLO11{size}-pose, бекенд CoreML: {ml}", flush=True)
+            return YOLO(ml), None
+        print(f"YOLO11{size}-pose, бекенд torch-mps: {pt} "
+              f"(для CoreML: yolo export model={pt} format=coreml)", flush=True)
+        return YOLO(pt), "mps"
+    ov = f"models/yolo11{size}-pose_openvino_model"
+    if os.path.isdir(ov):
+        print(f"YOLO11{size}-pose, бекенд OpenVINO: {ov}", flush=True)
+        return YOLO(ov), None
+    print(f"YOLO11{size}-pose, бекенд torch-cpu: {pt} "
+          f"(экспортируй OpenVINO для x2.2: yolo export format=openvino)", flush=True)
+    return YOLO(pt), "cpu"
+
+
 def main():
     size = sys.argv[1] if len(sys.argv) > 1 else "s"
-    model = YOLO(f"models/yolo11{size}-pose.pt")
-    print(f"YOLO11{size}-pose загружен", flush=True)
+    filt = sys.argv[2] if len(sys.argv) > 2 else "min"  # full|min|off
+    model, device = load_model(size)
 
     cfg = rs.config()
     cfg.enable_stream(rs.stream.color, 1280, 720, rs.format.bgr8, 30)
@@ -123,6 +149,15 @@ def main():
     temporal = rs.temporal_filter()
     temporal.set_option(rs.option.holes_fill, 3)
     holes = rs.hole_filling_filter()
+    # Цепочка по режимам (тайминг на кадр, i5-12450H, 1280x720):
+    #   full = spatial+temporal+holes ~45 мс — максимум качества (джиттер x0.5);
+    #   min  = только spatial          ~18 мс — баланс (по умолчанию);
+    #   off  = без фильтров            ~0 мс  — гейт-медиана фьюжна берёт на
+    #          себя большую часть работы (A/B в analyze: разница мала)
+    chain = [spatial]
+    if filt == "full":
+        chain += [temporal, holes]
+    print(f"depth-фильтры: {filt}", flush=True)
 
     def open_camera():
         while True:
@@ -138,11 +173,18 @@ def main():
                         raise SystemExit(0)
 
     cv2.namedWindow(W2D, cv2.WINDOW_NORMAL)
-    view = View3D()
+    # превью в полразмера: hstack двух 720p-панелей + imshow стоили ~20 мс/кадр
+    view = View3D(w=640, h=360, scale_px=140)
     filters = {}
     t0, frames = time.monotonic(), 0
     fps = 0.0
     pipeline = None
+    stage_t = {}  # имя стадии -> суммарные мс за секундное окно (раз в сек в консоль)
+
+    def tic(name, t):
+        now = time.perf_counter()
+        stage_t[name] = stage_t.get(name, 0.0) + (now - t) * 1000
+        return now
     try:
         while True:
             if pipeline is None:
@@ -152,6 +194,7 @@ def main():
                 color_intr = (profile.get_stream(rs.stream.color)
                               .as_video_stream_profile().get_intrinsics())
                 print(f"USB: {profile.get_device().get_info(rs.camera_info.usb_type_descriptor)}", flush=True)
+            t = time.perf_counter()
             try:
                 fs = pipeline.wait_for_frames(timeout_ms=5000)
             except RuntimeError as e:
@@ -162,17 +205,23 @@ def main():
                     pass
                 pipeline = None
                 continue
+            t = tic("wait", t)
             fs = align.process(fs)
+            t = tic("align", t)
             color_f, depth_f = fs.get_color_frame(), fs.get_depth_frame()
             if not color_f or not depth_f:
                 continue
-            # depth-фильтры SDK: edge-preserving -> temporal -> заливка дыр
-            depth_f = holes.process(temporal.process(spatial.process(depth_f)))
+            # depth-фильтры SDK по выбранному режиму
+            for flt in chain:
+                depth_f = flt.process(depth_f)
+            t = tic("filters", t)
             color = np.asanyarray(color_f.get_data())
             depth_m = np.asanyarray(depth_f.get_data()).astype(np.float32) * depth_scale
+            t = tic("to_numpy", t)
 
             res = model.predict(color, imgsz=640, conf=0.3, classes=0,
-                                device="cpu", verbose=False)[0]
+                                **({"device": device} if device else {}), verbose=False)[0]
+            t = tic("infer", t)
             raw, pts2d = {}, {}
             if res.keypoints is not None and len(res.keypoints):
                 kxy = res.keypoints.xy.cpu().numpy()
@@ -185,6 +234,7 @@ def main():
 
                 # 3D: фьюжн общий с analyze_bag.py (fusion.py)
                 raw = fuse_joints(depth_m, pts2d, color_intr)
+                t = tic("fuse", t)
 
                 # отрисовка 2D
                 for i, j in CONNECTIONS:
@@ -194,6 +244,7 @@ def main():
                 for i, (u, v) in pts2d.items():
                     r, c = (6, (255, 255, 255)) if i in KEY_JOINTS else (3, PART_COLOR[IDX2PART[i]])
                     cv2.circle(color, (int(u), int(v)), r, c, -1, cv2.LINE_AA)
+            t = tic("draw", t)
 
             # One-Euro на сустав: фактический dt, состояние переживает дропаут
             t_now = time.monotonic()
@@ -204,14 +255,20 @@ def main():
             frames += 1
             dt = time.monotonic() - t0
             if dt > 1:
-                fps, t0, frames = frames / dt, time.monotonic(), 0
+                n = frames
+                fps, t0, frames = n / dt, time.monotonic(), 0
+                br = " ".join(f"{k}:{v / max(1, n):.0f}ms"
+                              for k, v in sorted(stage_t.items(), key=lambda kv: -kv[1]))
+                print(f"    [тайминг] {br}", flush=True)
+                stage_t.clear()
             pelvis = smoothed.get(11)
             info = (f"fps {fps:4.1f} | joints {len(smoothed)}/17 | "
                     f"pelvis {'-' if pelvis is None else f'{pelvis[2]:.2f} m'}")
             cv2.putText(color, info, (12, 30), 6, 0.7, (60, 255, 60), 2)
             cv2.putText(color, f"yolo11{size}-pose  q-quit", (12, 58), 6, 0.55, (200, 200, 200), 1)
 
-            cv2.imshow(W2D, np.hstack([color, view.draw(smoothed, info)]))
+            cv2.imshow(W2D, np.hstack([cv2.resize(color, (640, 360)),
+                                       view.draw(smoothed, info)]))
             if cv2.getWindowProperty(W2D, cv2.WND_PROP_VISIBLE) < 1:
                 print("Окно закрыто — выходим.", flush=True)
                 break
@@ -219,6 +276,7 @@ def main():
             if key in (ord('q'), 27):
                 break
             view.rotate(key)
+            tic("show", t)
     finally:
         if pipeline is not None:
             try:
