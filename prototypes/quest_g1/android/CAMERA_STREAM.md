@@ -12,7 +12,9 @@ is required by the Quest client.
 
 ## Alignment
 
-A resets alignment. Stand facing the camera, look forward and make a short
+Alignment runs whenever Quest body tracking is valid, even while robot control
+is paused or awaiting calibration. A resets alignment. Stand facing the camera,
+look forward and make a short
 translation/crouch movement while remaining fully visible. Shoulders across time
 provide a metric rigid transform (Horn/Kabsch equivalent, scale fixed to one).
 Static shoulders alone are collinear: the client waits for sufficient motion
@@ -33,8 +35,10 @@ invalid numbers, oversized JSON, missing required landmarks and reordered
 packets are rejected. The client sends HMD/controller poses back to the server.
 
 Camera epoch timestamps are matched to a 3 s Meta history (nearest body pose
-within 60 ms), rather than the latest predicted HMD pose. Source age and arrival
-age both gate use. The client sends JSON ping messages and uses the server's `server_t` pong
+within 60 ms), rather than the latest predicted HMD pose. Registration accepts
+matched historical packets younger than 1 s. Driving physical legs still
+requires packets younger than 150 ms; delayed calibration never bypasses that
+gate. Source age and arrival age both gate use. The client sends JSON ping messages and uses the server's `server_t` pong
 field to estimate clock offset from the minimum-RTT exchange. Offset and RTT
 are exposed in CSV and camera recordings. Existing servers can add this field
 with `scripts/enable_camera_clock.py /path/to/skeleton_server.py`, then restart.

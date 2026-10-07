@@ -77,13 +77,16 @@ TrackingFrame CameraFusion::Apply(const TrackingFrame&raw,const CameraSkeleton*c
  bool newPacket=c && c->sequence!=lastSequence;
  if(newPacket){
   lastSequence=c->sequence;weights={};
-  if(!history.empty() && fresh){auto it=std::min_element(history.begin(),history.end(),[&](const Sample&a,const Sample&b){return std::abs(a.ms-c->sourceMs)<std::abs(b.ms-c->sourceMs);});
+  // Registration compares timestamp-matched historical poses. Its latency
+  // limit need not be the strict limit for driving the current physical legs.
+  bool registrationFresh=c && stats.ageMs>=0 && stats.ageMs<1000 && now-c->sourceMs>=-100;
+  if(!history.empty() && registrationFresh){auto it=std::min_element(history.begin(),history.end(),[&](const Sample&a,const Sample&b){return std::abs(a.ms-c->sourceMs)<std::abs(b.ms-c->sourceMs);});
    if(std::abs(it->ms-c->sourceMs)<60){
     if(!aligned)Fit(*c,it->frame);
     bool usable=aligned && c->frame=="camera";
     // pelvis-relative packets already use STAGE axes and need no camera R.
     bool stage=c->frame=="pelvis-relative";
-    if((usable || stage) && Good(c->pelvis)){
+    if(fresh && (usable || stage) && Good(c->pelvis)){
      for(int side=0;side<2;side++){
       bool good=Good(c->joints[side]) && Good(c->joints[2+side]) && Good(c->joints[4+side]);
       if(!good){weights[side]=0;continue;}

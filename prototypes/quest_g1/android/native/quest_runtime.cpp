@@ -297,6 +297,19 @@ void G1Initialize(android_app* app){
                 bool applyReference=trackingEnabled && valid && retarget->calibrated;
                 retarget->EnableCameraTracking(firstPerson.load());
                 float leftGrip=grip[0].load(),rightGrip=grip[1].load();
+                // Camera registration belongs to Quest STAGE, not to robot
+                // retarget calibration. Keep diagnostics working while GMR
+                // is paused or waiting for a new body bind skeleton.
+                TrackingFrame fused=input;
+                if(valid){
+                    cameraFusion.Observe(input,CameraEpochMs());CameraSkeleton optical;
+                    std::string opticalRaw;bool haveOptical=cameraStream->Latest(optical,&opticalRaw);
+                    if(haveOptical && recorder.active && optical.sequence!=cameraRecordedSequence){
+                        cameraRecording<<"{\"input_sequence\":"<<input.sequence<<",\"received_epoch_ms\":"<<std::setprecision(17)<<optical.receivedMs<<",\"clock_offset_ms\":"<<cameraStream->clockOffsetMs.load()<<",\"payload\":"<<opticalRaw<<"}\n";
+                        cameraRecordedSequence=optical.sequence;
+                    }
+                    fused=cameraFusion.Apply(input,haveOptical?&optical:nullptr,CameraEpochMs());
+                }
                 if(applyReference){
                     if(calibratedNow || !wasApplying){
                         blendOrigin.fill(0);blendOrigin[2]=sim->data->qpos[2];blendStarted=sim->data->time;
@@ -307,13 +320,6 @@ void G1Initialize(android_app* app){
                         }
                     }
                     double gmrStart=ClockSeconds();
-                    cameraFusion.Observe(input,CameraEpochMs());CameraSkeleton optical;
-                    std::string opticalRaw;bool haveOptical=cameraStream->Latest(optical,&opticalRaw);
-                    if(haveOptical && recorder.active && optical.sequence!=cameraRecordedSequence){
-                        cameraRecording<<"{\"input_sequence\":"<<input.sequence<<",\"received_epoch_ms\":"<<std::setprecision(17)<<optical.receivedMs<<",\"clock_offset_ms\":"<<cameraStream->clockOffsetMs.load()<<",\"payload\":"<<opticalRaw<<"}\n";
-                        cameraRecordedSequence=optical.sequence;
-                    }
-                    auto fused=cameraFusion.Apply(input,haveOptical?&optical:nullptr,CameraEpochMs());
                     auto whole=retarget->Solve(fused);
                     if(retarget->solver().HasCameraTarget()){
                         TrackedPose actual;std::copy_n(sim->data->cam_xpos+3*egoCamera,3,actual.position.begin());

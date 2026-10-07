@@ -10,6 +10,7 @@ int main(){
  for(auto&j:c.joints){j.measured=true;j.confidence=1;}c.joints[9].confidence=c.joints[10].confidence=0;
  // Camera frame is a translated half-turn around X. No similarity scaling.
  auto camera=[](std::array<double,3> p){return std::array<double,3>{p[0]+1,2-p[1],3-p[2]};};
+ std::vector<TrackingFrame> frames;std::vector<CameraSkeleton> packets;
  for(int n=0;n<80;n++){
   double t=100000+n*80.;raw.xr_time_ns=raw.body.time_ns=int64_t(t*1e6);
   double x=.15*std::sin(n*.1),y=.1*std::cos(n*.15);
@@ -21,8 +22,17 @@ int main(){
    c.joints[7+side].p=camera(raw.body.joints[8+side].position);
   }
   c.pelvis.p=camera(raw.body.joints[0].position);auto nose=raw.head.position;nose[2]+=.1;nose[1]-=.06;c.joints[6].p=camera(nose);
-  c.sourceMs=c.receivedMs=t;c.sequence=n+1;fusion.Observe(raw,t);fusion.Apply(raw,&c,t);
+  c.sourceMs=c.receivedMs=t;c.sequence=n+1;fusion.Observe(raw,t);fusion.Apply(raw,&c,t);frames.push_back(raw);packets.push_back(c);
  }
+ CameraFusion delayed;
+ for(size_t n=0;n<frames.size();n++){
+  double now=packets[n].sourceMs;delayed.Observe(frames[n],now);
+  if(n>=3){auto old=packets[n-3];old.receivedMs=now;delayed.Apply(frames[n],&old,now);}
+ }
+ Require(delayed.Aligned(),"Timestamp-matched delayed stream cannot calibrate");
+ Require(delayed.stats.legs==0,"Delayed registration bypasses physical freshness gate");
+ auto delayedOverlay=delayed.MapForDisplay(&packets[packets.size()-4],frames.back(),packets.back().sourceMs);
+ Require(delayedOverlay.valid[4],"Calibrated delayed stream is not visible");
  Require(fusion.Aligned(),"Rigid fit did not converge");Require(fusion.stats.fitMm<.001,"Rigid fit wrong / reflected");
  auto display=fusion.MapForDisplay(&c,raw,c.sourceMs);
  Require(display.aligned && display.valid[4],"Mapped overlay missing");
