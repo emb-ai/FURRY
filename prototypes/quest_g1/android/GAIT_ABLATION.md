@@ -375,7 +375,6 @@ per-contact records and participant frames. A successful no-hand control does
 not validate the hand model or Meta's human foot estimates, and these single-motion
 diagnostics do not establish a reliable walking fix.
 
-
 ## Primitive collision fidelity audit
 
 The compiled mesh-to-body transform is retained correctly. The fitting heuristic
