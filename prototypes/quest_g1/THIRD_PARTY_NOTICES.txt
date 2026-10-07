@@ -23,3 +23,14 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+G1 geometry under assets/g1 is adapted from Unitree Robotics meshes and
+MuJoCo Menagerie's MJX collision model. The original articulated mesh files
+are also distributed by the pinned TWIST2 checkout above.
+Menagerie revision: f054586a8e90465d49ee5be15335c4a0c7f57caf
+https://github.com/google-deepmind/mujoco_menagerie/tree/f054586a8e90465d49ee5be15335c4a0c7f57caf/unitree_g1
+
+The full Unitree BSD-3-Clause notice is retained in assets/g1/LICENSE and
+packaged as G1_GEOMETRY_LICENSE.txt in Android assets. Modifications include
+exterior-shell remeshing, topology reduction, crease-aware normals and
+per-link convex hand proxies; no upstream endorsement is implied.

@@ -1,0 +1,497 @@
+{
+  "blender": "5.0.1",
+  "meshes": {
+    "head_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "e76b73bbc43e41e11146162e6dbf7b117efda49579059ada24c6b62b9156969c",
+      "source_file": "head_link.STL",
+      "source_sha256": "005fb67fbd3eff94aa8bf4a6e83238174e9f91b6721f7111594322f223724411",
+      "source_triangles": 18654,
+      "target_triangles": 3500,
+      "triangles": 3500,
+      "voxel_size_m": 0
+    },
+    "left_ankle_pitch_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "2a8f1e936720d2977882f819e9c7746df2f5905002db30646f78392c2d1d01ef",
+      "source_file": "left_ankle_pitch_link.STL",
+      "source_sha256": "d49e3abc6f5b12e532062cd575b87b5ef40cd2a3fc18f54a1ca5bba4f773d51d",
+      "source_triangles": 1422,
+      "target_triangles": 600,
+      "triangles": 600,
+      "voxel_size_m": 0
+    },
+    "left_ankle_roll_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "b371f504f9f4c58ec8a3fec941fab9fbf7adf5cecb7bfcf4e3a80e00876d1a7f",
+      "source_file": "left_ankle_roll_link.STL",
+      "source_sha256": "c4092af943141d4d9f74232f3cfa345afc6565f46a077793b8ae0e68b39dc33f",
+      "source_triangles": 13066,
+      "target_triangles": 2200,
+      "triangles": 2200,
+      "voxel_size_m": 0
+    },
+    "left_elbow_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "24e4231dbf1825a05ee3fb61b89808be7e5b71214e36dc57f0e0e527fe886c38",
+      "source_file": "left_elbow_link.STL",
+      "source_sha256": "fa752198accd104d5c4c3a01382e45165b944fbbc5acce085059223324e5bed3",
+      "source_triangles": 1774,
+      "target_triangles": 620,
+      "triangles": 620,
+      "voxel_size_m": 0
+    },
+    "left_hand_index_0_link": {
+      "method": "voxel union, shell retopology",
+      "sha256": "9201612cd38bf98a2f02b08b07cc1eda51eb369c68d9ceced8539b4732f6e942",
+      "source_file": "left_hand_index_0_link.STL",
+      "source_sha256": "6b35f2f77211d5a366f0b9a4e47c4ee35e536731266f1a34e9efa12db579b892",
+      "source_triangles": 9518,
+      "target_triangles": 900,
+      "triangles": 900,
+      "voxel_size_m": 0.00035
+    },
+    "left_hand_index_1_link": {
+      "method": "voxel union, shell retopology",
+      "sha256": "df976b5078a747dc6bc7d50abea9358eb33ca01cf741c95f77b107604a1eb8e8",
+      "source_file": "left_hand_index_1_link.STL",
+      "source_sha256": "9e315ebc8a7a0cb98e033985b586b20d81cf8aa761181ae61ce56fcb14077a06",
+      "source_triangles": 30434,
+      "target_triangles": 900,
+      "triangles": 900,
+      "voxel_size_m": 0.00035
+    },
+    "left_hand_middle_0_link": {
+      "method": "voxel union, shell retopology",
+      "sha256": "9201612cd38bf98a2f02b08b07cc1eda51eb369c68d9ceced8539b4732f6e942",
+      "source_file": "left_hand_middle_0_link.STL",
+      "source_sha256": "6b35f2f77211d5a366f0b9a4e47c4ee35e536731266f1a34e9efa12db579b892",
+      "source_triangles": 9518,
+      "target_triangles": 900,
+      "triangles": 900,
+      "voxel_size_m": 0.00035
+    },
+    "left_hand_middle_1_link": {
+      "method": "voxel union, shell retopology",
+      "sha256": "df976b5078a747dc6bc7d50abea9358eb33ca01cf741c95f77b107604a1eb8e8",
+      "source_file": "left_hand_middle_1_link.STL",
+      "source_sha256": "9e315ebc8a7a0cb98e033985b586b20d81cf8aa761181ae61ce56fcb14077a06",
+      "source_triangles": 30434,
+      "target_triangles": 900,
+      "triangles": 900,
+      "voxel_size_m": 0.00035
+    },
+    "left_hand_palm_link": {
+      "method": "voxel union, shell retopology",
+      "sha256": "04e1e9f2db811571152f6f6ae861224cfcad8ac7615f4f7e8fab2451efef4abe",
+      "source_file": "left_hand_palm_link.STL",
+      "source_sha256": "23a486b75bd78a9bf03cec25d84d87f97f3dae038cf21a743b6d469b337e4004",
+      "source_triangles": 42799,
+      "target_triangles": 3000,
+      "triangles": 3000,
+      "voxel_size_m": 0.0005
+    },
+    "left_hand_thumb_0_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "bdfafdb8e9375dd66a14e93666e0ad961cbac5f8cf02b518a84e5219ac109363",
+      "source_file": "left_hand_thumb_0_link.STL",
+      "source_sha256": "a90c721661c0622685488a3c74d1e122c7da89242d3a1daef75edb83422d05e0",
+      "source_triangles": 176,
+      "target_triangles": 176,
+      "triangles": 176,
+      "voxel_size_m": 0
+    },
+    "left_hand_thumb_1_link": {
+      "method": "voxel union, shell retopology",
+      "sha256": "cde64dd2ddcc96ef941180943dd42af01dd8d060cd76c1b526c592fe5384b9b5",
+      "source_file": "left_hand_thumb_1_link.STL",
+      "source_sha256": "445c54a45bc13ce36001556f66bc0f49c83cb40321205ae4d676bb2874325684",
+      "source_triangles": 9518,
+      "target_triangles": 900,
+      "triangles": 900,
+      "voxel_size_m": 0.00035
+    },
+    "left_hand_thumb_2_link": {
+      "method": "voxel union, shell retopology",
+      "sha256": "1c5bee1fc253fcf0dc1b424dfd9c1771e7cabedd7346f0161e57bdcc45deb910",
+      "source_file": "left_hand_thumb_2_link.STL",
+      "source_sha256": "3d8dbe5085acfc213d21aa8b0782e89cd79084e9678f3a85fc7b04a86b029db5",
+      "source_triangles": 30434,
+      "target_triangles": 900,
+      "triangles": 900,
+      "voxel_size_m": 0.00035
+    },
+    "left_hip_pitch_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "1b1cb7f8c0263d5f911469b553596cf924f043854dbe5186578234655a423c42",
+      "source_file": "left_hip_pitch_link.STL",
+      "source_sha256": "4725168105ee768ee31638ef22b53f6be2d7641bfd7cfefe803488d884776fa4",
+      "source_triangles": 3629,
+      "target_triangles": 1270,
+      "triangles": 1269,
+      "voxel_size_m": 0
+    },
+    "left_hip_roll_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "f0a7fa0b8789384f97d354435923a61e3ebde6732a39ac17b9ccecbf48cf0943",
+      "source_file": "left_hip_roll_link.STL",
+      "source_sha256": "91f25922ee8a7c3152790051bebad17b4d9cd243569c38fe340285ff93a97acf",
+      "source_triangles": 3842,
+      "target_triangles": 1344,
+      "triangles": 1344,
+      "voxel_size_m": 0
+    },
+    "left_hip_yaw_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "6435d2ae7422e9e38dbdd4d6b0a6eb93341f2de3ee4092ceee82af62d143d13a",
+      "source_file": "left_hip_yaw_link.STL",
+      "source_sha256": "a16d88aa6ddac8083aa7ad55ed317bea44b1fa003d314fba88965b7ed0f3b55b",
+      "source_triangles": 5924,
+      "target_triangles": 2073,
+      "triangles": 2072,
+      "voxel_size_m": 0
+    },
+    "left_knee_link": {
+      "method": "voxel union, shell retopology",
+      "sha256": "f3e04a1f93fbbce159760bb8f85c25be28fe5d82bf15d7e31edcb6442941264c",
+      "source_file": "left_knee_link.STL",
+      "source_sha256": "8d92b9e3d3a636761150bb8025e32514c4602b91c7028d523ee42b3e632de477",
+      "source_triangles": 17096,
+      "target_triangles": 3500,
+      "triangles": 3500,
+      "voxel_size_m": 0.001
+    },
+    "left_shoulder_pitch_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "6cb944529f5783811a2014d9a9bd6c1a8d3fa3bc9ccc0f0689cf35f2644b86ff",
+      "source_file": "left_shoulder_pitch_link.STL",
+      "source_sha256": "f0d1cfd02fcf0d42f95e678eeca33da3afbcc366ffba5c052847773ec4f31d52",
+      "source_triangles": 3534,
+      "target_triangles": 1236,
+      "triangles": 1236,
+      "voxel_size_m": 0
+    },
+    "left_shoulder_roll_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "fd007a6c1f01de0762be961badeaf4bf2d030338d93ad970cb2bc2794125c1fa",
+      "source_file": "left_shoulder_roll_link.STL",
+      "source_sha256": "fb9df21687773522598dc384f1a2945c7519f11cbc8bd372a49170316d6eee88",
+      "source_triangles": 8001,
+      "target_triangles": 2400,
+      "triangles": 2399,
+      "voxel_size_m": 0
+    },
+    "left_shoulder_yaw_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "442ab608702dccfb3fed24d426355466fded59dc93e97bf1738cdb93d786dce3",
+      "source_file": "left_shoulder_yaw_link.STL",
+      "source_sha256": "1aa97e9748e924336567992181f78c7cd0652fd52a4afcca3df6b2ef6f9e712e",
+      "source_triangles": 4982,
+      "target_triangles": 1743,
+      "triangles": 1742,
+      "voxel_size_m": 0
+    },
+    "left_wrist_pitch_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "9e68d906898ba9914f09e1014f16b739aa9ae52d181980aa817ab5ad598a8163",
+      "source_file": "left_wrist_pitch_link.STL",
+      "source_sha256": "b251d8e05047f695d0f536cd78c11973cfa4e78d08cfe82759336cc3471de3a9",
+      "source_triangles": 1718,
+      "target_triangles": 1718,
+      "triangles": 1718,
+      "voxel_size_m": 0
+    },
+    "left_wrist_roll_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "5a18769090e9a1fc322a4f699dcf8eb204a052a8ff13682145b5dfb1aa432251",
+      "source_file": "left_wrist_roll_link.STL",
+      "source_sha256": "edc387c9a0ba8c2237e9b296d32531426fabeb6f53e58df45c76106bca74148c",
+      "source_triangles": 7122,
+      "target_triangles": 2400,
+      "triangles": 2400,
+      "voxel_size_m": 0
+    },
+    "left_wrist_yaw_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "7e7aaaf7425c0f5ca4048f66469f05603a798fd6947163ff33e71ac3214eb71e",
+      "source_file": "left_wrist_yaw_link.STL",
+      "source_sha256": "83f8fb3a726bf9613d65dd14f0f447cb918c3c95b3938042a0c9c09749267d3b",
+      "source_triangles": 6372,
+      "target_triangles": 2230,
+      "triangles": 2230,
+      "voxel_size_m": 0
+    },
+    "logo_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "356604defb377b9c92411793c30e247af60684fde7a3daba14d39000dccf18a6",
+      "source_file": "logo_link.STL",
+      "source_sha256": "8571a0a19bc4916fa55f91449f51d5fdefd751000054865a842449429d5f155b",
+      "source_triangles": 4866,
+      "target_triangles": 1200,
+      "triangles": 1200,
+      "voxel_size_m": 0
+    },
+    "pelvis": {
+      "method": "voxel union, shell retopology",
+      "sha256": "6d6467acb77ae9af7ee7d1bfa22ccfd180953e48ee500855e314776d82acd651",
+      "source_file": "pelvis.STL",
+      "source_sha256": "5ba6bbc888e630550140d3c26763f10206da8c8bd30ed886b8ede41c61f57a31",
+      "source_triangles": 21216,
+      "target_triangles": 2500,
+      "triangles": 2500,
+      "voxel_size_m": 0.0012
+    },
+    "pelvis_contour_link": {
+      "method": "voxel union, shell retopology",
+      "sha256": "feb2c6dc4459212ebf22618d0b680d4cf25ad34d4e383a56d746bbfb5fb9d20f",
+      "source_file": "pelvis_contour_link.STL",
+      "source_sha256": "5cc5c2c7a312329e3feeb2b03d3fc09fc29705bd01864f6767e51be959662420",
+      "source_triangles": 36102,
+      "target_triangles": 5000,
+      "triangles": 5000,
+      "voxel_size_m": 0.0012
+    },
+    "right_ankle_pitch_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "c59fc4572a763870cf4c1f484ab04849c4a37f33d8fc92ae5f9cc855d39de211",
+      "source_file": "right_ankle_pitch_link.STL",
+      "source_sha256": "15be426539ec1be70246d4d82a168806db64a41301af8b35c197a33348c787a9",
+      "source_triangles": 1422,
+      "target_triangles": 600,
+      "triangles": 600,
+      "voxel_size_m": 0
+    },
+    "right_ankle_roll_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "01fee3ecdb1cd65464c9c7dcf4f053c0eea15e26f4cd48794b38b9b0b6c454ae",
+      "source_file": "right_ankle_roll_link.STL",
+      "source_sha256": "4b66222ea56653e627711b56d0a8949b4920da5df091da0ceb343f54e884e3a5",
+      "source_triangles": 13074,
+      "target_triangles": 2200,
+      "triangles": 2200,
+      "voxel_size_m": 0
+    },
+    "right_elbow_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "a8d62f879d7e3268eaf81286919f2680b352d1f6baeb4f1bc4303caab66b22ad",
+      "source_file": "right_elbow_link.STL",
+      "source_sha256": "1be925d7aa268bb8fddf5362b9173066890c7d32092c05638608126e59d1e2ab",
+      "source_triangles": 1774,
+      "target_triangles": 620,
+      "triangles": 620,
+      "voxel_size_m": 0
+    },
+    "right_hand_index_0_link": {
+      "method": "voxel union, shell retopology",
+      "sha256": "ed687de605f78b222fe83611090c93e9c905154f18e7960c40537e4b793e96c5",
+      "source_file": "right_hand_index_0_link.STL",
+      "source_sha256": "12ab4300c95e437e834f9aef772b3b431c671bf34338930b52ad11aef73bbd0d",
+      "source_triangles": 9518,
+      "target_triangles": 900,
+      "triangles": 900,
+      "voxel_size_m": 0.00035
+    },
+    "right_hand_index_1_link": {
+      "method": "voxel union, shell retopology",
+      "sha256": "18a90944fbd5eb7d7b24d44927d6215c925773f61126f1e329223b2a575d35f9",
+      "source_file": "right_hand_index_1_link.STL",
+      "source_sha256": "c9c34efce4563cacdcfd29fc838a982976d40f5442c71219811dcbbf3923a33d",
+      "source_triangles": 30434,
+      "target_triangles": 900,
+      "triangles": 900,
+      "voxel_size_m": 0.00035
+    },
+    "right_hand_middle_0_link": {
+      "method": "voxel union, shell retopology",
+      "sha256": "ed687de605f78b222fe83611090c93e9c905154f18e7960c40537e4b793e96c5",
+      "source_file": "right_hand_middle_0_link.STL",
+      "source_sha256": "12ab4300c95e437e834f9aef772b3b431c671bf34338930b52ad11aef73bbd0d",
+      "source_triangles": 9518,
+      "target_triangles": 900,
+      "triangles": 900,
+      "voxel_size_m": 0.00035
+    },
+    "right_hand_middle_1_link": {
+      "method": "voxel union, shell retopology",
+      "sha256": "18a90944fbd5eb7d7b24d44927d6215c925773f61126f1e329223b2a575d35f9",
+      "source_file": "right_hand_middle_1_link.STL",
+      "source_sha256": "c9c34efce4563cacdcfd29fc838a982976d40f5442c71219811dcbbf3923a33d",
+      "source_triangles": 30434,
+      "target_triangles": 900,
+      "triangles": 900,
+      "voxel_size_m": 0.00035
+    },
+    "right_hand_palm_link": {
+      "method": "voxel union, shell retopology",
+      "sha256": "930d3fa8fe4460fffb47c90fe00482ef15178eb4ade331f3a193ab8c93911ce9",
+      "source_file": "right_hand_palm_link.STL",
+      "source_sha256": "86c0b231cc44477d64a6493e5a427ba16617a00738112dd187c652675b086fb9",
+      "source_triangles": 42799,
+      "target_triangles": 3000,
+      "triangles": 3000,
+      "voxel_size_m": 0.0005
+    },
+    "right_hand_thumb_0_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "d55e6cae25de91a9a25d0c191f4b66af35187f4199555322c0b07b33426d1cc9",
+      "source_file": "right_hand_thumb_0_link.STL",
+      "source_sha256": "544298d0ea1088f5b276a10cc6a6a9e533efdd91594955fdc956c46211d07f83",
+      "source_triangles": 176,
+      "target_triangles": 176,
+      "triangles": 176,
+      "voxel_size_m": 0
+    },
+    "right_hand_thumb_1_link": {
+      "method": "voxel union, shell retopology",
+      "sha256": "99e5db40f25690e9bde0f23e1ec99f4cf344cef1b05311f5bd0bc5836d5b2289",
+      "source_file": "right_hand_thumb_1_link.STL",
+      "source_sha256": "0a9a820da8dd10f298778b714f1364216e8a5976f4fd3a05689ea26327d44bf6",
+      "source_triangles": 9518,
+      "target_triangles": 900,
+      "triangles": 900,
+      "voxel_size_m": 0.00035
+    },
+    "right_hand_thumb_2_link": {
+      "method": "voxel union, shell retopology",
+      "sha256": "00fb2e889f92caf530f7698f079acf6c2e6b8cdf495702df813b0671bd9b50a0",
+      "source_file": "right_hand_thumb_2_link.STL",
+      "source_sha256": "3f1bfb37668e8f61801c8d25f171fa1949e08666be86c67acad7e0079937cc45",
+      "source_triangles": 30434,
+      "target_triangles": 900,
+      "triangles": 900,
+      "voxel_size_m": 0.00035
+    },
+    "right_hip_pitch_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "5e53a3ff5f0f1a310fff38e9f7dd3746bf31e0dbdbcc06a760adced89987c019",
+      "source_file": "right_hip_pitch_link.STL",
+      "source_sha256": "e4f3c99d7f4a7d34eadbef9461fc66e3486cb5442db1ec50c86317d459f1a9c6",
+      "source_triangles": 3622,
+      "target_triangles": 1267,
+      "triangles": 1266,
+      "voxel_size_m": 0
+    },
+    "right_hip_roll_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "270f1c4c51ec762fc1561b754efbe36d5c4f53dc1f442587b8bd60e231b4c356",
+      "source_file": "right_hip_roll_link.STL",
+      "source_sha256": "4c254ef66a356f492947f360dd931965477b631e3fcc841f91ccc46d945d54f6",
+      "source_triangles": 3852,
+      "target_triangles": 1348,
+      "triangles": 1348,
+      "voxel_size_m": 0
+    },
+    "right_hip_yaw_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "7d4aaced46d31834eb929d81f50ecb84ae483c5bb98f811021f10d42c70c5e35",
+      "source_file": "right_hip_yaw_link.STL",
+      "source_sha256": "e479c2936ca2057e9eb2f7dff6c189b7419d7b8484dea0b298cbb36a2a6aa668",
+      "source_triangles": 5924,
+      "target_triangles": 2073,
+      "triangles": 2072,
+      "voxel_size_m": 0
+    },
+    "right_knee_link": {
+      "method": "voxel union, shell retopology",
+      "sha256": "2f0e569a22c3856658f16d2e8804670580c09d0db79f63ecd0b19555fee9390f",
+      "source_file": "right_knee_link.STL",
+      "source_sha256": "63c4008449c9bbe701a6e2b557b7a252e90cf3a5abcf54cee46862b9a69f8ec8",
+      "source_triangles": 17044,
+      "target_triangles": 3500,
+      "triangles": 3498,
+      "voxel_size_m": 0.001
+    },
+    "right_shoulder_pitch_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "e3260f9701184a7de67bd275a1313801bb9ee771ea05334210dabd58ee10c93d",
+      "source_file": "right_shoulder_pitch_link.STL",
+      "source_sha256": "24cdb387e0128dfe602770a81c56cdce3a0181d34d039a11d1aaf8819b7b8c02",
+      "source_triangles": 3534,
+      "target_triangles": 1236,
+      "triangles": 1236,
+      "voxel_size_m": 0
+    },
+    "right_shoulder_roll_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "0b5e7d9b8bcc427902dd2ee2a4258daa8fd4f5061caf27841a19cd2bdc04a387",
+      "source_file": "right_shoulder_roll_link.STL",
+      "source_sha256": "962b97c48f9ce9e8399f45dd9522e0865d19aa9fd299406b2d475a8fc4a53e81",
+      "source_triangles": 8033,
+      "target_triangles": 2400,
+      "triangles": 2399,
+      "voxel_size_m": 0
+    },
+    "right_shoulder_yaw_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "d0f1f8783e81651de9ce34d52e898c6703514748f7e416b19aea1d1c126ac931",
+      "source_file": "right_shoulder_yaw_link.STL",
+      "source_sha256": "a0b76489271da0c72461a344c9ffb0f0c6e64f019ea5014c1624886c442a2fe5",
+      "source_triangles": 4998,
+      "target_triangles": 1749,
+      "triangles": 1748,
+      "voxel_size_m": 0
+    },
+    "right_wrist_pitch_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "c276d1729e0b8f8c7252cbe538f64d66bc2c77e5a957b66f2b8165f5e5ed80b3",
+      "source_file": "right_wrist_pitch_link.STL",
+      "source_sha256": "d22f8f3b3127f15a63e5be1ee273cd5075786c3142f1c3d9f76cbf43d2a26477",
+      "source_triangles": 1590,
+      "target_triangles": 1590,
+      "triangles": 1590,
+      "voxel_size_m": 0
+    },
+    "right_wrist_roll_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "30097a64a4785f614fa0898dfaedee6fd7477e3af20a6a34d08f124a78367a7e",
+      "source_file": "right_wrist_roll_link.STL",
+      "source_sha256": "a7ee9212ff5b94d6cb7f52bb1bbf3f352194d5b598acff74f4c77d340c5b344f",
+      "source_triangles": 7120,
+      "target_triangles": 2400,
+      "triangles": 2400,
+      "voxel_size_m": 0
+    },
+    "right_wrist_yaw_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "4c1b4c28624cd651776df0985d97235eb22aacbd04360aefe44d68f1d88ac600",
+      "source_file": "right_wrist_yaw_link.STL",
+      "source_sha256": "bc9dece2d12509707e0057ba2e48df8f3d56db0c79410212963a25e8a50f61a6",
+      "source_triangles": 6828,
+      "target_triangles": 2389,
+      "triangles": 2388,
+      "voxel_size_m": 0
+    },
+    "torso_link": {
+      "method": "voxel union, shell retopology",
+      "sha256": "ee24fc7d69ce98e734551e97f3066ac9f0b7b7e610ea540c6e98775d41de2d8a",
+      "source_file": "torso_link_rev_1_0.STL",
+      "source_sha256": "11ddb46f2098efbbd8816b1d65893632d8e78be936376c7cdcd6771899ccc723",
+      "source_triangles": 51403,
+      "target_triangles": 9000,
+      "triangles": 9000,
+      "voxel_size_m": 0.0015
+    },
+    "waist_roll_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "4711900e93429f329296bb2b80e01aa4d249a66d491a0de100e24b2746391f9d",
+      "source_file": "waist_roll_link_rev_1_0.STL",
+      "source_sha256": "b67c347a05abc3e8ddae600d98a082bee273bb39f8e651647708b0a7140a8a97",
+      "source_triangles": 1716,
+      "target_triangles": 600,
+      "triangles": 600,
+      "voxel_size_m": 0
+    },
+    "waist_yaw_link": {
+      "method": "weld, feature-preserving reduction",
+      "sha256": "e0185f66c62859b742fee165e5f6a91ec4259601684c1b10a8d3734efd276773",
+      "source_file": "waist_yaw_link_rev_1_0.STL",
+      "source_sha256": "ec6db442b11f25eed898b5add07940c85d804f300de24dcbd264ccd8be7d554c",
+      "source_triangles": 12398,
+      "target_triangles": 2400,
+      "triangles": 2400,
+      "voxel_size_m": 0
+    }
+  },
+  "source_twist2": "b06178f19a22f2138cbd31f60c6d494bc263f67d",
+  "triangles": 88047
+}

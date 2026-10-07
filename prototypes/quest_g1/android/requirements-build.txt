@@ -1,2 +1,1 @@
 -r ../requirements.lock
-fast-simplification==0.1.12

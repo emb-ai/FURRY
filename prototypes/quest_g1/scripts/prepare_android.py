@@ -3,12 +3,9 @@ from pathlib import Path
 import shutil
 import sys
 import xml.etree.ElementTree as ET
-import struct
 import json
 import hashlib
 from collections import Counter
-import numpy as np
-import fast_simplification
 import mujoco
 from PIL import Image, ImageDraw, ImageFont
 
@@ -16,24 +13,38 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from g1_sim.scene import make_model
 from g1_sim.controller import UPSTREAM
+from g1_sim.visuals import export_visual_meshes
 
 assets = ROOT / 'android/assets'
 assets.mkdir(parents=True, exist_ok=True)
 model, xml = make_model('lab', hands=True)
 root = ET.fromstring(xml)
-root.find('compiler').set('meshdir', 'meshes')
 # Hide duplicate collision geometry in the GLES renderer, retain physical shape.
 pelvis = root.find(".//body[@name='pelvis']")
 for geom in pelvis.iter('geom'):
     if geom.get('contype') != '0':
         geom.set('group', '3')
-ET.ElementTree(root).write(assets/'scene.xml', encoding='unicode')
 shutil.copy2(UPSTREAM/'assets/ckpts/twist2_1017_20k.onnx', assets/'policy.onnx')
 meshdir = assets/'meshes'
 meshdir.mkdir(exist_ok=True)
+source_meshdir = Path(root.find('compiler').get('meshdir'))
+copied_meshes = []
 for mesh in root.iter('mesh'):
-    shutil.copy2(UPSTREAM/'assets/g1/meshes'/mesh.get('file'), meshdir/mesh.get('file'))
+    if mesh.get('file'):
+        source = source_meshdir / mesh.get('file')
+        dest = meshdir / source.name
+        shutil.copy2(source, dest)
+        mesh.set('file', source.name)
+        copied_meshes.append(dest)
+# This generated directory previously held the full STL set. Do not package
+# obsolete CAD files alongside the new OBJ assets when rebuilding in place.
+for obsolete in meshdir.iterdir():
+    if obsolete.is_file() and obsolete not in copied_meshes and obsolete.suffix.lower() in ('.stl', '.obj'):
+        obsolete.unlink()
+root.find('compiler').set('meshdir', 'meshes')
+ET.ElementTree(root).write(assets/'scene.xml', encoding='unicode')
 shutil.copy2(ROOT/'THIRD_PARTY_NOTICES.txt', assets/'TWIST2_LICENSE.txt')
+shutil.copy2(ROOT/'assets/g1/LICENSE', assets/'G1_GEOMETRY_LICENSE.txt')
 shutil.copy2(ROOT/'vendor/mujoco/LICENSE', assets/'MUJOCO_LICENSE.txt')
 shutil.copy2(ROOT/'vendor/OpenXR-SDK-Source/LICENSE', assets/'OPENXR_LICENSE.txt')
 shutil.copy2(ROOT/'vendor/OpenXR-SDK-Source/LICENSES/Apache-2.0.txt', assets/'OPENXR_APACHE_2.txt')
@@ -53,38 +64,20 @@ primitive_faces = {mujoco.mjtGeom.mjGEOM_BOX:12, mujoco.mjtGeom.mjGEOM_PLANE:12,
                    mujoco.mjtGeom.mjGEOM_CYLINDER:64, mujoco.mjtGeom.mjGEOM_CAPSULE:64}
 primitive_triangles = 2 + sum(primitive_faces.get(g.type, 0) for g in scene.geoms[:scene.ngeom]
                               if g.type != mujoco.mjtGeom.mjGEOM_PLANE)
-targets = [min(int(n), max(200, min(1800, int(n*.12)))) for n in model.mesh_facenum]
-weighted = sum(targets[i]*uses for i, uses in mesh_usage.items())
-ratio = min(1., (90000-primitive_triangles)/max(weighted,1))
-targets = [max(4, int(n*ratio)) for n in targets]
-# A separate visual mesh stream leaves MuJoCo's collision meshes untouched.
-triangles = 0
-mesh_counts = []
-with (assets/'visual_meshes.bin').open('wb') as out:
-    out.write(struct.pack('<I', model.nmesh))
-    for i in range(model.nmesh):
-        va, vn = model.mesh_vertadr[i], model.mesh_vertnum[i]
-        fa, fn = model.mesh_faceadr[i], model.mesh_facenum[i]
-        vertices = model.mesh_vert[va:va+vn].astype(np.float64)
-        faces = model.mesh_face[fa:fa+fn]
-        target = targets[i]
-        if target < fn:
-            vertices, faces = fast_simplification.simplify(vertices, faces, target_count=target)
-        points = vertices[faces]
-        normal = np.cross(points[:,1]-points[:,0], points[:,2]-points[:,0])
-        normal /= np.maximum(np.linalg.norm(normal,axis=1,keepdims=True),1e-12)
-        packed = np.concatenate([points,np.repeat(normal[:,None,:],3,axis=1)],axis=2).astype('<f4')
-        out.write(struct.pack('<I',len(faces)*3))
-        out.write(packed.tobytes())
-        triangles += len(faces)
-        mesh_counts.append(len(faces))
-print('Visual mesh triangles:', model.nmeshface, '->',triangles)
+# OBJ corner normals and authored topology are retained. Hidden collision hulls
+# have empty render streams and never consume the visual triangle budget.
+mesh_counts = export_visual_meshes(model, assets/'visual_meshes.bin', mesh_usage)
+triangles = sum(mesh_counts)
+print('Authored visual mesh triangles:', triangles)
 scene_triangles = primitive_triangles + sum(mesh_counts[i]*uses for i, uses in mesh_usage.items())
 assert scene_triangles <= 100000, f'Scene exceeds polygon budget: {scene_triangles}'
+collision_spec = json.loads((ROOT/'assets/g1/collision.json').read_text())
 budget = dict(maximum_triangles_per_eye=100000, scene_triangles_per_eye=scene_triangles,
               primitive_triangles=primitive_triangles, unique_visual_mesh_triangles=triangles,
-              original_mesh_triangles=int(model.nmeshface), method='quadric edge collapse',
-              mesh_instances=sum(mesh_usage.values()), physics_meshes_unchanged=True)
+              source_visual_mesh_triangles=629338, method='authored exterior shells with crease-aware normals',
+              mesh_instances=sum(mesh_usage.values()), collision_model='mjx_body_articulated_hands_v1',
+              body_primitives=len(collision_spec['body']), hand_convex_meshes=len(collision_spec['hands']),
+              hand_collision_triangles=sum(len(h['faces']) for h in collision_spec['hands']))
 (assets/'mesh_budget.json').write_text(json.dumps(budget, indent=2)+'\n')
 print('Complete rendered scene triangles per eye:', scene_triangles, '/ 100000')
 font_path = '/System/Library/Fonts/Supplemental/Arial.ttf'
@@ -239,14 +232,15 @@ print('Android scene and OpenXR lifecycle prepared:',assets)
 
 # Identify the exact scene, meshes, policy and retargeter used by each episode.
 hashes = {}
-for path in sorted([assets/'scene.xml', assets/'policy.onnx', *meshdir.glob('*'),
+for path in sorted([assets/'scene.xml', assets/'policy.onnx', assets/'visual_meshes.bin', *copied_meshes,
                     ROOT/'android/native/retarget.cpp', ROOT/'android/native/simulation.cpp']):
     hashes[str(path.relative_to(assets) if path.is_relative_to(assets) else path.relative_to(ROOT))] = hashlib.sha256(path.read_bytes()).hexdigest()
 metadata = dict(schema_version=1, input_mode='openxr_touch_grip', pose_frame='OpenXR STAGE; metres; quaternion wxyz',
                 head_pose='mean stereo-eye position; left-eye orientation',
                 physics_hz=1000, policy_hz=100, nq=model.nq, nv=model.nv, nu=model.nu,
                 joints=[mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_JOINT, i) for i in range(model.njnt)],
-                source_twist2='b06178f19a22f2138cbd31f60c6d494bc263f67d', sha256=hashes,
+                source_twist2='b06178f19a22f2138cbd31f60c6d494bc263f67d',
+                geometry='mjx_body_articulated_hands_v1', sha256=hashes,
                 state_phase='before next 10 physics steps; ctrl is last physics-step output',
                 clocks='xr_time_ns is predicted display time; receive_ns is steady_clock, no clock-offset fit',
                 missing_data='valid and per-pose OpenXR flags are authoritative; invalid numerical poses must not be used',

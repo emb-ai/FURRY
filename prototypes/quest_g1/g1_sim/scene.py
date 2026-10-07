@@ -1,15 +1,18 @@
-"""Build scenes around the unmodified upstream G1 description."""
+"""Build scenes with source articulation and independently authored geometry."""
 import math
 import xml.etree.ElementTree as ET
 import mujoco
 from .controller import UPSTREAM
+from .geometry import apply_hybrid, configure_props
 
 
 def add(parent, tag, **attrs):
     return ET.SubElement(parent, tag, {k: str(v) for k, v in attrs.items()})
 
 
-def make_model(scene="lab", hands=True):
+def make_model(scene="lab", hands=True, geometry="hybrid"):
+    if geometry not in ("hybrid", "source", "collision_only"):
+        raise ValueError(f"Unknown geometry variant: {geometry}")
     source = UPSTREAM / "assets/g1" / ("g1_sim2sim_29dof_with_hands.xml" if hands else "g1_sim2sim_29dof.xml")
     root = ET.parse(source).getroot()
     if hands:
@@ -24,6 +27,8 @@ def make_model(scene="lab", hands=True):
                     if attr in ref.attrib:
                         joint.set(attr, ref.get(attr))
     root.find("compiler").set("meshdir", str(source.parent / "meshes"))
+    if hands and geometry != "source":
+        apply_hybrid(root, visuals=geometry == "hybrid")
     # The supplied keyframe is for the original qpos layout, not extra free props.
     for key in root.findall("keyframe"):
         root.remove(key)
@@ -73,5 +78,7 @@ def make_model(scene="lab", hands=True):
         target = add(world, "body", name="t_target", pos=f"{x+.9} {y} .002")
         for pos, size in [(".12 0 0", ".09 .3 .002"), ("-.12 0 0", ".15 .09 .002")]:
             add(target, "geom", type="box", pos=pos, size=size, contype="0", conaffinity="0", rgba=".15 .7 1 .45")
+    if hands and geometry != "source":
+        configure_props(world)
     xml = ET.tostring(root, encoding="unicode")
     return mujoco.MjModel.from_xml_string(xml), xml
