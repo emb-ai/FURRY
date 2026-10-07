@@ -35,6 +35,8 @@ public:
     void SetTargets(const std::vector<TrackedPose>& value);
     // Optional Meta extension; disabled for the unmodified upstream oracle.
     void SetCameraTarget(const TrackedPose& target);
+    // Translate the reference constellation together; retain floor height.
+    std::array<double,3> AlignTargetsToCameraXY(const TrackedPose& target);
     void ClearCameraTarget(){cameraEnabled=false;}
     TrackedPose CameraPose()const;
     const TrackedPose& CameraTarget()const{return cameraTarget;}

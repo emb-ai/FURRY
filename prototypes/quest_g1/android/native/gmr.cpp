@@ -78,6 +78,18 @@ TrackedPose GmrRetargeter::CameraPose()const{
     mju_mulQuat(pose.quaternion.data(),rotation,cameraLocal.quaternion.data());
     return pose;
 }
+std::array<double,3> GmrRetargeter::AlignTargetsToCameraXY(const TrackedPose& target){
+    auto referenceCamera=CameraPose();
+    std::array<double,3> shift{target.position[0]-referenceCamera.position[0],
+                               target.position[1]-referenceCamera.position[1],0};
+    for(double v:shift)if(!std::isfinite(v))throw std::runtime_error("Invalid camera target translation");
+    // Both task targets and their warm start undergo the same rigid shift.
+    // This moves only the kinematic reference, never the physical robot.
+    for(auto& p:targets)for(int a=0;a<2;a++)p.position[a]+=shift[a];
+    for(int a=0;a<2;a++)data_->qpos[a]+=shift[a];
+    mj_kinematics(model_,data_);mj_comPos(model_,data_);
+    return shift;
+}
 void GmrRetargeter::SetCameraTarget(const TrackedPose& target){
     for(double v:target.position)if(!std::isfinite(v))throw std::runtime_error("Invalid camera position");
     for(double v:target.quaternion)if(!std::isfinite(v))throw std::runtime_error("Invalid camera orientation");

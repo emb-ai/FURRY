@@ -112,7 +112,13 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& input){
         for(int a=0;a<3;a++)camera.position[a]=cameraOrigin.position[a]+cameraScale*headMapped[a];
         camera.position[2]=cameraOrigin.position[2]+cameraScale*(input.head.position[1]-cameraHeadOrigin.position[1]);
         mju_mulQuat(aligned,basisQuat,input.head.quaternion.data());
-        mju_mulQuat(camera.quaternion.data(),aligned,cameraRotationOffset.data());gmr.SetCameraTarget(camera);
+        mju_mulQuat(camera.quaternion.data(),aligned,cameraRotationOffset.data());
+        // First retarget the body pose without a competing absolute camera
+        // task. Then place the entire reference constellation under the HMD.
+        // Use the achieved reference camera, not the lagging physical robot:
+        // adding its tracking error here would count world travel twice.
+        gmr.ClearCameraTarget();gmr.Solve();
+        gmr.AlignTargetsToCameraXY(camera);gmr.SetCameraTarget(camera);
     }else gmr.ClearCameraTarget();
     gmr.Solve();error=gmr.error;
     const double* q=gmr.data()->qpos;double delta[35]={},worldVel[3]={},localVel[3]={},R[9];mju_quat2Mat(R,q+3);
