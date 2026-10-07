@@ -23,6 +23,9 @@ def make_model(scene="lab", hands=True):
                 for attr in ("armature", "damping", "frictionloss", "actuatorfrcrange"):
                     if attr in ref.attrib:
                         joint.set(attr, ref.get(attr))
+    # PGS saturates 50 sweeps on dense finger/cup contacts. Newton solves the
+    # same contact model to the existing tolerance without changing timestep.
+    root.find("option").set("solver", "Newton")
     root.find("compiler").set("meshdir", str(source.parent / "meshes"))
     # The supplied keyframe is for the original qpos layout, not extra free props.
     for key in root.findall("keyframe"):

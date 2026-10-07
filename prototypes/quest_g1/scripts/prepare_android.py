@@ -108,7 +108,7 @@ for state in range(18):
                             'A → начало координат и калибровка тела',
                             'B → пауза / продолжение трекинга',
                             'Grip слева / справа → сжать свою кисть',
-                            'X → рестарт; Y → начать / закончить запись',
+                            'X → рестарт; Y → запись; левый стик → вид',
                             ['Запись выключена. Сначала Y, затем A.', '● ИДЁТ ЗАПИСЬ · Y → сохранить', 'Ошибка записи: проверьте свободное место'][state // 6]]):
         draw.text((40,125+y*58),line,font=body_font,fill=(228,236,245))
     (assets/f'controls_{state}.rgba').write_bytes(panel.tobytes())
@@ -149,7 +149,7 @@ for name in names:
         text = text.replace('struct OpenXrProgram : IOpenXrProgram {',
                             'struct OpenXrProgram : IOpenXrProgram {\n    Passthrough passthrough; BodyTracking bodyTracking; uint64_t trackingSequence=0;')
         text = text.replace('XrAction quitAction{XR_NULL_HANDLE};',
-                            'XrAction quitAction{XR_NULL_HANDLE};\n        XrAction calibrateAction{XR_NULL_HANDLE}, pauseAction{XR_NULL_HANDLE}, resetAction{XR_NULL_HANDLE}, recordAction{XR_NULL_HANDLE};')
+                            'XrAction quitAction{XR_NULL_HANDLE};\n        XrAction calibrateAction{XR_NULL_HANDLE}, pauseAction{XR_NULL_HANDLE}, resetAction{XR_NULL_HANDLE}, recordAction{XR_NULL_HANDLE}, viewAction{XR_NULL_HANDLE};')
         text = text.replace('CHECK_XRCMD(xrCreateAction(m_input.actionSet, &actionInfo, &m_input.quitAction));', '''CHECK_XRCMD(xrCreateAction(m_input.actionSet, &actionInfo, &m_input.quitAction));
             strcpy_s(actionInfo.actionName, "calibrate_tracking");
             strcpy_s(actionInfo.localizedActionName, "Calibrate tracking");
@@ -162,7 +162,10 @@ for name in names:
             CHECK_XRCMD(xrCreateAction(m_input.actionSet, &actionInfo, &m_input.resetAction));
             strcpy_s(actionInfo.actionName, "record_episode");
             strcpy_s(actionInfo.localizedActionName, "Record episode");
-            CHECK_XRCMD(xrCreateAction(m_input.actionSet, &actionInfo, &m_input.recordAction));''')
+            CHECK_XRCMD(xrCreateAction(m_input.actionSet, &actionInfo, &m_input.recordAction));
+            strcpy_s(actionInfo.actionName, "toggle_view");
+            strcpy_s(actionInfo.localizedActionName, "Toggle first person view");
+            CHECK_XRCMD(xrCreateAction(m_input.actionSet, &actionInfo, &m_input.viewAction));''')
         text = text.replace('suggestedBindings.interactionProfile = oculusTouchInteractionProfilePath;', '''suggestedBindings.interactionProfile = oculusTouchInteractionProfilePath;
             XrPath aButton, bButton, xButton, yButton;
             CHECK_XRCMD(xrStringToPath(m_instance,"/user/hand/right/input/a/click",&aButton));
@@ -172,16 +175,19 @@ for name in names:
             CHECK_XRCMD(xrStringToPath(m_instance,"/user/hand/left/input/x/click",&xButton));
             CHECK_XRCMD(xrStringToPath(m_instance,"/user/hand/left/input/y/click",&yButton));
             bindings.push_back({m_input.resetAction,xButton});
-            bindings.push_back({m_input.recordAction,yButton});''')
-        text = text.replace('// There were no subaction paths specified for the quit action,', '''for(int button=0;button<4;button++){
+            bindings.push_back({m_input.recordAction,yButton});
+            XrPath viewClick;
+            CHECK_XRCMD(xrStringToPath(m_instance,"/user/hand/left/input/thumbstick/click",&viewClick));
+            bindings.push_back({m_input.viewAction,viewClick});''')
+        text = text.replace('// There were no subaction paths specified for the quit action,', '''for(int button=0;button<5;button++){
             XrActionStateGetInfo info{XR_TYPE_ACTION_STATE_GET_INFO};
-            const XrAction buttons[]={m_input.calibrateAction,m_input.pauseAction,m_input.resetAction,m_input.recordAction};
+            const XrAction buttons[]={m_input.calibrateAction,m_input.pauseAction,m_input.resetAction,m_input.recordAction,m_input.viewAction};
             info.action=buttons[button];
             XrActionStateBoolean state{XR_TYPE_ACTION_STATE_BOOLEAN};
             CHECK_XRCMD(xrGetActionStateBoolean(m_session,&info,&state));
             if(state.isActive && state.changedSinceLastSync && state.currentState){
                 if(button==0)G1Calibrate();else if(button==1)G1ToggleTracking();
-                else if(button==2)G1Reset();else G1ToggleRecording();
+                else if(button==2)G1Reset();else if(button==3)G1ToggleRecording();else G1ToggleView();
             }
         }
         // There were no subaction paths specified for the quit action,''')

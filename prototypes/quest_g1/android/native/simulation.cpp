@@ -22,7 +22,8 @@ std::vector<std::string> JointNames() {
 }
 }
 
-Simulation::Simulation(const std::string& assets) {
+Simulation::Simulation(const std::string& assets, int physicsWorkers) {
+    if(physicsWorkers<0 || physicsWorkers>4)throw std::runtime_error("Invalid MuJoCo worker count");
     options.SetIntraOpNumThreads(1);
     options.SetInterOpNumThreads(1);
     session = std::make_unique<Ort::Session>(env, (assets+"/policy.onnx").c_str(), options);
@@ -34,6 +35,11 @@ Simulation::Simulation(const std::string& assets) {
     if (!model) throw std::runtime_error(std::string("MuJoCo model: ")+error);
     data = mj_makeData(model);
     if (!data) throw std::runtime_error("mj_makeData failed");
+    if(physicsWorkers){
+        physicsPool.reset(mju_threadPoolCreate(physicsWorkers));
+        mju_bindThreadPool(data,physicsPool.get());
+        physics_workers=physicsWorkers;
+    }
     auto names = JointNames();
     for (int i=0;i<29;i++) {
         int j=mj_name2id(model,mjOBJ_JOINT,names[i].c_str());

@@ -11,15 +11,15 @@
 #include <stdexcept>
 
 // Lightweight native glyph atlas; drawn every eye even when physics is stalled.
-inline int DrawStatsHud(const float* projection,const std::string& assets,const RuntimeStats& s,
+inline int DrawStatsHud(const float* headViewProjection,const std::string& assets,const RuntimeStats& s,
                          double fps,double drawMs,uint64_t skipped,double now,int status,bool active,int exportStatus,
-                         const TrackingFrame& raw,double rawAgeMs){
+                         const TrackingFrame& raw,double rawAgeMs,bool firstPerson){
     static GLuint program=0,texture=0,vao=0,vbo=0;
     if(!program){
         auto shader=[](GLenum type,const char* source){GLuint h=glCreateShader(type);glShaderSource(h,1,&source,nullptr);glCompileShader(h);GLint ok;glGetShaderiv(h,GL_COMPILE_STATUS,&ok);if(!ok)throw std::runtime_error("Stats shader failed");return h;};
         GLuint v=shader(GL_VERTEX_SHADER,R"(#version 320 es
-layout(location=0) in vec2 p;layout(location=1) in vec2 uv;uniform mat4 projection;out vec2 tex;
-void main(){gl_Position=projection*vec4(p,-1.6,1);tex=uv;})");
+layout(location=0) in vec2 p;layout(location=1) in vec2 uv;uniform mat4 headViewProjection;out vec2 tex;
+void main(){gl_Position=headViewProjection*vec4(p,-1.6,1);tex=uv;})");
         GLuint f=shader(GL_FRAGMENT_SHADER,R"(#version 320 es
 precision mediump float;in vec2 tex;uniform sampler2D atlas;uniform vec4 tint;out vec4 color;
 void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
@@ -38,14 +38,14 @@ void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
     const char* reasons[]={"-","STAGE RECENTER: A","BODY RECALIBRATED: A","FALL/EXCEPTION: X"};
     char text[2048];
     std::snprintf(text,sizeof(text),
-        "FPS %5.1f  CPU/eye %4.1f ms\nSIM %4.2fx  cycle %5.1f ms\nPHYS %4.1f  GMR %4.1f  NN %4.1f ms\nCONTACT %3d  pairs %3d  overlap %3d\nDEPTH %5.1f mm  constraints %4d\nSOLVER %3d  GMR iterations %2d\nINPUT %5.1f ms  body gap %+5.1f ms\nBODY conf %.2f  version %llu\nTARGET %+.2f %+.2f  ROOT %+.2f %+.2f\nROOT error %.3f m  GMR residual %.2f\nCMD local %+.2f %+.2f m/s\nVEL world %+.2f %+.2f m/s\nHEIGHT %.3f m  TILT %4.1f deg\nFEET L/R %d/%d  LEG error %.1f deg\nOVERRUN %llu DROP %llu WARN %d\nSCENE skips %llu  STATE age %.0f ms\n%s\n%s\n%s",
-        fps,drawMs,active?s.realTimeFactor:0.,s.cycleMs,s.physicsMs,s.gmrMs,s.inferenceMs,s.contacts,s.pairs,s.overlaps,s.depthMm,s.constraints,s.solverIterations,s.gmrIterations,s.inputAgeMs,s.bodyGapMs,s.confidence,(unsigned long long)s.bodyVersion,
+        "VIEW: %s / LEFT STICK CLICK\nFPS %5.1f  CPU/eye %4.1f ms\nSIM %4.2fx  cycle %5.1f ms  MT %d\nPHYS %4.1f  GMR %4.1f  NN %4.1f ms\nCONTACT %3d  pairs %3d  overlap %3d\nDEPTH %5.1f mm  constraints %4d\nSOLVER %3d  GMR iterations %2d\nINPUT %5.1f ms  body gap %+5.1f ms\nBODY conf %.2f  version %llu\nTARGET %+.2f %+.2f  ROOT %+.2f %+.2f\nROOT error %.3f m  GMR residual %.2f\nCMD local %+.2f %+.2f m/s\nVEL world %+.2f %+.2f m/s\nHEIGHT %.3f m  TILT %4.1f deg\nFEET L/R %d/%d  LEG error %.1f deg\nOVERRUN %llu DROP %llu WARN %d\nSCENE skips %llu  STATE age %.0f ms\n%s\n%s\n%s",
+        firstPerson?"FIRST PERSON":"OBSERVER",fps,drawMs,active?s.realTimeFactor:0.,s.cycleMs,s.physicsWorkers,s.physicsMs,s.gmrMs,s.inferenceMs,s.contacts,s.pairs,s.overlaps,s.depthMm,s.constraints,s.solverIterations,s.gmrIterations,s.inputAgeMs,s.bodyGapMs,s.confidence,(unsigned long long)s.bodyVersion,
         s.targetXY[0],s.targetXY[1],s.actualXY[0],s.actualXY[1],s.positionError,s.residual,s.commandXY[0],s.commandXY[1],s.velocityXY[0],s.velocityXY[1],s.height,s.tilt,s.footContacts[0],s.footContacts[1],s.legErrorDegrees,(unsigned long long)s.overruns,(unsigned long long)s.droppedInputs,s.warnings,(unsigned long long)skipped,s.published>0?std::max(0.,now-s.published)*1000:0.,active?states[std::clamp(status,0,5)]:"XR FOCUS PAUSED",reasons[std::clamp(s.reason,0,3)],exports[std::clamp(exportStatus,0,3)]);
     std::vector<float> vertices;vertices.reserve(24000);
     auto quad=[&](float x,float y,float w,float h,int code){int cell=code-32;float u=(cell%16)/16.f,v=(cell/16)/6.f;
         const float q[]={x,y,u,v, x+w,y-h,u+20/512.f,v+1/6.f, x+w,y,u+20/512.f,v,
                          x,y,u,v, x,y-h,u,v+1/6.f, x+w,y-h,u+20/512.f,v+1/6.f};vertices.insert(vertices.end(),q,q+24);};
-    quad(-1.18f,.96f,.97f,.68f,127);
+    quad(-1.18f,.96f,.97f,.72f,127);
     float x=-1.16f,y=.945f;for(char c:std::string(text)){if(c=='\n'){x=-1.16f;y-=.033f;continue;}if(c>=32 && c<127)quad(x,y,.020f,.040f,c);x+=.0185f;}
     const int statsEnd=vertices.size()/4;
     struct Batch{int first,count;std::array<float,4> color;};
@@ -102,18 +102,15 @@ void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
         }
         batch(first,fresh?(group?std::array<float,4>{1.f,.65f,.25f,1.f}:std::array<float,4>{.3f,.85f,1.f,1.f}):std::array<float,4>{.5f,.5f,.5f,.7f});
     }
-    // Keep diagnostics inside the central lens region; viewport corners are
-    // outside the comfortably readable area on Quest.
-    // Preserve glyph aspect ratio using the projection's x/y scale ratio.
-    const float px=projection[0],py=projection[5];
-    if(px>0 && py>0)for(size_t i=0;i<vertices.size();i+=4){
-        bool left=i/4<size_t(statsEnd);float factor=left?.50f/.97f:.42f/.83f;
-        float nx=left?-.66f+(vertices[i]+1.18f)*factor:.24f+(vertices[i]-.35f)*factor;
-        float ny=.56f+(vertices[i+1]-.96f)*factor*py/px;
-        vertices[i]=1.6f*(nx+projection[8])/px;vertices[i+1]=1.6f*(ny+projection[9])/py;
+    // Shared metre coordinates in the central head frame, not per-eye NDC.
+    // The real eye poses and asymmetric FOVs provide the stereo disparity.
+    for(size_t i=0;i<vertices.size();i+=4){
+        bool left=i/4<size_t(statsEnd);float factor=left?.64f/.97f:.54f/.83f;
+        vertices[i]=left?-.84f+(vertices[i]+1.18f)*factor:.30f+(vertices[i]-.35f)*factor;
+        vertices[i+1]=.68f+(vertices[i+1]-.96f)*factor;
     }
     glDisable(GL_DEPTH_TEST);glEnable(GL_BLEND);glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-    glUseProgram(program);glUniformMatrix4fv(glGetUniformLocation(program,"projection"),1,GL_FALSE,projection);
+    glUseProgram(program);glUniformMatrix4fv(glGetUniformLocation(program,"headViewProjection"),1,GL_FALSE,headViewProjection);
     glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,texture);glUniform1i(glGetUniformLocation(program,"atlas"),0);
     glBindVertexArray(vao);glBindBuffer(GL_ARRAY_BUFFER,vbo);glBufferData(GL_ARRAY_BUFFER,vertices.size()*sizeof(float),vertices.data(),GL_STREAM_DRAW);
     glUniform4f(glGetUniformLocation(program,"tint"),.025f,.04f,.06f,.82f);glDrawArrays(GL_TRIANGLES,0,6);

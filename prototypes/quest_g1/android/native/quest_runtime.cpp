@@ -1,3 +1,4 @@
+#include "view_frames.h"
 #include "quest_runtime.h"
 #include "simulation.h"
 #include "meta_retarget.h"
@@ -61,7 +62,29 @@ std::thread worker;
 std::atomic<bool> running{false}, active{false}, reset{false};
 std::atomic<float> grip[2]{{0},{0}};
 std::string assetsPath;
-mjvScene scene{};
+mjvScene scene{},workerScene{};
+std::mutex geometryMutex;
+std::vector<mjvGeom> publishedGeometry;
+XrMatrix4x4f publishedCamera{},frameCamera{},headMatrix{},egoAnchor{};
+TrackingFrame frameTracking;
+RuntimeStats frameStats;
+double frameAgeMs=0,frameDrawMs=0,frameNow=0;
+int frameStatus=0,frameExportStatus=0;
+bool firstPerson=false,refreshEgoAnchor=true;
+int egoCamera=-1,headBody=-1;
+void PublishGeometry(){
+    mjvOption option;mjv_defaultOption(&option);option.geomgroup[3]=0;
+    mjvCamera camera;mjv_defaultCamera(&camera);
+    mjv_updateScene(sim->model,sim->data,&option,nullptr,&camera,mjCAT_ALL,&workerScene);
+    XrMatrix4x4f pose{};pose.m[15]=1;
+    for(int r=0;r<3;r++){
+        for(int c=0;c<3;c++)pose.m[4*c+r]=float(sim->data->cam_xmat[9*egoCamera+3*r+c]);
+        pose.m[12+r]=float(sim->data->cam_xpos[3*egoCamera+r]);
+    }
+    std::lock_guard<std::mutex> guard(geometryMutex);
+    publishedGeometry.assign(workerScene.geoms,workerScene.geoms+workerScene.ngeom);
+    publishedCamera=pose;
+}
 GLuint program=0;
 struct Mesh {GLuint vao=0,vbo=0; GLsizei count=0;};
 std::map<int,Mesh> meshes;
@@ -190,13 +213,18 @@ void G1Initialize(android_app* app){
     for(auto& mesh:visualMeshes){uint32_t n=0;visual.read(reinterpret_cast<char*>(&n),4);if(n>3000000)throw std::runtime_error("Invalid visual mesh");mesh.resize(size_t(n)*6);visual.read(reinterpret_cast<char*>(mesh.data()),mesh.size()*sizeof(float));}
     if(!visual)throw std::runtime_error("Truncated visual mesh asset");
     mjv_defaultScene(&scene);mjv_makeScene(sim->model,&scene,2048);
+    mjv_defaultScene(&workerScene);mjv_makeScene(sim->model,&workerScene,2048);
+    egoCamera=mj_name2id(sim->model,mjOBJ_CAMERA,"ego");
+    headBody=mj_name2id(sim->model,mjOBJ_BODY,"head_link");
+    if(egoCamera<0)throw std::runtime_error("Missing ego camera");
+    publishedGeometry.reserve(2048);PublishGeometry();
     telemetry.open(assets+"/runtime_stats.csv",std::ios::trunc);
-    telemetry<<"wall_s,sim_s,cycle_ms,physics_ms,gmr_ms,inference_ms,rtf,contacts,overlap_points,pairs,max_depth_mm,solver_iterations,constraints,body_gap_ms,input_age_ms,body_confidence,body_version,state,reason,target_x,target_y,actual_x,actual_y,cmd_vx,cmd_vy,actual_vx,actual_vy,root_error,height,tilt,gmr_residual,gmr_iterations,overruns,dropped_inputs,left_foot_contacts,right_foot_contacts,leg_error_deg\n";
+    telemetry<<"wall_s,sim_s,cycle_ms,physics_ms,gmr_ms,inference_ms,rtf,contacts,overlap_points,pairs,max_depth_mm,solver_iterations,constraints,body_gap_ms,input_age_ms,body_confidence,body_version,state,reason,target_x,target_y,actual_x,actual_y,cmd_vx,cmd_vy,actual_vx,actual_vy,root_error,height,tilt,gmr_residual,gmr_iterations,overruns,dropped_inputs,left_foot_contacts,right_foot_contacts,leg_error_deg,physics_workers\n";
     try{exporter=std::make_unique<RecordingExport>(app->activity->vm,app->activity->clazz);exporter->Latest(assets+"/recordings");}
     catch(const std::exception& e){__android_log_print(ANDROID_LOG_ERROR,"G1Quest","Recording export unavailable: %s",e.what());}
     running=true;
     worker=std::thread([]{
-        double rateWall=ClockSeconds(),rateSim=0,lastTelemetry=0;RuntimeStats sample;
+        double rateWall=ClockSeconds(),rateSim=0,lastTelemetry=0;RuntimeStats sample;sample.physicsWorkers=sim->physics_workers;
         auto next=std::chrono::steady_clock::now();
         while(running){
             double cycleStart=ClockSeconds();
@@ -280,6 +308,7 @@ void G1Initialize(android_app* app){
                 }
                 double physicsStart=ClockSeconds();
                 for(int i=0;i<10;i++)sim->Step(false,leftGrip,rightGrip);
+                PublishGeometry();
                 sample.physicsMs=std::max(0.,(ClockSeconds()-physicsStart)*1000-sim->inference_ms);
                 sample.inferenceMs=sim->inference_ms;sample.cycleMs=(ClockSeconds()-cycleStart)*1000;
                 if(sample.cycleMs>10)sample.overruns++;
@@ -319,7 +348,7 @@ void G1Initialize(android_app* app){
                     const auto& x=sample;
                     telemetry<<x.published<<','<<x.simTime<<','<<x.cycleMs<<','<<x.physicsMs<<','<<x.gmrMs<<','<<x.inferenceMs<<','<<x.realTimeFactor<<','<<x.contacts<<','<<x.overlaps<<','<<x.pairs<<','<<x.depthMm<<','<<x.solverIterations<<','<<x.constraints<<','<<x.bodyGapMs<<','<<x.inputAgeMs<<','<<x.confidence<<','<<x.bodyVersion<<','<<x.status<<','<<x.reason;
                     for(const auto& values:{x.targetXY,x.actualXY,x.commandXY,x.velocityXY})for(double v:values)telemetry<<','<<v;
-                    telemetry<<','<<x.positionError<<','<<x.height<<','<<x.tilt<<','<<x.residual<<','<<x.gmrIterations<<','<<x.overruns<<','<<x.droppedInputs<<','<<x.footContacts[0]<<','<<x.footContacts[1]<<','<<x.legErrorDegrees<<'\n';lastTelemetry=x.published;
+                    telemetry<<','<<x.positionError<<','<<x.height<<','<<x.tilt<<','<<x.residual<<','<<x.gmrIterations<<','<<x.overruns<<','<<x.droppedInputs<<','<<x.footContacts[0]<<','<<x.footContacts[1]<<','<<x.legErrorDegrees<<','<<x.physicsWorkers<<'\n';lastTelemetry=x.published;
                     if(sim->steps%1000==0)telemetry.flush();
                 }
                 if(sim->steps%5000==0)__android_log_print(ANDROID_LOG_INFO,"G1Quest","sim=%.2fs height=%.3f inference=%.3fms",sim->data->time,sim->data->qpos[2],sim->inference_ms);
@@ -334,7 +363,7 @@ void G1Initialize(android_app* app){
             if(std::chrono::steady_clock::now()-next>std::chrono::milliseconds(100))next=std::chrono::steady_clock::now();
         }
     });
-    __android_log_print(ANDROID_LOG_INFO,"G1Quest","Initialized autonomous MuJoCo %s, %d actuators",mj_versionString(),sim->model->nu);
+    __android_log_print(ANDROID_LOG_INFO,"G1Quest","Initialized autonomous MuJoCo %s, %d actuators, %d physics workers",mj_versionString(),sim->model->nu,sim->physics_workers);
 }
 void G1Shutdown(bool interrupted){
     running=false;if(worker.joinable())worker.join();
@@ -343,20 +372,20 @@ void G1Shutdown(bool interrupted){
         else {bool wasRecording=recorder.active;recorder.Stop("app_shutdown");if(wasRecording && exporter)exporter->Queue(recorder.path());}
     });
     exporter.reset();
-    telemetry.close();trace.close();mjv_freeScene(&scene);retarget.reset();sim.reset();
+    telemetry.close();trace.close();mjv_freeScene(&scene);mjv_freeScene(&workerScene);retarget.reset();sim.reset();
 }
 void G1SetActive(bool value){
     if(active.exchange(value)!=value){std::lock_guard<std::mutex> guard(inputMutex);pendingEvents.emplace_back(value?"focus_resume":"focus_pause");}
 }
 void G1Grip(int hand,float value){if(hand>=0 && hand<2)grip[hand]=value;}
-void G1Reset(){reset=true;placeScene=true;}
+void G1Reset(){reset=true;placeScene=true;refreshEgoAnchor=true;}
 void G1ReferenceSpaceChange(int64_t changeTime){
     std::lock_guard<std::mutex> guard(inputMutex);
     spaceChanges.Schedule(changeTime);
 }
 void G1SubmitTracking(const TrackingFrame& input){
     {std::lock_guard<std::mutex> guard(inputMutex);latestTracking=input;trackingTime=std::chrono::steady_clock::now();
-        if(spaceChanges.Advance(input.xr_time_ns)){spaceInvalidated=true;placeScene=true;}
+        if(spaceChanges.Advance(input.xr_time_ns)){spaceInvalidated=true;placeScene=true;refreshEgoAnchor=true;}
         if(pendingInputs.size()>=512){pendingInputs.pop_front();droppedInputs++;}
         pendingInputs.push_back({input,grip[0].load(),grip[1].load(),EpisodeRecorder::Now()});
     }
@@ -370,6 +399,7 @@ void G1SubmitTracking(const TrackingFrame& input){
     }
 }
 void G1Calibrate(){calibrate=true;}
+void G1ToggleView(){firstPerson=!firstPerson;refreshEgoAnchor=true;}
 void G1ToggleRecording(){toggleRecording=true;}
 void G1ToggleTracking(){toggleTracking=true;}
 void G1CaptureFrame(int width,int height){
@@ -385,12 +415,17 @@ void G1CaptureFrame(int width,int height){
 void G1PrepareFrame(){
     if(!sim)return;
     static double last=ClockSeconds();static int frames=0;
-    frames++;double now=ClockSeconds();if(now-last>=.5){renderFps=frames/(now-last);frames=0;last=now;}
-    std::unique_lock<std::mutex> guard(mutex,std::try_to_lock);
+    frames++;double now=ClockSeconds();frameNow=now;if(now-last>=.5){renderFps=frames/(now-last);frames=0;last=now;}
+    {std::lock_guard<std::mutex> guard(inputMutex);frameTracking=latestTracking;
+        frameAgeMs=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-trackingTime).count();}
+    {std::unique_lock<std::mutex> guard(statsMutex,std::try_to_lock);if(guard.owns_lock())frameStats=stats;}
+    frameDrawMs=renderMs;frameStatus=trackingStatus.load();frameExportStatus=exporter?exporter->status.load():3;
+    headMatrix=PoseMatrix(frameTracking.head);
+    if(refreshEgoAnchor && (frameTracking.location_flags[0]&3)==3){egoAnchor=headMatrix;refreshEgoAnchor=false;}
+    std::unique_lock<std::mutex> guard(geometryMutex,std::try_to_lock);
     if(!guard.owns_lock()){skippedSceneUpdates++;return;}
-    mjvOption opt;mjv_defaultOption(&opt);opt.geomgroup[3]=0;
-    mjvCamera cam;mjv_defaultCamera(&cam);
-    mjv_updateScene(sim->model,sim->data,&opt,nullptr,&cam,mjCAT_ALL,&scene);
+    scene.ngeom=std::min(int(publishedGeometry.size()),scene.maxgeom);
+    std::copy_n(publishedGeometry.begin(),scene.ngeom,scene.geoms);frameCamera=publishedCamera;
 }
 void G1Render(const float* vp,const float* projection){
     double renderStart=ClockSeconds();
@@ -399,9 +434,12 @@ void G1Render(const float* vp,const float* projection){
     glUniformMatrix4fv(vpLocation,1,GL_FALSE,vp);
     // MuJoCo +Z up -> XR +Y up, anchored ahead of the initial headset pose.
     XrMatrix4x4f world{};std::copy(sceneTransform.begin(),sceneTransform.end(),world.m);
+    if(firstPerson)world=EgoWorld(frameCamera,egoAnchor);
     int renderedTriangles=2;
     for(int i=0;i<scene.ngeom;i++){
         const mjvGeom& g=scene.geoms[i];if(g.rgba[3]<.01)continue;
+        if(firstPerson && g.objtype==mjOBJ_GEOM && g.objid>=0 &&
+           sim->model->geom_bodyid[g.objid]==headBody)continue;
         // The physical floor remains, but real surroundings are visible through it.
         if(g.type==mjGEOM_PLANE)continue;
         if(g.type!=mjGEOM_MESH && g.type!=mjGEOM_BOX && g.type!=mjGEOM_PLANE && g.type!=mjGEOM_SPHERE && g.type!=mjGEOM_ELLIPSOID && g.type!=mjGEOM_CYLINDER && g.type!=mjGEOM_CAPSULE)continue;
@@ -429,11 +467,10 @@ void G1Render(const float* vp,const float* projection){
     XrMatrix4x4f cardWorld,cardVP,viewProjection;std::copy_n(vp,16,viewProjection.m);
     XrMatrix4x4f_Multiply(&cardWorld,&world,&originalInverse);
     XrMatrix4x4f_Multiply(&cardVP,&viewProjection,&cardWorld);
-    DrawLegend(cardVP.m,assetsPath,trackingStatus.load()+6*recordingStatus.load());
-    static RuntimeStats visible;
-    {std::unique_lock<std::mutex> guard(statsMutex,std::try_to_lock);if(guard.owns_lock())visible=stats;}
-    renderedTriangles+=DrawStatsHud(projection,assetsPath,visible,renderFps,renderMs,skippedSceneUpdates,ClockSeconds(),trackingStatus.load(),active.load(),exporter?exporter->status.load():3,latestTracking,
-        std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-trackingTime).count());
+    if(!firstPerson)DrawLegend(cardVP.m,assetsPath,frameStatus+6*recordingStatus.load());
+    XrMatrix4x4f viewProjectionHud,hudVP;std::copy_n(vp,16,viewProjectionHud.m);
+    XrMatrix4x4f_Multiply(&hudVP,&viewProjectionHud,&headMatrix);
+    renderedTriangles+=DrawStatsHud(hudVP.m,assetsPath,frameStats,renderFps,frameDrawMs,skippedSceneUpdates,frameNow,frameStatus,active.load(),frameExportStatus,frameTracking,frameAgeMs,firstPerson);
     if(renderedTriangles>100000)throw std::runtime_error("Scene and HUD exceed triangle budget");
     renderMs=.9*renderMs+.1*(ClockSeconds()-renderStart)*1000;
 }

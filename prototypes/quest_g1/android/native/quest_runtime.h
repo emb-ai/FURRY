@@ -15,3 +15,4 @@ void G1ReferenceSpaceChange(int64_t changeTime);
 void G1Calibrate();
 void G1ToggleTracking();
 void G1ToggleRecording();
+void G1ToggleView();

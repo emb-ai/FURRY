@@ -2,6 +2,7 @@
 #include <array>
 #include <cstdint>
 struct RuntimeStats {
+    int physicsWorkers=0;
     double published=0, cycleMs=0, physicsMs=0, gmrMs=0, inferenceMs=0;
     double simTime=0, realTimeFactor=0, inputAgeMs=0, bodyGapMs=0, confidence=0;
     std::array<int,2> footContacts{};

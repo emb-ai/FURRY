@@ -36,6 +36,8 @@ jobs:
           git -C vendor/TWIST2 fetch --depth 1 origin b06178f19a22f2138cbd31f60c6d494bc263f67d
           git -C vendor/TWIST2 checkout --detach FETCH_HEAD
       - run: python -m unittest discover -s tests -v
+      - name: Check threaded physics equality and reset
+        run: python scripts/check_mujoco_threads.py
       - name: Check reference-space event timing
         run: |
           c++ -std=c++17 -Wall -Wextra -Werror -Iandroid/native tests/check_tracking_space.cpp -o /tmp/check-tracking-space
