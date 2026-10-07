@@ -3,7 +3,8 @@
 #include <cstdint>
 struct RuntimeStats {
     int physicsWorkers=0;
-    int cameraState=0,cameraLegs=0;bool cameraConnected=false;
+    int cameraState=0,cameraLegs=0;bool cameraConnected=false,cameraClockSynced=false;
+    double cameraClockOffsetMs=0,cameraClockRttMs=-1;
     double cameraAgeMs=-1,cameraFitMm=-1,cameraWeight=0;
     double cameraPositionError=-1,cameraOrientationError=-1,visualScale=1;
     double published=0, cycleMs=0, physicsMs=0, gmrMs=0, inferenceMs=0;

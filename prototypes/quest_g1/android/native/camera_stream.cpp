@@ -32,15 +32,31 @@ CameraStream::CameraStream(const std::string&url):socket(std::make_unique<ix::We
  socket->setPerMessageDeflateOptions(ix::WebSocketPerMessageDeflateOptions(false));
  socket->setMaxWaitBetweenReconnectionRetries(3000);
  socket->setOnMessageCallback([this](const ix::WebSocketMessagePtr&m){
-  if(m->type==ix::WebSocketMessageType::Open){connected=true;std::lock_guard<std::mutex>g(mutex);have=false;}
+  if(m->type==ix::WebSocketMessageType::Open){connected=true;clockSynced=false;clockRttMs=-1;std::lock_guard<std::mutex>g(mutex);have=false;}
   else if(m->type==ix::WebSocketMessageType::Close || m->type==ix::WebSocketMessageType::Error)connected=false;
   else if(m->type==ix::WebSocketMessageType::Message && !m->binary){
+   double now=CameraEpochMs();
+   try{
+    Json::CharReaderBuilder b;Json::Value value;std::string errors;std::unique_ptr<Json::CharReader>r(b.newCharReader());
+    if(m->str.size()<1024 && r->parse(m->str.data(),m->str.data()+m->str.size(),&value,&errors) && value.get("type","").asString()=="pong"){
+     if(value["t"].isNumeric() && value["server_t"].isNumeric()){
+      double start=value["t"].asDouble(),server=value["server_t"].asDouble(),rtt=now-start;
+      if(std::isfinite(start) && std::isfinite(server) && rtt>=0 && rtt<500 && (clockRttMs<0 || rtt<clockRttMs)){
+       double offset=(start+now)/2-server;
+       std::lock_guard<std::mutex>g(mutex);if(!clockSynced || std::abs(offset-clockOffsetMs)>20)have=false;
+       clockOffsetMs=offset;clockRttMs=rtt;clockSynced=true;
+      }
+     }
+     return;
+    }
+   }catch(...){rejected++;return;}
    CameraSkeleton c;try{if(!Parse(m->str,CameraEpochMs(),c)){rejected++;return;}}catch(...){rejected++;return;}
+   if(clockSynced)c.sourceMs+=clockOffsetMs;
    std::lock_guard<std::mutex>g(mutex);if(have && (c.sequence<=latest.sequence || c.sourceMs<=latest.sourceMs)){rejected++;return;}latest=c;latestRaw=m->str;have=true;
   }
  });
  socket->start();running=true;
- sender=std::thread([this]{while(running){std::string s;{std::lock_guard<std::mutex>g(mutex);s.swap(pendingUplink);}if(connected && !s.empty() && socket->bufferedAmount()<16384)socket->send(s);std::this_thread::sleep_for(std::chrono::milliseconds(10));}});
+ sender=std::thread([this]{double lastPing=0;while(running){double now=CameraEpochMs();if(connected && now-lastPing>2000){Json::Value ping;ping["type"]="ping";ping["t"]=now;Json::StreamWriterBuilder b;b["indentation"]="";socket->send(Json::writeString(b,ping));lastPing=now;}std::string s;{std::lock_guard<std::mutex>g(mutex);s.swap(pendingUplink);}if(connected && !s.empty() && socket->bufferedAmount()<16384)socket->send(s);std::this_thread::sleep_for(std::chrono::milliseconds(10));}});
 }
 CameraStream::~CameraStream(){running=false;if(sender.joinable())sender.join();socket->stop();}
 bool CameraStream::Latest(CameraSkeleton&out,std::string* raw)const{std::lock_guard<std::mutex>g(mutex);if(!have)return false;out=latest;if(raw)*raw=latestRaw;return true;}

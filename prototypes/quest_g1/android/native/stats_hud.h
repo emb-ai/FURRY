@@ -38,7 +38,7 @@ void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
     const char* reasons[]={"-","STAGE RECENTER: A","BODY RECALIBRATED: A","FALL/EXCEPTION: X"};
     char text[2048],cameraText[80],opticalText[100];
     const char* opticalStates[]={"META","ALIGN","FUSE","STALE"};
-    std::snprintf(opticalText,sizeof(opticalText),"CAM %s %.0fms FIT %.0fmm %dL",s.cameraConnected?opticalStates[std::clamp(s.cameraState,0,3)]:"OFF",s.cameraAgeMs,s.cameraFitMm,s.cameraLegs);
+    std::snprintf(opticalText,sizeof(opticalText),"CAM %s %.0fms FIT %.0fmm %dL",s.cameraConnected?(s.cameraClockSynced?opticalStates[std::clamp(s.cameraState,0,3)]:"SYNC"):"OFF",s.cameraAgeMs,s.cameraFitMm,s.cameraLegs);
     if(s.cameraPositionError>=0)std::snprintf(cameraText,sizeof(cameraText),"HEAD %.1f cm / %.1f deg",100*s.cameraPositionError,s.cameraOrientationError);
     else std::snprintf(cameraText,sizeof(cameraText),"HEAD target: OFF");
     std::snprintf(text,sizeof(text),

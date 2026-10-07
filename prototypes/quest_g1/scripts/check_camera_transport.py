@@ -37,11 +37,15 @@ def handler(ws):
         ws.send('malformed')
         value['seq'] = 1
         ws.send(json.dumps(value))
-        data = json.loads(ws.recv(timeout=3))
-        assert all(k in data for k in ['t', 'hmd', 'ctrl_l', 'ctrl_r'])
-        uplink.set()
-        for _ in ws:
-            pass
+        for message in ws:
+            data = json.loads(message)
+            if data.get('type') == 'ping':
+                ws.send(json.dumps({'type': 'pong', 't': data['t'], 'server_t': time.time_ns()/1e6-700}))
+                value['seq'] = 3
+                value['t'] = time.time_ns()/1e6-700
+                ws.send(json.dumps(value))
+            elif all(k in data for k in ['t', 'hmd', 'ctrl_l', 'ctrl_r']):
+                uplink.set()
     except Exception as error:
         errors.append(error)
 with serve(handler, '127.0.0.1', 0, compression=None) as server:

@@ -13,7 +13,8 @@ class CameraStream {
  std::string pendingUplink,latestRaw;
  std::atomic<bool> running{false};std::thread sender;
 public:
- std::atomic<bool> connected{false};std::atomic<uint64_t> rejected{0};
+ std::atomic<bool> connected{false},clockSynced{false};
+ std::atomic<double> clockOffsetMs{0},clockRttMs{-1};std::atomic<uint64_t> rejected{0};
  explicit CameraStream(const std::string&url);
  ~CameraStream();
  void Submit(const TrackingFrame&);

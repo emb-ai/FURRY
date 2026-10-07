@@ -34,9 +34,11 @@ packets are rejected. The client sends HMD/controller poses back to the server.
 
 Camera epoch timestamps are matched to a 3 s Meta history (nearest body pose
 within 60 ms), rather than the latest predicted HMD pose. Source age and arrival
-age both gate use. Server and Quest clocks must agree; automatic clock-offset
-estimation is not implemented yet. Persistent clock skew prevents fusion rather
-than silently mixing mismatched motion.
+age both gate use. The client sends JSON ping messages and uses the server's `server_t` pong
+field to estimate clock offset from the minimum-RTT exchange. Offset and RTT
+are exposed in CSV and camera recordings. Existing servers can add this field
+with `scripts/enable_camera_clock.py /path/to/skeleton_server.py`, then restart.
+Without it the HUD shows SYNC; clock-skewed packets cannot enter fusion.
 
 ## Fusion
 
