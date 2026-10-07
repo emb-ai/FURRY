@@ -39,13 +39,3 @@ errors are -1 while the objective is off. Recording formats remain compatible.
   uniform scale and level world up pass native transform checks.
 - Android APK builds successfully. These checks do not establish improved live
   walking or full head-pose correspondence on a user recording.
-
-## Latest recorded run
-
-The locally retained complete episode contains 3,939 inputs and 3,423 physical
-frames (34.22 s). It ends in a balance fault: tilt exceeds 30 degrees near the end,
-then 60 degrees, with pelvis height 0.358 m at the last frame. The desired base
-pitch has median -0.353 rad and yaw-rate commands reach -9.12 rad/s. These are
-investigation leads, not an established cause of the fall. Recording began after
-calibration, so an exact fresh retargeting comparison cannot reconstruct that
-calibration from this episode alone. No raw participant data is published.
