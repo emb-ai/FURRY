@@ -73,6 +73,7 @@ unset until participants agree to a bounded task.
 | [Architecture And Decisions](Architecture-and-Decisions.md) | Where are the component boundaries and unresolved design choices? |
 | [Common Ground](Common-Ground.md) | What do our terms, transforms, clocks and representations mean? |
 | [Data And Evaluation](Data-and-Evaluation.md) | What makes a trajectory auditable and a comparison fair? |
+| [Policy Learning](Policy-Learning.md) | How would a state-based Diffusion Policy plug into the simulator loop? |
 | [Contributing](Contributing.md) | How do I turn an investigation into a reviewed contribution? |
 
 For a first session, read Home -> Common Ground -> TWIST2 Baseline. Then read the
