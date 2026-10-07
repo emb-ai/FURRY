@@ -3,8 +3,10 @@
 [Home](Home.md) | [TWIST2 Baseline](TWIST2-Baseline.md) | [Data](Data-and-Evaluation.md)
 
 **Status: proposed.** Written 2026-10-07. This page plans a state-based
-high-level policy in the spirit of the TWIST2 Diffusion Policy. The policy
-itself is not implemented. The [desktop NPZ contract](#desktop-recording-contract)
+high-level policy in the spirit of the TWIST2 Diffusion Policy. A scripted
+cup reach and a small low-dimensional policy that drives it are
+[locally reproduced](#reach-loop). Pickup, Kick-T, and image observations are
+not. The [desktop NPZ contract](#desktop-recording-contract)
 and the [state contract](#state-contract) below are locally reproduced. Statements about TWIST2 are author-reported
 or inspected at the [pinned revision](TWIST2-Baseline.md).
 
@@ -82,7 +84,8 @@ a planned ablation.
 | Actions in recordings | Quest `mimic.csv` (`p_cmd`) and `frames.csv` (`grip_left`, `grip_right`); desktop NPZ `command` and `grip` | Recorded |
 | Scene state | `qpos` and `qvel` include the robot and the `cup_free` and `t_box_free` bodies from [`g1_sim/scene.py`](../prototypes/quest_g1/g1_sim/scene.py) | Recorded as flat scene-dependent vectors; read them by joint name |
 | Policy observation | [`g1_sim/state.py`](../prototypes/quest_g1/g1_sim/state.py) builds `state-v1` from a desktop NPZ | Derived export; the raw episode stays untouched |
-| Tasks | `cup` (similar to WB-Dex) and `push_t` (similar to Kick-T) scenes | No success criteria yet |
+| High-level policy | [`g1_sim/diffusion.py`](../prototypes/quest_g1/g1_sim/diffusion.py) reads that export and passes `p_cmd` to `Controller.step` | Reach loop locally reproduced |
+| Tasks | `cup` (similar to WB-Dex) and `push_t` (similar to Kick-T) scenes | Reach reports fingertip distance; no success criteria yet |
 
 The policy becomes a third command source next to the scripted arm demo and the
 standing command in [`g1_sim/__main__.py`](../prototypes/quest_g1/g1_sim/__main__.py).
@@ -239,14 +242,81 @@ The file contains `state`, `state_names`, `command`, `command_names`, `grip`,
 `time`, `source_index`, `scene`, `schema` and a JSON `metadata` string.
 `source_index` is the row each export sample copied from the raw episode.
 
+## Reach Loop
+
+**Status: locally reproduced** on 2026-10-07, on the same host and with the
+same MuJoCo, NumPy, and ONNX Runtime versions as the recording contract.
+PyTorch 2.14.1+cpu was added for this loop only. There is no GPU. The low-level
+weights are still `twist2_1017_20k.onnx`. Raw episodes, `state-v1` exports, and
+the checkpoint stay in gitignored `prototypes/quest_g1/outputs/`. Repeat from
+that directory:
+
+```sh
+.venv/bin/python -m pip install -r requirements-policy.txt
+.venv/bin/python -m g1_sim.reach outputs/reach --demos 16 --seconds 3 --seed 0
+.venv/bin/python -m g1_sim.diffusion train outputs/reach outputs/reach_policy.pt --steps 2000 --seed 0
+.venv/bin/python -m g1_sim.diffusion rollout outputs/reach_policy.pt --seed 0 16 100 101 --seconds 3
+.venv/bin/python -m unittest tests.test_reach tests.test_diffusion -v
+```
+
+[`g1_sim/reach.py`](../prototypes/quest_g1/g1_sim/reach.py) places the cup on
+the `cup` scene table and blends the standing command into a right-arm
+reference over 2 s, then holds it for 1 s. Grip stays 0. The tracker does not
+hold an arbitrary inverse-kinematics pose, and combined wrist targets ran away
+to the joint limit, so the reference leaves the wrists at the standing command.
+Shoulder pitch and elbow use the largest lift that stayed put. Shoulder roll
+is a line fit that aims the fingertip's y at the cup: a roll offset of 0.45
+put the fingertip near y=-0.15 m, and 0.65 put it near y=-0.063 m. Cup centers
+are drawn uniformly from x in [0.38, 0.46] m and y in [-0.22, -0.02] m.
+
+This is an approach, not a grasp. On the sixteen seeds 0 through 15 the
+fingertip-to-cup distance ended between 0.126 m and 0.195 m. The pelvis stayed
+above 0.70 m, tilt stayed under 15 degrees, and MuJoCo reported no warnings.
+Each raw NPZ is converted with the existing exporter and is not modified.
+
+[`g1_sim/diffusion.py`](../prototypes/quest_g1/g1_sim/diffusion.py) trains
+schema `lowdim-dp-v1` on those exports. The observation is two `state-v1`
+frames. The action is a chunk of eight `p_cmd` vectors plus `grip`, at the
+20 Hz export rate. A conditional 1D convolution predicts that clean command.
+Noise prediction on this set collapsed to the final pose, so the checkpoint
+records prediction `x0`. The loss is weighted toward joints that actually
+move. Training used 848 windows, 2000 AdamW steps, seed 0, and finished at
+weighted loss 1.6e-4. Fifty diffusion steps are used in training and sixteen
+at inference.
+
+The closed loop is a third command source in
+[`g1_sim/__main__.py`](../prototypes/quest_g1/g1_sim/__main__.py), beside the
+standing command and the arm wave. Every 50 ms the policy samples a chunk,
+keeps the first two commands, and holds each one across the physics steps
+until the next 20 Hz tick. `Controller.step` receives that command. Consecutive
+chunks are not blended. `--scene cup` is required.
+
+Four seeds were rolled out for 3 s. Seed 0 is one of the sixteen
+demonstrations. Seed 16 is the next seed, and seeds 100 and 101 are outside
+that block. Fingertip distance is initial, then final. The script and a
+standing command saw the same cup.
+
+| Seed | Policy | Script | Standing |
+| --- | --- | --- | --- |
+| 0 | 0.394 m to 0.171 m | 0.170 m | 0.378 m |
+| 16 | 0.399 m to 0.167 m | 0.166 m | 0.390 m |
+| 100 | 0.427 m to 0.189 m | 0.187 m | 0.422 m |
+| 101 | 0.418 m to 0.196 m | 0.195 m | 0.404 m |
+
+No trial fell. The pelvis stayed above 0.782 m, tilt stayed under 3.3 degrees,
+and MuJoCo reported no warnings. The policy matched the script to about 2 mm.
+Standing stayed near its initial distance. The state is still privileged.
+The hand stops short of the cup. Success criteria, randomization beyond this
+cup box, and Quest demonstrations remain open.
+
 ## Open Work
 
 - **Converter:** desktop NPZ to [`state-v1`](#state-contract) is locally
   reproduced. Quest CSV is not. Training exports are derived data; raw
   episodes stay untouched
   ([ADR-005](Architecture-and-Decisions.md#decision-register)).
-- **Demonstrations:** Quest demos of cup pickup and Kick-T are not yet
-  validated. Debug the whole loop first on scripted simulator demos.
+- **Demonstrations:** scripted simulator reaches are locally reproduced.
+  Quest demos of cup pickup and Kick-T are not yet validated.
 - **Tasks:** success criteria, timeouts, fall detection, randomized starts and
   seeded resets for `cup` and `push_t`.
 - **Runtime:** interpolate chunk steps to the 100 Hz tracker, start smoothly
@@ -264,8 +334,9 @@ The file contains `state`, `state_names`, `command`, `command_names`, `grip`,
 2. Done. [`g1_sim/state.py`](../prototypes/quest_g1/g1_sim/state.py) defines
    `state-v1` and converts a desktop NPZ without modifying it. See
    [State Contract](#state-contract).
-3. Script a simple reach task, generate demonstrations, train a small
-   low-dimensional Diffusion Policy and close the loop through `Controller.step`.
+3. Done. A scripted cup reach, sixteen demonstrations, and a small
+   low-dimensional Diffusion Policy close the loop through `Controller.step`.
+   See [Reach Loop](#reach-loop).
 4. Add success criteria and randomization to `cup` and `push_t`, then move to
    Quest demonstrations.
 

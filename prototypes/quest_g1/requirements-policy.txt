@@ -1,0 +1,5 @@
+# Optional. The desktop viewer and the low-level tracker do not import torch.
+# CPU wheel, matching the host that reproduced the reach loop:
+#   python -m pip install -r requirements-policy.txt
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.14.1+cpu

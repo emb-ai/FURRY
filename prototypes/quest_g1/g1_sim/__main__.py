@@ -8,6 +8,7 @@ import mujoco
 import numpy as np
 
 from .controller import Controller, ROOT, standing_command
+from .reach import ScriptedReach, place_cup, sample_cup
 from .scene import make_model
 
 
@@ -82,6 +83,20 @@ def run(args):
     data = mujoco.MjData(model)
     controller = Controller(model)
     controller.initialize(data)
+    cup = None
+    source = None
+    if args.reach or args.policy:
+        if mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "cup") < 0:
+            raise SystemExit("Reach and the reach policy require a scene with a cup")
+        cup = sample_cup(np.random.default_rng(args.seed))
+        place_cup(model, data, cup)
+        if args.policy:
+            from .diffusion import PolicySource
+            source = PolicySource(args.policy, seed=args.seed)
+            source.bind(model)
+        else:
+            source = ScriptedReach(model, cup)
+        print(f"Reach cup xyz={np.round(cup, 3).tolist()}", flush=True)
     output = ROOT / "outputs"
     output.mkdir(exist_ok=True)
     queued_keys = deque()
@@ -118,6 +133,10 @@ def run(args):
                         print("Finish this recording before resetting (close and restart).", flush=True)
                         continue
                     controller.initialize(data)
+                    if cup is not None:
+                        place_cup(model, data, cup)
+                    if source is not None:
+                        source.reset()
                     demo_start = None
                     demo_stop = False
                     grip = 0.
@@ -150,10 +169,13 @@ def run(args):
                     viewer.sync()
                 time.sleep(.016)
                 continue
-            if demo_stop and demo_start is not None and (data.time-demo_start) % 6 < model.opt.timestep*1.5:
-                demo_start = None
-                demo_stop = False
-            command = arm_command(data.time-demo_start) if demo_start is not None else standing_command()
+            if source is not None:
+                command, grip = source(model, data, controller)
+            else:
+                if demo_stop and demo_start is not None and (data.time-demo_start) % 6 < model.opt.timestep*1.5:
+                    demo_start = None
+                    demo_stop = False
+                command = arm_command(data.time-demo_start) if demo_start is not None else standing_command()
             controller.step(data, command, grip)
             min_height = min(min_height, float(data.qpos[2]))
             max_tilt = max(max_tilt, float(np.arccos(np.clip(data.xmat[model.body('pelvis').id, 8], -1, 1))))
@@ -206,6 +228,9 @@ def main():
     parser.add_argument("--fixed-hands", action="store_true", help="Use original 29-DoF model without articulated fingers")
     parser.add_argument("--seconds", type=float, default=0)
     parser.add_argument("--demo", action="store_true", help="Smooth arm reference demonstration")
+    parser.add_argument("--reach", action="store_true", help="Scripted right-hand reach toward a seeded cup")
+    parser.add_argument("--policy", help="Low-dimensional diffusion checkpoint used as the command source")
+    parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--ego", action="store_true")
     parser.add_argument("--fast", action="store_true")
     parser.add_argument("--record", help="Save states and commands to an NPZ episode")
@@ -215,6 +240,14 @@ def main():
     args = parser.parse_args()
     if args.headless and args.seconds <= 0 and not args.replay:
         parser.error("--headless requires a positive --seconds")
+    if args.reach and args.policy:
+        parser.error("choose either --reach or --policy")
+    if args.demo and (args.reach or args.policy):
+        parser.error("--demo cannot be combined with --reach or --policy")
+    if args.fixed_hands and (args.reach or args.policy):
+        parser.error("the reach task uses articulated hands")
+    if (args.reach or args.policy) and args.scene != "cup":
+        parser.error("the reach task uses --scene cup")
     if args.record and not args.record.endswith(".npz"):
         parser.error("--record filename must end with .npz")
     if args.replay:
