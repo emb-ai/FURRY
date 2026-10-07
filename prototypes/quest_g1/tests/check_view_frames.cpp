@@ -16,5 +16,15 @@ int main(){
   float expected=(projection.m[0]*(point.x-offset)-projection.m[8]*1.6f)/1.6f;
   if(std::abs(projected.x/projected.w-expected)>1e-6)throw std::runtime_error("HUD stereo frame");
  }
- puts("Stereo panel and ego transform checks passed");
+ auto rotation=LevelEgoRotation(camera,head);
+ for(float scale:{.8f,1.f,1.4f})for(float delta:{-.5f,0.f,.4f}){
+  auto moved=head;moved.m[12]+=delta;moved.m[13]-=delta/2;moved.m[14]-=delta;
+  auto follow=FollowCameraWorld(camera,moved,rotation,scale);
+  XrVector4f centre{camera.m[12],camera.m[13],camera.m[14],1},mapped;
+  XrMatrix4x4f_TransformVector4f(&mapped,&follow,&centre);
+  for(int i=0;i<3;i++)if(std::abs((&mapped.x)[i]-moved.m[12+i])>2e-6)throw std::runtime_error("Live HMD translation lost");
+  XrVector4f up{0,0,1,0},level;XrMatrix4x4f_TransformVector4f(&level,&follow,&up);
+  if(std::abs(level.y-scale)>1e-6 || std::abs(level.x)>1e-6 || std::abs(level.z)>1e-6)throw std::runtime_error("Floor tilted");
+ }
+ puts("Stereo, live ego centre, uniform scale and level floor checks passed");
 }

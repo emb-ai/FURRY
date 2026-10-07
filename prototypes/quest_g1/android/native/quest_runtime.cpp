@@ -65,12 +65,16 @@ std::string assetsPath;
 mjvScene scene{},workerScene{};
 std::mutex geometryMutex;
 std::vector<mjvGeom> publishedGeometry;
-XrMatrix4x4f publishedCamera{},frameCamera{},headMatrix{},egoAnchor{};
+XrMatrix4x4f publishedCamera{},frameCamera{},headMatrix{};
+XrMatrix4x4f publishedEgoRotation{},frameEgoRotation{};
+float publishedEgoScale=1,frameEgoScale=1;
+bool publishedEgoCalibrated=false;
 TrackingFrame frameTracking;
 RuntimeStats frameStats;
 double frameAgeMs=0,frameDrawMs=0,frameNow=0;
 int frameStatus=0,frameExportStatus=0;
-bool firstPerson=false,refreshEgoAnchor=true;
+std::atomic<bool> firstPerson{false};
+bool refreshEgoAnchor=true;
 int egoCamera=-1,headBody=-1;
 void PublishGeometry(){
     mjvOption option;mjv_defaultOption(&option);option.geomgroup[3]=0;
@@ -83,7 +87,13 @@ void PublishGeometry(){
     }
     std::lock_guard<std::mutex> guard(geometryMutex);
     publishedGeometry.assign(workerScene.geoms,workerScene.geoms+workerScene.ngeom);
-    publishedCamera=pose;
+    publishedCamera=pose;publishedEgoCalibrated=retarget->calibrated;
+    if(publishedEgoCalibrated){
+        const double* basis=retarget->StageToRobotRotation();
+        publishedEgoRotation={};publishedEgoRotation.m[15]=1;
+        for(int r=0;r<3;r++)for(int c=0;c<3;c++)publishedEgoRotation.m[4*c+r]=float(basis[3*c+r]);
+        publishedEgoScale=float(retarget->VisualScale());
+    }
 }
 GLuint program=0;
 struct Mesh {GLuint vao=0,vbo=0; GLsizei count=0;};
@@ -219,7 +229,7 @@ void G1Initialize(android_app* app){
     if(egoCamera<0)throw std::runtime_error("Missing ego camera");
     publishedGeometry.reserve(2048);PublishGeometry();
     telemetry.open(assets+"/runtime_stats.csv",std::ios::trunc);
-    telemetry<<"wall_s,sim_s,cycle_ms,physics_ms,gmr_ms,inference_ms,rtf,contacts,overlap_points,pairs,max_depth_mm,solver_iterations,constraints,body_gap_ms,input_age_ms,body_confidence,body_version,state,reason,target_x,target_y,actual_x,actual_y,cmd_vx,cmd_vy,actual_vx,actual_vy,root_error,height,tilt,gmr_residual,gmr_iterations,overruns,dropped_inputs,left_foot_contacts,right_foot_contacts,leg_error_deg,physics_workers\n";
+    telemetry<<"wall_s,sim_s,cycle_ms,physics_ms,gmr_ms,inference_ms,rtf,contacts,overlap_points,pairs,max_depth_mm,solver_iterations,constraints,body_gap_ms,input_age_ms,body_confidence,body_version,state,reason,target_x,target_y,actual_x,actual_y,cmd_vx,cmd_vy,actual_vx,actual_vy,root_error,height,tilt,gmr_residual,gmr_iterations,overruns,dropped_inputs,left_foot_contacts,right_foot_contacts,leg_error_deg,physics_workers,camera_error_m,camera_error_deg,visual_scale\n";
     try{exporter=std::make_unique<RecordingExport>(app->activity->vm,app->activity->clazz);exporter->Latest(assets+"/recordings");}
     catch(const std::exception& e){__android_log_print(ANDROID_LOG_ERROR,"G1Quest","Recording export unavailable: %s",e.what());}
     running=true;
@@ -274,6 +284,7 @@ void G1Initialize(android_app* app){
                     Record([&]{recorder.Event("body_skeleton_changed",input.sequence);});
                 }
                 bool applyReference=trackingEnabled && valid && retarget->calibrated;
+                retarget->EnableCameraTracking(firstPerson.load());
                 float leftGrip=grip[0].load(),rightGrip=grip[1].load();
                 if(applyReference){
                     if(calibratedNow || !wasApplying){
@@ -342,13 +353,23 @@ void G1Initialize(android_app* app){
                 sample.bodyGapMs=(input.xr_time_ns-input.body.time_ns)*1e-6;sample.confidence=input.body.confidence;sample.bodyVersion=input.body.skeleton_version;
                 sample.residual=retarget->error;sample.gmrIterations=retarget->solver().iterations;
                 for(int a=0;a<2;a++){sample.targetXY[a]=retarget->solver().data()->qpos[a];sample.actualXY[a]=sim->data->qpos[a];sample.commandXY[a]=sim->WholeBodyReference()[a];sample.velocityXY[a]=sim->data->qvel[a];}
+                sample.visualScale=retarget->calibrated?retarget->VisualScale():1;
+                sample.cameraPositionError=sample.cameraOrientationError=-1;
+                if(retarget->solver().HasCameraTarget()){
+                    const auto& goal=retarget->solver().CameraTarget();double delta[3],actual[4],inverse[4],relative[4],angle[3];
+                    mju_sub3(delta,goal.position.data(),sim->data->cam_xpos+3*egoCamera);
+                    sample.cameraPositionError=mju_norm3(delta);
+                    mju_mat2Quat(actual,sim->data->cam_xmat+9*egoCamera);mju_negQuat(inverse,actual);
+                    mju_mulQuat(relative,inverse,goal.quaternion.data());mju_quat2Vel(angle,relative,1);
+                    sample.cameraOrientationError=mju_norm3(angle)*180/3.141592653589793;
+                }
                 sample.positionError=std::hypot(sample.targetXY[0]-sample.actualXY[0],sample.targetXY[1]-sample.actualXY[1]);sample.status=trackingStatus;sample.reason=pauseReason;sample.droppedInputs=droppedInputs;
                 {std::lock_guard<std::mutex> guard(statsMutex);stats=sample;}
                 if(sample.published-lastTelemetry>.1){
                     const auto& x=sample;
                     telemetry<<x.published<<','<<x.simTime<<','<<x.cycleMs<<','<<x.physicsMs<<','<<x.gmrMs<<','<<x.inferenceMs<<','<<x.realTimeFactor<<','<<x.contacts<<','<<x.overlaps<<','<<x.pairs<<','<<x.depthMm<<','<<x.solverIterations<<','<<x.constraints<<','<<x.bodyGapMs<<','<<x.inputAgeMs<<','<<x.confidence<<','<<x.bodyVersion<<','<<x.status<<','<<x.reason;
                     for(const auto& values:{x.targetXY,x.actualXY,x.commandXY,x.velocityXY})for(double v:values)telemetry<<','<<v;
-                    telemetry<<','<<x.positionError<<','<<x.height<<','<<x.tilt<<','<<x.residual<<','<<x.gmrIterations<<','<<x.overruns<<','<<x.droppedInputs<<','<<x.footContacts[0]<<','<<x.footContacts[1]<<','<<x.legErrorDegrees<<','<<x.physicsWorkers<<'\n';lastTelemetry=x.published;
+                    telemetry<<','<<x.positionError<<','<<x.height<<','<<x.tilt<<','<<x.residual<<','<<x.gmrIterations<<','<<x.overruns<<','<<x.droppedInputs<<','<<x.footContacts[0]<<','<<x.footContacts[1]<<','<<x.legErrorDegrees<<','<<x.physicsWorkers<<','<<x.cameraPositionError<<','<<x.cameraOrientationError<<','<<x.visualScale<<'\n';lastTelemetry=x.published;
                     if(sim->steps%1000==0)telemetry.flush();
                 }
                 if(sim->steps%5000==0)__android_log_print(ANDROID_LOG_INFO,"G1Quest","sim=%.2fs height=%.3f inference=%.3fms",sim->data->time,sim->data->qpos[2],sim->inference_ms);
@@ -399,7 +420,7 @@ void G1SubmitTracking(const TrackingFrame& input){
     }
 }
 void G1Calibrate(){calibrate=true;}
-void G1ToggleView(){firstPerson=!firstPerson;refreshEgoAnchor=true;}
+void G1ToggleView(){firstPerson=!firstPerson.load();refreshEgoAnchor=true;}
 void G1ToggleRecording(){toggleRecording=true;}
 void G1ToggleTracking(){toggleTracking=true;}
 void G1CaptureFrame(int width,int height){
@@ -421,11 +442,17 @@ void G1PrepareFrame(){
     {std::unique_lock<std::mutex> guard(statsMutex,std::try_to_lock);if(guard.owns_lock())frameStats=stats;}
     frameDrawMs=renderMs;frameStatus=trackingStatus.load();frameExportStatus=exporter?exporter->status.load():3;
     headMatrix=PoseMatrix(frameTracking.head);
-    if(refreshEgoAnchor && (frameTracking.location_flags[0]&3)==3){egoAnchor=headMatrix;refreshEgoAnchor=false;}
+
     std::unique_lock<std::mutex> guard(geometryMutex,std::try_to_lock);
     if(!guard.owns_lock()){skippedSceneUpdates++;return;}
     scene.ngeom=std::min(int(publishedGeometry.size()),scene.maxgeom);
     std::copy_n(publishedGeometry.begin(),scene.ngeom,scene.geoms);frameCamera=publishedCamera;
+    if(publishedEgoCalibrated){frameEgoRotation=publishedEgoRotation;frameEgoScale=publishedEgoScale;refreshEgoAnchor=false;}
+    else if(refreshEgoAnchor && (frameTracking.location_flags[0]&3)==3){
+        frameEgoRotation=LevelEgoRotation(frameCamera,headMatrix);
+        frameEgoScale=std::clamp(headMatrix.m[13]/std::max(.5f,frameCamera.m[14]),.7f,2.f);
+        refreshEgoAnchor=false;
+    }
 }
 void G1Render(const float* vp,const float* projection){
     double renderStart=ClockSeconds();
@@ -434,7 +461,7 @@ void G1Render(const float* vp,const float* projection){
     glUniformMatrix4fv(vpLocation,1,GL_FALSE,vp);
     // MuJoCo +Z up -> XR +Y up, anchored ahead of the initial headset pose.
     XrMatrix4x4f world{};std::copy(sceneTransform.begin(),sceneTransform.end(),world.m);
-    if(firstPerson)world=EgoWorld(frameCamera,egoAnchor);
+    if(firstPerson)world=FollowCameraWorld(frameCamera,headMatrix,frameEgoRotation,frameEgoScale);
     int renderedTriangles=2;
     for(int i=0;i<scene.ngeom;i++){
         const mjvGeom& g=scene.geoms[i];if(g.rgba[3]<.01)continue;
@@ -470,7 +497,7 @@ void G1Render(const float* vp,const float* projection){
     if(!firstPerson)DrawLegend(cardVP.m,assetsPath,frameStatus+6*recordingStatus.load());
     XrMatrix4x4f viewProjectionHud,hudVP;std::copy_n(vp,16,viewProjectionHud.m);
     XrMatrix4x4f_Multiply(&hudVP,&viewProjectionHud,&headMatrix);
-    renderedTriangles+=DrawStatsHud(hudVP.m,assetsPath,frameStats,renderFps,frameDrawMs,skippedSceneUpdates,frameNow,frameStatus,active.load(),frameExportStatus,frameTracking,frameAgeMs,firstPerson);
+    renderedTriangles+=DrawStatsHud(hudVP.m,assetsPath,frameStats,renderFps,frameDrawMs,skippedSceneUpdates,frameNow,frameStatus,active.load(),frameExportStatus,frameTracking,frameAgeMs,firstPerson.load(),firstPerson?frameEgoScale:1.f);
     if(renderedTriangles>100000)throw std::runtime_error("Scene and HUD exceed triangle budget");
     renderMs=.9*renderMs+.1*(ClockSeconds()-renderStart)*1000;
 }

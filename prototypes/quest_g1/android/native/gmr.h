@@ -14,6 +14,10 @@ class GmrRetargeter {
     mjModel* model_=nullptr; mjData* data_=nullptr;
     std::vector<GmrTask> tasks_;
     double assumedHeight=1.8,ground=0;
+    bool cameraEnabled=false;
+    int cameraBody=-1;
+    TrackedPose cameraTarget,cameraLocal;
+    double cameraPositionCost=10,cameraRotationCost=3;
     std::vector<TrackedPose> targets;
     double Error(int stage);
     void Step(int stage);
@@ -29,6 +33,12 @@ public:
     void SetHumanTargets(const std::vector<TrackedPose>& human,double height,bool offsetToGround);
     // Device adapter may supply already-scaled, anatomically aligned targets.
     void SetTargets(const std::vector<TrackedPose>& value);
+    // Optional Meta extension; disabled for the unmodified upstream oracle.
+    void SetCameraTarget(const TrackedPose& target);
+    void ClearCameraTarget(){cameraEnabled=false;}
+    TrackedPose CameraPose()const;
+    const TrackedPose& CameraTarget()const{return cameraTarget;}
+    bool HasCameraTarget()const{return cameraEnabled;}
     void Solve();
     double error=0;
     int iterations=0;

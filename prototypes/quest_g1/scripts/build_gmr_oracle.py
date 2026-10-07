@@ -32,3 +32,12 @@ env = os.environ.copy()
 if sys.platform == 'darwin':
     env['DYLD_LIBRARY_PATH'] = str(package) + ':' + env.get('DYLD_LIBRARY_PATH', '')
 subprocess.run([str(build / 'check_leg_mapping'), str(ROOT / 'android/assets')], env=env, check=True)
+
+# Optional camera objective: must improve its goal while preserving foot priority.
+subprocess.run([
+    os.environ.get('CXX', 'c++'), '-O2', '-std=c++17',
+    '-I' + str(package / 'include'), '-I' + str(ROOT / 'android/native'),
+    str(ROOT / 'android/native/gmr.cpp'), str(ROOT / 'tests/check_camera_task.cpp'),
+    str(libraries[0]), '-Wl,-rpath,' + str(package), '-o', str(build / 'check_camera_task'),
+], check=True)
+subprocess.run([str(build / 'check_camera_task'), str(ROOT / 'android/assets')], env=env, check=True)

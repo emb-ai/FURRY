@@ -43,10 +43,15 @@ GmrRetargeter::GmrRetargeter(const std::string& assets){
         GmrTask task;f>>task.human>>task.robot>>task.scale;for(auto&v:task.costs)f>>v;for(auto&v:task.offset.position)f>>v;for(auto&v:task.offset.quaternion)f>>v;
         task.body=mj_name2id(model_,mjOBJ_BODY,task.robot.c_str());if(!f || task.body<0)throw std::runtime_error("Invalid GMR task");tasks_.push_back(task);
     }
+    cameraBody=mj_name2id(model_,mjOBJ_BODY,"torso_link");
+    if(cameraBody<0)throw std::runtime_error("Missing camera body");
+    cameraLocal.position={.08,0,.43};
+    double cameraRotation[9]={0,0,-1,-1,0,0,0,1,0};
+    mju_mat2Quat(cameraLocal.quaternion.data(),cameraRotation);
     targets.resize(count);Reset();
 }
 GmrRetargeter::~GmrRetargeter(){mj_deleteData(data_);mj_deleteModel(model_);}
-void GmrRetargeter::Reset(const double* qpos){mj_resetData(model_,data_);if(qpos)std::copy_n(qpos,model_->nq,data_->qpos);mj_kinematics(model_,data_);mj_comPos(model_,data_);}
+void GmrRetargeter::Reset(const double* qpos){cameraEnabled=false;mj_resetData(model_,data_);if(qpos)std::copy_n(qpos,model_->nq,data_->qpos);mj_kinematics(model_,data_);mj_comPos(model_,data_);}
 void GmrRetargeter::SetTargets(const std::vector<TrackedPose>& value){
     if(value.size()!=tasks_.size())throw std::runtime_error("Incomplete GMR skeleton");
     for(const auto&p:value){for(double v:p.position)if(!std::isfinite(v))throw std::runtime_error("Invalid body position");for(double v:p.quaternion)if(!std::isfinite(v))throw std::runtime_error("Invalid body rotation");}
@@ -65,8 +70,25 @@ void GmrRetargeter::SetHumanTargets(const std::vector<TrackedPose>& human,double
     if(offsetToGround){double floor=1e10;for(size_t i=0;i<out.size();i++)if(tasks_[i].human.find("Foot")!=std::string::npos)floor=std::min(floor,out[i].position[2]);for(auto&p:out)p.position[2]+=.1-floor;}
     SetTargets(out);
 }
+TrackedPose GmrRetargeter::CameraPose()const{
+    TrackedPose pose;double offset[3],rotation[4];
+    mju_mat2Quat(rotation,data_->xmat+9*cameraBody);
+    mju_rotVecQuat(offset,cameraLocal.position.data(),rotation);
+    for(int i=0;i<3;i++)pose.position[i]=data_->xpos[3*cameraBody+i]+offset[i];
+    mju_mulQuat(pose.quaternion.data(),rotation,cameraLocal.quaternion.data());
+    return pose;
+}
+void GmrRetargeter::SetCameraTarget(const TrackedPose& target){
+    for(double v:target.position)if(!std::isfinite(v))throw std::runtime_error("Invalid camera position");
+    for(double v:target.quaternion)if(!std::isfinite(v))throw std::runtime_error("Invalid camera orientation");
+    cameraTarget=target;mju_normalize4(cameraTarget.quaternion.data());cameraEnabled=true;
+}
 double GmrRetargeter::Error(int stage){
-    double sum=0;for(size_t i=0;i<tasks_.size();i++){const auto&t=tasks_[i];if(!t.costs[2*stage]&&!t.costs[2*stage+1])continue;double e[6];Residual(e,data_->xpos+3*t.body,data_->xmat+9*t.body,targets[i]);for(double v:e)sum+=v*v;}return std::sqrt(sum);
+    double sum=0;for(size_t i=0;i<tasks_.size();i++){const auto&t=tasks_[i];if(!t.costs[2*stage]&&!t.costs[2*stage+1])continue;double e[6];Residual(e,data_->xpos+3*t.body,data_->xmat+9*t.body,targets[i]);for(double v:e)sum+=v*v;}if(stage==1 && cameraEnabled){
+        auto pose=CameraPose();double rotation[9],e[6];mju_quat2Mat(rotation,pose.quaternion.data());
+        Residual(e,pose.position.data(),rotation,cameraTarget);for(double v:e)sum+=v*v;
+    }
+    return std::sqrt(sum);
 }
 void GmrRetargeter::Step(int stage){
     constexpr int n=35;double H[n*n]={},g[n]={},dq[n]={},factor[n*(n+7)]={},lower[n],upper[n];int index[n];
@@ -79,6 +101,20 @@ void GmrRetargeter::Step(int stage){
         mju_mulMatMat(J,jlog,bodyJ,6,6,n);
         for(int r=0;r<6;r++){
             double weight=r<3?pc:rc,ew=weight*e[r];damping+=ew*ew;
+            for(int a=0;a<n;a++){
+                double ja=-J[r*n+a]*weight;g[a]+=ja*ew;
+                for(int b=0;b<n;b++)H[a*n+b]+=ja*(-J[r*n+b]*weight);
+            }
+        }
+    }
+    if(stage==1 && cameraEnabled){
+        auto pose=CameraPose();double R[9];mju_quat2Mat(R,pose.quaternion.data());
+        Residual(e,pose.position.data(),R,cameraTarget);LogJacobian(jlog,e);
+        mj_jac(model_,data_,jp,jr,pose.position.data(),cameraBody);
+        mju_mulMatTMat(bodyJ,R,jp,3,3,n);mju_mulMatTMat(bodyJ+3*n,R,jr,3,3,n);
+        mju_mulMatMat(J,jlog,bodyJ,6,6,n);
+        for(int r=0;r<6;r++){
+            double weight=r<3?cameraPositionCost:cameraRotationCost,ew=weight*e[r];damping+=ew*ew;
             for(int a=0;a<n;a++){
                 double ja=-J[r*n+a]*weight;g[a]+=ja*ew;
                 for(int b=0;b<n;b++)H[a*n+b]+=ja*(-J[r*n+b]*weight);

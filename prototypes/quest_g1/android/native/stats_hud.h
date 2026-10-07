@@ -13,7 +13,7 @@
 // Lightweight native glyph atlas; drawn every eye even when physics is stalled.
 inline int DrawStatsHud(const float* headViewProjection,const std::string& assets,const RuntimeStats& s,
                          double fps,double drawMs,uint64_t skipped,double now,int status,bool active,int exportStatus,
-                         const TrackingFrame& raw,double rawAgeMs,bool firstPerson){
+                         const TrackingFrame& raw,double rawAgeMs,bool firstPerson,float visualScale){
     static GLuint program=0,texture=0,vao=0,vbo=0;
     if(!program){
         auto shader=[](GLenum type,const char* source){GLuint h=glCreateShader(type);glShaderSource(h,1,&source,nullptr);glCompileShader(h);GLint ok;glGetShaderiv(h,GL_COMPILE_STATUS,&ok);if(!ok)throw std::runtime_error("Stats shader failed");return h;};
@@ -36,17 +36,22 @@ void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
     const char* states[]={"CALIBRATE A","TRACKING","PAUSED B","BODY INVALID","PHYSICS FAULT: X","TRACKING / POSE ERROR"};
     const char* exports[]={"Y: RECORD / SAVE ZIP","ZIP: COPYING TO DOWNLOADS","ZIP: Download/G1Quest","ZIP EXPORT FAILED (data kept)"};
     const char* reasons[]={"-","STAGE RECENTER: A","BODY RECALIBRATED: A","FALL/EXCEPTION: X"};
-    char text[2048];
+    char text[2048],cameraText[80];
+    if(s.cameraPositionError>=0)std::snprintf(cameraText,sizeof(cameraText),"HEAD %.1f cm / %.1f deg",100*s.cameraPositionError,s.cameraOrientationError);
+    else std::snprintf(cameraText,sizeof(cameraText),"HEAD target: OFF");
     std::snprintf(text,sizeof(text),
-        "VIEW: %s / LEFT STICK CLICK\nFPS %5.1f  CPU/eye %4.1f ms\nSIM %4.2fx  cycle %5.1f ms  MT %d\nPHYS %4.1f  GMR %4.1f  NN %4.1f ms\nCONTACT %3d  pairs %3d  overlap %3d\nDEPTH %5.1f mm  constraints %4d\nSOLVER %3d  GMR iterations %2d\nINPUT %5.1f ms  body gap %+5.1f ms\nBODY conf %.2f  version %llu\nTARGET %+.2f %+.2f  ROOT %+.2f %+.2f\nROOT error %.3f m  GMR residual %.2f\nCMD local %+.2f %+.2f m/s\nVEL world %+.2f %+.2f m/s\nHEIGHT %.3f m  TILT %4.1f deg\nFEET L/R %d/%d  LEG error %.1f deg\nOVERRUN %llu DROP %llu WARN %d\nSCENE skips %llu  STATE age %.0f ms\n%s\n%s\n%s",
-        firstPerson?"FIRST PERSON":"OBSERVER",fps,drawMs,active?s.realTimeFactor:0.,s.cycleMs,s.physicsWorkers,s.physicsMs,s.gmrMs,s.inferenceMs,s.contacts,s.pairs,s.overlaps,s.depthMm,s.constraints,s.solverIterations,s.gmrIterations,s.inputAgeMs,s.bodyGapMs,s.confidence,(unsigned long long)s.bodyVersion,
-        s.targetXY[0],s.targetXY[1],s.actualXY[0],s.actualXY[1],s.positionError,s.residual,s.commandXY[0],s.commandXY[1],s.velocityXY[0],s.velocityXY[1],s.height,s.tilt,s.footContacts[0],s.footContacts[1],s.legErrorDegrees,(unsigned long long)s.overruns,(unsigned long long)s.droppedInputs,s.warnings,(unsigned long long)skipped,s.published>0?std::max(0.,now-s.published)*1000:0.,active?states[std::clamp(status,0,5)]:"XR FOCUS PAUSED",reasons[std::clamp(s.reason,0,3)],exports[std::clamp(exportStatus,0,3)]);
+        "VIEW %s [L-stick]\nFPS %4.0f  CPU %.1f ms\nSIM %.2fx  MT %d  WARN %d\nPHYS %.1f GMR %.1f NN %.1f ms\nCONTACT %d  DEPTH %.1f mm\nSOLVER %d  CONSTRAINT %d\nINPUT %.0f  AGE %.0f ms\nROOT %.2f m  LEG %.0f deg\n%s\nSCALE %.2fx  TILT %.0f deg\nCMD %+.2f / %+.2f m/s\n%s\n%s\n%s",
+        firstPerson?"EGO":"OBSERVER",fps,drawMs,active?s.realTimeFactor:0.,s.physicsWorkers,s.warnings,
+        s.physicsMs,s.gmrMs,s.inferenceMs,s.contacts,s.depthMm,s.solverIterations,s.constraints,
+        s.inputAgeMs,s.published>0?std::max(0.,now-s.published)*1000:0.,s.positionError,s.legErrorDegrees,
+        cameraText,visualScale,s.tilt,s.commandXY[0],s.commandXY[1],
+        active?states[std::clamp(status,0,5)]:"XR FOCUS PAUSED",reasons[std::clamp(s.reason,0,3)],exports[std::clamp(exportStatus,0,3)]);
     std::vector<float> vertices;vertices.reserve(24000);
     auto quad=[&](float x,float y,float w,float h,int code){int cell=code-32;float u=(cell%16)/16.f,v=(cell/16)/6.f;
         const float q[]={x,y,u,v, x+w,y-h,u+20/512.f,v+1/6.f, x+w,y,u+20/512.f,v,
                          x,y,u,v, x,y-h,u,v+1/6.f, x+w,y-h,u+20/512.f,v+1/6.f};vertices.insert(vertices.end(),q,q+24);};
-    quad(-1.18f,.96f,.97f,.72f,127);
-    float x=-1.16f,y=.945f;for(char c:std::string(text)){if(c=='\n'){x=-1.16f;y-=.033f;continue;}if(c>=32 && c<127)quad(x,y,.020f,.040f,c);x+=.0185f;}
+    quad(-1.18f,.96f,.97f,.85f,127);
+    float x=-1.16f,y=.945f;for(char c:std::string(text)){if(c=='\n'){x=-1.16f;y-=.055f;continue;}if(c>=32 && c<127)quad(x,y,.028f,.052f,c);x+=.026f;}
     const int statsEnd=vertices.size()/4;
     struct Batch{int first,count;std::array<float,4> color;};
     std::vector<Batch> batches;
@@ -54,7 +59,7 @@ void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
     int first=vertices.size()/4;quad(.35f,.96f,.83f,.85f,127);batch(first,{.025f,.04f,.06f,.82f});
     auto label=[&](float y,const std::string& value,std::array<float,4> color){
         int begin=vertices.size()/4;float x=.375f;
-        for(char c:value){if(c>=32 && c<127)quad(x,y,.019f,.038f,c);x+=.018f;}
+        for(char c:value){if(c>=32 && c<127)quad(x,y,.024f,.040f,c);x+=.022f;}
         batch(begin,color);
     };
     label(.945f,"RAW META / BEFORE GMR",{.8f,1.f,.95f,1.f});
@@ -105,8 +110,8 @@ void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
     // Shared metre coordinates in the central head frame, not per-eye NDC.
     // The real eye poses and asymmetric FOVs provide the stereo disparity.
     for(size_t i=0;i<vertices.size();i+=4){
-        bool left=i/4<size_t(statsEnd);float factor=left?.64f/.97f:.54f/.83f;
-        vertices[i]=left?-.84f+(vertices[i]+1.18f)*factor:.30f+(vertices[i]-.35f)*factor;
+        bool left=i/4<size_t(statsEnd);float factor=left?.90f/.97f:.54f/.83f;
+        vertices[i]=left?-.98f+(vertices[i]+1.18f)*factor:.30f+(vertices[i]-.35f)*factor;
         vertices[i+1]=.68f+(vertices[i+1]-.96f)*factor;
     }
     glDisable(GL_DEPTH_TEST);glEnable(GL_BLEND);glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);

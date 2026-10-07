@@ -56,7 +56,7 @@ def make_model(scene="lab", hands=True, geometry="hybrid"):
     add(world, "light", pos="1 -3 4", dir="-.2 .5 -1", diffuse=".7 .7 .7")
     # Camera looks along robot +X; MuJoCo camera looks along local -Z.
     torso = root.find(".//body[@name='torso_link']")
-    add(torso, "camera", name="ego", pos=".08 0 .43", xyaxes="0 -1 0 .5 0 .8660254", fovy="80")
+    add(torso, "camera", name="ego", pos=".08 0 .43", xyaxes="0 -1 0 0 0 1", fovy="80")
     if scene in ("cup", "lab"):
         x, y = (.65, 0.) if scene == "cup" else (.8, -.8)
         table = add(world, "body", name="table", pos=f"{x} {y} 0")
