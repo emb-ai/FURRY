@@ -35,7 +35,8 @@ shutil.copy2(UPSTREAM/'assets/ckpts/twist2_1017_20k.onnx', assets/'policy.onnx')
 meshdir = assets/'meshes'
 meshdir.mkdir(exist_ok=True)
 for mesh in root.iter('mesh'):
-    shutil.copy2(UPSTREAM/'assets/g1/meshes'/mesh.get('file'), meshdir/mesh.get('file'))
+    if mesh.get('file'):
+        shutil.copy2(UPSTREAM/'assets/g1/meshes'/mesh.get('file'), meshdir/mesh.get('file'))
 shutil.copy2(ROOT/'THIRD_PARTY_NOTICES.txt', assets/'TWIST2_LICENSE.txt')
 shutil.copy2(ROOT/'vendor/mujoco/LICENSE', assets/'MUJOCO_LICENSE.txt')
 shutil.copy2(ROOT/'vendor/OpenXR-SDK-Source/LICENSE', assets/'OPENXR_LICENSE.txt')
@@ -89,7 +90,7 @@ budget = dict(maximum_triangles_per_eye=100000, scene_triangles_per_eye=scene_tr
               hud_max_triangles=hud_max_triangles, total_max_triangles_per_eye=scene_triangles+hud_max_triangles,
               primitive_triangles=primitive_triangles, unique_visual_mesh_triangles=triangles,
               original_mesh_triangles=int(model.nmeshface), method='quadric edge collapse',
-              mesh_instances=sum(mesh_usage.values()), physics_meshes_unchanged=False, robot_collision_meshes=0)
+              mesh_instances=sum(mesh_usage.values()), physics_meshes_unchanged=False, robot_collision_meshes=collision_report['collision_hulls'])
 (assets/'mesh_budget.json').write_text(json.dumps(budget, indent=2)+'\n')
 print('Complete rendered scene triangles per eye:', scene_triangles, '/ 100000')
 font_path = '/System/Library/Fonts/Supplemental/Arial.ttf'

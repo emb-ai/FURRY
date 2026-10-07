@@ -1,8 +1,38 @@
-"""Replace only robot collision meshes with fitted primitives, preserving dynamics."""
+"""Fast collision proxies, with faithful convex housings where primitives overlap."""
 import xml.etree.ElementTree as ET
 from collections import Counter
 import mujoco
 import numpy as np
+from scipy.spatial import ConvexHull
+
+
+HULL_TOLERANCE_M = .00015
+
+
+def compact_hull(vertices):
+    """Inner convex hull with bounded source-vertex plane error (150 microns).
+
+    Select original hull vertices, never enlarge a housing. MuJoCo uses convex
+    mesh contacts too; this retains its contact surface without the STL detail.
+    """
+    vertices = vertices[ConvexHull(vertices).vertices]
+    chosen = set(np.r_[vertices.argmin(axis=0), vertices.argmax(axis=0)].tolist())
+    for _ in range(len(vertices)):
+        points = vertices[sorted(chosen)]
+        hull = ConvexHull(points)
+        # einsum avoids platform BLAS warnings for these small matrices.
+        errors = np.max(np.einsum("ij,kj->ik", vertices, hull.equations[:, :3])
+                        + hull.equations[:, 3], axis=1)
+        index = int(errors.argmax())
+        if errors[index] <= HULL_TOLERANCE_M:
+            faces = hull.simplices.copy()
+            for i, face in enumerate(faces):
+                a, b, c = points[face]
+                if np.dot(np.cross(b-a, c-a), hull.equations[i, :3]) < 0:
+                    faces[i, [1, 2]] = faces[i, [2, 1]]
+            return points, faces, float(errors[index]), float(hull.volume / ConvexHull(vertices).volume)
+        chosen.add(index)
+    raise ValueError("Collision hull fitting did not converge")
 
 
 def primitive_collisions(xml):
@@ -29,6 +59,26 @@ def primitive_collisions(xml):
         rotation = rotation.reshape(3, 3)
         position = original.geom_pos[gid] + rotation @ center
         body = original.body(original.geom_bodyid[gid]).name
+        # These non-cylindrical housings cannot be represented faithfully by
+        # a bounding box/capsule: they create wrist and thumb/hip contacts.
+        precise = body.endswith('hip_roll_link') or (
+            body.endswith(('wrist_roll_link', 'wrist_yaw_link'))
+            and original.mesh(mid).name == body)
+        if precise:
+            points, faces, error, volume_ratio = compact_hull(vertices)
+            mesh_name = 'collision_hull_' + geom.get('name')
+            ET.SubElement(root.find('asset'), 'mesh', name=mesh_name,
+                          vertex=' '.join(format(v, '.12g') for v in points.ravel()),
+                          face=' '.join(map(str, faces.ravel())))
+            for attr in ('size', 'pos', 'quat', 'euler', 'axisangle', 'xyaxes', 'zaxis', 'fromto'):
+                geom.attrib.pop(attr, None)
+            geom.set('type', 'mesh'); geom.set('mesh', mesh_name)
+            geom.set('pos', ' '.join(map(str, original.geom_pos[gid])))
+            geom.set('quat', ' '.join(map(str, original.geom_quat[gid])))
+            changes.append(dict(body=body, geom=geom.get('name'), shape='compact_convex_hull',
+                                vertices=len(points), triangles=len(faces),
+                                max_plane_error_m=error, volume_ratio=volume_ratio))
+            continue
         axis = int(np.argmax(extent))
         other = [a for a in range(3) if a != axis]
         radius = float(min(extent[other]))
@@ -65,6 +115,7 @@ def primitive_collisions(xml):
                   'dof_damping', 'jnt_range', 'actuator_ctrlrange'):
         np.testing.assert_allclose(getattr(model, field), getattr(original, field), atol=1e-12, rtol=0)
     active = (model.geom_contype != 0) | (model.geom_conaffinity != 0)
-    assert not np.any(model.geom_type[active] == mujoco.mjtGeom.mjGEOM_MESH)
+    assert np.count_nonzero(model.geom_type[active] == mujoco.mjtGeom.mjGEOM_MESH) == 6
     return result, dict(replaced_meshes=len(changes), shapes=dict(Counter(c['shape'] for c in changes)),
-                        robot_mass_preserved=True, ground_contact_pads_preserved=True, changes=changes)
+                        robot_mass_preserved=True, ground_contact_pads_preserved=True,
+                        hull_tolerance_m=HULL_TOLERANCE_M, collision_hulls=6, changes=changes)

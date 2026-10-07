@@ -1,11 +1,10 @@
 """Compare fitted robot contacts with the source mesh at identical legal poses.
 
 Run from the Quest prototype root. No recordings or headset are needed. The
-rounded-wrist alternative is an in-memory diagnostic; production is unchanged.
+compact hulls are the production collision model.
 """
 import argparse
 import json
-import sys
 import sys
 import xml.etree.ElementTree as ET
 from collections import defaultdict
@@ -36,17 +35,7 @@ def build_models():
     xml = ET.tostring(root, encoding='unicode')
     mesh = mujoco.MjModel.from_xml_string(xml)
     primitives, _ = primitive_collisions(xml)
-    alternative = ET.fromstring(primitives)
-    motor_bodies = {f'{side}_wrist_{axis}_link' for side in ('left', 'right') for axis in ('roll', 'yaw')}
-    for gid in range(mesh.ngeom):
-        body = mesh.body(mesh.geom_bodyid[gid]).name
-        if (body in motor_bodies and mesh.geom_type[gid] == mujoco.mjtGeom.mjGEOM_MESH
-                and (mesh.geom_contype[gid] or mesh.geom_conaffinity[gid])
-                and mesh.mesh(mesh.geom_dataid[gid]).name == body):
-            name = mesh.geom(gid).name
-            alternative.find(f".//geom[@name='{name}']").set('type', 'ellipsoid')
-    return dict(mesh=mesh, primitive=mujoco.MjModel.from_xml_string(primitives),
-                diagnostic_wrist_ellipsoid=mujoco.MjModel.from_xml_string(ET.tostring(alternative, encoding='unicode')))
+    return dict(mesh=mesh, primitive=mujoco.MjModel.from_xml_string(primitives))
 
 
 def contacts(model, data, q):
@@ -101,7 +90,6 @@ def main():
                   scores={key: [dict(pair=list(pair), **score) for pair, score in sorted(value.items())] for key, value in scores.items()},
                   limitations=['Static geometric comparison; no causal gait or hardware claims.',
                                'The source mesh can also intersect at HOME; compare depth as well as contact presence.',
-                               'The diagnostic bbox ellipsoid preserves bounds but is not contained in the convex hull.',
                                'Fingers fixed at zero; independent small joint perturbations are not a human motion distribution.'])
     path = Path(args.output)
     path.parent.mkdir(parents=True, exist_ok=True)
