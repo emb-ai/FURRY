@@ -76,7 +76,6 @@ void MetaRetargeter::Calibrate(const mjModel* model,const mjData* data,const Tra
     if(!std::isfinite(eyeHeight) || eyeHeight<.7 || eyeHeight>2.4)
         throw std::runtime_error("Invalid standing eye height: calibrate upright");
     cameraScale=cameraOrigin.position[2]/eyeHeight;
-    mju_sub3(headPelvisOrigin.data(),input.head.position.data(),input.body.joints[0].position.data());
     double alignedHead[4],inverse[4];mju_mulQuat(alignedHead,basisQuat,input.head.quaternion.data());
     mju_negQuat(inverse,alignedHead);mju_mulQuat(cameraRotationOffset.data(),inverse,cameraOrigin.quaternion.data());
     skeletonVersion=input.body.skeleton_version;lastTime=0;calibrated=true;
@@ -91,7 +90,10 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& input){
     // torso, and mixes predicted head time with the returned body timestamp.
     mju_sub3(pelvisDelta,input.body.joints[0].position.data(),translationOrigin.data());
     mju_mulMatVec(translation,basis,pelvisDelta,3,3);
-    double root[3]={rootOrigin[0]+rootScale*translation[0],rootOrigin[1]+rootScale*translation[1],0};
+    // Whole-world travel uses the same similarity scale as the stationary
+    // first-person world. Anatomical limb/height scales remain separate.
+    double travelScale=cameraTracking?cameraScale:rootScale;
+    double root[3]={rootOrigin[0]+travelScale*translation[0],rootOrigin[1]+travelScale*translation[1],0};
     // Grounded GMR mode: preserve pelvis height above the lower foot. Estimated
     // feet are used explicitly; there is no hidden generated gait in this app.
     double floor=std::min(input.body.joints[6].position[1],input.body.joints[7].position[1]);
@@ -103,12 +105,11 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& input){
     }
     gmr.SetTargets(targets);
     if(cameraTracking && (input.location_flags[0]&3)==3){
-        TrackedPose camera;double relative[3],change[3],mapped[3],aligned[4];
-        mju_sub3(relative,input.head.position.data(),input.body.joints[0].position.data());
-        mju_sub3(change,relative,headPelvisOrigin.data());mju_mulMatVec(mapped,basis,change,3,3);
-        // Independent head task: pelvis locomotion translates the body, head
-        // sway acts on the torso without moving every planted-foot target.
-        for(int a=0;a<3;a++)camera.position[a]=cameraOrigin.position[a]+rootScale*translation[a]+cameraScale*mapped[a];
+        TrackedPose camera;double aligned[4];
+        // Absolute HMD goal in the fixed calibrated scene/STAGE transform.
+        double headDelta[3],headMapped[3];mju_sub3(headDelta,input.head.position.data(),cameraHeadOrigin.position.data());
+        mju_mulMatVec(headMapped,basis,headDelta,3,3);
+        for(int a=0;a<3;a++)camera.position[a]=cameraOrigin.position[a]+cameraScale*headMapped[a];
         camera.position[2]=cameraOrigin.position[2]+cameraScale*(input.head.position[1]-cameraHeadOrigin.position[1]);
         mju_mulQuat(aligned,basisQuat,input.head.quaternion.data());
         mju_mulQuat(camera.quaternion.data(),aligned,cameraRotationOffset.data());gmr.SetCameraTarget(camera);

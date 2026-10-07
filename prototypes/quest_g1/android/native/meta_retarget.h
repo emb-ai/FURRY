@@ -11,7 +11,6 @@ class MetaRetargeter {
     std::array<double,14> scales{};
     double rootScale=1,footHeight=0,cameraScale=1;
     TrackedPose cameraOrigin,cameraHeadOrigin;
-    std::array<double,3> headPelvisOrigin{};
     std::array<double,4> cameraRotationOffset{1,0,0,0};
     bool cameraTracking=false;
     uint32_t skeletonVersion=0;
@@ -27,6 +26,8 @@ public:
     void EnableCameraTracking(bool value){cameraTracking=value;if(!value)gmr.ClearCameraTarget();}
     double VisualScale()const{return 1/cameraScale;}
     const double* StageToRobotRotation()const{return basis;}
+    const TrackedPose& CameraCalibrationPose()const{return cameraOrigin;}
+    const TrackedPose& HeadCalibrationPose()const{return cameraHeadOrigin;}
     void Pause(){lastTime=0;}
     bool Compatible(const TrackingFrame& f)const{return calibrated && f.body.skeleton_version==skeletonVersion;}
     GmrRetargeter& solver(){return gmr;}

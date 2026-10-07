@@ -19,12 +19,25 @@ int main(){
  auto rotation=LevelEgoRotation(camera,head);
  for(float scale:{.8f,1.f,1.4f})for(float delta:{-.5f,0.f,.4f}){
   auto moved=head;moved.m[12]+=delta;moved.m[13]-=delta/2;moved.m[14]-=delta;
-  auto follow=FollowCameraWorld(camera,moved,rotation,scale);
+  auto follow=CalibratedCameraWorld(camera,moved,rotation,scale);
   XrVector4f centre{camera.m[12],camera.m[13],camera.m[14],1},mapped;
   XrMatrix4x4f_TransformVector4f(&mapped,&follow,&centre);
   for(int i=0;i<3;i++)if(std::abs((&mapped.x)[i]-moved.m[12+i])>2e-6)throw std::runtime_error("Live HMD translation lost");
   XrVector4f up{0,0,1,0},level;XrMatrix4x4f_TransformVector4f(&level,&follow,&up);
   if(std::abs(level.y-scale)>1e-6 || std::abs(level.x)>1e-6 || std::abs(level.z)>1e-6)throw std::runtime_error("Floor tilted");
  }
- puts("Stereo, live ego centre, uniform scale and level floor checks passed");
+ // Production keeps this calibration world fixed; head motion changes only
+ // the eye view. A stationary prop must retain identical STAGE coordinates.
+ auto fixed=CalibratedCameraWorld(camera,head,rotation,1.3f);
+ XrVector4f prop{.8f,-.8f,.74f,1},initialProp;XrMatrix4x4f_TransformVector4f(&initialProp,&fixed,&prop);
+ for(float dx:{-.5f,0.f,.5f}){
+  auto moved=head;moved.m[12]+=dx;
+  XrVector4f currentProp;XrMatrix4x4f_TransformVector4f(&currentProp,&fixed,&prop);
+  if(currentProp.x!=initialProp.x || currentProp.y!=initialProp.y || currentProp.z!=initialProp.z)throw std::runtime_error("Prop moved in STAGE");
+  XrMatrix4x4f view;XrMatrix4x4f_InvertRigidBody(&view,&moved);XrVector4f a,b;
+  XrMatrix4x4f_TransformVector4f(&a,&view,&currentProp);
+  XrMatrix4x4f originalView;XrMatrix4x4f_InvertRigidBody(&originalView,&head);XrMatrix4x4f_TransformVector4f(&b,&originalView,&initialProp);
+  if(std::abs((a.x-b.x)+originalView.m[0]*dx)>1e-6)throw std::runtime_error("HMD translation not one-to-one in STAGE");
+ }
+ puts("Stereo, calibrated world, stationary props and one-to-one HMD displacement checks passed");
 }

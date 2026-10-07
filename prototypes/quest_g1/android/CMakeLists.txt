@@ -16,11 +16,23 @@ add_library(onnxruntime SHARED IMPORTED)
 set_target_properties(onnxruntime PROPERTIES IMPORTED_LOCATION "${G1_ROOT}/vendor/onnxruntime-android/jni/arm64-v8a/libonnxruntime.so")
 add_library(openxr_loader SHARED IMPORTED)
 set_target_properties(openxr_loader PROPERTIES IMPORTED_LOCATION "${G1_ROOT}/vendor/openxr-android/jni/arm64-v8a/libopenxr_loader.so")
+set(USE_TLS OFF CACHE BOOL "" FORCE)
+set(USE_ZLIB OFF CACHE BOOL "" FORCE)
+set(BUILD_DEMO OFF CACHE BOOL "" FORCE)
+function(g1_network_dependency)
+    set(BUILD_SHARED_LIBS OFF)
+    add_subdirectory("${G1_ROOT}/vendor/IXWebSocket" ixwebsocket)
+endfunction()
+g1_network_dependency()
+set(G1_JSON "${G1_ROOT}/vendor/OpenXR-SDK-Source/src/external/jsoncpp")
+add_library(g1_json STATIC "${G1_JSON}/src/lib_json/json_reader.cpp"
+    "${G1_JSON}/src/lib_json/json_value.cpp" "${G1_JSON}/src/lib_json/json_writer.cpp")
+target_include_directories(g1_json PUBLIC "${G1_JSON}/include")
 add_library(g1_quest SHARED
     generated/xr/main.cpp generated/xr/openxr_program.cpp generated/xr/logger.cpp
     generated/xr/platformplugin_factory.cpp generated/xr/platformplugin_android.cpp
     generated/xr/graphicsplugin_factory.cpp
-    native/graphics.cpp native/simulation.cpp native/gmr.cpp native/meta_retarget.cpp native/quest_runtime.cpp
+    native/camera_stream.cpp native/camera_fusion.cpp native/graphics.cpp native/simulation.cpp native/gmr.cpp native/meta_retarget.cpp native/quest_runtime.cpp
     "${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c")
 target_compile_definitions(g1_quest PRIVATE XR_USE_PLATFORM_ANDROID XR_USE_GRAPHICS_API_OPENGL_ES DEFAULT_GRAPHICS_PLUGIN_OPENGLES)
 target_include_directories(g1_quest PRIVATE
@@ -29,7 +41,7 @@ target_include_directories(g1_quest PRIVATE
     "${G1_ROOT}/vendor/onnxruntime-android/headers"
     "${G1_ROOT}/vendor/OpenXR-SDK-Source/src"
     "${G1_ROOT}/vendor/OpenXR-SDK-Source/src/common")
-target_link_libraries(g1_quest PRIVATE mujoco onnxruntime openxr_loader android log EGL GLESv3)
+target_link_libraries(g1_quest PRIVATE ixwebsocket g1_json mujoco onnxruntime openxr_loader android log EGL GLESv3)
 target_link_options(g1_quest PRIVATE "-uANativeActivity_onCreate" "-Wl,-z,max-page-size=16384")
 
 add_executable(g1_check native/check.cpp native/simulation.cpp)

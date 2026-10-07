@@ -20,9 +20,9 @@ inline XrMatrix4x4f EgoWorld(const XrMatrix4x4f& camera,const XrMatrix4x4f& anch
     return result;
 }
 
-// Fixed calibration rotation and uniform visual scale; the camera's centre
-// stays at the live HMD position, while HMD rotation still controls the view.
-inline XrMatrix4x4f FollowCameraWorld(const XrMatrix4x4f& camera,
+// Construct the calibration similarity transform once; callers keep it fixed.
+// Only the eye view changes with later HMD movement.
+inline XrMatrix4x4f CalibratedCameraWorld(const XrMatrix4x4f& camera,
                                     const XrMatrix4x4f& head,
                                     const XrMatrix4x4f& rotation,float scale){
     XrMatrix4x4f world{};world.m[15]=1;

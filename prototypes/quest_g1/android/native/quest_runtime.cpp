@@ -7,6 +7,8 @@
 #include "tracking_space.h"
 #include "runtime_stats.h"
 #include "stats_hud.h"
+#include "camera_stream.h"
+#include "camera_pose_servo.h"
 #include "recording_export.h"
 #include <deque>
 #include <set>
@@ -36,12 +38,15 @@ std::mutex inputMutex,statsMutex;
 std::deque<InputSample> pendingInputs;
 std::vector<std::string> pendingEvents;
 std::atomic<bool> spaceInvalidated{false};
+std::unique_ptr<CameraStream> cameraStream;
+CameraFusion cameraFusion;
 std::atomic<uint64_t> droppedInputs{0};
 RuntimeStats stats;
 int pauseReason=0;
 double renderFps=0,renderMs=0;uint64_t skippedSceneUpdates=0;
 double ClockSeconds(){return std::chrono::duration<double>(std::chrono::steady_clock::now().time_since_epoch()).count();}
-std::ofstream telemetry;
+std::ofstream telemetry,cameraRecording;
+uint64_t cameraRecordedSequence=~0ull;
 TrackingSpaceChanges spaceChanges;
 EpisodeRecorder recorder;
 std::unique_ptr<RecordingExport> exporter;
@@ -66,7 +71,7 @@ mjvScene scene{},workerScene{};
 std::mutex geometryMutex;
 std::vector<mjvGeom> publishedGeometry;
 XrMatrix4x4f publishedCamera{},frameCamera{},headMatrix{};
-XrMatrix4x4f publishedEgoRotation{},frameEgoRotation{};
+XrMatrix4x4f publishedEgoRotation{},frameEgoRotation{},publishedEgoWorld{},frameEgoWorld{};
 float publishedEgoScale=1,frameEgoScale=1;
 bool publishedEgoCalibrated=false;
 TrackingFrame frameTracking;
@@ -93,6 +98,8 @@ void PublishGeometry(){
         publishedEgoRotation={};publishedEgoRotation.m[15]=1;
         for(int r=0;r<3;r++)for(int c=0;c<3;c++)publishedEgoRotation.m[4*c+r]=float(basis[3*c+r]);
         publishedEgoScale=float(retarget->VisualScale());
+        publishedEgoWorld=CalibratedCameraWorld(PoseMatrix(retarget->CameraCalibrationPose()),
+            PoseMatrix(retarget->HeadCalibrationPose()),publishedEgoRotation,publishedEgoScale);
     }
 }
 GLuint program=0;
@@ -206,6 +213,8 @@ void G1Initialize(android_app* app){
     assetsPath=assets;
     CopyAssets(app->activity->assetManager,"",assets);
     CopyAssets(app->activity->assetManager,"meshes",assets+"/meshes");
+    std::ifstream cameraConfig(assets+"/camera_stream_url.txt");std::string cameraUrl;std::getline(cameraConfig,cameraUrl);
+    cameraStream=std::make_unique<CameraStream>(cameraUrl);
     sim=std::make_unique<Simulation>(assets);
     retarget=std::make_unique<MetaRetargeter>(assets);
     if(std::filesystem::exists(assets+"/teleop_trace.csv"))
@@ -229,7 +238,7 @@ void G1Initialize(android_app* app){
     if(egoCamera<0)throw std::runtime_error("Missing ego camera");
     publishedGeometry.reserve(2048);PublishGeometry();
     telemetry.open(assets+"/runtime_stats.csv",std::ios::trunc);
-    telemetry<<"wall_s,sim_s,cycle_ms,physics_ms,gmr_ms,inference_ms,rtf,contacts,overlap_points,pairs,max_depth_mm,solver_iterations,constraints,body_gap_ms,input_age_ms,body_confidence,body_version,state,reason,target_x,target_y,actual_x,actual_y,cmd_vx,cmd_vy,actual_vx,actual_vy,root_error,height,tilt,gmr_residual,gmr_iterations,overruns,dropped_inputs,left_foot_contacts,right_foot_contacts,leg_error_deg,physics_workers,camera_error_m,camera_error_deg,visual_scale\n";
+    telemetry<<"wall_s,sim_s,cycle_ms,physics_ms,gmr_ms,inference_ms,rtf,contacts,overlap_points,pairs,max_depth_mm,solver_iterations,constraints,body_gap_ms,input_age_ms,body_confidence,body_version,state,reason,target_x,target_y,actual_x,actual_y,cmd_vx,cmd_vy,actual_vx,actual_vy,root_error,height,tilt,gmr_residual,gmr_iterations,overruns,dropped_inputs,left_foot_contacts,right_foot_contacts,leg_error_deg,physics_workers,camera_error_m,camera_error_deg,visual_scale,camera_connected,camera_state,camera_age_ms,camera_fit_mm,camera_legs,camera_weight\n";
     try{exporter=std::make_unique<RecordingExport>(app->activity->vm,app->activity->clazz);exporter->Latest(assets+"/recordings");}
     catch(const std::exception& e){__android_log_print(ANDROID_LOG_ERROR,"G1Quest","Recording export unavailable: %s",e.what());}
     running=true;
@@ -248,16 +257,18 @@ void G1Initialize(android_app* app){
                     Record([&]{recorder.Event(event.c_str(),input.sequence);});
                 }
                 if(spaceInvalidated.exchange(false)){
-                    trackingEnabled=false;retarget->calibrated=false;calibrate=false;toggleTracking=false;
+                    trackingEnabled=false;retarget->calibrated=false;calibrate=false;toggleTracking=false;cameraFusion.Reset();
                     wasApplying=false;retarget->Pause();sim->PauseWholeBodyReference();pauseReason=1;
                     Record([&]{recorder.Event("reference_space_change",input.sequence);});
                 }
                 Record([&]{
                     for(const auto& entry:inputs)recorder.Input(entry.frame,entry.left,entry.right,entry.received);
                     if(toggleRecording.exchange(false)){
-                        if(recorder.active){recorder.Stop();if(exporter)exporter->Queue(recorder.path());__android_log_print(ANDROID_LOG_INFO,"G1Quest","Recording saved: %s",recorder.path().c_str());}
+                        if(recorder.active){cameraRecording.close();recorder.Stop();if(exporter)exporter->Queue(recorder.path());__android_log_print(ANDROID_LOG_INFO,"G1Quest","Recording saved: %s",recorder.path().c_str());}
                         else{
                             recorder.Start(assetsPath,sim->model);
+                            cameraRecording.open(std::filesystem::path(recorder.path())/"camera.jsonl");cameraRecordedSequence=~0ull;
+                            recorder.Event(firstPerson?"ego_world":"observer_view",input.sequence);
                             auto received=std::chrono::duration_cast<std::chrono::nanoseconds>(receivedAt.time_since_epoch()).count();
                             recorder.Input(input,grip[0],grip[1],received);
                             __android_log_print(ANDROID_LOG_INFO,"G1Quest","Recording started: %s",recorder.path().c_str());
@@ -270,11 +281,11 @@ void G1Initialize(android_app* app){
             try{
                 std::lock_guard<std::mutex> guard(mutex);
                 bool resetNow=reset.exchange(false);
-                if(resetNow){pauseReason=0;sim->Reset();wasApplying=false;trackingEnabled=false;retarget->calibrated=false;trackingStatus=0;calibrate=false;toggleTracking=false;faulted=false;lastReference={};grip[0]=0;grip[1]=0;Record([&]{recorder.Event("reset",input.sequence);});}
+                if(resetNow){cameraFusion.Reset();pauseReason=0;sim->Reset();wasApplying=false;trackingEnabled=false;retarget->calibrated=false;trackingStatus=0;calibrate=false;toggleTracking=false;faulted=false;lastReference={};grip[0]=0;grip[1]=0;Record([&]{recorder.Event("reset",input.sequence);});}
                 bool valid=input.body.valid && (input.location_flags[0]&3)==3 && std::abs(input.xr_time_ns-input.body.time_ns)<200000000LL && std::chrono::steady_clock::now()-receivedAt<std::chrono::milliseconds(200);
                 bool calibratedNow=false;
                 if(calibrate.load() && valid){
-                    pauseReason=0;calibratedNow=true;Record([&]{recorder.Event("calibrate",input.sequence);});
+                    cameraFusion.Reset();pauseReason=0;calibratedNow=true;Record([&]{recorder.Event("calibrate",input.sequence);});
                     retarget->Calibrate(sim->model,sim->data,input);trackingEnabled=true;calibrate=false;
                     __android_log_print(ANDROID_LOG_INFO,"G1Quest","Tracking calibrated: Meta full body -> native GMR -> TWIST2");
                 }
@@ -296,7 +307,20 @@ void G1Initialize(android_app* app){
                         }
                     }
                     double gmrStart=ClockSeconds();
-                    auto whole=retarget->Solve(input);sample.gmrMs=(ClockSeconds()-gmrStart)*1000;
+                    cameraFusion.Observe(input,CameraEpochMs());CameraSkeleton optical;
+                    std::string opticalRaw;bool haveOptical=cameraStream->Latest(optical,&opticalRaw);
+                    if(haveOptical && recorder.active && optical.sequence!=cameraRecordedSequence){
+                        cameraRecording<<"{\"input_sequence\":"<<input.sequence<<",\"received_epoch_ms\":"<<std::setprecision(17)<<optical.receivedMs<<",\"payload\":"<<opticalRaw<<"}\n";
+                        cameraRecordedSequence=optical.sequence;
+                    }
+                    auto fused=cameraFusion.Apply(input,haveOptical?&optical:nullptr,CameraEpochMs());
+                    auto whole=retarget->Solve(fused);
+                    if(retarget->solver().HasCameraTarget()){
+                        TrackedPose actual;std::copy_n(sim->data->cam_xpos+3*egoCamera,3,actual.position.begin());
+                        mju_mat2Quat(actual.quaternion.data(),sim->data->cam_xmat+9*egoCamera);
+                        whole=CameraPoseServo(whole,retarget->solver().CameraTarget(),actual,sim->data->qpos+3);
+                    }
+                    sample.gmrMs=(ClockSeconds()-gmrStart)*1000;
                     double u=std::clamp((sim->data->time-blendStarted)/.5,0.,1.);
                     for(int j=0;j<35;j++)whole[j]=blendOrigin[j]+u*(whole[j]-blendOrigin[j]);
                     sim->SetWholeBodyReference(whole);std::copy_n(whole.begin()+6,29,lastReference.begin());
@@ -353,6 +377,9 @@ void G1Initialize(android_app* app){
                 sample.bodyGapMs=(input.xr_time_ns-input.body.time_ns)*1e-6;sample.confidence=input.body.confidence;sample.bodyVersion=input.body.skeleton_version;
                 sample.residual=retarget->error;sample.gmrIterations=retarget->solver().iterations;
                 for(int a=0;a<2;a++){sample.targetXY[a]=retarget->solver().data()->qpos[a];sample.actualXY[a]=sim->data->qpos[a];sample.commandXY[a]=sim->WholeBodyReference()[a];sample.velocityXY[a]=sim->data->qvel[a];}
+                sample.cameraState=cameraFusion.stats.state;sample.cameraLegs=cameraFusion.stats.legs;
+                sample.cameraAgeMs=cameraFusion.stats.ageMs;sample.cameraFitMm=cameraFusion.stats.fitMm;
+                sample.cameraWeight=cameraFusion.stats.weight;sample.cameraConnected=cameraStream->connected;
                 sample.visualScale=retarget->calibrated?retarget->VisualScale():1;
                 sample.cameraPositionError=sample.cameraOrientationError=-1;
                 if(retarget->solver().HasCameraTarget()){
@@ -369,7 +396,7 @@ void G1Initialize(android_app* app){
                     const auto& x=sample;
                     telemetry<<x.published<<','<<x.simTime<<','<<x.cycleMs<<','<<x.physicsMs<<','<<x.gmrMs<<','<<x.inferenceMs<<','<<x.realTimeFactor<<','<<x.contacts<<','<<x.overlaps<<','<<x.pairs<<','<<x.depthMm<<','<<x.solverIterations<<','<<x.constraints<<','<<x.bodyGapMs<<','<<x.inputAgeMs<<','<<x.confidence<<','<<x.bodyVersion<<','<<x.status<<','<<x.reason;
                     for(const auto& values:{x.targetXY,x.actualXY,x.commandXY,x.velocityXY})for(double v:values)telemetry<<','<<v;
-                    telemetry<<','<<x.positionError<<','<<x.height<<','<<x.tilt<<','<<x.residual<<','<<x.gmrIterations<<','<<x.overruns<<','<<x.droppedInputs<<','<<x.footContacts[0]<<','<<x.footContacts[1]<<','<<x.legErrorDegrees<<','<<x.physicsWorkers<<','<<x.cameraPositionError<<','<<x.cameraOrientationError<<','<<x.visualScale<<'\n';lastTelemetry=x.published;
+                    telemetry<<','<<x.positionError<<','<<x.height<<','<<x.tilt<<','<<x.residual<<','<<x.gmrIterations<<','<<x.overruns<<','<<x.droppedInputs<<','<<x.footContacts[0]<<','<<x.footContacts[1]<<','<<x.legErrorDegrees<<','<<x.physicsWorkers<<','<<x.cameraPositionError<<','<<x.cameraOrientationError<<','<<x.visualScale<<','<<x.cameraConnected<<','<<x.cameraState<<','<<x.cameraAgeMs<<','<<x.cameraFitMm<<','<<x.cameraLegs<<','<<x.cameraWeight<<'\n';lastTelemetry=x.published;
                     if(sim->steps%1000==0)telemetry.flush();
                 }
                 if(sim->steps%5000==0)__android_log_print(ANDROID_LOG_INFO,"G1Quest","sim=%.2fs height=%.3f inference=%.3fms",sim->data->time,sim->data->qpos[2],sim->inference_ms);
@@ -392,8 +419,8 @@ void G1Shutdown(bool interrupted){
         if(interrupted){recorder.Event("app_error",latestTracking.sequence);recorder.Flush();recorder.Abort();}
         else {bool wasRecording=recorder.active;recorder.Stop("app_shutdown");if(wasRecording && exporter)exporter->Queue(recorder.path());}
     });
-    exporter.reset();
-    telemetry.close();trace.close();mjv_freeScene(&scene);mjv_freeScene(&workerScene);retarget.reset();sim.reset();
+    exporter.reset();cameraStream.reset();
+    cameraRecording.close();telemetry.close();trace.close();mjv_freeScene(&scene);mjv_freeScene(&workerScene);retarget.reset();sim.reset();
 }
 void G1SetActive(bool value){
     if(active.exchange(value)!=value){std::lock_guard<std::mutex> guard(inputMutex);pendingEvents.emplace_back(value?"focus_resume":"focus_pause");}
@@ -405,6 +432,7 @@ void G1ReferenceSpaceChange(int64_t changeTime){
     spaceChanges.Schedule(changeTime);
 }
 void G1SubmitTracking(const TrackingFrame& input){
+    if(cameraStream)cameraStream->Submit(input);
     {std::lock_guard<std::mutex> guard(inputMutex);latestTracking=input;trackingTime=std::chrono::steady_clock::now();
         if(spaceChanges.Advance(input.xr_time_ns)){spaceInvalidated=true;placeScene=true;refreshEgoAnchor=true;}
         if(pendingInputs.size()>=512){pendingInputs.pop_front();droppedInputs++;}
@@ -420,7 +448,7 @@ void G1SubmitTracking(const TrackingFrame& input){
     }
 }
 void G1Calibrate(){calibrate=true;}
-void G1ToggleView(){firstPerson=!firstPerson.load();refreshEgoAnchor=true;}
+void G1ToggleView(){firstPerson=!firstPerson.load();refreshEgoAnchor=true;std::lock_guard<std::mutex>g(inputMutex);pendingEvents.emplace_back(firstPerson?"ego_world":"observer_view");}
 void G1ToggleRecording(){toggleRecording=true;}
 void G1ToggleTracking(){toggleTracking=true;}
 void G1CaptureFrame(int width,int height){
@@ -447,11 +475,11 @@ void G1PrepareFrame(){
     if(!guard.owns_lock()){skippedSceneUpdates++;return;}
     scene.ngeom=std::min(int(publishedGeometry.size()),scene.maxgeom);
     std::copy_n(publishedGeometry.begin(),scene.ngeom,scene.geoms);frameCamera=publishedCamera;
-    if(publishedEgoCalibrated){frameEgoRotation=publishedEgoRotation;frameEgoScale=publishedEgoScale;refreshEgoAnchor=false;}
+    if(publishedEgoCalibrated){frameEgoRotation=publishedEgoRotation;frameEgoScale=publishedEgoScale;frameEgoWorld=publishedEgoWorld;refreshEgoAnchor=false;}
     else if(refreshEgoAnchor && (frameTracking.location_flags[0]&3)==3){
         frameEgoRotation=LevelEgoRotation(frameCamera,headMatrix);
         frameEgoScale=std::clamp(headMatrix.m[13]/std::max(.5f,frameCamera.m[14]),.7f,2.f);
-        refreshEgoAnchor=false;
+        frameEgoWorld=CalibratedCameraWorld(frameCamera,headMatrix,frameEgoRotation,frameEgoScale);refreshEgoAnchor=false;
     }
 }
 void G1Render(const float* vp,const float* projection){
@@ -461,7 +489,7 @@ void G1Render(const float* vp,const float* projection){
     glUniformMatrix4fv(vpLocation,1,GL_FALSE,vp);
     // MuJoCo +Z up -> XR +Y up, anchored ahead of the initial headset pose.
     XrMatrix4x4f world{};std::copy(sceneTransform.begin(),sceneTransform.end(),world.m);
-    if(firstPerson)world=FollowCameraWorld(frameCamera,headMatrix,frameEgoRotation,frameEgoScale);
+    if(firstPerson)world=frameEgoWorld;
     int renderedTriangles=2;
     for(int i=0;i<scene.ngeom;i++){
         const mjvGeom& g=scene.geoms[i];if(g.rgba[3]<.01)continue;

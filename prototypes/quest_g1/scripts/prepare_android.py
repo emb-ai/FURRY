@@ -17,6 +17,9 @@ from g1_sim.visuals import export_visual_meshes
 
 assets = ROOT / 'android/assets'
 assets.mkdir(parents=True, exist_ok=True)
+shutil.copy2(ROOT/'android/camera_stream_url.txt', assets/'camera_stream_url.txt')
+shutil.copy2(ROOT/'vendor/IXWebSocket/LICENSE.txt', assets/'IXWEBSOCKET_LICENSE.txt')
+shutil.copy2(ROOT/'vendor/OpenXR-SDK-Source/src/external/jsoncpp/LICENSE', assets/'JSONCPP_LICENSE.txt')
 model, xml = make_model('lab', hands=True)
 root = ET.fromstring(xml)
 # Hide duplicate collision geometry in the GLES renderer, retain physical shape.

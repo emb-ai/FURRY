@@ -36,13 +36,15 @@ void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
     const char* states[]={"CALIBRATE A","TRACKING","PAUSED B","BODY INVALID","PHYSICS FAULT: X","TRACKING / POSE ERROR"};
     const char* exports[]={"Y: RECORD / SAVE ZIP","ZIP: COPYING TO DOWNLOADS","ZIP: Download/G1Quest","ZIP EXPORT FAILED (data kept)"};
     const char* reasons[]={"-","STAGE RECENTER: A","BODY RECALIBRATED: A","FALL/EXCEPTION: X"};
-    char text[2048],cameraText[80];
+    char text[2048],cameraText[80],opticalText[100];
+    const char* opticalStates[]={"META","ALIGN","FUSE","STALE"};
+    std::snprintf(opticalText,sizeof(opticalText),"CAM %s %.0fms FIT %.0fmm %dL",s.cameraConnected?opticalStates[std::clamp(s.cameraState,0,3)]:"OFF",s.cameraAgeMs,s.cameraFitMm,s.cameraLegs);
     if(s.cameraPositionError>=0)std::snprintf(cameraText,sizeof(cameraText),"HEAD %.1f cm / %.1f deg",100*s.cameraPositionError,s.cameraOrientationError);
     else std::snprintf(cameraText,sizeof(cameraText),"HEAD target: OFF");
     std::snprintf(text,sizeof(text),
-        "VIEW %s [L-stick]\nFPS %4.0f  CPU %.1f ms\nSIM %.2fx  MT %d  WARN %d\nPHYS %.1f GMR %.1f NN %.1f ms\nCONTACT %d  DEPTH %.1f mm\nSOLVER %d  CONSTRAINT %d\nINPUT %.0f  AGE %.0f ms\nROOT %.2f m  LEG %.0f deg\n%s\nSCALE %.2fx  TILT %.0f deg\nCMD %+.2f / %+.2f m/s\n%s\n%s\n%s",
+        "VIEW %s [L-stick]\nFPS %4.0f  CPU %.1f ms\nSIM %.2fx  MT %d  WARN %d\nPHYS %.1f GMR %.1f NN %.1f ms\nCONTACT %d  DEPTH %.1f mm\n%s\nINPUT %.0f  AGE %.0f ms\nROOT %.2f m  LEG %.0f deg\n%s\nSCALE %.2fx  TILT %.0f deg\nCMD %+.2f / %+.2f m/s\n%s\n%s\n%s",
         firstPerson?"EGO":"OBSERVER",fps,drawMs,active?s.realTimeFactor:0.,s.physicsWorkers,s.warnings,
-        s.physicsMs,s.gmrMs,s.inferenceMs,s.contacts,s.depthMm,s.solverIterations,s.constraints,
+        s.physicsMs,s.gmrMs,s.inferenceMs,s.contacts,s.depthMm,opticalText,
         s.inputAgeMs,s.published>0?std::max(0.,now-s.published)*1000:0.,s.positionError,s.legErrorDegrees,
         cameraText,visualScale,s.tilt,s.commandXY[0],s.commandXY[1],
         active?states[std::clamp(status,0,5)]:"XR FOCUS PAUSED",reasons[std::clamp(s.reason,0,3)],exports[std::clamp(exportStatus,0,3)]);

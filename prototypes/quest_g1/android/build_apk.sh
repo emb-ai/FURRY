@@ -6,6 +6,10 @@ export JAVA_HOME="$G1_PROJECT/.tools/jdk/Contents/Home"
 G1_SDK="$G1_PROJECT/.tools/android-sdk"
 G1_NDK="$G1_SDK/ndk/27.2.12479018"
 G1_BT="$G1_SDK/build-tools/android-14"
+if [[ ! -f vendor/IXWebSocket/ixwebsocket/IXWebSocket.h ]]; then
+  print "Missing camera transport dependency: run scripts/fetch_camera_transport.sh"
+  exit 1
+fi
 .venv/bin/python scripts/prepare_android.py
 cmake -S android -B android/build/arm64 \
   -DCMAKE_BUILD_TYPE=Release \
