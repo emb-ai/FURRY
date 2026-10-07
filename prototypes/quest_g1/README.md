@@ -4,7 +4,7 @@
 
 Ранее на Quest после исправления индексов визуальных сеток измерено 72 FPS, в том числе с passthrough, при 68 091 треугольнике на глаз. Новая геометрия содержит **89 629 треугольников на глаз**; лимит 100 000 проверяется сборкой и рендерером. FPS новой версии на шлеме ещё не измерен. Подробности визуальных сеток и гибридных коллизий: [Geometry](assets/g1/README.md).
 
-Реальная комната видна через цветной passthrough; виртуальный пол скрыт. **A** калибрует движения контроллеров и включает управление руками через нативную IK и политику TWIST2; **B** приостанавливает/продолжает трекинг. Grip каждого контроллера сжимает соответствующую кисть, меню левого контроллера сбрасывает сцену. **X** перезапускает симуляцию, **Y** начинает/заканчивает отдельную запись движений человека; стики не назначены. Поднятие чашки, Kick-T, полный PICO/GMR-трекинг тела ещё не реализованы. Соответствие движений рук пока неудовлетворительное по проверке оператора; запись предназначена для его диагностики.
+Реальная комната видна через passthrough; виртуальный пол скрыт. **A** калибрует полный скелет Meta и точку начала перемещения тела. Нативный GMR формирует полный референс для TWIST2; **B** ставит трекинг на паузу, **X** перезапускает симуляцию, **Y** записывает движения и состояние робота. Grip сжимает кисти. Порт GMR прошёл сравнение с оригиналом на синтетических данных; точность реального Quest-трекинга, ходьба, поднятие чашки и Kick-T ещё не подтверждены. [Подробности переноса и проверки](android/GMR_PORT.md).
 
 ## Настольная версия
 
@@ -101,7 +101,8 @@ fresh environment with `requirements.lock` and the pinned vendor revisions:
 
 - `python -m unittest discover -s tests -v`: 13 tests, including the 60-second balance/reset/contact checks and synthetic recording-corruption regressions.
 - `./android/check_recording_mac.sh`: 500 input/state rows, 20 invalid inputs, two calibrations and one reset; 430 references replayed with zero divergence. The interrupted-recorder check passed.
-- `./android/check_tracking_mac.sh`: native controller/IK regression; results are synthetic, not a human-fidelity measurement.
+- `./android/check_gmr_mac.sh`: native GMR versus upstream Python, Meta source-coordinate invariance, dynamic fixture and recorded replay.
+- `./android/check_tracking_mac.sh`: historical wrist-IK regression only.
 - `python scripts/prepare_android.py`: regenerated assets and XR lifecycle; 68,091 triangles per eye, below the 100,000 budget.
 - `tests/check_tracking_space.cpp`: reference-space changes apply at their announced XR time, including delayed, duplicate and multiple pending events.
 - Repository Markdown/link checks and all 16 documentation-tool tests passed.

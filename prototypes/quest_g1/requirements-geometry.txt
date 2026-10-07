@@ -1,6 +1,5 @@
 # Offline geometry authoring / inspection only. Not needed to run or build APKs.
 -r requirements.lock
-scipy==1.18.1
 trimesh==5.1.1
 rtree==1.4.1
 networkx==3.6.1

@@ -22,7 +22,8 @@ std::vector<std::string> JointNames() {
 }
 }
 
-Simulation::Simulation(const std::string& assets) {
+Simulation::Simulation(const std::string& assets, int physicsWorkers) {
+    if(physicsWorkers<0 || physicsWorkers>4)throw std::runtime_error("Invalid MuJoCo worker count");
     options.SetIntraOpNumThreads(1);
     options.SetInterOpNumThreads(1);
     session = std::make_unique<Ort::Session>(env, (assets+"/policy.onnx").c_str(), options);
@@ -34,6 +35,11 @@ Simulation::Simulation(const std::string& assets) {
     if (!model) throw std::runtime_error(std::string("MuJoCo model: ")+error);
     data = mj_makeData(model);
     if (!data) throw std::runtime_error("mj_makeData failed");
+    if(physicsWorkers){
+        physicsPool.reset(mju_threadPoolCreate(physicsWorkers));
+        mju_bindThreadPool(data,physicsPool.get());
+        physics_workers=physicsWorkers;
+    }
     auto names = JointNames();
     for (int i=0;i<29;i++) {
         int j=mj_name2id(model,mjOBJ_JOINT,names[i].c_str());
@@ -54,7 +60,7 @@ void Simulation::Reset() {
     for(int i=0;i<29;i++){data->qpos[qadr[i]]=home[i]; target[i]=home[i];}
     data->qpos[qadr[16]]=.2; data->qpos[qadr[23]]=-.2;
     history.fill(0); last_action.fill(0); steps=0; hand_grip.fill(0);
-    has_reference=false;
+    has_reference=false;has_whole_reference=false;whole_reference.fill(0);
     mj_forward(model,data);
 }
 void Simulation::SetArmReference(const std::array<float,29>& joints){
@@ -64,6 +70,13 @@ void Simulation::SetArmReference(const std::array<float,29>& joints){
         arm_reference[k]+=std::clamp(joints[15+k]-arm_reference[k],-.02f,.02f);
     }
     has_reference=true;
+}
+void Simulation::SetWholeBodyReference(const std::array<float,35>& reference){
+    for(double v:reference)if(!std::isfinite(v))throw std::runtime_error("Nonfinite GMR reference");
+    whole_reference=reference;has_whole_reference=true;
+}
+void Simulation::PauseWholeBodyReference(){
+    if(has_whole_reference)whole_reference[0]=whole_reference[1]=whole_reference[5]=0;
 }
 void Simulation::Step(bool demo,double grip,double right_grip) {
     if(steps%10==0) {
@@ -77,6 +90,7 @@ void Simulation::Step(bool demo,double grip,double right_grip) {
             obs[21]-=.35*wave; obs[28]-=.35*wave;
             obs[24]+=.3*wave; obs[31]+=.3*wave;
         }
+        if(has_whole_reference)std::copy(whole_reference.begin(),whole_reference.end(),obs.begin());
         for(int i=0;i<3;i++) obs[35+i]=data->qvel[3+i]*.25;
         double w=data->qpos[3],x=data->qpos[4],y=data->qpos[5],z=data->qpos[6];
         obs[38]=std::atan2(2*(w*x+y*z),1-2*(x*x+y*y));

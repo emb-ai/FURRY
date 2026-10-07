@@ -8,7 +8,8 @@ skeleton and pose, never the fixed-hand MJX visual model.
 
 The 49 versioned OBJ assets contain **88,047 triangles**, versus 629,338 in the
 source and 66,509 in the previous Quest export. The complete Android scene is
-**89,629 triangles per eye**, including props and UI, below the 100,000 limit.
+**89,629 triangles per eye**, including props and the control panel. The newer
+diagnostic HUD reserves another 8,192, for a **97,821** maximum, below 100,000.
 
 Complex torso, pelvis, knee, palm and finger parts are rebuilt as voxel-remeshed
 shells, smoothed and reduced with per-part budgets. Simpler parts use welded,
@@ -62,8 +63,9 @@ with Android assets. Vendor repositories are not modified.
 
 ## Authoring And Verification
 
-Normal runtime and Android builds read committed assets and need no Blender,
-SciPy, trimesh or simplification package. Optional authoring commands, run from
+Normal runtime and Android builds read committed geometry and need no Blender,
+trimesh or simplification package. SciPy follows the shared runtime/test lock.
+Optional authoring commands, run from
 `prototypes/quest_g1` with the pinned vendor checkout present:
 
 ```sh
@@ -85,6 +87,19 @@ Tests cover unchanged articulation/dynamics, closed convex proxies enclosing
 source vertices, contact on every palm/finger link, sole-floor filtering, visual
 budgets and corner normals, plus the existing 60-second balance and prop tests.
 Native tracking and recording checks use the regenerated Android scene.
+
+Integration with the newer remote main retains GMR, the diagnostic HUD, ego
+view, threaded physics and the Newton solver fix for dense cup contacts. The
+previous compact wrist/hip collision fitter remains available as an explicit
+source-model baseline, with its regression tests; Android no longer runs that
+fitter on the already-authored hybrid geometry. Historical collision/gait
+reports describe their original model, not measurements of this hybrid.
+The retained wrist-only retargeter copies pose rather than threaded `mjData`
+when calibrating, keeping its scratch allocator independent. Combined checks:
+37 Python tests, 3,000 single/threaded steps with zero pose difference, native
+tracking/recording regressions, and GMR parity plus 1,000-frame exact replay.
+On this macOS host SciPy 1.15.3 used its macOS 12 ARM wheel; the macOS 14 wheel
+failed dyld validation. The dependency version remains the shared lock value.
 
 For controlled comparisons, Python `make_model` accepts `geometry="source"` or
 `geometry="collision_only"`; the default is `"hybrid"`. `--fixed-hands` retains

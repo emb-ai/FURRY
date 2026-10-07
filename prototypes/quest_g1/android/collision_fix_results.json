@@ -1,0 +1,942 @@
+{
+  "static": {
+    "actual_home": {
+      "mesh": [
+        {
+          "pair": [
+            "left_hand_thumb_2_link",
+            "left_hip_roll_link"
+          ],
+          "depth_m": 0.007267641051154812
+        },
+        {
+          "pair": [
+            "right_hand_thumb_2_link",
+            "right_hip_roll_link"
+          ],
+          "depth_m": 0.007365515725743668
+        }
+      ],
+      "primitive": [
+        {
+          "pair": [
+            "left_hand_thumb_2_link",
+            "left_hip_roll_link"
+          ],
+          "depth_m": 0.0076271627771669105
+        },
+        {
+          "pair": [
+            "right_hand_thumb_2_link",
+            "right_hip_roll_link"
+          ],
+          "depth_m": 0.0048629307948463785
+        }
+      ]
+    },
+    "poses": 1024,
+    "random_seed": 512,
+    "depth_threshold_m": 0.0002,
+    "scores": {
+      "primitive": [
+        {
+          "pair": [
+            "left_hand_index_0_link",
+            "left_hip_roll_link"
+          ],
+          "true_contact": 43,
+          "false_contact": 0,
+          "missed_contact": 0,
+          "max_depth_m": 0.05426667097305609
+        },
+        {
+          "pair": [
+            "left_hand_index_1_link",
+            "left_hip_roll_link"
+          ],
+          "true_contact": 23,
+          "false_contact": 0,
+          "missed_contact": 4,
+          "max_depth_m": 0.04779492948575378
+        },
+        {
+          "pair": [
+            "left_hand_middle_0_link",
+            "left_hip_roll_link"
+          ],
+          "true_contact": 50,
+          "false_contact": 2,
+          "missed_contact": 1,
+          "max_depth_m": 0.051368452580574764
+        },
+        {
+          "pair": [
+            "left_hand_middle_1_link",
+            "left_hip_roll_link"
+          ],
+          "true_contact": 28,
+          "false_contact": 1,
+          "missed_contact": 1,
+          "max_depth_m": 0.0334709672099385
+        },
+        {
+          "pair": [
+            "left_hand_thumb_0_link",
+            "left_hip_roll_link"
+          ],
+          "true_contact": 46,
+          "false_contact": 0,
+          "missed_contact": 8,
+          "max_depth_m": 0.04169715368276004
+        },
+        {
+          "pair": [
+            "left_hand_thumb_1_link",
+            "left_hip_roll_link"
+          ],
+          "true_contact": 150,
+          "false_contact": 0,
+          "missed_contact": 0,
+          "max_depth_m": 0.04410976956981329
+        },
+        {
+          "pair": [
+            "left_hand_thumb_2_link",
+            "left_hip_roll_link"
+          ],
+          "true_contact": 259,
+          "false_contact": 1,
+          "missed_contact": 18,
+          "max_depth_m": 0.050542595261719545
+        },
+        {
+          "pair": [
+            "left_hip_roll_link",
+            "left_wrist_pitch_link"
+          ],
+          "true_contact": 39,
+          "false_contact": 6,
+          "missed_contact": 2,
+          "max_depth_m": 0.04768934873376243
+        },
+        {
+          "pair": [
+            "left_hip_roll_link",
+            "left_wrist_roll_link"
+          ],
+          "true_contact": 3,
+          "false_contact": 0,
+          "missed_contact": 0,
+          "max_depth_m": 0.014026090814998485
+        },
+        {
+          "pair": [
+            "left_hip_roll_link",
+            "left_wrist_yaw_link"
+          ],
+          "true_contact": 83,
+          "false_contact": 15,
+          "missed_contact": 0,
+          "max_depth_m": 0.07608388333933291
+        },
+        {
+          "pair": [
+            "right_hand_index_0_link",
+            "right_hip_roll_link"
+          ],
+          "true_contact": 47,
+          "false_contact": 0,
+          "missed_contact": 2,
+          "max_depth_m": 0.05094385082821359
+        },
+        {
+          "pair": [
+            "right_hand_index_1_link",
+            "right_hip_roll_link"
+          ],
+          "true_contact": 29,
+          "false_contact": 0,
+          "missed_contact": 2,
+          "max_depth_m": 0.059242656816975665
+        },
+        {
+          "pair": [
+            "right_hand_middle_0_link",
+            "right_hip_roll_link"
+          ],
+          "true_contact": 64,
+          "false_contact": 0,
+          "missed_contact": 2,
+          "max_depth_m": 0.05511844085775403
+        },
+        {
+          "pair": [
+            "right_hand_middle_1_link",
+            "right_hip_roll_link"
+          ],
+          "true_contact": 40,
+          "false_contact": 0,
+          "missed_contact": 4,
+          "max_depth_m": 0.037294039304541234
+        },
+        {
+          "pair": [
+            "right_hand_thumb_0_link",
+            "right_hip_roll_link"
+          ],
+          "true_contact": 57,
+          "false_contact": 0,
+          "missed_contact": 7,
+          "max_depth_m": 0.05024412110326335
+        },
+        {
+          "pair": [
+            "right_hand_thumb_1_link",
+            "right_hip_roll_link"
+          ],
+          "true_contact": 166,
+          "false_contact": 0,
+          "missed_contact": 0,
+          "max_depth_m": 0.04434197110914737
+        },
+        {
+          "pair": [
+            "right_hand_thumb_2_link",
+            "right_hip_roll_link"
+          ],
+          "true_contact": 264,
+          "false_contact": 0,
+          "missed_contact": 27,
+          "max_depth_m": 0.051737620345186544
+        },
+        {
+          "pair": [
+            "right_hip_roll_link",
+            "right_wrist_pitch_link"
+          ],
+          "true_contact": 37,
+          "false_contact": 2,
+          "missed_contact": 2,
+          "max_depth_m": 0.038427905029138565
+        },
+        {
+          "pair": [
+            "right_hip_roll_link",
+            "right_wrist_roll_link"
+          ],
+          "true_contact": 2,
+          "false_contact": 0,
+          "missed_contact": 0,
+          "max_depth_m": 0.012197294564625922
+        },
+        {
+          "pair": [
+            "right_hip_roll_link",
+            "right_wrist_yaw_link"
+          ],
+          "true_contact": 91,
+          "false_contact": 17,
+          "missed_contact": 0,
+          "max_depth_m": 0.0771659084828312
+        }
+      ]
+    },
+    "limitations": [
+      "Static geometric comparison; no causal gait or hardware claims.",
+      "The source mesh can also intersect at HOME; compare depth as well as contact presence.",
+      "Fingers fixed at zero; independent small joint perturbations are not a human motion distribution."
+    ]
+  },
+  "paired": {
+    "walk002": {
+      "max_tilt_deg": 11.387870220245258,
+      "min_height_m": 0.7601,
+      "max_contacts": 20,
+      "falls": 0,
+      "segments": [
+        {
+          "segment": 1,
+          "first_wall_s": 0.0,
+          "last_wall_s": 15.35,
+          "duration_sim_s": 15.349999999996932,
+          "net_displacement_xy_m": [
+            2.129027796248658,
+            1.1040631024985381
+          ],
+          "net_displacement_m": 2.3982732728982565,
+          "path_m": 4.52988775373328,
+          "fell": false,
+          "min_height_m": 0.7601
+        }
+      ],
+      "path_m": 4.52988775373328,
+      "fall_times": [],
+      "samples": 1236,
+      "p95_tilt_deg": 8.271242283996132,
+      "loaded_foot_slip_p95_m_s": 0.42204412507339145,
+      "legs_tracking_rmse_rad": 0.11421230468962497,
+      "legs_common_ref_rmse_rad": 0.11421230468962497,
+      "legs_velocity_above6Hz_rms_rad_s": 1.5146272991752185,
+      "legs_retarget_truth_rmse_rad": 1.2654239028084636e-06,
+      "legs_physics_truth_rmse_rad": 0.1142123431609314,
+      "arms_tracking_rmse_rad": 0.08049723135827518,
+      "arms_common_ref_rmse_rad": 0.08049723135827518,
+      "arms_velocity_above6Hz_rms_rad_s": 0.6624067104097067,
+      "arms_retarget_truth_rmse_rad": 1.7627988110719433e-07,
+      "arms_physics_truth_rmse_rad": 0.0804972413819394,
+      "root_shared_xy_trajectory_rmse_m": 0.6830324758073443,
+      "root_retarget_shared_xy_trajectory_rmse_m": 6.635962602367472e-08,
+      "wrist_common_target_rms_m": 0.02583682543577077,
+      "wrist_retarget_target_rms_m": 3.410840406526013e-07,
+      "wrist_common_target_orientation_rms_deg": 12.385347375417057,
+      "wrist_retarget_target_orientation_rms_deg": 9.701781876253e-05,
+      "matched_baseline": {
+        "samples": 1236,
+        "p95_tilt_deg": 8.58388715813702,
+        "loaded_foot_slip_p95_m_s": 0.44066385611725395,
+        "legs_tracking_rmse_rad": 0.11158037604944988,
+        "legs_common_ref_rmse_rad": 0.11158037604944988,
+        "legs_velocity_above6Hz_rms_rad_s": 1.4225771771418891,
+        "legs_retarget_truth_rmse_rad": 1.2654239028084636e-06,
+        "legs_physics_truth_rmse_rad": 0.11158040087251644,
+        "arms_tracking_rmse_rad": 0.08133857127048988,
+        "arms_common_ref_rmse_rad": 0.08133857127048988,
+        "arms_velocity_above6Hz_rms_rad_s": 0.6257044387679218,
+        "arms_retarget_truth_rmse_rad": 1.7627988110719433e-07,
+        "arms_physics_truth_rmse_rad": 0.0813385807569859,
+        "root_shared_xy_trajectory_rmse_m": 0.8396781717900621,
+        "root_retarget_shared_xy_trajectory_rmse_m": 6.635962602367472e-08,
+        "wrist_common_target_rms_m": 0.02531807396043671,
+        "wrist_retarget_target_rms_m": 3.410840406526013e-07,
+        "wrist_common_target_orientation_rms_deg": 12.80733074368862,
+        "wrist_retarget_target_orientation_rms_deg": 9.701781876253e-05
+      },
+      "paired_windows": [
+        {
+          "segment": 1,
+          "samples": 1236,
+          "first_wall_s": 3.0,
+          "last_wall_s": 15.35
+        }
+      ],
+      "limitations": [
+        "Offline replay; no hardware validation or human foot ground truth.",
+        "Full outcomes and paired metrics use different horizons; inspect falls and paired_windows together.",
+        "Synthetic truth is a robot FK round-trip, not independent human tracking validation.",
+        "Above-6 Hz velocity measures roughness and can include intended motion harmonics.",
+        "Root-relative wrists omit global base drift, reported separately as XY trajectory error."
+      ]
+    },
+    "walk008": {
+      "max_tilt_deg": 77.58759418632337,
+      "min_height_m": 0.3702,
+      "max_contacts": 20,
+      "falls": 1,
+      "segments": [
+        {
+          "segment": 1,
+          "first_wall_s": 0.0,
+          "last_wall_s": 6.59,
+          "duration_sim_s": 6.590000000000535,
+          "net_displacement_xy_m": [
+            2.087121714552573,
+            2.9358664283149833
+          ],
+          "net_displacement_m": 3.602136690391392,
+          "path_m": 3.9013824415730705,
+          "fell": true,
+          "min_height_m": 0.3702
+        }
+      ],
+      "path_m": 3.9013824415730705,
+      "fall_times": [],
+      "samples": 360,
+      "p95_tilt_deg": 55.28979227184814,
+      "loaded_foot_slip_p95_m_s": 1.127787721691847,
+      "legs_tracking_rmse_rad": 0.21169977323706177,
+      "legs_common_ref_rmse_rad": 0.21169977323706177,
+      "legs_velocity_above6Hz_rms_rad_s": 3.1405120225769654,
+      "legs_retarget_truth_rmse_rad": 1.5421222019195716e-06,
+      "legs_physics_truth_rmse_rad": 0.21169979414325962,
+      "arms_tracking_rmse_rad": 0.24650018020350517,
+      "arms_common_ref_rmse_rad": 0.24650018020350517,
+      "arms_velocity_above6Hz_rms_rad_s": 1.570792439527658,
+      "arms_retarget_truth_rmse_rad": 0.0001686095559979042,
+      "arms_physics_truth_rmse_rad": 0.2465163006066961,
+      "root_shared_xy_trajectory_rmse_m": 1.6700033181302356,
+      "root_retarget_shared_xy_trajectory_rmse_m": 1.0043064226215672e-07,
+      "wrist_common_target_rms_m": 0.0938774914353149,
+      "wrist_retarget_target_rms_m": 6.804887960620867e-06,
+      "wrist_common_target_orientation_rms_deg": 40.263547855226925,
+      "wrist_retarget_target_orientation_rms_deg": 0.00017618175734838932,
+      "matched_baseline": {
+        "samples": 360,
+        "p95_tilt_deg": 37.70443481980048,
+        "loaded_foot_slip_p95_m_s": 1.4926791281046035,
+        "legs_tracking_rmse_rad": 0.21142849844613057,
+        "legs_common_ref_rmse_rad": 0.21142849844613057,
+        "legs_velocity_above6Hz_rms_rad_s": 3.065125174712097,
+        "legs_retarget_truth_rmse_rad": 1.5421222019195716e-06,
+        "legs_physics_truth_rmse_rad": 0.21142853062685185,
+        "arms_tracking_rmse_rad": 0.2202394459110088,
+        "arms_common_ref_rmse_rad": 0.2202394459110088,
+        "arms_velocity_above6Hz_rms_rad_s": 1.390412505371897,
+        "arms_retarget_truth_rmse_rad": 0.0001686095559979042,
+        "arms_physics_truth_rmse_rad": 0.22025587940952157,
+        "root_shared_xy_trajectory_rmse_m": 1.58211672611756,
+        "root_retarget_shared_xy_trajectory_rmse_m": 1.0043064226215672e-07,
+        "wrist_common_target_rms_m": 0.08754660403688472,
+        "wrist_retarget_target_rms_m": 6.804887960620867e-06,
+        "wrist_common_target_orientation_rms_deg": 36.68542315117378,
+        "wrist_retarget_target_orientation_rms_deg": 0.00017618175734838932
+      },
+      "paired_windows": [
+        {
+          "segment": 1,
+          "samples": 360,
+          "first_wall_s": 3.0,
+          "last_wall_s": 6.59
+        }
+      ],
+      "limitations": [
+        "Offline replay; no hardware validation or human foot ground truth.",
+        "Full outcomes and paired metrics use different horizons; inspect falls and paired_windows together.",
+        "Synthetic truth is a robot FK round-trip, not independent human tracking validation.",
+        "Above-6 Hz velocity measures roughness and can include intended motion harmonics.",
+        "Root-relative wrists omit global base drift, reported separately as XY trajectory error."
+      ]
+    },
+    "arms": {
+      "max_tilt_deg": 3.096798245017105,
+      "min_height_m": 0.7824,
+      "max_contacts": 20,
+      "falls": 0,
+      "segments": [
+        {
+          "segment": 1,
+          "first_wall_s": 0.0,
+          "last_wall_s": 21.990000000000002,
+          "duration_sim_s": 21.990000000003892,
+          "net_displacement_xy_m": [
+            0.03615213357244527,
+            0.011155125196921568
+          ],
+          "net_displacement_m": 0.037834026748403596,
+          "path_m": 0.19357393472692214,
+          "fell": false,
+          "min_height_m": 0.7824
+        }
+      ],
+      "path_m": 0.19357393472692214,
+      "fall_times": [],
+      "samples": 1900,
+      "p95_tilt_deg": 2.924674085726188,
+      "loaded_foot_slip_p95_m_s": 0.0020293305030030457,
+      "legs_tracking_rmse_rad": 0.06792108538994598,
+      "legs_common_ref_rmse_rad": 0.06792108538994598,
+      "legs_velocity_above6Hz_rms_rad_s": 0.005808565672041575,
+      "legs_retarget_truth_rmse_rad": 1.3101907859937238e-07,
+      "legs_physics_truth_rmse_rad": 0.06792106860791045,
+      "arms_tracking_rmse_rad": 0.05040899871913287,
+      "arms_common_ref_rmse_rad": 0.05040899871913287,
+      "arms_velocity_above6Hz_rms_rad_s": 0.06593089296808896,
+      "arms_retarget_truth_rmse_rad": 3.2450976348425755e-07,
+      "arms_physics_truth_rmse_rad": 0.0504090159531269,
+      "root_shared_xy_trajectory_rmse_m": 0.006877139778434511,
+      "root_retarget_shared_xy_trajectory_rmse_m": 6.331785450992507e-08,
+      "wrist_common_target_rms_m": 0.02051457755380613,
+      "wrist_retarget_target_rms_m": 1.481433651598101e-07,
+      "wrist_common_target_orientation_rms_deg": 7.185827611430128,
+      "wrist_retarget_target_orientation_rms_deg": 1.6906298537168284e-05,
+      "matched_baseline": {
+        "samples": 1900,
+        "p95_tilt_deg": 2.928392723951556,
+        "loaded_foot_slip_p95_m_s": 0.0020461409853392014,
+        "legs_tracking_rmse_rad": 0.06809043845790395,
+        "legs_common_ref_rmse_rad": 0.06809043845790395,
+        "legs_velocity_above6Hz_rms_rad_s": 0.005128037119457591,
+        "legs_retarget_truth_rmse_rad": 1.3101907859937238e-07,
+        "legs_physics_truth_rmse_rad": 0.06809042168488007,
+        "arms_tracking_rmse_rad": 0.053779914219084395,
+        "arms_common_ref_rmse_rad": 0.053779914219084395,
+        "arms_velocity_above6Hz_rms_rad_s": 0.07734837496698668,
+        "arms_retarget_truth_rmse_rad": 3.2450976348425755e-07,
+        "arms_physics_truth_rmse_rad": 0.053779930578932475,
+        "root_shared_xy_trajectory_rmse_m": 0.007050710346994473,
+        "root_retarget_shared_xy_trajectory_rmse_m": 6.331785450992507e-08,
+        "wrist_common_target_rms_m": 0.022041507131531513,
+        "wrist_retarget_target_rms_m": 1.481433651598101e-07,
+        "wrist_common_target_orientation_rms_deg": 8.099298253662552,
+        "wrist_retarget_target_orientation_rms_deg": 1.6906298537168284e-05
+      },
+      "paired_windows": [
+        {
+          "segment": 1,
+          "samples": 1900,
+          "first_wall_s": 3.0,
+          "last_wall_s": 21.990000000000002
+        }
+      ],
+      "limitations": [
+        "Offline replay; no hardware validation or human foot ground truth.",
+        "Full outcomes and paired metrics use different horizons; inspect falls and paired_windows together.",
+        "Synthetic truth is a robot FK round-trip, not independent human tracking validation.",
+        "Above-6 Hz velocity measures roughness and can include intended motion harmonics.",
+        "Root-relative wrists omit global base drift, reported separately as XY trajectory error."
+      ]
+    },
+    "private": {
+      "max_tilt_deg": 14.014074359749428,
+      "min_height_m": 0.766143,
+      "max_contacts": 17,
+      "falls": 0,
+      "segments": [
+        {
+          "segment": 1,
+          "first_wall_s": 0.458312963,
+          "last_wall_s": 28.778338649000002,
+          "duration_sim_s": 28.32000000001163,
+          "net_displacement_xy_m": [
+            2.5208121233357415,
+            0.050309568186167726
+          ],
+          "net_displacement_m": 2.5213141045509437,
+          "path_m": 4.900466888622489,
+          "fell": false,
+          "min_height_m": 0.766143
+        },
+        {
+          "segment": 2,
+          "first_wall_s": 31.253573426000003,
+          "last_wall_s": 36.003682077,
+          "duration_sim_s": 4.749999999999921,
+          "net_displacement_xy_m": [
+            0.3263283458145237,
+            -0.020598645118344677
+          ],
+          "net_displacement_m": 0.3269778179980331,
+          "path_m": 0.605908829169007,
+          "fell": false,
+          "min_height_m": 0.769643
+        }
+      ],
+      "path_m": 5.506375717791496,
+      "fall_times": [],
+      "samples": 2545,
+      "p95_tilt_deg": 9.474744100638757,
+      "loaded_foot_slip_p95_m_s": 0.24533187898156855,
+      "legs_tracking_rmse_rad": 0.13575100944492033,
+      "legs_common_ref_rmse_rad": 0.13575101050668792,
+      "legs_velocity_above6Hz_rms_rad_s": 0.7498117994030681,
+      "arms_tracking_rmse_rad": 0.05569354798960475,
+      "arms_common_ref_rmse_rad": 0.05569354917520324,
+      "arms_velocity_above6Hz_rms_rad_s": 0.41806323044007454,
+      "root_shared_xy_trajectory_rmse_m": 0.5125189898032795,
+      "root_retarget_shared_xy_trajectory_rmse_m": 0.0007834614652798461,
+      "wrist_common_target_rms_m": 0.028952310917152183,
+      "wrist_retarget_target_rms_m": 2.6027436147229986e-12,
+      "wrist_common_target_orientation_rms_deg": 9.256054284275894,
+      "wrist_retarget_target_orientation_rms_deg": 5.272293108922185e-10,
+      "matched_baseline": {
+        "samples": 2545,
+        "p95_tilt_deg": 9.43172876646468,
+        "loaded_foot_slip_p95_m_s": 0.24170697053052467,
+        "legs_tracking_rmse_rad": 0.12774809674235926,
+        "legs_common_ref_rmse_rad": 0.12774809674235926,
+        "legs_velocity_above6Hz_rms_rad_s": 0.7618323997064559,
+        "arms_tracking_rmse_rad": 0.0856865967770837,
+        "arms_common_ref_rmse_rad": 0.0856865967770837,
+        "arms_velocity_above6Hz_rms_rad_s": 0.299456398645838,
+        "root_shared_xy_trajectory_rmse_m": 0.5419518728536864,
+        "root_retarget_shared_xy_trajectory_rmse_m": 0.0,
+        "wrist_common_target_rms_m": 0.027254740496475752,
+        "wrist_retarget_target_rms_m": 0.0,
+        "wrist_common_target_orientation_rms_deg": 14.455785104383072,
+        "wrist_retarget_target_orientation_rms_deg": 2.2197686936053543e-15
+      },
+      "paired_windows": [
+        {
+          "segment": 1,
+          "samples": 2332,
+          "first_wall_s": 5.4684178370000005,
+          "last_wall_s": 28.778338649000002
+        },
+        {
+          "segment": 2,
+          "samples": 213,
+          "first_wall_s": 33.883613428000004,
+          "last_wall_s": 36.003682077
+        }
+      ],
+      "limitations": [
+        "Offline replay; no hardware validation or human foot ground truth.",
+        "Full outcomes and paired metrics use different horizons; inspect falls and paired_windows together.",
+        "Recorded shared target is baseline GMR; common-reference error does not establish human pose accuracy.",
+        "Above-6 Hz velocity measures roughness and can include intended motion harmonics.",
+        "Root-relative wrists omit global base drift, reported separately as XY trajectory error."
+      ]
+    }
+  },
+  "desktop_timing": {
+    "source": {
+      "p50_ms": 0.2926245006165118,
+      "p95_ms": 0.8546128496163872,
+      "max_ms": 1.255332999789971,
+      "max_contacts": 35,
+      "warnings": 0
+    },
+    "previous": {
+      "p50_ms": 0.18018700029642787,
+      "p95_ms": 0.5106184505166311,
+      "max_ms": 0.7241660005092854,
+      "max_contacts": 36,
+      "warnings": 0
+    },
+    "fixed": {
+      "p50_ms": 0.18535399976826739,
+      "p95_ms": 0.5126041995026742,
+      "max_ms": 0.6825000000389991,
+      "max_contacts": 32,
+      "warnings": 0
+    }
+  },
+  "stress": {
+    "collision_model": {
+      "replaced_meshes": 38,
+      "shapes": {
+        "sphere": 1,
+        "capsule": 26,
+        "compact_convex_hull": 6,
+        "ellipsoid": 3,
+        "box": 2
+      },
+      "robot_mass_preserved": true,
+      "ground_contact_pads_preserved": true,
+      "hull_tolerance_m": 0.00015,
+      "collision_hulls": 6,
+      "changes": [
+        {
+          "body": "pelvis",
+          "geom": "source_geom_2",
+          "shape": "sphere"
+        },
+        {
+          "body": "left_hip_pitch_link",
+          "geom": "source_geom_4",
+          "shape": "capsule"
+        },
+        {
+          "body": "left_hip_roll_link",
+          "geom": "source_geom_6",
+          "shape": "compact_convex_hull",
+          "vertices": 479,
+          "triangles": 954,
+          "max_plane_error_m": 0.00014926548292713143,
+          "volume_ratio": 0.9987611763634969
+        },
+        {
+          "body": "left_hip_yaw_link",
+          "geom": "source_geom_8",
+          "shape": "capsule"
+        },
+        {
+          "body": "left_knee_link",
+          "geom": "source_geom_10",
+          "shape": "capsule"
+        },
+        {
+          "body": "left_ankle_pitch_link",
+          "geom": "source_geom_12",
+          "shape": "capsule"
+        },
+        {
+          "body": "right_hip_pitch_link",
+          "geom": "source_geom_19",
+          "shape": "capsule"
+        },
+        {
+          "body": "right_hip_roll_link",
+          "geom": "source_geom_21",
+          "shape": "compact_convex_hull",
+          "vertices": 474,
+          "triangles": 944,
+          "max_plane_error_m": 0.0001477459125039382,
+          "volume_ratio": 0.9987641363169323
+        },
+        {
+          "body": "right_hip_yaw_link",
+          "geom": "source_geom_23",
+          "shape": "capsule"
+        },
+        {
+          "body": "right_knee_link",
+          "geom": "source_geom_25",
+          "shape": "capsule"
+        },
+        {
+          "body": "right_ankle_pitch_link",
+          "geom": "source_geom_27",
+          "shape": "capsule"
+        },
+        {
+          "body": "torso_link",
+          "geom": "source_geom_36",
+          "shape": "ellipsoid"
+        },
+        {
+          "body": "torso_link",
+          "geom": "source_geom_38",
+          "shape": "ellipsoid"
+        },
+        {
+          "body": "torso_link",
+          "geom": "source_geom_40",
+          "shape": "ellipsoid"
+        },
+        {
+          "body": "left_shoulder_yaw_link",
+          "geom": "source_geom_46",
+          "shape": "capsule"
+        },
+        {
+          "body": "left_elbow_link",
+          "geom": "source_geom_48",
+          "shape": "capsule"
+        },
+        {
+          "body": "left_wrist_roll_link",
+          "geom": "source_geom_50",
+          "shape": "compact_convex_hull",
+          "vertices": 258,
+          "triangles": 512,
+          "max_plane_error_m": 0.0001496046296946829,
+          "volume_ratio": 0.9967959295773783
+        },
+        {
+          "body": "left_wrist_pitch_link",
+          "geom": "source_geom_52",
+          "shape": "capsule"
+        },
+        {
+          "body": "left_wrist_yaw_link",
+          "geom": "source_geom_54",
+          "shape": "compact_convex_hull",
+          "vertices": 272,
+          "triangles": 540,
+          "max_plane_error_m": 0.00014979799088733065,
+          "volume_ratio": 0.9956643221183346
+        },
+        {
+          "body": "left_wrist_yaw_link",
+          "geom": "source_geom_56",
+          "shape": "box"
+        },
+        {
+          "body": "left_hand_thumb_0_link",
+          "geom": "source_geom_58",
+          "shape": "capsule"
+        },
+        {
+          "body": "left_hand_thumb_2_link",
+          "geom": "source_geom_62",
+          "shape": "capsule"
+        },
+        {
+          "body": "left_hand_middle_0_link",
+          "geom": "source_geom_64",
+          "shape": "capsule"
+        },
+        {
+          "body": "left_hand_middle_1_link",
+          "geom": "source_geom_66",
+          "shape": "capsule"
+        },
+        {
+          "body": "left_hand_index_0_link",
+          "geom": "source_geom_68",
+          "shape": "capsule"
+        },
+        {
+          "body": "left_hand_index_1_link",
+          "geom": "source_geom_70",
+          "shape": "capsule"
+        },
+        {
+          "body": "right_shoulder_yaw_link",
+          "geom": "source_geom_76",
+          "shape": "capsule"
+        },
+        {
+          "body": "right_elbow_link",
+          "geom": "source_geom_78",
+          "shape": "capsule"
+        },
+        {
+          "body": "right_wrist_roll_link",
+          "geom": "source_geom_80",
+          "shape": "compact_convex_hull",
+          "vertices": 259,
+          "triangles": 514,
+          "max_plane_error_m": 0.0001490573589651989,
+          "volume_ratio": 0.9968654938306283
+        },
+        {
+          "body": "right_wrist_pitch_link",
+          "geom": "source_geom_82",
+          "shape": "capsule"
+        },
+        {
+          "body": "right_wrist_yaw_link",
+          "geom": "source_geom_84",
+          "shape": "compact_convex_hull",
+          "vertices": 278,
+          "triangles": 552,
+          "max_plane_error_m": 0.00014868869131522827,
+          "volume_ratio": 0.995802557731409
+        },
+        {
+          "body": "right_wrist_yaw_link",
+          "geom": "source_geom_86",
+          "shape": "box"
+        },
+        {
+          "body": "right_hand_thumb_0_link",
+          "geom": "source_geom_88",
+          "shape": "capsule"
+        },
+        {
+          "body": "right_hand_thumb_2_link",
+          "geom": "source_geom_92",
+          "shape": "capsule"
+        },
+        {
+          "body": "right_hand_middle_0_link",
+          "geom": "source_geom_94",
+          "shape": "capsule"
+        },
+        {
+          "body": "right_hand_middle_1_link",
+          "geom": "source_geom_96",
+          "shape": "capsule"
+        },
+        {
+          "body": "right_hand_index_0_link",
+          "geom": "source_geom_98",
+          "shape": "capsule"
+        },
+        {
+          "body": "right_hand_index_1_link",
+          "geom": "source_geom_100",
+          "shape": "capsule"
+        }
+      ]
+    },
+    "timing_platform": "desktop CPU, not Quest",
+    "models": {
+      "mesh": {
+        "forward_ms_p50": 0.29164599982323125,
+        "forward_ms_p95": 0.8627131508546879,
+        "forward_ms_max": 1.2582919989654329,
+        "max_contacts": 35,
+        "warnings": 0,
+        "policy": {
+          "stand": {
+            "sim_seconds": 12.0,
+            "wall_seconds": 2.6830206659997202,
+            "min_height": 0.7823370255596074,
+            "max_tilt_deg": 2.4843714955360627,
+            "max_contacts": 8,
+            "path_m": 0.0823249906030147,
+            "final_xy": [
+              0.03936473768972678,
+              0.007989663487872604
+            ],
+            "fell": false,
+            "warnings": 0
+          },
+          "squat": {
+            "sim_seconds": 12.0,
+            "wall_seconds": 2.713439290999304,
+            "min_height": 0.5121426840002652,
+            "max_tilt_deg": 5.352565538592326,
+            "max_contacts": 8,
+            "path_m": 0.17176647478834156,
+            "final_xy": [
+              -0.04904084438174001,
+              -0.002881210618282381
+            ],
+            "fell": false,
+            "warnings": 0
+          },
+          "fold_arms": {
+            "sim_seconds": 12.0,
+            "wall_seconds": 4.38586345800104,
+            "min_height": 0.7823471080995952,
+            "max_tilt_deg": 2.564912905964524,
+            "max_contacts": 18,
+            "path_m": 0.10184022447068085,
+            "final_xy": [
+              0.015240018727844331,
+              0.014951424195767159
+            ],
+            "fell": false,
+            "warnings": 0
+          }
+        }
+      },
+      "primitive": {
+        "forward_ms_p50": 0.17837450104707386,
+        "forward_ms_p95": 0.5143851006323527,
+        "forward_ms_max": 0.6954999989829957,
+        "max_contacts": 32,
+        "warnings": 0,
+        "policy": {
+          "stand": {
+            "sim_seconds": 12.0,
+            "wall_seconds": 2.5104262080003537,
+            "min_height": 0.7823370255596074,
+            "max_tilt_deg": 2.4843714955360627,
+            "max_contacts": 8,
+            "path_m": 0.0823249906030147,
+            "final_xy": [
+              0.03936473768972678,
+              0.007989663487872604
+            ],
+            "fell": false,
+            "warnings": 0
+          },
+          "squat": {
+            "sim_seconds": 12.0,
+            "wall_seconds": 2.425932333999299,
+            "min_height": 0.5121426840002652,
+            "max_tilt_deg": 5.352565538592326,
+            "max_contacts": 8,
+            "path_m": 0.17176647478834156,
+            "final_xy": [
+              -0.04904084438174001,
+              -0.002881210618282381
+            ],
+            "fell": false,
+            "warnings": 0
+          },
+          "fold_arms": {
+            "sim_seconds": 12.0,
+            "wall_seconds": 3.2202760000000126,
+            "min_height": 0.7823471080995952,
+            "max_tilt_deg": 2.5592260504119846,
+            "max_contacts": 15,
+            "path_m": 0.1002625677684311,
+            "final_xy": [
+              0.01586880379121043,
+              0.011912865570568094
+            ],
+            "fell": false,
+            "warnings": 0
+          }
+        }
+      }
+    }
+  },
+  "method": "Six compact inner convex housings; remaining proxies unchanged",
+  "quest_hardware_validated": false
+}

@@ -8,7 +8,18 @@ struct TrackedPose {
     std::array<double,3> position{};
     std::array<double,4> quaternion{1,0,0,0}; // w,x,y,z
 };
+struct BodyFrame {
+    // GMR order: pelvis, chest, hips L/R, knees L/R, feet L/R,
+    // shoulders L/R, elbows L/R, wrists L/R. Lower body is Meta-estimated.
+    std::array<TrackedPose,14> joints{},rest{};
+    std::array<uint64_t,14> flags{};
+    int64_t time_ns=0;
+    uint32_t skeleton_version=0;
+    double confidence=0;
+    bool valid=false,supported=false;
+};
 struct TrackingFrame {
+    BodyFrame body;
     TrackedPose head;
     std::array<TrackedPose,2> hands;
     bool valid=false;

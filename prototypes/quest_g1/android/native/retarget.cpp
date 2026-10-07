@@ -33,7 +33,13 @@ ArmRetargeter::~ArmRetargeter(){mj_deleteData(ik);}
 void ArmRetargeter::Calibrate(const mjData* data,const TrackingFrame& input){
     if(!input.valid)throw std::runtime_error("Both controllers must be tracked to calibrate");
     origin=input;
-    mj_copyData(ik,model,data);
+    // The simulator may own a thread pool; keep the IK scratch allocator
+    // independent instead of copying that runtime state with mj_copyData.
+    mju_copy(ik->qpos,data->qpos,model->nq);
+    if(model->nmocap){
+        mju_copy(ik->mocap_pos,data->mocap_pos,3*model->nmocap);
+        mju_copy(ik->mocap_quat,data->mocap_quat,4*model->nmocap);
+    }
     // Solve in a stationary, upright robot frame; dynamics stay in Simulation.
     ik->qpos[0]=ik->qpos[1]=0;ik->qpos[2]=.793;
     ik->qpos[3]=1;ik->qpos[4]=ik->qpos[5]=ik->qpos[6]=0;
@@ -55,8 +61,11 @@ std::array<float,29> ArmRetargeter::Solve(const TrackingFrame& input){
     if(!calibrated || !input.valid)throw std::runtime_error("No valid calibrated tracking");
     error_m=0;limited=false;
     for(int h=0;h<2;h++){
+        // Standing mode: anchor hand translation to STAGE at calibration.
+        // HMD bobbing is not torso motion; it must not move stationary hands.
+        // Locomotion/room recenter requires a separate body reference or recalibration.
         double delta[3],local[3],target[3];
-        for(int a=0;a<3;a++)delta[a]=(input.hands[h].position[a]-input.head.position[a])-(origin.hands[h].position[a]-origin.head.position[a]);
+        for(int a=0;a<3;a++)delta[a]=input.hands[h].position[a]-origin.hands[h].position[a];
         mju_mulMatVec(local,basis,delta,3,3);
         double length=mju_norm3(local),scale=.8*(length>.45?.45/length:1);
         for(int a=0;a<3;a++)target[a]=initialPosition[h][a]+scale*local[a];
