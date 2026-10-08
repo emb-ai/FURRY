@@ -50,48 +50,126 @@ keeps fixtures that complete that baseline at seed 0. In the first experiment,
 001/003/005/006 qualify. These four supply 20% of training samples and are never
 added to Quest validation. Keep the all-fixture baseline to expose exclusions.
 
-## Experiment
+## Corrected experiment (schema v2)
+
+The first run (110651, iteration 790) regressed and was stopped. These changes
+are a new experiment, not an exact resume or a claim that learning has improved.
+Use a fresh output directory and the original recovered actor.
 
 ```bash
-python training/evaluate.py --assets EMPTY_ASSETS --dataset CURATED --policy POLICY_ONNX --split validation --seeds 0 1 2 --output baseline.json
-python training/train.py --assets EMPTY_ASSETS --dataset CURATED --initial INITIAL_PT --source PINNED_ACTOR_SOURCE --output RUN
+python -m unittest discover -s training -p 'test_*.py' -v
+python training/check_pipeline.py --assets ASSETS --dataset CURATED --policy POLICY_ONNX
+python training/train.py --assets ASSETS --dataset CURATED --initial INITIAL_PT --source PINNED_ACTOR_SOURCE --output NEW_RUN
 ```
 
-Control is 100Hz and physics 1000Hz. Observations (1432), history ordering,
-29 actions, PD and saturation match the deployed controller; the parity check
-compares 100 physics steps. Episode resets use reference position/velocity
-and zero history. Evaluation covers full clips; seed 0 is unperturbed and
-seeds 1/2 add 0.005rad initial joint noise. This is an optimistic tracking test,
-not a reproduction of live standing-to-walking transitions. Train episodes
-sample random reference starts and end at 20s or a fall. Time limits bootstrap
-the terminal value; falls do not. Neither crosses reset boundaries in GAE.
+Control is 100 Hz; physics and slip integration are 1000 Hz. The actor keeps
+its released 1432 observations, history, 29 actions and frozen normalization.
+The deployment parity check covers 100 control steps and verifies that the
+shadow contact measurement does not modify physical integration state.
 
-The reward implements the pinned TWIST2 tracking/regularization terms with
-MuJoCo contact forces and 0.01s integration scaling. Unlike the upstream model,
-key bodies use wrist-yaw frames and torso instead of rubber-hand/head-mocap
-frames, matching the Quest embodiment. Torque-limit normalization uses the
-Quest enforced PD caps. Joint errors are uniformly weighted. These explicit
-model/reward adaptations prevent a claim of exact author parity. No additional
-swing-clearance reward is used in this first experiment. The actual reward
-terms are named in `env.py`.
+### Reward
 
-PPO uses clipping 0.2, gamma sqrt(0.99) = 0.99498744,
-GAE lambda sqrt(0.95) = 0.97467943, entropy coefficient 0.005,
-actor LR 1e-5, critic LR 3e-4, KL early stop 0.02, 4 epochs, minibatches <=512.
-Exploration starts at std=0.05. The first 10 updates warm only the fresh critic.
-The discount and GAE coefficients preserve decay per second from the upstream
-50Hz configuration at our 100Hz control rate. Reward terms already multiply
-by DT in the environment; do not halve those coefficients again. The initial
-experiment used unconverted gamma=0.99/lambda=0.95; its archived bundle remains
-unchanged. This correction alone has not been validated by a new training run.
-Dropout is disabled in the actor even during optimization to keep PPO ratios
-well-defined. The released ONNX observation normalization is frozen; no
-validation statistics are fitted. A 1000-update/16-env/128-step job collects
-2,048,000 simulated transitions; it is an initial bounded experiment.
+`rewards.py` defines explicit experiment configuration. New slip is the sum
+of contact-weighted sliding path over time, not squared speed or foot COM
+velocity. Tangential velocity is evaluated at actual foot-floor contact
+points with a shadow MuJoCo state. Per-foot speed is the normal-force-weighted
+RMS; the force gate is Fn/(Fn+5 N). The smooth absolute speed is
+sqrt(v² + 0.01²) - 0.01 m/s. Sum feet and multiply by the 0.001 s physics step,
+then apply `--slide-weight` (initial candidate 0.5, not a tuned optimum).
+This is a weighted path, not net foot displacement. Numerical impact peaks
+have approximately linear rather than quadratic cost. No swing-height term
+is added. `stumble` remains a diagnostic and has zero weight in the new flat
+floor reward. `--legacy-slip` isolates the old COM-slip reward for an ablation.
 
-`run_slurm.sh` requests one RTX4500 Ada, 16 CPUs, 32GB and at most 8 hours.
-Latest checkpoints are atomic every 10 updates. Validate every 100 updates;
-choose candidate by completion rate then surviving time. Report tracking and
-slip too: survival alone can favor standing. The initial policy stays intact;
-`best.pt` means best candidate, not guaranteed better than baseline. Export
-requires PyTorch/ONNX numerical parity. No automatic headset installation.
+The formerly saturated global-key reward uses a Cauchy kernel:
+2/(1 + mean_body_squared_error/0.5²). Half reward corresponds to 0.5 m RMS
+error. `--legacy-reward` restores both old slip and global-key formulas for
+comparison. Local tracking and the other existing terms remain. Continuous
+state reward rates already multiply by DT; do not apply a second rate correction.
+Action differences and touchdown airtime events are exceptions: their rate
+receives a 0.02/DT factor to preserve the upstream 50 Hz cost per physical
+trajectory/event. Tests cover constant action slew and a fixed touchdown cost.
+The new coefficients and formulas need learning ablations; offline correlation
+alone does not establish an improvement in behavior.
+
+### Critic readiness, before any actor updates
+
+The new critic receives actor observations plus simulation qpos/qvel, world
+and joint reference errors, orientation and key-body errors, foot contacts,
+airtime, previous velocities and time remaining in the source motion. This
+information is critic-only; deployment inputs do not change. Its normalization
+is fitted to warm-up train rollouts and then frozen.
+
+The actor is frozen while collecting 32 complete stochastic training rollouts
+and 8 held-out rollouts with separate seeds, using std=0.05. Both sets use
+training motions only; the protocol validation split never supplies gradients
+or normalization. The critic holdout shares the training motion pool and is
+a value-fit diagnostic, not independent motion generalization validation.
+Targets are full-episode discounted Monte Carlo returns, never values from
+the untrained critic. Samples are kept every 5 control steps; complete rewards
+are still integrated at 100 Hz. Falls and source-motion ends terminate value.
+Artificial 20 s PPO limits bootstrap the terminal pre-reset state once.
+GAE never crosses resets. This explicitly corrects the old behavior that also
+bootstrapped source-motion ends without a subsequent reference.
+
+The critic is trained for at least 100 and at most 2000 minibatch updates.
+Readiness requires two consecutive checks (25 updates apart): held-out
+explained variance >=0.3, RMSE/target-std <=0.85 and absolute bias/target-std
+<=0.2. These are configurable starting criteria, not universal guarantees.
+Degenerate constant-target data cannot pass. If readiness fails, save the
+report and checkpoint and stop with zero actor updates. `--warmup-only` runs
+only this stage. `critic_holdout.npz` and rollout metadata preserve evidence.
+
+### PPO and regression controls
+
+Gamma=sqrt(0.99), GAE lambda=sqrt(0.95) preserve the original 50 Hz physical
+time horizon at 100 Hz. Actor LR ramps from 1e-6 to 1e-5 over 50 updates;
+critic LR is 3e-4. Actor and critic have separate optimizers and separate
+norm-1 gradient clipping. Critic Adam moments are retained after warm-up. Four epochs, minibatches <=512, PPO clip=0.2 and
+local KL stop=0.02 remain. A local KL stop stops actor updates only.
+
+A frozen original teacher anchors actor outputs on current rollout states:
+0.5*mean(((mu-mu_original)/0.05)²), coefficient 0.1. This is a fixed-scale mean
+penalty, not a KL that can be reduced by inflating learned action std. The
+public-motion replay mix remains 20%. Entropy coefficient is reduced to 1e-4;
+std starts at 0.05 and is bounded [0.02,0.15]. These defaults are conservative
+experiment settings; `--anchor-coef`, `--entropy-coef` and LR are configurable.
+
+Evaluate the initial actor and candidates on complete Quest validation and
+public replay clips, with the same seeds (default 0/1/2). Every 25 PPO updates,
+compare tracking/slip on matched pre-termination prefixes, excluding the first
+0.3 s. Reject new falls on baseline-successful trials, increased total falls,
+>1% lost survival, >5% tracking regression (joint/local-key/root-position), or
+>2% sliding regression, with 1e-4 absolute metric slack. To accept a candidate,
+Quest validation also needs fewer falls or >2% improvement in sliding or joint
+tracking; replay must not regress. Neither survival nor standing still alone
+qualifies. These validation tolerances are recorded in each acceptance report.
+
+At each evaluation, 4 fresh complete on-policy training rollouts probe critic
+accuracy against Monte Carlo returns; a candidate also needs a healthy critic.
+Stop after 3 consecutive baseline regressions or 2 failed critic probes.
+Among accepted candidates select completion, then lower slip, then joint error.
+`best.pt` exists only after acceptance. Otherwise the original policy is the
+fallback. A selected candidate still needs testing on an independent recording
+and real standing-to-walking transitions before headset deployment.
+
+Logs separate raw environment reward from timeout bootstrap, policy loss,
+value loss, entropy, teacher deviation, reward components, GAE-target value
+metrics, clipping and complete-rollout critic probes. Save actor/critic and
+both optimizer states for audit; automatic v1/v2 resume is not supported.
+
+`run_slurm.sh` requests one RTX4500 Ada, 16 CPUs, 32 GB, up to 4 hours and
+300 PPO updates. Extra trainer arguments can follow the bundle and venv paths.
+It runs tests and parity checks first. Export only an accepted checkpoint,
+verify PyTorch/ONNX parity, then evaluate with the recorded reward configuration.
+No automatic headset installation. A run without an accepted candidate ends
+with an explicit report and leaves the original policy as fallback.
+
+### Short controlled slip ablation
+
+Keep the same original actor, seed, data, readiness criteria and PPO settings.
+Use separate output directories. Compare repaired PPO with `--legacy-slip`
+against the same trainer with `--slide-weight 0.5`, initially 75 updates,
+`--eval-every 25 --eval-seeds 0`. This is a pilot; accepted results still need
+the full three-seed evaluation. If critic readiness fails, that arm has no
+actor training result and must not be called a policy comparison.
