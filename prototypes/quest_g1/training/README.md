@@ -75,9 +75,15 @@ model/reward adaptations prevent a claim of exact author parity. No additional
 swing-clearance reward is used in this first experiment. The actual reward
 terms are named in `env.py`.
 
-PPO uses clipping 0.2, gamma 0.99, GAE lambda 0.95, entropy coefficient 0.005,
+PPO uses clipping 0.2, gamma sqrt(0.99) = 0.99498744,
+GAE lambda sqrt(0.95) = 0.97467943, entropy coefficient 0.005,
 actor LR 1e-5, critic LR 3e-4, KL early stop 0.02, 4 epochs, minibatches <=512.
 Exploration starts at std=0.05. The first 10 updates warm only the fresh critic.
+The discount and GAE coefficients preserve decay per second from the upstream
+50Hz configuration at our 100Hz control rate. Reward terms already multiply
+by DT in the environment; do not halve those coefficients again. The initial
+experiment used unconverted gamma=0.99/lambda=0.95; its archived bundle remains
+unchanged. This correction alone has not been validated by a new training run.
 Dropout is disabled in the actor even during optimization to keep PPO ratios
 well-defined. The released ONNX observation normalization is frozen; no
 validation statistics are fitted. A 1000-update/16-env/128-step job collects

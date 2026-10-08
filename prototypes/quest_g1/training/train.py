@@ -18,7 +18,9 @@ def main():
  p=argparse.ArgumentParser();p.add_argument('--assets',required=True);p.add_argument('--dataset',required=True);p.add_argument('--initial',required=True);p.add_argument('--source',required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--device',default='cuda');p.add_argument('--envs',type=int,default=16);p.add_argument('--iterations',type=int,default=1000);p.add_argument('--horizon',type=int,default=128);p.add_argument('--seed',type=int,default=20261008);p.add_argument('--eval-every',type=int,default=100);a=p.parse_args()
  a.output.mkdir(parents=True,exist_ok=True);torch.set_num_threads(1);torch.manual_seed(a.seed);np.random.seed(a.seed)
  if a.device=='cuda' and not torch.cuda.is_available():raise RuntimeError('GPU allocation missing')
- actor=load(a.initial,a.source,a.device);actor.train();critic=nn.Sequential(nn.Linear(1432,512),nn.ELU(),nn.Linear(512,256),nn.ELU(),nn.Linear(256,1)).to(a.device);logstd=nn.Parameter(torch.full((29,),np.log(.05),device=a.device));optimizer=torch.optim.Adam([{'params':actor.parameters(),'lr':1e-5},{'params':critic.parameters(),'lr':3e-4},{'params':[logstd],'lr':1e-5}]);gamma=.99;lam=.95
+ actor=load(a.initial,a.source,a.device);actor.train();critic=nn.Sequential(nn.Linear(1432,512),nn.ELU(),nn.Linear(512,256),nn.ELU(),nn.Linear(256,1)).to(a.device);logstd=nn.Parameter(torch.full((29,),np.log(.05),device=a.device));optimizer=torch.optim.Adam([{'params':actor.parameters(),'lr':1e-5},{'params':critic.parameters(),'lr':3e-4},{'params':[logstd],'lr':1e-5}]);gamma=.99**.5;lam=.95**.5
+ # Preserve the 50Hz discount and GAE decay per second at 100Hz.
+ # Continuous reward terms already carry DT in Env.step; do not scale twice.
  motions=Motions(a.dataset,'train');envs=[Env(a.assets,motions,a.seed+j) for j in range(a.envs)];pool=ThreadPoolExecutor(max_workers=a.envs);obs=np.stack([e.reset(randomize=True) for e in envs]);best=(-1.,-float('inf'));start_time=time.time();stop=False
  def handler(*_):
   nonlocal stop
