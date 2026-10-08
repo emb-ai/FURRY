@@ -62,4 +62,29 @@ class CollectionTests(unittest.TestCase):
         self.assertEqual(set(c for c,s in plan[37:]),set(range(37)))
         self.assertEqual(plan,mc_plan(motions,74,123));self.assertEqual(len(set(s for c,s in plan)),74)
 
+class MirrorAdmissionTests(unittest.TestCase):
+    def test_baseline_failures_do_not_remove_training_clips(self):
+        import hashlib,json,sys,tempfile
+        from pathlib import Path
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        import mirror_guard
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder);dataset=root/'dataset';dataset.mkdir();initial=root/'initial.pt';initial.write_bytes(b'policy')
+            np.savez(dataset/'mirror.npz',qpos=np.zeros((2,36)))
+            original={'id':'original','split':'train'}
+            mirrored={'id':'mirror','parent_id':'original','split':'train','augmentation':'sagittal_reflection','file':'mirror.npz','sha256':hashlib.sha256((dataset/'mirror.npz').read_bytes()).hexdigest()}
+            clips=[original,mirrored];manifest={'clips':clips,'augmentation':{'checks':[{'parent_id':'original','max_fk_position_error_m':0.,'max_fk_rotation_matrix_error':0.}]}}
+            (dataset/'manifest.json').write_text(json.dumps(manifest))
+            baseline={'policy_sha256':hashlib.sha256(initial.read_bytes()).hexdigest(),'columns':['joint_rmse','slide_rate'],'trials':[{'id':'original','fell':True}]}
+            (root/'baseline.json').write_text(json.dumps(baseline));np.savez(root/'baseline.npz',original=np.full((100,2),.1))
+            result={'trials':[{'clip':'mirror','seed':0,'trace_key':'mirror__seed0','fell':True}],'trace_columns':['joint_rmse','slide_rate'],'_traces':{'mirror__seed0':np.ones((100,2))}}
+            args=['mirror_guard.py','--assets','fixture','--dataset',str(dataset),'--initial',str(initial),'--source','fixture','--baseline',str(root/'baseline.json'),'--output',str(root/'audit')]
+            with patch.object(sys,'argv',args),patch.object(mirror_guard,'Motions',return_value=SimpleNamespace(items=[{'meta':mirrored}])),patch.object(mirror_guard,'evaluate',return_value=result):mirror_guard.main()
+            self.assertEqual(json.loads((dataset/'manifest.json').read_text())['clips'],clips)
+            audit=json.loads((root/'audit/mirror-audit.json').read_text())
+            self.assertEqual(audit['included'],1)
+            self.assertIn('mirrored_baseline_failed',audit['checks'][0]['diagnostic_flags'])
+
+
 if __name__=='__main__':unittest.main()

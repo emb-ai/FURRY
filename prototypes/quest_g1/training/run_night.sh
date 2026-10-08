@@ -16,5 +16,7 @@ mkdir -p "$TASK_OUT"
 "$TASK_VENV/bin/python" -m unittest discover -s training -p 'test_*.py' -v
 "$TASK_VENV/bin/python" training/check_pipeline.py --assets assets --dataset dataset --policy assets/policy.onnx > "$TASK_OUT/pipeline-check.json"
 "$TASK_VENV/bin/python" training/smoke_updates.py --assets assets --dataset dataset --initial initial_actor.pt --source upstream/actor_critic_future.py --device cuda > "$TASK_OUT/optimizer-smoke.json"
-"$TASK_VENV/bin/python" training/mirror_guard.py --assets assets --dataset dataset --initial initial_actor.pt --source upstream/actor_critic_future.py --baseline baseline-reference.json --output "$TASK_OUT/preflight"
+TASK_AUDIT_ARGS=()
+if [[ -d mirror-audit-cache ]]; then TASK_AUDIT_ARGS=(--cached-rollouts mirror-audit-cache); fi
+"$TASK_VENV/bin/python" training/mirror_guard.py --assets assets --dataset dataset --initial initial_actor.pt --source upstream/actor_critic_future.py --baseline baseline-reference.json --output "$TASK_OUT/preflight" "${TASK_AUDIT_ARGS[@]}"
 exec "$TASK_VENV/bin/python" training/night_experiment.py --output "$TASK_OUT"

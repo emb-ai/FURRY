@@ -199,9 +199,11 @@ reports paired-prefix reward on a fixed eight-clip original train subset.
 `mirror_dataset.py` creates train-only G1 sagittal reflections and checks joint
 limits, involution and forward-kinematic link poses. The fixed asymmetric IMU
 mount is excluded from symmetry checks. Original/validation/replay files are
-copied byte-for-byte. `mirror_guard.py` subsequently admits only synthetic clips
-whose original and reflected baseline rollouts survive, with bounded tracking
-and sliding changes. No validation data is consulted for augmentation selection.
+copied byte-for-byte. `mirror_guard.py` records baseline falls/tracking as diagnostics only.
+A baseline failure does not make a reference invalid and must not exclude it.
+All reflected clips passing data/geometry checks are retained. No validation
+data is consulted for augmentation selection. Cached baseline rollouts can be
+reused only when policy, dataset and simulation/evaluation source hashes match.
 Mirror augmentation adds zero independent demonstrations. Use a fresh private
 output directory; the source dataset is not edited.
 
@@ -209,7 +211,7 @@ output directory; the source dataset is not edited.
 must contain augmented `dataset`, unchanged assets/source/initial actor, and
 `baseline-reference.json/.npz` from the deterministic fixed-train diagnostic.
 Unit tests, physics parity, a real optimizer smoke test and the mirror physics
-guard must pass before training starts. Two predeclared arms then run for at
+audit must pass before training starts. Two predeclared arms then run for at
 most 3.4 hours each: old slip as control, and contact-point sliding weight2.
 Each starts from the original actor; no failed checkpoint is used to initialize
 the other arm. Both use32 environments x256 steps (8192 transitions),
