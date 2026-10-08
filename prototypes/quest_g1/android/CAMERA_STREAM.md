@@ -17,6 +17,11 @@ is paused or awaiting calibration. A resets alignment. Stand facing the camera,
 look forward and make a short
 translation/crouch movement while remaining fully visible. Shoulders across time
 provide a metric rigid transform (Horn/Kabsch equivalent, scale fixed to one).
+
+The PC can lock that transform first (`skeleton/marker_frame.py`): a printed
+AprilTag 36h11 of known size, posed from the color image, and the same marker posed by a
+controller touch in STAGE. It then sends `frame=pelvis-relative` joints already
+in STAGE axes. Shoulder fitting does not run for that frame.
 Static shoulders alone are collinear: the client waits for sufficient motion
 instead of inventing a pitch angle. At least 40 shoulder observations, transverse
 spread above 2 cm and shoulder fit RMS below 40 mm are required. Calibration

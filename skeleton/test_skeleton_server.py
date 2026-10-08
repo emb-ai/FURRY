@@ -19,6 +19,14 @@ class TransportTest(unittest.TestCase):
         self.assertEqual(len(p["joints"]), 9)
         json.dumps(p, allow_nan=False)
 
+    def test_stage_frame_keeps_absolute_pelvis(self):
+        p = packet({11: [0, -.1, 0], 12: [0, .1, 0]}, {11: .9, 12: .8}, {},
+                   1, 1, 30, "test", "pelvis-relative", {"p": [1, 2, 3], "conf": .85})
+        self.assertEqual(p["frame"], "pelvis-relative")
+        self.assertEqual(p["pelvis"]["p"], [1., 2., 3.])
+        self.assertEqual(p["pelvis"]["conf"], .85)
+        self.assertEqual(p["joints"]["lhip"]["p"], [0, -.1, 0])
+
     def test_live_transport_uplink_and_no_stale_replay(self):
         with tempfile.TemporaryDirectory() as folder:
             log = Path(folder) / "frames.jsonl"
@@ -39,6 +47,7 @@ class TransportTest(unittest.TestCase):
                     while 'uplink' not in log.read_text() and time.monotonic() < deadline:
                         time.sleep(.01)
                     self.assertIn('uplink', log.read_text())
+                    self.assertIsNotNone(server.latest_uplink())
             finally:
                 server.close()
 

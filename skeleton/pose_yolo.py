@@ -14,7 +14,8 @@ analyze_bag.py, код в fusion.py: бенчмарк v2 измеряет ров
 One-Euro берёт фактический dt (CPU даёт 8-15 fps, не 30) и не сбрасывает
 состояние при дропауте сустава.
 
-Управление: q/Esc — выход, крестик — выход, стрелки — вращение 3D.
+Управление: q/Esc — выход, крестик — выход, стрелки — вращение 3D,
+c — зафиксировать камеру по AprilTag и позе контроллера (нужен --ws).
 Запуск: .venv/Scripts/python pose_yolo.py [s|m|l] [full|min|off]
   второй аргумент — режим depth-фильтров (min по умолчанию, см. main()).
 Превью — в полразмера панелей (экономия ~15 мс/кадр на imshow).
@@ -30,6 +31,7 @@ import pyrealsense2 as rs
 from ultralytics import YOLO
 
 from fusion import OneEuro, fuse_joints
+from marker_frame import MarkerSession, to_stage_relative
 
 W2D = "YOLO pose | 3D (smart fusion)"
 
@@ -145,10 +147,19 @@ def main():
     parser.add_argument("--seconds", type=float, default=0)
     parser.add_argument("--record-rgbd", help="New directory for unfiltered aligned RGB-D frames")
     parser.add_argument("--record-rgbd-seconds", type=float, default=60)
+    parser.add_argument("--marker-m", type=float, default=0.16,
+                        help="сторона чёрного квадрата AprilTag, метры")
+    parser.add_argument("--marker-id", type=int, default=0)
+    parser.add_argument("--marker-hand", choices=["right", "left"], default="right")
+    parser.add_argument("--session", help="JSON связки камера→STAGE: загрузить, если файл есть, и писать сюда по клавише c")
     args = parser.parse_args()
     size, filt = args.size, args.filters
     server = None
     rgbd_recorder = None
+    session = MarkerSession(args.marker_m, args.marker_id, args.marker_hand)
+    if args.session and os.path.isfile(args.session):
+        session.load(args.session)
+        print(f"Связка камера→STAGE загружена из {args.session}", flush=True)
     model, device = load_model(size)
 
     cfg = rs.config()
@@ -198,6 +209,7 @@ def main():
     t0, frames = time.monotonic(), 0
     fps = 0.0
     pipeline = None
+    marker_K = marker_dist = None
     started = time.monotonic()
     sequence = 0
     stage_t = {}  # имя стадии -> суммарные мс за секундное окно (раз в сек в консоль)
@@ -224,6 +236,10 @@ def main():
                 depth_scale = profile.get_device().first_depth_sensor().get_depth_scale()
                 color_intr = (profile.get_stream(rs.stream.color)
                               .as_video_stream_profile().get_intrinsics())
+                marker_K = np.array([[color_intr.fx, 0, color_intr.ppx],
+                                     [0, color_intr.fy, color_intr.ppy],
+                                     [0, 0, 1]], np.float64)
+                marker_dist = np.asarray(color_intr.coeffs, np.float64)
                 print(f"USB: {profile.get_device().get_info(rs.camera_info.usb_type_descriptor)}", flush=True)
             t = time.perf_counter()
             try:
@@ -260,6 +276,8 @@ def main():
             t = tic("filters", t)
             color = np.asanyarray(color_f.get_data())
             depth_m = np.asanyarray(depth_f.get_data()).astype(np.float32) * depth_scale
+            if marker_K is not None:
+                session.observe(color, marker_K, marker_dist)
             t = tic("to_numpy", t)
 
             res = model.predict(color, imgsz=640, conf=0.3, classes=0,
@@ -298,8 +316,19 @@ def main():
 
             sequence += 1
             if server:
-                server.publish(packet(smoothed, confidence, sources, frame_timestamp,
-                                      sequence, fps, backend))
+                wire, wire_frame, pelvis = smoothed, "camera", None
+                if session.locked:
+                    server.record("camera", packet(smoothed, confidence, sources, frame_timestamp,
+                                                   sequence, fps, backend))
+                    converted = to_stage_relative(smoothed, session.R, session.t)
+                    wire_frame = "pelvis-relative"
+                    if converted:
+                        wire, pelvis_xyz = converted
+                        pelvis = {"p": pelvis_xyz, "conf": min(confidence.get(11, 0), confidence.get(12, 0))}
+                    else:
+                        wire, pelvis = {}, {"p": [0, 0, 0], "conf": 0}
+                server.publish(packet(wire, confidence, sources, frame_timestamp,
+                                      sequence, fps, backend, wire_frame, pelvis))
             frames += 1
             dt = time.monotonic() - t0
             if dt > 1:
@@ -311,10 +340,16 @@ def main():
                 stage_t.clear()
             if args.headless:
                 continue
+            if session.corners is not None:
+                quad = session.corners.astype(np.int32).reshape(-1, 1, 2)
+                cv2.polylines(color, [quad], True, (0, 220, 255), 2, cv2.LINE_AA)
             pelvis = smoothed.get(11)
+            marker = "STAGE" if session.locked else ("маркер" if session.corners is not None else "нет маркера")
             info = (f"fps {fps:4.1f} | joints {len(smoothed)}/17 | "
-                    f"pelvis {'-' if pelvis is None else f'{pelvis[2]:.2f} m'}")
+                    f"pelvis {'-' if pelvis is None else f'{pelvis[2]:.2f} m'} | {marker}")
             cv2.putText(color, info, (12, 30), 6, 0.7, (60, 255, 60), 2)
+            cv2.putText(color, "c — зафиксировать камеру контроллером", (12, 86),
+                        6, 0.55, (200, 200, 200), 1)
             cv2.putText(color, f"yolo11{size}-pose  q-quit", (12, 58), 6, 0.55, (200, 200, 200), 1)
 
             cv2.imshow(W2D, np.hstack([cv2.resize(color, (640, 360)),
@@ -325,6 +360,16 @@ def main():
             key = cv2.waitKey(1) & 0xFF
             if key in (ord('q'), 27):
                 break
+            if key == ord('c'):
+                if server is None:
+                    print("Фиксация маркера нужна с --ws: шлем присылает позу контроллера.", flush=True)
+                else:
+                    ok, reason = session.try_lock(server.latest_uplink())
+                    print(reason, flush=True)
+                    if ok:
+                        path = args.session or "session.json"
+                        session.save(path)
+                        print(f"Связка записана в {path}", flush=True)
             view.rotate(key)
             tic("show", t)
     finally:
