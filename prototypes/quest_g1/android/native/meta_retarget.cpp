@@ -10,6 +10,7 @@ void MetaRetargeter::Calibrate(const mjModel* model,const mjData* data,const Tra
     calibrated=false;
     if(!input.body.valid)throw std::runtime_error("Full body tracking required");
     auto* gm=gmr.model();auto* gd=gmr.data();gmr.Reset();gmr.ClearCameraTarget();gd->qpos[2]=.8;
+    if(swingClearance>0)swing.Load(model,gm);
     for(auto side:{"left","right"}){
         bool left=std::string(side)=="left";
         int roll=mj_name2id(gm,mjOBJ_JOINT,(std::string(side)+"_shoulder_roll_joint").c_str());
@@ -78,13 +79,19 @@ void MetaRetargeter::Calibrate(const mjModel* model,const mjData* data,const Tra
     cameraScale=cameraOrigin.position[2]/eyeHeight;
     double alignedHead[4],inverse[4];mju_mulQuat(alignedHead,basisQuat,input.head.quaternion.data());
     mju_negQuat(inverse,alignedHead);mju_mulQuat(cameraRotationOffset.data(),inverse,cameraOrigin.quaternion.data());
-    calibrationRest=input.body.rest;skeletonVersion=input.body.skeleton_version;lastTime=0;calibrated=true;
+    calibrationRest=input.body.rest;skeletonVersion=input.body.skeleton_version;lastTime=0;baselinePoseStored=false;calibrated=true;
 }
 const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& input){
     if(!calibrated || !input.body.valid)throw std::runtime_error("No calibrated full body sample");
     if(!Compatible(input)){calibrated=false;throw std::runtime_error("Body proportions changed: press A to recalibrate");}
     skeletonVersion=input.body.skeleton_version;
     if(lastTime && input.body.time_ns<=lastTime)return mimic;
+    // Clearance must not contaminate the next source solve or the velocity
+    // finite difference. Restore the previous unmodified source warm start.
+    if(swingClearance>0 && baselinePoseStored){
+        std::copy(lastQ.begin(),lastQ.end(),gmr.data()->qpos);
+        mj_kinematics(gmr.model(),gmr.data());mj_comPos(gmr.model(),gmr.data());
+    }
     std::vector<TrackedPose> targets(14);double pelvisDelta[3],translation[3];
     // Whole-body translation belongs to the pelvis. Adding HMD displacement
     // here also translates planted feet when the head moves relative to the
@@ -104,6 +111,7 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& input){
         mju_sub3(rel,input.body.joints[i].position.data(),input.body.joints[0].position.data());mju_mulMatVec(mapped,basis,rel,3,3);mju_rotVecQuat(offset,offsets[i].position.data(),targets[i].quaternion.data());
         for(int a=0;a<3;a++)targets[i].position[a]=root[a]+scales[i]*mapped[a]+offset[a];
     }
+    if(twistGrounding)gmr.GroundFootTargets(targets);
     gmr.SetTargets(targets);
     if(cameraTracking && (input.location_flags[0]&3)==3){
         TrackedPose camera;double aligned[4];
@@ -122,13 +130,19 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& input){
         gmr.AlignTargetsToCameraXY(camera);gmr.SetCameraTarget(camera);
     }else gmr.ClearCameraTarget();
     gmr.Solve();error=gmr.error;
+    std::array<double,36> sourceQ{};std::copy_n(gmr.data()->qpos,36,sourceQ.begin());
+    if(swingClearance>0){
+        auto raised=gmr.Targets();
+        swing.Correct(raised,rootScale*(input.body.joints[6].position[1]-input.body.joints[7].position[1]),swingClearance);
+        if(swing.lastLift[0]>0 || swing.lastLift[1]>0){gmr.SetTargets(raised);gmr.Solve();error=gmr.error;}
+    }
     const double* q=gmr.data()->qpos;double delta[35]={},worldVel[3]={},localVel[3]={},R[9];mju_quat2Mat(R,q+3);
     double dt=lastTime?(input.body.time_ns-lastTime)*1e-9:0;
-    if(dt>0 && dt<=.2){mj_differentiatePos(gmr.model(),delta,dt,lastQ.data(),q);std::copy_n(delta,3,worldVel);mju_mulMatTVec(localVel,R,worldVel,3,3);}
+    if(dt>0 && dt<=.2){mj_differentiatePos(gmr.model(),delta,dt,lastQ.data(),sourceQ.data());std::copy_n(delta,3,worldVel);mju_quat2Mat(R,sourceQ.data()+3);mju_mulMatTVec(localVel,R,worldVel,3,3);}
     mimic[0]=localVel[0];mimic[1]=localVel[1];mimic[2]=q[2];
     double w=q[3],x=q[4],y=q[5],z=q[6];mimic[3]=std::atan2(2*(w*x+y*z),1-2*(x*x+y*y));mimic[4]=std::asin(std::clamp(2*(w*y-z*x),-1.,1.));mimic[5]=delta[5];
     for(int i=0;i<29;i++)mimic[6+i]=q[7+i];
-    std::copy_n(q,36,lastQ.begin());lastTime=input.body.time_ns;return mimic;
+    lastQ=sourceQ;baselinePoseStored=true;lastTime=input.body.time_ns;return mimic;
 }
 
 bool MetaRetargeter::Compatible(const TrackingFrame& f)const{

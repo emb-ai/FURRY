@@ -7,6 +7,7 @@
 #include <cmath>
 #include <algorithm>
 #include <stdexcept>
+#include <limits>
 namespace {
 void Skew(double* out,const double* v){double a[9]={0,-v[2],v[1],v[2],0,-v[0],-v[1],v[0],0};std::copy_n(a,9,out);}
 void Mul(double* c,const double*a,const double*b){mju_mulMatMat(c,a,b,3,3,3);}
@@ -67,8 +68,20 @@ void GmrRetargeter::SetHumanTargets(const std::vector<TrackedPose>& human,double
         mju_rotVecQuat(translated,offset,out[i].quaternion.data());
         for(int a=0;a<3;a++)out[i].position[a]=human[0].position[a]*tasks_[0].scale*ratio+(human[i].position[a]-human[0].position[a])*t.scale*ratio+translated[a];
     }
-    if(offsetToGround){double floor=1e10;for(size_t i=0;i<out.size();i++)if(tasks_[i].human.find("Foot")!=std::string::npos)floor=std::min(floor,out[i].position[2]);for(auto&p:out)p.position[2]+=.1-floor;}
+    if(offsetToGround)GroundFootTargets(out);
     SetTargets(out);
+}
+void GmrRetargeter::GroundFootTargets(std::vector<TrackedPose>& value)const{
+    if(value.size()!=tasks_.size())throw std::runtime_error("Incomplete GMR ground targets");
+    double lowest=std::numeric_limits<double>::infinity();
+    for(size_t i=0;i<value.size();i++){
+        for(double v:value[i].position)if(!std::isfinite(v))throw std::runtime_error("Invalid GMR ground target");
+        const auto& name=tasks_[i].human;
+        if(name.find("Foot")!=std::string::npos || name.find("foot")!=std::string::npos)
+            lowest=std::min(lowest,value[i].position[2]);
+    }
+    if(!std::isfinite(lowest))throw std::runtime_error("No foot targets for GMR grounding");
+    for(auto& pose:value)pose.position[2]+=.1-lowest;
 }
 TrackedPose GmrRetargeter::CameraPose()const{
     TrackedPose pose;double offset[3],rotation[4];

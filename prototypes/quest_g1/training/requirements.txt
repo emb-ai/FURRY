@@ -1,0 +1,6 @@
+numpy==2.2.6
+scipy==1.15.3
+mujoco==3.3.7
+onnx==1.17.0
+onnxruntime==1.23.2
+torch==2.14.0
