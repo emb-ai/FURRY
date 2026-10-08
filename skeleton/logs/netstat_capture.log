@@ -1,0 +1,1783 @@
+=== 12:31:51
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:31:52
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:31:53
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:51074    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:31:54
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:51074    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:31:56
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:31:57
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:31:58
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:51080    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:31:59
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:51080    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:00
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:02
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:03
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:04
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:42698    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:05
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:42698    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:06
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:08
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:09
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:42710    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:10
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:42710    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:11
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:12
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:14
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:15
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:41410    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:16
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:41410    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:17
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:18
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:19
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:41422    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:21
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:41422    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:22
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:23
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:24
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:25
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:33458    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:27
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:33458    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:28
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:29
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:30
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:33472    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:31
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:33472    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:33
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:34
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:35
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:58800    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:36
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:58800    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:37
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:39
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:40
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:41
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:58810    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:42
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:58810    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:43
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:44
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:46
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:40426    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:47
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:40426    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:48
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:49
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:50
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:52
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:40440    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:53
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:40440    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:54
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:55
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:56
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      1 192.168.10.216:57914    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:57
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      1 192.168.10.216:57914    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:32:59
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:00
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:01
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:02
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      1 192.168.10.216:57920    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:03
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      1 192.168.10.216:57920    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:05
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:06
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:07
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:38648    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:08
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:38648    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:09
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:10
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:12
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:13
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:55800    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:14
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:55800    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:15
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:16
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:18
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:55806    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:19
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:55806    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:20
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:21
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:22
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:24
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      1 192.168.10.216:41310    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:25
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      1 192.168.10.216:41310    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:26
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:27
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:28
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      1 192.168.10.216:41318    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:29
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      1 192.168.10.216:41318    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:31
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:32
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:33
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:34
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:35516    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:35
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:35516    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:37
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:38
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:39
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:35522    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:40
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:35522    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:41
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:43
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:44
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:45
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:57872    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:46
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:57872    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:47
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:49
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:50
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      1 192.168.10.216:57874    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:51
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      1 192.168.10.216:57874    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:52
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:53
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:55
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:56
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:47590    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:33476 ::ffff:142.251.156.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:33:57
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+=== 12:33:58
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+=== 12:33:59
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:47594    192.168.10.29:8765      SYN_SENT   
+tcp6       1      1 ::ffff:192.168.10:39682 ::ffff:209.85.233.94:80 LAST_ACK   
+tcp6       0      0 ::ffff:192.168.10:47750 ::ffff:142.251.150.:443 ESTABLISHED
+udp        0    768 192.168.10.216:21906    192.168.10.1:53         ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:00
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:47594    192.168.10.29:8765      SYN_SENT   
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:02
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0    268 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:03
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:04
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:05
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      1 192.168.10.216:57614    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:06
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      1 192.168.10.216:57614    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:08
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:09
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:10
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      1 192.168.10.216:57622    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:11
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      1 192.168.10.216:57622    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:12
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:14
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:15
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:16
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:54764    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:17
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:54764    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:18
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:20
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:21
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:54780    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:22
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:54780    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:23
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:24
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:25
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:27
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      1 192.168.10.216:41638    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:28
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      1 192.168.10.216:41638    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:29
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:30
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:31
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      1 192.168.10.216:41640    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:33
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      1 192.168.10.216:41640    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:34
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:35
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:36
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:37
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:58314    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:39
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:58314    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:40
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:41
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:42
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:58328    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:43
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:58328    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:45
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:46
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:47
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:48
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:46032    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:49
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:50
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:52
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:53
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:45460    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:54
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:45460    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:55
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:56
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:58
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:45476    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:34:59
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:45476    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:00
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:01
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:02
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:04
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:44332    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:05
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:44332    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:06
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:07
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:08
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:44344    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:10
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:44344    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:11
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:12
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:13
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:14
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:48580    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:16
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:48580    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:17
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:18
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:19
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:48584    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:20
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:48584    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:22
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:23
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:24
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:25
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:58662    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:26
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:58662    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:27
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:29
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:30
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:58664    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:31
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:58664    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:32
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:33
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:35
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:36
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:47596    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:37
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:47596    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:38
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:39
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:41
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:47608    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:42
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:47608    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:43
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:44
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:45
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:45798    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:47
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:45798    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:48
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:49
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:50
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:51
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:45806    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:53
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:45806    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:54
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:55
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:56
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:37028    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:57
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:37028    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:35:59
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:00
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:01
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:02
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:37040    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:03
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:37040    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:05
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:06
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:07
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:48104    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:08
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:48104    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:09
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:10
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:12
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:13
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      1 192.168.10.216:38878    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:14
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      1 192.168.10.216:38878    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:15
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:16
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:18
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:38894    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:19
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:38894    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:20
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:21
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:23
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:24
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:37196    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:25
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:26
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:27
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:29
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:37204    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:30
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:37204    192.168.10.29:8765      SYN_SENT   
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:31
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:32
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:33
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:40692    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:35
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp        0      1 192.168.10.216:40692    192.168.10.29:8765      SYN_SENT   
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+=== 12:36:36
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    291 192.168.10.216:34408    57.144.244.145:443      FIN_WAIT1  
+tcp        0    291 192.168.10.216:48920    57.144.244.145:443      FIN_WAIT1  
+tcp6       0      0 ::ffff:192.168.10:50090 ::ffff:142.251.151.:443 ESTABLISHED
+udp        0      0 192.168.10.216:68       192.168.10.1:67         ESTABLISHED
+capture done
