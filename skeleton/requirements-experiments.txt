@@ -1,0 +1,5 @@
+# Optional offline experiments; no Quest dependency.
+rtmlib==0.0.14
+onnxruntime==1.23.2
+scipy==1.15.3
+numpy==2.4.6

@@ -72,7 +72,7 @@ def person_distance(depth_m, pts2d):
     return None
 
 
-def fuse_joints(depth_m, pts2d, intr, band=0.5):
+def fuse_joints(depth_m, pts2d, intr, band=0.5, sources=None):
     """2D-кейпоинты {coco: (u, v)} + глубина (м) -> {coco: xyz (м)}.
 
     Дистанция человека оценивается по тазу, суставы берутся гейт-медианой,
@@ -84,10 +84,14 @@ def fuse_joints(depth_m, pts2d, intr, band=0.5):
     raw = {}
     for i, (u, v) in pts2d.items():
         d = window_median(depth_m, u, v, person_d, band=band)
+        source = "window"
         if d is None and i in PARENT and PARENT[i] in pts2d:
             pu, pv = pts2d[PARENT[i]]
             d = line_median(depth_m, pu, pv, u, v, person_d, band=band)
+            source = "line"
         if d is not None:
+            if sources is not None:
+                sources[i] = source
             raw[i] = np.array(
                 rs.rs2_deproject_pixel_to_point(intr, [float(u), float(v)], d),
                 dtype=np.float32)

@@ -19,6 +19,7 @@ One-Euro берёт фактический dt (CPU даёт 8-15 fps, не 30) �
   второй аргумент — режим depth-фильтров (min по умолчанию, см. main()).
 Превью — в полразмера панелей (экономия ~15 мс/кадр на imshow).
 """
+import argparse
 import os
 import sys
 import time
@@ -133,8 +134,21 @@ def load_model(size):
 
 
 def main():
-    size = sys.argv[1] if len(sys.argv) > 1 else "s"
-    filt = sys.argv[2] if len(sys.argv) > 2 else "min"  # full|min|off
+    parser = argparse.ArgumentParser()
+    parser.add_argument("size", nargs="?", choices=["n", "s", "m", "l", "x"], default="s")
+    parser.add_argument("filters", nargs="?", choices=["full", "min", "off"], default="min")
+    parser.add_argument("--ws", action="store_true")
+    parser.add_argument("--host", default="0.0.0.0")
+    parser.add_argument("--port", type=int, default=8765)
+    parser.add_argument("--log", help="JSONL of downlink and headset uplink")
+    parser.add_argument("--headless", action="store_true")
+    parser.add_argument("--seconds", type=float, default=0)
+    parser.add_argument("--record-rgbd", help="New directory for unfiltered aligned RGB-D frames")
+    parser.add_argument("--record-rgbd-seconds", type=float, default=60)
+    args = parser.parse_args()
+    size, filt = args.size, args.filters
+    server = None
+    rgbd_recorder = None
     model, device = load_model(size)
 
     cfg = rs.config()
@@ -154,31 +168,38 @@ def main():
     #   min  = только spatial          ~18 мс — баланс (по умолчанию);
     #   off  = без фильтров            ~0 мс  — гейт-медиана фьюжна берёт на
     #          себя большую часть работы (A/B в analyze: разница мала)
-    chain = [spatial]
+    chain = [] if filt == "off" else [spatial]
     if filt == "full":
         chain += [temporal, holes]
     print(f"depth-фильтры: {filt}", flush=True)
 
     def open_camera():
         while True:
+            if args.seconds and time.monotonic() - started >= args.seconds:
+                raise TimeoutError("Camera did not become available")
             try:
-                p = rs.pipeline()
-                prof = p.start(cfg)
-                return p, prof
+                from camera_open import open_pipeline
+                return open_pipeline(rs, cfg)
             except Exception as e:
                 print(f"[!] Камера недоступна ({e}). Жду переподключения... (q — выход)", flush=True)
                 for _ in range(10):
+                    if args.headless:
+                        time.sleep(.2)
+                        continue
                     k = cv2.waitKey(200) & 0xFF
                     if k in (ord('q'), 27) or cv2.getWindowProperty(W2D, cv2.WND_PROP_VISIBLE) < 1:
                         raise SystemExit(0)
 
-    cv2.namedWindow(W2D, cv2.WINDOW_NORMAL)
+    if not args.headless:
+        cv2.namedWindow(W2D, cv2.WINDOW_NORMAL)
     # превью в полразмера: hstack двух 720p-панелей + imshow стоили ~20 мс/кадр
     view = View3D(w=640, h=360, scale_px=140)
     filters = {}
     t0, frames = time.monotonic(), 0
     fps = 0.0
     pipeline = None
+    started = time.monotonic()
+    sequence = 0
     stage_t = {}  # имя стадии -> суммарные мс за секундное окно (раз в сек в консоль)
 
     def tic(name, t):
@@ -186,8 +207,18 @@ def main():
         stage_t[name] = stage_t.get(name, 0.0) + (now - t) * 1000
         return now
     try:
+        if args.record_rgbd:
+            from rgbd_recording import RGBDRecorder
+            rgbd_recorder = RGBDRecorder(args.record_rgbd, args.record_rgbd_seconds)
+        if args.ws:
+            from skeleton_server import SkeletonServer, packet
+            backend = "torch-" + device if device else ("coreml" if sys.platform == "darwin" else "openvino")
+            server = SkeletonServer(args.host, args.port, args.log)
         while True:
+            if args.seconds and time.monotonic() - started >= args.seconds:
+                break
             if pipeline is None:
+                filters.clear()
                 pipeline, profile = open_camera()
                 align = rs.align(rs.stream.color)
                 depth_scale = profile.get_device().first_depth_sensor().get_depth_scale()
@@ -205,12 +236,24 @@ def main():
                     pass
                 pipeline = None
                 continue
+            frame_timestamp = time.time_ns() // 1_000_000
+            color_clock = fs.get_color_frame()
+            if color_clock and color_clock.get_frame_timestamp_domain() in (rs.timestamp_domain.global_time, rs.timestamp_domain.system_time):
+                frame_timestamp = int(color_clock.get_timestamp())
             t = tic("wait", t)
             fs = align.process(fs)
             t = tic("align", t)
             color_f, depth_f = fs.get_color_frame(), fs.get_depth_frame()
             if not color_f or not depth_f:
                 continue
+            if rgbd_recorder:
+                rgbd_recorder.submit(np.asanyarray(color_f.get_data()),
+                    np.asanyarray(depth_f.get_data()).astype(np.float32) * depth_scale,
+                    [color_intr.fx, color_intr.fy, color_intr.ppx, color_intr.ppy],
+                    frame_timestamp, sequence + 1,
+                    {"distortion_model": str(color_intr.model),
+                     "distortion_coeffs": np.array(color_intr.coeffs),
+                     "timestamp_domain": str(color_f.get_frame_timestamp_domain())})
             # depth-фильтры SDK по выбранному режиму
             for flt in chain:
                 depth_f = flt.process(depth_f)
@@ -222,7 +265,7 @@ def main():
             res = model.predict(color, imgsz=640, conf=0.3, classes=0,
                                 **({"device": device} if device else {}), verbose=False)[0]
             t = tic("infer", t)
-            raw, pts2d = {}, {}
+            raw, pts2d, sources, confidence = {}, {}, {}, {}
             if res.keypoints is not None and len(res.keypoints):
                 kxy = res.keypoints.xy.cpu().numpy()
                 kconf = (res.keypoints.conf.cpu().numpy()
@@ -230,10 +273,11 @@ def main():
                 xy, conf = (kxy[0], kconf[0]) if kxy.ndim == 3 else (kxy, kconf)
                 for i in range(min(17, len(xy))):
                     if conf[i] > 0.5:
+                        confidence[i] = float(conf[i])
                         pts2d[i] = (float(xy[i][0]), float(xy[i][1]))
 
                 # 3D: фьюжн общий с analyze_bag.py (fusion.py)
-                raw = fuse_joints(depth_m, pts2d, color_intr)
+                raw = fuse_joints(depth_m, pts2d, color_intr, sources=sources)
                 t = tic("fuse", t)
 
                 # отрисовка 2D
@@ -252,6 +296,10 @@ def main():
                 filters.setdefault(i, OneEuro())(p, t_now)
             smoothed = {i: f.x_prev.copy() for i, f in filters.items() if i in raw}
 
+            sequence += 1
+            if server:
+                server.publish(packet(smoothed, confidence, sources, frame_timestamp,
+                                      sequence, fps, backend))
             frames += 1
             dt = time.monotonic() - t0
             if dt > 1:
@@ -261,6 +309,8 @@ def main():
                               for k, v in sorted(stage_t.items(), key=lambda kv: -kv[1]))
                 print(f"    [тайминг] {br}", flush=True)
                 stage_t.clear()
+            if args.headless:
+                continue
             pelvis = smoothed.get(11)
             info = (f"fps {fps:4.1f} | joints {len(smoothed)}/17 | "
                     f"pelvis {'-' if pelvis is None else f'{pelvis[2]:.2f} m'}")
@@ -278,12 +328,17 @@ def main():
             view.rotate(key)
             tic("show", t)
     finally:
+        if rgbd_recorder:
+            rgbd_recorder.close()
         if pipeline is not None:
             try:
                 pipeline.stop()
             except RuntimeError:
                 pass
-        cv2.destroyAllWindows()
+        if server:
+            server.close()
+        if not args.headless:
+            cv2.destroyAllWindows()
 
 
 if __name__ == "__main__":

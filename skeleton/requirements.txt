@@ -14,3 +14,5 @@ openvino;     sys_platform != "darwin"
 # macOS вместо них: torch-MPS (ставится с ultralytics) и CoreML —
 #   pip install coremltools
 #   yolo export model=models/yolo11s-pose.pt format=coreml   # на маке, даст .mlpackage
+
+websockets>=14,<18
