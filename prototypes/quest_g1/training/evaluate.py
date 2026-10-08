@@ -7,9 +7,9 @@ import onnxruntime as ort
 from env import Motions,Env
 from rewards import RewardConfig
 
-METRICS=['joint_rmse','key_rmse_m','slip_m_s','slide_rate','stumble','root_xy_error_m','tilt_deg']
+METRICS=['joint_rmse','key_rmse_m','slip_m_s','slide_rate','stumble','root_xy_error_m','tilt_deg','reward_rate']
 
-def evaluate(assets,dataset,policy,source=None,split='validation',seeds=(0,),output=None,limit=None,reward_config=None,stop=None):
+def evaluate(assets,dataset,policy,source=None,split='validation',seeds=(0,),output=None,limit=None,reward_config=None,stop=None,clip_indices=None):
  config=reward_config or RewardConfig();motions=Motions(dataset,split);env=Env(assets,motions,reward_config=config);env.max_steps=10000000
  if str(policy).endswith('.onnx'):
   opts=ort.SessionOptions();opts.intra_op_num_threads=1;opts.inter_op_num_threads=1;s=ort.InferenceSession(str(policy),sess_options=opts,providers=['CPUExecutionProvider']);name=s.get_inputs()[0].name
@@ -21,7 +21,8 @@ def evaluate(assets,dataset,policy,source=None,split='validation',seeds=(0,),out
   def act(obs):
    with torch.no_grad():return p(torch.from_numpy(obs[None])).numpy()[0]
  results=[];traces={}
- for clip in range(len(motions.items) if limit is None else min(limit,len(motions.items))):
+ indices=clip_indices if clip_indices is not None else range(len(motions.items) if limit is None else min(limit,len(motions.items)))
+ for clip in indices:
   for seed in seeds:
    env.rng=np.random.default_rng(seed);obs=env.reset(clip=clip,start=0,randomize=seed!=0);rows=[]
    while True:

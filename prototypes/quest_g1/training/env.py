@@ -12,6 +12,23 @@ from rewards import RewardConfig, sliding_rate, global_tracking_reward, discrete
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from g1_sim.controller import DEFAULT,KP,KD,JOINTS,euler
 DT=.01
+FUTURE_SECONDS=np.array([.02]+[i/10 for i in range(1,20)])
+
+def future_reference_features(motion, frame, root_position, root_quaternion):
+ """Critic only: 20 reference poses up to 1.9 s, with explicit end padding.
+
+ Commands retain the actor's convention; relative translation/orientation expose
+ future tracking errors. Padding repeats the final pose with zero velocities
+ and a validity bit, so a short clip cannot masquerade as a longer trajectory.
+ """
+ indices=frame+np.rint(FUTURE_SECONDS/DT).astype(int);valid=indices<len(motion['q'])
+ indices=np.minimum(indices,len(motion['q'])-1);q=motion['q'][indices]
+ commands=motion['cmd'][indices].copy();commands[~valid,0:2]=0;commands[~valid,5]=0
+ current=Rotation.from_quat(np.asarray(root_quaternion)[[1,2,3,0]])
+ delta_position=current.inv().apply(q[:,:3]-root_position)
+ delta_rotation=(current.inv()*Rotation.from_quat(q[:,[4,5,6,3]])).as_rotvec()
+ return np.c_[commands,delta_position,delta_rotation,valid].astype(np.float32).ravel()
+
 KEYS=['left_wrist_yaw_link','right_wrist_yaw_link','left_ankle_roll_link','right_ankle_roll_link','left_knee_link','right_knee_link','left_elbow_link','right_elbow_link','torso_link']
 class Motions:
  def __init__(self,path,split):
@@ -75,7 +92,8 @@ class Env:
    self.data.qvel[:6]-v[:6],self.data.qvel[self.va]-v[6:],orientation,
    (self.data.xpos[self.key]-self.ref.xpos[self.key]).ravel(),
    self.contact_force/350.,self.contact_speed,self.air,self.lastcontact.astype(float),self.last_vel,
-   (len(self.motion['q'])-1-self.k)*DT].astype(np.float32)
+   (len(self.motion['q'])-1-self.k)*DT,
+   future_reference_features(self.motion,self.k,self.data.qpos[:3],self.data.qpos[3:7])].astype(np.float32)
  def step(self,action):
   action=np.asarray(action);assert action.shape==(29,) and np.isfinite(action).all();previous_action=self.action.copy();self.action=action.copy();target=DEFAULT+.5*np.clip(action,-10,10)
   slide_integral=0.
@@ -106,5 +124,5 @@ class Env:
   reward=float(sum(terms.values())*DT);tilt=float(np.arccos(np.clip(cr.as_matrix()[2,2],-1,1)));bad=any(self.data.warning[j].number for j in [mujoco.mjtWarning.mjWARN_BADQPOS,mujoco.mjtWarning.mjWARN_BADQVEL,mujoco.mjtWarning.mjWARN_BADQACC,mujoco.mjtWarning.mjWARN_BADCTRL]);fall=bool(currentq[2]<.35 or tilt>1.2 or bad or not np.isfinite(reward))
   if bad or not np.isfinite(reward):raise RuntimeError('Invalid MuJoCo numerical rollout')
   self.steps+=1;self.return_+=reward;truncated=self.k>=len(self.motion['q'])-1 or self.steps>=self.max_steps;done=fall or truncated
-  info={'fall':fall,'truncated':truncated,'reference_end':self.k>=len(self.motion['q'])-1,'time_limit':self.steps>=self.max_steps,'seconds':self.steps*DT,'return':self.return_,'joint_rmse':float(np.sqrt(np.mean(dq*dq))),'key_rmse_m':float(np.sqrt(np.mean((local-ref_local)**2))),'slip_m_s':float(np.mean(speed[contact])) if contact.any() else 0.,'stumble':stumble,'root_xy_error_m':float(np.linalg.norm(currentq[:2]-q[:2])),'tilt_deg':float(np.degrees(tilt)),'slide_rate':slide_integral/DT,'slide_path_m':self.slide_path,'reward_terms':terms.copy()}
+  info={'fall':fall,'truncated':truncated,'reference_end':self.k>=len(self.motion['q'])-1,'time_limit':self.steps>=self.max_steps,'seconds':self.steps*DT,'return':self.return_,'joint_rmse':float(np.sqrt(np.mean(dq*dq))),'key_rmse_m':float(np.sqrt(np.mean((local-ref_local)**2))),'slip_m_s':float(np.mean(speed[contact])) if contact.any() else 0.,'stumble':stumble,'root_xy_error_m':float(np.linalg.norm(currentq[:2]-q[:2])),'tilt_deg':float(np.degrees(tilt)),'slide_rate':slide_integral/DT,'slide_path_m':self.slide_path,'reward_terms':terms.copy(),'reward_rate':reward/DT}
   return self.observation(),reward,done,info

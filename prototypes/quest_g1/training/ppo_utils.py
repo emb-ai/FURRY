@@ -18,3 +18,10 @@ def actor_lr(update, target, warmup_updates):
     if update<1:return 0.
     if warmup_updates<=1:return target
     return target*min(1.,.1+.9*(update-1)/max(1,warmup_updates-1))
+
+def adaptive_actor_lr(current, kl, target_kl, ceiling, floor=1e-7):
+    """Persistent KL schedule; warm-up sets a ceiling, never resets reductions."""
+    if not np.isfinite(kl) or kl < 0:raise ValueError('Invalid analytic KL')
+    if kl > 2*target_kl:current /= 1.5
+    elif 0 < kl < target_kl/2:current *= 1.5
+    return float(np.clip(current,min(floor,ceiling),ceiling))

@@ -173,3 +173,48 @@ against the same trainer with `--slide-weight 0.5`, initially 75 updates,
 `--eval-every 25 --eval-seeds 0`. This is a pilot; accepted results still need
 the full three-seed evaluation. If critic readiness fails, that arm has no
 actor training result and must not be called a policy comparison.
+
+
+## V3 bounded overnight adaptation
+
+The v3 trainer adds 20 critic-only reference samples from 0.02 to 1.9 s.
+The deployed actor still receives exactly 1432 values. Each future sample has
+35 command values, relative root translation/rotation, and an end-validity bit;
+clipped end padding has zero reference velocities. This is future conditioning,
+not a claim of complete TWIST2 critic parity.
+
+Monte Carlo warm-up visits every training motion at least twice and each
+holdout motion once. Holdout means independent stochastic trajectories from
+training motions, not Quest validation. Collection is reproducible across
+worker scheduling. Periodic on-policy critic probes use fixed clips, initial
+phases and noise seeds instead of changing their test distribution each time.
+
+Actor LR persists across updates and adapts to analytic Gaussian KL with a
+warm-up ceiling. The former KL0.02 minibatch early stop is removed; KL0.1 is
+retained as an emergency stop within an update. PPO critic loss clips value
+changes by 0.2. Separate actor/critic optimizers and original-action anchoring
+remain. Checkpoints record the adaptive LR, and periodic evaluation also
+reports paired-prefix reward on a fixed eight-clip original train subset.
+
+`mirror_dataset.py` creates train-only G1 sagittal reflections and checks joint
+limits, involution and forward-kinematic link poses. The fixed asymmetric IMU
+mount is excluded from symmetry checks. Original/validation/replay files are
+copied byte-for-byte. `mirror_guard.py` subsequently admits only synthetic clips
+whose original and reflected baseline rollouts survive, with bounded tracking
+and sliding changes. No validation data is consulted for augmentation selection.
+Mirror augmentation adds zero independent demonstrations. Use a fresh private
+output directory; the source dataset is not edited.
+
+`run_night.sh BUNDLE VENV` is a single eight-hour Slurm allocation. The bundle
+must contain augmented `dataset`, unchanged assets/source/initial actor, and
+`baseline-reference.json/.npz` from the deterministic fixed-train diagnostic.
+Unit tests, physics parity, a real optimizer smoke test and the mirror physics
+guard must pass before training starts. Two predeclared arms then run for at
+most 3.4 hours each: old slip as control, and contact-point sliding weight2.
+Each starts from the original actor; no failed checkpoint is used to initialize
+the other arm. Both use32 environments x256 steps (8192 transitions),
+minibatches2048, actor LR ceiling3e-6 with100-update warm-up, critic LR1e-4,
+up to1500 updates, full validation/replay seeds0/1 every100 updates, and three
+consecutive regressions or bad critic probes to stop. No checkpoint is deployed
+automatically. Inspect `night-results.json`, per-arm acceptance reports and
+`best.pt` (present only on acceptance), not just `latest.pt`.

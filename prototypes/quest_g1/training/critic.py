@@ -1,5 +1,6 @@
 """Privileged value function and measured, actor-frozen Monte Carlo warm-up."""
 import json
+from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 import torch
 from torch import nn
@@ -46,33 +47,47 @@ def discounted_returns(rewards, gamma):
     return out
 
 
-def collect_mc(actor, assets, motions, config, episodes, seed, device, gamma, std, stop):
-    """Complete source episodes or actual falls; no critic bootstraps in targets.
+def mc_plan(motions, episodes, seed):
+    """Seeded permutations guarantee every training clip is visited per cycle."""
+    rng=np.random.default_rng(seed);plan=[];count=len(motions.items)
+    while len(plan)<episodes:plan.extend(rng.permutation(count).tolist())
+    return [(clip,seed+1009*(i+1)) for i,clip in enumerate(plan[:episodes])]
 
-    Different seeds provide held-out stochastic rollouts from training motions.
-    Validation motions never enter this dataset. Five-step subsampling reduces RAM.
+
+def collect_mc(actor, assets, motions, config, episodes, seed, device, gamma, std, stop, workers=1):
+    """Complete, independently seeded train episodes; no critic bootstrap.
+
+    A fixed seed fixes clip, starting phase, reset noise and action-noise stream,
+    independently of earlier falls and worker scheduling. Actor is read-only.
     """
-    e=Env(assets,motions,seed,reward_config=config);e.max_steps=10_000_000
-    rng=np.random.default_rng(seed);xs=[];ys=[];summary=[]
-    for episode in range(episodes):
+    plan=mc_plan(motions,episodes,seed)
+    def collect(item):
+        clip,episode_seed=item
         if stop():raise InterruptedError('Stopped during critic data collection')
-        obs=e.reset(randomize=True);states=[];rewards=[];indices=[]
+        e=Env(assets,motions,episode_seed,reward_config=config);e.max_steps=10_000_000
+        rng=np.random.default_rng(episode_seed);obs=e.reset(clip=clip,randomize=True)
+        start=e.first;states=[];rewards=[];indices=[]
         while True:
             if e.steps%100==0 and stop():raise InterruptedError('Stopped during critic rollout')
             if e.steps%5==0:indices.append(e.steps);states.append(e.critic_observation())
-            with torch.no_grad():mu=actor(torch.as_tensor(obs[None],device=device)).cpu().numpy()[0]
+            with torch.inference_mode():mu=actor(torch.as_tensor(obs[None],device=device)).cpu().numpy()[0]
             act=(mu+rng.normal(0,std,mu.shape)).astype(np.float32)
             obs,r,done,info=e.step(act);rewards.append(r)
             if done:break
-        target=discounted_returns(rewards,gamma);xs.extend(states);ys.extend(target[indices]);summary.append({'clip':e.motion['meta']['id'],'fall':info['fall'],'seconds':info['seconds']})
-        print(json.dumps({'phase':'critic_rollouts','seed':seed,'episode':episode+1,'episodes':episodes,**summary[-1]}),flush=True)
-    return np.asarray(xs,np.float32),np.asarray(ys,np.float32),summary
+        target=discounted_returns(rewards,gamma)
+        summary={'clip':e.motion['meta']['id'],'start_frame':start,'seed':episode_seed,'fall':info['fall'],'seconds':info['seconds']}
+        print(json.dumps({'phase':'critic_rollouts','collection_seed':seed,**summary}),flush=True)
+        return np.asarray(states,np.float32),target[indices],summary
+    with ThreadPoolExecutor(max_workers=workers) as pool:results=list(pool.map(collect,plan))
+    return np.concatenate([r[0] for r in results]),np.concatenate([r[1] for r in results]),[r[2] for r in results]
 
 
 def warmup(critic, actor, assets, motions, config, args, gamma, stop, log, optimizer=None):
     device=args.device
-    train_x,train_y,train_eps=collect_mc(actor,assets,motions,config,args.critic_train_episodes,args.seed+10000,device,gamma,.05,stop)
-    test_x,test_y,test_eps=collect_mc(actor,assets,motions,config,args.critic_holdout_episodes,args.seed+20000,device,gamma,.05,stop)
+    train_episodes=max(args.critic_train_episodes,2*len(motions.items))
+    holdout_episodes=max(args.critic_holdout_episodes,len(motions.items))
+    train_x,train_y,train_eps=collect_mc(actor,assets,motions,config,train_episodes,args.seed+10000,device,gamma,.05,stop,workers=args.critic_workers)
+    test_x,test_y,test_eps=collect_mc(actor,assets,motions,config,holdout_episodes,args.seed+20000,device,gamma,.05,stop,workers=args.critic_workers)
     if min(len(train_y),len(test_y))<32:raise RuntimeError('Too few complete-rollout samples for critic readiness')
     # Save diagnostic evidence; these are private experiment outputs, never repo assets.
     np.savez_compressed(args.output/'critic_holdout.npz',states=test_x,returns=test_y)
@@ -98,5 +113,5 @@ def warmup(critic, actor, assets, motions, config, args, gamma, stop, log, optim
     # Keep the model that actually passed both checks, not a different historical model.
     if not ready and best_state is not None:critic.load_state_dict(best_state)
     with torch.no_grad():final=value_metrics(torch.cat([critic(b) for b in vx.split(1024)]).cpu().numpy(),test_y)
-    report={'ready':ready,'updates':update,'holdout':final,'thresholds':{'min_ev':args.critic_min_ev,'max_nrmse':args.critic_max_nrmse,'max_normalized_bias':args.critic_max_bias},'actor_updates':0}
+    report={'ready':ready,'updates':update,'holdout':final,'thresholds':{'min_ev':args.critic_min_ev,'max_nrmse':args.critic_max_nrmse,'max_normalized_bias':args.critic_max_bias},'actor_updates':0,'train_episodes':train_episodes,'holdout_episodes':holdout_episodes,'train_unique_clips':len({e['clip'] for e in train_eps}),'holdout_unique_clips':len({e['clip'] for e in test_eps})}
     (args.output/'critic_readiness.json').write_text(json.dumps(report,indent=2));return report

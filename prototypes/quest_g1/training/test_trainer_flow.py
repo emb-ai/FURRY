@@ -39,11 +39,11 @@ class TrainerFlowTests(unittest.TestCase):
    p=Path(td);(p/'manifest.json').write_text('{}');(p/'initial.pt').write_bytes(b'fixture');out=p/'run'
    args=['train.py','--assets',td,'--dataset',td,'--initial',str(p/'initial.pt'),'--source','fixture','--output',str(out),'--device','cpu','--envs','2','--iterations','2','--horizon','4','--eval-every','2','--critic-train-episodes','1','--critic-holdout-episodes','1','--critic-probe-episodes','1']
    px=np.zeros((32,1433),np.float32);py=np.linspace(0,1,32,dtype=np.float32)
-   with patch.object(sys,'argv',args),patch.object(train,'load',side_effect=lambda *a,**k:Actor()),patch.object(train,'Env',Environment),patch.object(train,'Motions',return_value=SimpleNamespace()),patch.object(train,'warmup',side_effect=fake_warmup),patch.object(train,'evaluate',side_effect=fake_evaluate),patch.object(train,'collect_mc',return_value=(px,py,[])),patch.object(train,'critic_ready',return_value=True):train.main()
+   with patch.object(sys,'argv',args),patch.object(train,'load',side_effect=lambda *a,**k:Actor()),patch.object(train,'Env',Environment),patch.object(train,'Motions',return_value=SimpleNamespace(items=[{'meta':{'id':'a','split':'train'}}])),patch.object(train,'warmup',side_effect=fake_warmup),patch.object(train,'evaluate',side_effect=fake_evaluate),patch.object(train,'collect_mc',return_value=(px,py,[])),patch.object(train,'critic_ready',return_value=True):train.main()
    result=json.loads((out/'result.json').read_text());checkpoint=torch.load(out/'latest.pt',weights_only=True);metrics=[json.loads(l) for l in (out/'metrics.jsonl').read_text().splitlines()]
    self.assertTrue(checkpoint['critic_optimizer']['state']) # warm-up Adam moments retained
    if ready:
-    self.assertEqual(result['last_iteration'],2);ppo=[r for r in metrics if r['phase']=='ppo'];self.assertEqual(len(ppo),2);self.assertGreater(ppo[0]['actor_update_batches'],0);self.assertGreater(ppo[1]['actor_lr'],ppo[0]['actor_lr']);self.assertTrue(checkpoint['actor_optimizer']['state'])
+    self.assertEqual(result['last_iteration'],2);ppo=[r for r in metrics if r['phase']=='ppo'];self.assertEqual(len(ppo),2);self.assertGreater(ppo[0]['actor_update_batches'],0);self.assertGreater(ppo[1]['actor_lr_ceiling'],ppo[0]['actor_lr_ceiling']);self.assertLessEqual(ppo[1]['actor_lr'],ppo[1]['actor_lr_ceiling']);self.assertTrue(checkpoint['actor_optimizer']['state'])
     self.assertFalse((out/'best.pt').exists()) # equal to baseline is not an improvement
    else:
     self.assertEqual(result['stop_reason'],'critic_not_ready');self.assertEqual(result['last_iteration'],0);self.assertFalse(checkpoint['actor_optimizer']['state']);self.assertTrue(torch.equal(checkpoint['policy']['w'],torch.zeros(29)))
