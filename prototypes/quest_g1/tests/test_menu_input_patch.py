@@ -41,14 +41,15 @@ class MenuInputPatchTests(unittest.TestCase):
         cls.before = prepared_openxr_source()
         cls.after = adapt_menu_input(cls.before)
 
-    def test_only_fast_A_B_Y_and_menu_bindings_remain(self):
+    def test_fast_buttons_and_view_binding_are_preserved(self):
         for path in ('/user/hand/right/input/a/click', '/user/hand/right/input/b/click',
-                     '/user/hand/left/input/y/click', '/user/hand/left/input/menu/click'):
+                     '/user/hand/left/input/y/click', '/user/hand/left/input/menu/click',
+                     '/user/hand/left/input/x/click', '/user/hand/left/input/thumbstick/click'):
             self.assertIn(path, self.after)
-        for action in ('G1Calibrate();', 'G1ToggleTracking();', 'G1ToggleRecording();', 'G1ToggleMenu();'):
+        for action in ('G1Calibrate();', 'G1ToggleTracking();', 'G1ToggleRecording();', 'G1ToggleMenu();', 'G1Reset();', 'G1ToggleView();'):
             self.assertIn(action, self.after)
-        for removed in ('resetAction', 'viewAction', 'captureModeAction', 'captureLatch',
-                        '/input/x/click', '/input/thumbstick/click', 'G1Reset();', 'G1CycleCaptureMode();'):
+        for removed in ('captureModeAction', 'captureLatch',
+                        '/user/hand/right/input/thumbstick/click', 'G1CycleCaptureMode();'):
             self.assertNotIn(removed, self.after)
 
     def test_aim_and_trigger_use_both_subaction_paths(self):
@@ -60,7 +61,7 @@ class MenuInputPatchTests(unittest.TestCase):
             self.assertIn(f'/user/hand/{hand}/input/trigger/value', self.after)
         aim_create = self.after.index('strcpy_s(actionInfo.actionName, "menu_aim")')
         subactions = self.after.rfind('actionInfo.subactionPaths = m_input.handSubactionPath.data();', 0, aim_create)
-        self.assertGreater(subactions, self.after.index('&m_input.recordAction'))
+        self.assertGreater(subactions, self.after.index('&m_input.viewAction'))
         trigger_create = self.after.index('strcpy_s(actionInfo.actionName, "menu_trigger")')
         self.assertIn('actionInfo.actionType = XR_ACTION_TYPE_FLOAT_INPUT;', self.after[aim_create:trigger_create])
 

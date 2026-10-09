@@ -2,7 +2,7 @@
 
 This runs after prepare_android.py's original OpenXR transforms. A changed or
 partially transformed source is an error, so a build cannot silently ship the
-old overloaded controller bindings.
+controller bindings that disagree with the runtime.
 """
 
 
@@ -14,7 +14,7 @@ def _replace_once(text: str, before: str, after: str, label: str) -> str:
 
 
 def adapt_menu_input(text: str) -> str:
-    """Return adapted C++ with Menu, A/B/Y and two controller aim rays."""
+    """Return adapted C++ with Menu, A/B/X/Y, left-stick view and two controller aim rays."""
     def patch(before: str, after: str, label: str) -> None:
         nonlocal text
         text = _replace_once(text, before, after, label)
@@ -23,7 +23,7 @@ def adapt_menu_input(text: str) -> str:
     patch(
         "XrAction calibrateAction{XR_NULL_HANDLE}, pauseAction{XR_NULL_HANDLE}, resetAction{XR_NULL_HANDLE}, "
         "recordAction{XR_NULL_HANDLE}, viewAction{XR_NULL_HANDLE}, captureModeAction{XR_NULL_HANDLE};",
-        "XrAction calibrateAction{XR_NULL_HANDLE}, pauseAction{XR_NULL_HANDLE}, recordAction{XR_NULL_HANDLE};\n"
+        "XrAction calibrateAction{XR_NULL_HANDLE}, pauseAction{XR_NULL_HANDLE}, resetAction{XR_NULL_HANDLE}, recordAction{XR_NULL_HANDLE}, viewAction{XR_NULL_HANDLE};\n"
         "        XrAction menuAimAction{XR_NULL_HANDLE}, menuTriggerAction{XR_NULL_HANDLE};\n"
         "        std::array<XrSpace, Side::COUNT> menuAimSpace{};\n"
         "        std::array<XrBool32, Side::COUNT> menuAimActive{};\n"
@@ -31,8 +31,6 @@ def adapt_menu_input(text: str) -> str:
         "menu action fields",
     )
     for action, action_name, localized in (
-        ("resetAction", "restart_simulation", "Restart simulation"),
-        ("viewAction", "toggle_view", "Toggle first person view"),
         ("captureModeAction", "capture_mode", "Select guided walking capture"),
     ):
         patch(
@@ -45,8 +43,8 @@ def adapt_menu_input(text: str) -> str:
     patch('"quit_session"', '"session_menu"', "menu action name")
     patch('"Reset scene"', '"Open session menu"', "menu action label")
     patch(
-        "CHECK_XRCMD(xrCreateAction(m_input.actionSet, &actionInfo, &m_input.recordAction));",
-        """CHECK_XRCMD(xrCreateAction(m_input.actionSet, &actionInfo, &m_input.recordAction));
+        "CHECK_XRCMD(xrCreateAction(m_input.actionSet, &actionInfo, &m_input.viewAction));",
+        """CHECK_XRCMD(xrCreateAction(m_input.actionSet, &actionInfo, &m_input.viewAction));
             // Aim and trigger have independent left/right subaction paths.
             actionInfo.countSubactionPaths = uint32_t(m_input.handSubactionPath.size());
             actionInfo.subactionPaths = m_input.handSubactionPath.data();
@@ -76,13 +74,18 @@ def adapt_menu_input(text: str) -> str:
             XrPath captureClick;
             CHECK_XRCMD(xrStringToPath(m_instance,"/user/hand/right/input/thumbstick/click",&captureClick));
             bindings.push_back({m_input.captureModeAction,captureClick});""",
-        """            XrPath aButton, bButton, yButton;
+        """            XrPath aButton, bButton, xButton, yButton;
             CHECK_XRCMD(xrStringToPath(m_instance,"/user/hand/right/input/a/click",&aButton));
             CHECK_XRCMD(xrStringToPath(m_instance,"/user/hand/right/input/b/click",&bButton));
             CHECK_XRCMD(xrStringToPath(m_instance,"/user/hand/left/input/y/click",&yButton));
             bindings.push_back({m_input.calibrateAction,aButton});
             bindings.push_back({m_input.pauseAction,bButton});
             bindings.push_back({m_input.recordAction,yButton});
+            CHECK_XRCMD(xrStringToPath(m_instance,"/user/hand/left/input/x/click",&xButton));
+            bindings.push_back({m_input.resetAction,xButton});
+            XrPath viewClick;
+            CHECK_XRCMD(xrStringToPath(m_instance,"/user/hand/left/input/thumbstick/click",&viewClick));
+            bindings.push_back({m_input.viewAction,viewClick});
             std::array<XrPath, Side::COUNT> menuAimPath{};
             CHECK_XRCMD(xrStringToPath(m_instance,"/user/hand/left/input/aim/pose",&menuAimPath[Side::LEFT]));
             CHECK_XRCMD(xrStringToPath(m_instance,"/user/hand/right/input/aim/pose",&menuAimPath[Side::RIGHT]));
@@ -105,20 +108,21 @@ def adapt_menu_input(text: str) -> str:
                 else if(button==2)G1Reset();else if(button==3)G1ToggleRecording();else if(button==4)G1ToggleView();else G1CycleCaptureMode();
             }
         }""",
-        """for(int button=0;button<3;button++){
+        """for(int button=0;button<5;button++){
             XrActionStateGetInfo info{XR_TYPE_ACTION_STATE_GET_INFO};
-            const XrAction buttons[]={m_input.calibrateAction,m_input.pauseAction,m_input.recordAction};
+            const XrAction buttons[]={m_input.calibrateAction,m_input.pauseAction,m_input.resetAction,m_input.recordAction,m_input.viewAction};
             info.action=buttons[button];
             XrActionStateBoolean state{XR_TYPE_ACTION_STATE_BOOLEAN};
             CHECK_XRCMD(xrGetActionStateBoolean(m_session,&info,&state));
             bool focused=IsSessionFocused();
-            bool press=button==2?recordLatch.Update(state.isActive && focused,state.currentState)
+            bool press=button==3?recordLatch.Update(state.isActive && focused,state.currentState)
                 :(state.isActive && state.changedSinceLastSync && state.currentState);
             if(press && focused){
-                if(button==0)G1Calibrate();else if(button==1)G1ToggleTracking();else G1ToggleRecording();
+                if(button==0)G1Calibrate();else if(button==1)G1ToggleTracking();
+                else if(button==2)G1Reset();else if(button==3)G1ToggleRecording();else G1ToggleView();
             }
         }""",
-        "A B Y dispatch",
+        "A B X Y and view dispatch",
     )
     patch("            G1Reset();", "            G1ToggleMenu();", "hardware menu dispatch")
     patch(
@@ -193,7 +197,7 @@ def adapt_menu_input(text: str) -> str:
         "            if(G1PassthroughVisible())layers.push_back(passthrough.Layer());",
         "passthrough visibility",
     )
-    for removed in ("resetAction", "viewAction", "captureModeAction", "/input/x/click", "/input/thumbstick/click"):
+    for removed in ("captureModeAction", "captureLatch", "/user/hand/right/input/thumbstick/click"):
         if removed in text:
             raise ValueError(f"Menu input patch: obsolete binding remains: {removed}")
     return text

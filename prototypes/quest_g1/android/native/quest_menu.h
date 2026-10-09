@@ -15,7 +15,7 @@ enum class Scene { Empty, Cup, PushT };
 enum class Capture { Robot, Human };
 enum class Plan { Train, Test };
 enum class Action {
-    None, Close, Start, Save, Reset, Calibrate, Place,
+    None, Close, Start, Save, Reset, QuickReset, ToggleRecording, Calibrate, Place,
     ModeSimulation, ModeTrajectories, CaptureRobot, CaptureHuman, PlanTrain, PlanTest,
     SceneEmpty, SceneCup, ScenePushT, ViewObserver, ViewFirstPerson, Passthrough,
     DebugEnabled, DebugStats, DebugMeta, DebugCamera, DebugTargets, DebugContacts,
@@ -209,8 +209,7 @@ inline std::vector<Widget> BuildLayout(const State& s) {
     add({.032f, -.362f, .32f, .054f}, start, Action::Start,
         s.calibrated && s.trackingValid && !s.faulted, false, Kind::Primary);
     add({-.352f, -.410f, .704f, .032f},
-        s.mode == Mode::Trajectories ? "Menu: меню     B: пауза     Y: запись     A: калибровка" :
-                                     "Menu: меню     B: пауза     A: калибровка",
+        "A: калибровка   B: пауза   X: сброс   Y: запись   L-стик: вид",
         Action::None, true, false, Kind::MutedText);
     return out;
 }

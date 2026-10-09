@@ -90,6 +90,7 @@ std::unique_ptr<RecordingExport> exporter;
 std::atomic<int> recordingStatus{0};
 std::atomic<double> recordingStarted{0};
 std::atomic<bool> toggleRecording{false};
+bool recordingShortcut=false,restartAfterCalibration=false;
 std::chrono::steady_clock::time_point trackingTime;
 std::atomic<bool> calibrate{false};
 bool trackingEnabled=false;
@@ -325,6 +326,7 @@ void SavePreferences(){
 void ChangeConfiguration(questmenu::Action action){
     using A=questmenu::Action;
     if(recorder.active){Notice("Сначала сохраните запись.");return;}
+    restartAfterCalibration=false;
     if(action==A::ModeSimulation)sessionMode=0;
     if(action==A::ModeTrajectories)sessionMode=1;
     if(action==A::CaptureRobot)sessionCapture=0;
@@ -343,18 +345,32 @@ void ApplyMenuAction(questmenu::Action action,bool fresh,uint64_t sequence){
     if(action==A::SceneEmpty||action==A::SceneCup||action==A::ScenePushT){
         if(recorder.active){Notice("Сначала сохраните запись.");return;}
         int selected=action==A::SceneEmpty?0:action==A::SceneCup?1:2;
-        if(selected!=sessionScene.load()){requestedScene=selected;userPaused=true;menuOpen=true;Notice("Загрузка сцены...");}
+        if(selected!=sessionScene.load()){restartAfterCalibration=false;requestedScene=selected;userPaused=true;menuOpen=true;Notice("Загрузка сцены...");}
         return;
     }
     if(action==A::Calibrate){calibrate=true;return;}
+    if(action==A::ToggleRecording){
+        if(recorder.active){recordingShortcut=true;toggleRecording=true;return;}
+        if(!fresh||!retarget->calibrated||faulted||requestedScene>=0){Notice("Для записи нужны свежий трекинг и калибровка.");return;}
+        // Y can start recording the current simulation without invalidating
+        // the calibration or resetting the physical robot/policy history.
+        if(sessionMode==0){sessionMode=1;sessionCapture=0;capture.mode=0;settingsDirty=true;}
+        recordingShortcut=true;toggleRecording=true;return;
+    }
+    if(action==A::QuickReset){
+        if(requestedScene>=0)return;
+        if(recorder.active){Record([&]{FinishRecording(sequence,"user_stop");});if(recorder.failed)return;}
+        toggleRecording=false;recordingShortcut=false;
+        reset=true;restartAfterCalibration=true;userPaused=true;menuOpen=false;return;
+    }
     if(action==A::Start){
         if(!fresh||!retarget->calibrated||faulted||requestedScene>=0){Notice("Нужны свежий трекинг и калибровка.");return;}
-        if(sessionMode==1&&!recorder.active)toggleRecording=true;
+        if(sessionMode==1&&!recorder.active){recordingShortcut=false;toggleRecording=true;}
         else {userPaused=false;menuOpen=false;Record([&]{recorder.Event("session_resume",sequence);});Notice("");}
         return;
     }
-    if(action==A::Save){if(recorder.active)toggleRecording=true;return;}
-    if(action==A::Reset){if(recorder.active){Notice("Сначала сохраните запись.");return;}reset=true;userPaused=true;menuOpen=true;return;}
+    if(action==A::Save){if(recorder.active){recordingShortcut=false;toggleRecording=true;}return;}
+    if(action==A::Reset){if(recorder.active){Notice("Сначала сохраните запись.");return;}restartAfterCalibration=false;reset=true;userPaused=true;menuOpen=true;return;}
     if(action==A::Place){if(!recorder.active&&!HumanCapture()){placeScene=true;Notice("Сцена перед вами.");}return;}
     if(action==A::ViewObserver||action==A::ViewFirstPerson){if(!HumanCapture()){firstPerson=action==A::ViewFirstPerson;refreshEgoAnchor=true;settingsDirty=true;Record([&]{recorder.Event(firstPerson?"ego_world":"observer_view",sequence);});}return;}
     if(action==A::Passthrough){if(!HumanCapture())passthroughVisible=!passthroughVisible.load();settingsDirty=true;return;}
@@ -447,10 +463,12 @@ void G1Initialize(android_app* app){
             {
                 std::lock_guard<std::mutex> guard(mutex);
                 for(const auto& event:events){
+                    if(event=="menu_open"||event=="user_pause")restartAfterCalibration=false;
                     if(event=="focus_pause"||event=="menu_open"||event=="user_pause"){wasApplying=false;retarget->Pause();sim->PauseWholeBodyReference();}
                     Record([&]{recorder.Event(event.c_str(),input.sequence);});
                 }
                 if(spaceInvalidated.exchange(false)){
+                    restartAfterCalibration=false;
                     trackingEnabled=false;retarget->calibrated=false;calibrate=false;cameraFusion.Reset();
                     wasApplying=false;retarget->Pause();sim->PauseWholeBodyReference();pauseReason=1;
                     Record([&]{recorder.Event("reference_space_change",input.sequence);});
@@ -459,7 +477,7 @@ void G1Initialize(android_app* app){
                 for(auto action:actions)ApplyMenuAction(action,fresh,input.sequence);
                 if(reset.exchange(false)){
                     cameraFusion.Reset();pauseReason=0;sim->Reset();wasApplying=false;trackingEnabled=false;retarget->calibrated=false;
-                    trackingStatus=0;calibrate=false;faulted=false;lastReference={};grip[0]=0;grip[1]=0;capture.Invalidate();refreshGeometry=true;
+                    trackingStatus=0;calibrate=restartAfterCalibration;faulted=false;lastReference={};grip[0]=0;grip[1]=0;capture.Invalidate();refreshGeometry=true;
                     Record([&]{recorder.Event("reset",input.sequence);});Notice("");
                 }
                 if(retarget->calibrated&&fresh&&!retarget->Compatible(input)){
@@ -476,7 +494,9 @@ void G1Initialize(android_app* app){
                         cameraFusion.Reset();trackingEnabled=true;
                         calibratedThisCycle=true;pauseReason=0;wasApplying=false;if(capture.mode)capture.Calibrate();refreshGeometry=true;
                         Record([&]{recorder.Event("calibrate",input.sequence);});Notice("Калибровка готова.");
+                        if(restartAfterCalibration){restartAfterCalibration=false;if(!menuOpen.load()){userPaused=false;Notice("Симуляция перезапущена.");}}
                     }catch(const std::exception& e){
+                        restartAfterCalibration=false;
                         retarget->calibrated=false;capture.Invalidate();trackingEnabled=false;
                         Record([&]{recorder.Event("calibration_failed",input.sequence);});Notice("Калибровка не удалась. Повторите с устойчивым трекингом.");
                         __android_log_print(ANDROID_LOG_WARN,"G1Quest","Calibration: %s",e.what());
@@ -489,7 +509,13 @@ void G1Initialize(android_app* app){
                     for(const auto& entry:inputs)recorder.Input(entry.frame,entry.left,entry.right,entry.received);
                     if(calibratedThisCycle&&recorder.active){RecordCalibration();calibratedThisCycle=false;}
                     if(toggleRecording.exchange(false)){
-                        if(recorder.active){recorder.Event("record_button_stop",input.sequence);FinishRecording(input.sequence);__android_log_print(ANDROID_LOG_INFO,"G1Quest","Recording saved: %s",recorder.path().c_str());}
+                        bool shortcut=recordingShortcut;recordingShortcut=false;
+                        if(recorder.active){
+                            bool wasMenuOpen=menuOpen.load(),wasPaused=userPaused.load();
+                            recorder.Event("record_button_stop",input.sequence);FinishRecording(input.sequence);
+                            if(shortcut){menuOpen=wasMenuOpen;userPaused=wasPaused||faulted.load();}
+                            __android_log_print(ANDROID_LOG_INFO,"G1Quest","Recording saved: %s",recorder.path().c_str());
+                        }
                         else{
                             if(sessionMode!=1||!fresh||!retarget->calibrated||faulted||requestedScene>=0){
                                 Notice("Для записи выберите сбор траекторий и откалибруйте позу.");return;
@@ -737,7 +763,7 @@ void G1SetActive(bool value){
     if(active.exchange(value)!=value){std::lock_guard<std::mutex> guard(inputMutex);pendingEvents.emplace_back(value?"focus_resume":"focus_pause");}
 }
 void G1Grip(int hand,float value){if(hand>=0 && hand<2)grip[hand]=value;}
-void G1Reset(){QueueMenuAction(questmenu::Action::Reset);}
+void G1Reset(){QueueMenuAction(questmenu::Action::QuickReset);}
 void G1ReferenceSpaceChange(int64_t changeTime){
     std::lock_guard<std::mutex> guard(inputMutex);
     spaceChanges.Schedule(changeTime);
@@ -761,8 +787,7 @@ void G1SubmitTracking(const TrackingFrame& input){
 void G1Calibrate(){QueueMenuAction(questmenu::Action::Calibrate);}
 void G1ToggleView(){QueueMenuAction(firstPerson?questmenu::Action::ViewObserver:questmenu::Action::ViewFirstPerson);}
 void G1ToggleRecording(){
-    if(sessionMode!=1&&recordingStatus!=1)return;
-    QueueMenuAction(recordingStatus==1?questmenu::Action::Save:questmenu::Action::Start);
+    QueueMenuAction(questmenu::Action::ToggleRecording);
 }
 void G1ToggleTracking(){
     if(SessionPaused()){
