@@ -68,6 +68,18 @@ def build(menagerie):
              if pair.get('geom1') in body_names and pair.get('geom2') in body_names]
     source = ROOT/'vendor/TWIST2/assets/g1'
     robot = ET.parse(source/'g1_sim2sim_29dof_with_hands.xml').getroot()
+    # Restore TWIST2's four original support points on each sole. Keep the MJX
+    # box for foot/self/prop contact, but replace all three floor capsules.
+    body = [item for item in body if not (
+        item['body'].endswith('_ankle_roll_link') and item['geom']['type'] == 'capsule')]
+    for side in ('left', 'right'):
+        link = robot.find(f".//body[@name='{side}_ankle_roll_link']")
+        spheres = [g for g in link.findall('geom') if g.get('type', 'sphere') == 'sphere']
+        assert len(spheres) == 4
+        for i, geom in enumerate(spheres, 1):
+            body.append(dict(body=link.get('name'), geom=dict(
+                type='sphere', size=geom.get('size'), pos=geom.get('pos'),
+                name=f'{side}_foot{i}_collision')))
     meshes = {m.get('name', Path(m.get('file')).stem): m.get('file') for m in robot.findall('asset/mesh')}
     hands = []
     for link in robot.findall('.//body'):
@@ -86,10 +98,12 @@ def build(menagerie):
                               max_envelope_error_m=error,
                               tolerance_m=tolerance,
                               source_file=meshes[name], source_sha256=hashlib.sha256(path.read_bytes()).hexdigest()))
-    assert len(body) == 25 and len(hands) == 16
+    assert len(body) == 27 and len(hands) == 16
     out = ROOT/'assets/g1/collision.json'
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(dict(menagerie_revision=PIN, hand_padding_m=.0001,
+    out.write_text(json.dumps(dict(menagerie_revision=PIN,
+                                  sole_source='TWIST2 b06178f19a22f2138cbd31f60c6d494bc263f67d; g1_sim2sim_29dof_with_hands.xml; four 5 mm spheres per foot',
+                                  hand_padding_m=.0001,
                                   finger_error_m=.00075, palm_error_m=.0015, max_hand_faces=384,
                                   hand_method='adaptive supporting planes; separate conservative convex envelope for each palm/finger link',
                                   body=body, body_pairs=pairs, hands=hands), indent=2)+'\n')

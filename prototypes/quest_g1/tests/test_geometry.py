@@ -41,7 +41,7 @@ class GeometryTests(unittest.TestCase):
         body = np.flatnonzero(np.isin(m.geom_contype, [BODY, FOOT_BOX]))
         hands = np.flatnonzero(m.geom_contype == HAND)
         self.assertEqual(Counter(map(int, m.geom_type[body])), {
-            int(mujoco.mjtGeom.mjGEOM_CAPSULE): 21, int(mujoco.mjtGeom.mjGEOM_SPHERE): 2,
+            int(mujoco.mjtGeom.mjGEOM_CAPSULE): 15, int(mujoco.mjtGeom.mjGEOM_SPHERE): 10,
             int(mujoco.mjtGeom.mjGEOM_BOX): 2})
         self.assertEqual(len(hands), 16)
         self.assertEqual(len(set(m.geom_bodyid[hands])), 16)
@@ -96,14 +96,28 @@ class GeometryTests(unittest.TestCase):
                 pairs = {frozenset((c.geom1, c.geom2)) for c in d.contact}
                 self.assertIn(frozenset((int(i), probe_id)), pairs)
 
-    def test_sole_capsules_not_foot_boxes_contact_floor(self):
+    def test_four_source_sole_spheres_per_foot_contact_floor(self):
         m, d = self.model, mujoco.MjData(self.model)
         Controller(m).initialize(d)
         d.qpos[2] -= .07
         mujoco.mj_forward(m, d)
         floor = m.geom('floor').id
         touching = {c.geom2 if c.geom1 == floor else c.geom1 for c in d.contact if floor in (c.geom1, c.geom2)}
-        self.assertTrue(any('_foot' in m.geom(i).name for i in touching))
+        for side in ('left', 'right'):
+            ankle = m.body(f'{side}_ankle_roll_link').id
+            source_ankle = self.source.body(f'{side}_ankle_roll_link').id
+            source_spheres = [i for i in range(self.source.ngeom)
+                              if self.source.geom_bodyid[i] == source_ankle
+                              and self.source.geom_type[i] == mujoco.mjtGeom.mjGEOM_SPHERE]
+            spheres = [i for i in range(m.ngeom) if m.geom_bodyid[i] == ankle
+                       and m.geom_type[i] == mujoco.mjtGeom.mjGEOM_SPHERE]
+            self.assertEqual(len(spheres), 4)
+            np.testing.assert_array_equal(m.geom_pos[spheres], self.source.geom_pos[source_spheres])
+            np.testing.assert_array_equal(m.geom_size[spheres], self.source.geom_size[source_spheres])
+            self.assertTrue(set(spheres).issubset(touching), side)
+            self.assertFalse(any(m.geom_bodyid[i] == ankle and
+                                 m.geom_type[i] == mujoco.mjtGeom.mjGEOM_CAPSULE
+                                 for i in range(m.ngeom)))
         self.assertFalse(any(m.geom_contype[i] == FOOT_BOX for i in touching))
 
     def test_normals_and_visual_budget_survive_binary_export(self):

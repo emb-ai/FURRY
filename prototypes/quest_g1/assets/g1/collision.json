@@ -61,33 +61,6 @@
       }
     },
     {
-      "body": "left_ankle_roll_link",
-      "geom": {
-        "type": "capsule",
-        "size": "0.01",
-        "name": "left_foot1_collision",
-        "fromto": "0.1 -0.026 -0.025 0.05 -0.027 -0.025"
-      }
-    },
-    {
-      "body": "left_ankle_roll_link",
-      "geom": {
-        "type": "capsule",
-        "size": "0.02",
-        "name": "left_foot2_collision",
-        "fromto": "-0.045 0 -0.015 0.12 0 -0.015"
-      }
-    },
-    {
-      "body": "left_ankle_roll_link",
-      "geom": {
-        "type": "capsule",
-        "size": "0.01",
-        "name": "left_foot3_collision",
-        "fromto": "0.1 0.026 -0.025 0.05 0.026 -0.025"
-      }
-    },
-    {
       "body": "right_hip_roll_link",
       "geom": {
         "type": "capsule",
@@ -130,33 +103,6 @@
         "pos": "0.04 0 -0.029",
         "size": "0.09 0.03 0.008",
         "name": "right_foot_box_collision"
-      }
-    },
-    {
-      "body": "right_ankle_roll_link",
-      "geom": {
-        "type": "capsule",
-        "size": "0.01",
-        "name": "right_foot1_collision",
-        "fromto": "0.1 -0.026 -0.025 0.05 -0.026 -0.025"
-      }
-    },
-    {
-      "body": "right_ankle_roll_link",
-      "geom": {
-        "type": "capsule",
-        "size": "0.02",
-        "name": "right_foot2_collision",
-        "fromto": "-0.045 0 -0.015 0.12 0 -0.015"
-      }
-    },
-    {
-      "body": "right_ankle_roll_link",
-      "geom": {
-        "type": "capsule",
-        "size": "0.01",
-        "name": "right_foot3_collision",
-        "fromto": "0.1 0.026 -0.025 0.05 0.026 -0.025"
       }
     },
     {
@@ -229,6 +175,78 @@
         "name": "right_wrist_collision",
         "size": "0.035",
         "fromto": "-0.01 0 0 0.06 0 0"
+      }
+    },
+    {
+      "body": "left_ankle_roll_link",
+      "geom": {
+        "type": "sphere",
+        "size": "0.005",
+        "pos": "-0.05 0.025 -0.03",
+        "name": "left_foot1_collision"
+      }
+    },
+    {
+      "body": "left_ankle_roll_link",
+      "geom": {
+        "type": "sphere",
+        "size": "0.005",
+        "pos": "-0.05 -0.025 -0.03",
+        "name": "left_foot2_collision"
+      }
+    },
+    {
+      "body": "left_ankle_roll_link",
+      "geom": {
+        "type": "sphere",
+        "size": "0.005",
+        "pos": "0.12 0.03 -0.03",
+        "name": "left_foot3_collision"
+      }
+    },
+    {
+      "body": "left_ankle_roll_link",
+      "geom": {
+        "type": "sphere",
+        "size": "0.005",
+        "pos": "0.12 -0.03 -0.03",
+        "name": "left_foot4_collision"
+      }
+    },
+    {
+      "body": "right_ankle_roll_link",
+      "geom": {
+        "type": "sphere",
+        "size": "0.005",
+        "pos": "-0.05 0.025 -0.03",
+        "name": "right_foot1_collision"
+      }
+    },
+    {
+      "body": "right_ankle_roll_link",
+      "geom": {
+        "type": "sphere",
+        "size": "0.005",
+        "pos": "-0.05 -0.025 -0.03",
+        "name": "right_foot2_collision"
+      }
+    },
+    {
+      "body": "right_ankle_roll_link",
+      "geom": {
+        "type": "sphere",
+        "size": "0.005",
+        "pos": "0.12 0.03 -0.03",
+        "name": "right_foot3_collision"
+      }
+    },
+    {
+      "body": "right_ankle_roll_link",
+      "geom": {
+        "type": "sphere",
+        "size": "0.005",
+        "pos": "0.12 -0.03 -0.03",
+        "name": "right_foot4_collision"
       }
     }
   ],
@@ -19063,5 +19081,6 @@
       "source_file": "right_hand_index_1_link.STL",
       "source_sha256": "c9c34efce4563cacdcfd29fc838a982976d40f5442c71219811dcbbf3923a33d"
     }
-  ]
+  ],
+  "sole_source": "TWIST2 b06178f19a22f2138cbd31f60c6d494bc263f67d; g1_sim2sim_29dof_with_hands.xml; four 5 mm spheres per foot"
 }

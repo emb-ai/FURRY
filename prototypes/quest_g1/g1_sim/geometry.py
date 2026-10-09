@@ -43,8 +43,8 @@ def apply_hybrid(root, visuals=True):
 
 
 def configure_props(world):
-    # Floor remains category 1; foot boxes contact props, not the floor. MJX
-    # sole capsules provide floor contacts without duplicate box contacts.
+    # Floor remains category 1; foot boxes contact props, not the floor. The
+    # four TWIST2 sole spheres provide floor contacts without duplicate boxes.
     for body in world.findall('body'):
         if body.get('name') not in ('table', 'cup', 't_box'):
             continue

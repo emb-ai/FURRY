@@ -26,8 +26,11 @@ import cleanup, not raw STL counts. Four full-body comparison views currently ha
 
 ## Collisions
 
-- **25 body primitives** from Menagerie `g1_mjx.xml`: 21 capsules, two spheres,
-  two boxes. The two whole-hand capsules are deliberately omitted.
+- **27 body primitives**: 15 capsules, two spheres and two foot boxes from
+  Menagerie `g1_mjx.xml`, plus the original four 5 mm TWIST2 support spheres
+  on each foot. Heel centres are `(-0.05, ±0.025, -0.03)` m; toe centres are
+  `(0.12, ±0.03, -0.03)` m in the ankle-roll frame. The two whole-hand
+  capsules are deliberately omitted.
 - **16 independent convex hand meshes**: one palm and seven finger links per
   hand, 2,444 triangles total, 38-224 triangles each. No hull spans a joint.
 - Finger envelopes stay within 0.75 mm of the original link's convex hull;
@@ -36,12 +39,14 @@ import cleanup, not raw STL counts. Four full-body comparison views currently ha
   to concavities in the visual CAD surface.
 - Body self-collision uses 19 explicit MJX-derived pairs. Hands collide with
   props, floor, body and other hand links subject to MuJoCo's parent filtering.
-  Props also collide with body primitives. Sole capsules, not the overlapping
-  foot boxes, contact the floor; foot boxes remain available for object contact.
+  Props also collide with body primitives. The eight sole spheres contact
+  the floor without the overlapping foot boxes; foot boxes remain available
+  for object contact.
 - Categories are floor=1, body=2, hand=4, foot-box=8, prop=16. Collision geometry
   is group 3 and excluded from Android visual streams.
 
-Only the collision shapes and contact selection come from MJX, not its solver,
+Body proxies and self-contact pairs come from MJX; sole support points come
+from the pinned TWIST2 hand model. This does not import the MJX solver,
 timestep, articulation or actuation. This remains the existing native MuJoCo
 runtime, not a migration to the MJX backend. A new prop must use the prop category
 or be registered in `configure_props` to preserve this contact policy.
