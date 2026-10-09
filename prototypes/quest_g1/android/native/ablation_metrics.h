@@ -18,13 +18,12 @@ inline void AblationHeader(std::ostream& out) {
     // toe-task height relative to a flat grounded foot (NaN without GMR).
     for (auto field : {"floor_force", "floor_brake", "toe_target"}) for (auto side : {"_l", "_r"}) out<<','<<field<<side;
 }
-// Toe-task targets of the current Meta solve, relative to the flat-foot level.
-// Negative values ask GMR to put the toe frame below the grounded sole.
+// Estimated toe-task height of the current Meta solve before the floor clamp,
+// relative to the flat-foot level. Negative values were clamped to zero.
 inline std::array<double,2> ToeTargetClearance(MetaRetargeter& meta) {
-    const auto& targets=meta.solver().Targets();
-    if(!meta.calibrated || targets.size()<8)
+    if(!meta.calibrated)
         return {std::numeric_limits<double>::quiet_NaN(),std::numeric_limits<double>::quiet_NaN()};
-    return {targets[6].position[2]-meta.FlatToeHeight(0),targets[7].position[2]-meta.FlatToeHeight(1)};
+    return {meta.ToeClearance(0),meta.ToeClearance(1)};
 }
 inline void AblationRow(std::ostream& out, Simulation& sim, GmrRetargeter& g,
                         int segment, bool applying, bool referenceAvailable=true,

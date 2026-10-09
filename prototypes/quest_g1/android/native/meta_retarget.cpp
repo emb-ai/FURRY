@@ -2,6 +2,7 @@
 #include <cmath>
 #include <algorithm>
 #include <stdexcept>
+#include <limits>
 namespace {
 double Distance(const TrackedPose&a,const TrackedPose&b){double d[3];mju_sub3(d,a.position.data(),b.position.data());return mju_norm3(d);}
 void Normalize(double* v){if(mju_normalize3(v)<1e-6)throw std::runtime_error("Degenerate body skeleton");}
@@ -114,7 +115,18 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& input){
         mju_sub3(rel,input.body.joints[i].position.data(),input.body.joints[0].position.data());mju_mulMatVec(mapped,basis,rel,3,3);mju_rotVecQuat(offset,offsets[i].position.data(),targets[i].quaternion.data());
         for(int a=0;a<3;a++)targets[i].position[a]=root[a]+scales[i]*mapped[a]+offset[a];
     }
-    if(twistGrounding)gmr.GroundFootTargets(targets);
+    // Estimated foot pitch can put a toe target under the floor that the
+    // lower ankle defines. Keep the toe position at or above a flat foot;
+    // the toe orientation task is unchanged. TWIST2 grounding instead puts
+    // the lowest foot task at its own floor every frame.
+    if(twistGrounding){
+        gmr.GroundFootTargets(targets);
+        toeClearance.fill(std::numeric_limits<double>::quiet_NaN());
+    }else for(int side=0;side<2;side++){
+        double& z=targets[6+side].position[2];
+        toeClearance[side]=z-flatToeHeight[side];
+        z=std::max(z,flatToeHeight[side]);
+    }
     gmr.SetTargets(targets);
     if(cameraTracking && (input.location_flags[0]&3)==3){
         TrackedPose camera;double aligned[4];

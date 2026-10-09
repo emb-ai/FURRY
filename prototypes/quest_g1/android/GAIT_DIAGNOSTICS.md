@@ -65,8 +65,9 @@ proportion correction from the rigid ankle→toe offset. Neither consistently
 improved this recording: some combinations fell earlier in the first segment.
 They are **not shipped**. In the original adapter a source ankle separation of
 13 cm can yield a toe target below the floor; its interpretation depends on
-foot pitch and offsets. This remains a separate foot-target audit item, not a
-reason to clamp targets or silently generate an artificial gait.
+foot pitch and offsets. The adapter now clamps only the toe position to the
+flat-foot level (see "Foot trips and toe targets"); it still generates no
+artificial gait.
 
 ## What scaling actually does
 
@@ -111,8 +112,9 @@ are validated strictly.
 
 Replay CSVs from `replay_gmr_dynamics` and `ablation_motion` now add per-foot
 `floor_force_*`, `floor_brake_*` and `toe_target_*` columns. `toe_target` is the
-GMR toe-task height relative to a flat grounded foot; it exists only where the
-Meta adapter solved the frame and is NaN in `saved`/`direct` rows.
+estimated GMR toe-task height relative to a flat grounded foot, before the
+floor clamp; it exists only where the Meta adapter solved the frame and is NaN
+in `saved`/`direct` rows.
 
 ```sh
 .venv/bin/python scripts/analyze_foot_trips.py outputs/retarget.csv --output outputs/trips.json
@@ -125,9 +127,9 @@ foot's travel. The command, not the GMR qpos, defines the reference, so every
 replay mode is scored the same way. Trips are not falls.
 
 Baseline without a headset: nine pinned public walks in the production scene
-with props removed, policy and gains unchanged. Clip 004 is rejected by the
-upright-calibration check in both modes; 009 and 010 fall during startup and
-have no scored window. The remaining seven give 91 s of scored walking.
+with props removed, MJX sole capsules on the floor, policy and gains
+unchanged. Clip 004 is rejected by the upright-calibration check in both
+modes; 009 and 010 fall during startup and have no scored window. The remaining seven give 91 s of scored walking.
 
 | Input path | Trips/s | Braking trips/s | Toe target below −5 mm | Trips with toe below in previous 100 ms |
 |---|---:|---:|---:|---:|
@@ -140,3 +142,29 @@ pitched toe-down by about 4–6° (median); 44–76% of such rows are on the foo
 with the lower ankle, which the grounded adapter places at ankle height.
 They almost never precede a trip here. Meta's estimated foot pitch is not
 modelled by this fixture; compare a real Quest recording against this table.
+
+### Sole pads and toe clamp
+
+Two changes followed. TWIST2's four 5 mm sole spheres per foot replace the MJX
+sole capsules, as in the source sim2sim model; foot boxes keep contact with
+props only. The Meta adapter raises a toe-task position below the flat-foot
+level to that level; the toe orientation task is unchanged. The optional
+`G1_ENABLE_TWIST_GROUNDING` build regrounds every frame instead and does not
+clamp. Same seven walks and scored window:
+
+| Floor contact | Toe clamp | `direct` trips/s (braking) | `meta` trips/s (braking) | `meta` falls in scored clips |
+|---|---|---:|---:|---|
+| MJX capsules | no | 1.58 (1.09) | 1.66 (1.23) | 005 at 15.8 s, 008 |
+| MJX capsules | yes | 1.58 (1.09) | 1.39 (1.10) | 008 |
+| TWIST2 pads | no | 1.35 (0.90) | 1.31 (0.94) | 008 |
+| **TWIST2 pads** | **yes (shipped)** | 1.35 (0.90) | **1.27 (0.83)** | 008 |
+
+The clamp affects only the Meta adapter, so `direct` rows repeat. Replays are
+deterministic but chaotic: single clips move by ±20% between variants, and
+with about 120 trips the aggregate's counting noise is about ±0.12 trips/s.
+Pads reduce trips in both input paths beyond that noise. The clamp's further
+effect on pads (1.31 → 1.27) is within it. Requested toe targets stay below
+−5 mm in 14.2% of foot-rows, so the clamp is active that often. The 008 fall
+(about 6.6 s) and the 009/010 startup falls occur in every variant. The
+synthetic fixture does not model Meta's estimated foot pitch, so the clamp's
+effect on real Quest input remains to be measured.
