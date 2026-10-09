@@ -205,3 +205,7 @@ done
 ```
 
 Running each segment as a separate file gives identical counts.
+
+The follow-up [foot-tripping study on this capture](FOOT_TRIPPING_QUEST.md)
+compares policy rate, TWIST2 training contact, swing clearance and the
+quest-111260 fine-tune with the same harness.
