@@ -15,10 +15,12 @@ class EpisodeManifestTests(unittest.TestCase):
             self.skipTest('A C++17 compiler is required')
         with tempfile.TemporaryDirectory() as directory:
             binary = Path(directory) / 'check_episode_manifest'
-            subprocess.run([compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror',
-                            '-I'+str(root/'android/native'), str(root/'tests/check_episode_manifest.cpp'),
-                            '-o', str(binary)], check=True, capture_output=True, text=True)
-            result = subprocess.run([str(binary)], check=True, capture_output=True, text=True)
+            compiled = subprocess.run([compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror',
+                                       '-I'+str(root/'android/native'), str(root/'tests/check_episode_manifest.cpp'),
+                                       '-o', str(binary)], capture_output=True, text=True)
+            self.assertEqual(compiled.returncode, 0, compiled.stderr)
+            result = subprocess.run([str(binary)], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIn('fixtures passed', result.stdout)
 
 
