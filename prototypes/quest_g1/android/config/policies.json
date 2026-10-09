@@ -1,0 +1,16 @@
+[
+  {
+    "id": "quest-111260-500",
+    "title": "Quest: дообучение 500",
+    "note": "Эксперимент: 09.10 / 111260",
+    "path": "../../policies/quest-111260/checkpoint_000500.onnx",
+    "sha256": "c83fdeb9747410c5e6b8b150d6d543966ed4024cd6111e9d94281e414c6bcfb6"
+  },
+  {
+    "id": "quest-111260-1000",
+    "title": "Quest: дообучение 1000",
+    "note": "Эксперимент: 09.10 / 111260",
+    "path": "../../policies/quest-111260/checkpoint_001000.onnx",
+    "sha256": "8d386bf94724d1dccc7050e1bb3dee40315e20e1bba20a31debb5d9b0b61cae3"
+  }
+]

@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "training_date": "2026-10-09",
+  "slurm_job": 111260,
+  "upstream_twist2_commit": "b06178f19a22f2138cbd31f60c6d494bc263f67d",
+  "initial_actor": "twist2_1017_20k",
+  "trainer_settings_commit": "f05cf7a",
+  "training_source": "original TWIST2 Isaac Gym/DaggerPPO with author source settings",
+  "input_float32_shape": [
+    1,
+    1432
+  ],
+  "output_float32_shape": [
+    1,
+    29
+  ],
+  "export": "actor with frozen normalization embedded; runtime-compatible ONNX",
+  "runtime_policy_hz": 100,
+  "runtime_physics_hz": 1000,
+  "default_actor_remains": "twist2-20k",
+  "status": "experimental menu candidates; validation rejected for root_xy_error_m_regression",
+  "training_notes": [
+    "Pretrained actor initialization; critic/std/optimizer were not published upstream.",
+    "Non-PICO author train subset plus Quest train mixture; held-out Quest validation stages 2/9/14.",
+    "Frozen actor normalization, critic warmup/normalization and runtime validation are explicit finetune differences."
+  ],
+  "artifacts": [
+    {
+      "file": "checkpoint_000500.onnx",
+      "id": "quest-111260-500",
+      "actor_updates": 500,
+      "bytes": 3183314,
+      "sha256": "c83fdeb9747410c5e6b8b150d6d543966ed4024cd6111e9d94281e414c6bcfb6",
+      "torch_onnx_parity": {
+        "max_absolute_error": 1.6689300537109375e-06,
+        "samples": 128
+      },
+      "validation": {
+        "checkpoint": "checkpoint_000500.pt",
+        "non_regressing": false,
+        "accepted": false,
+        "improved": true,
+        "reasons": [
+          "root_xy_error_m_regression"
+        ],
+        "new_falls": [],
+        "matched_prefix_means": {
+          "baseline": {
+            "joint_rmse": 0.11718471082369881,
+            "key_rmse_m": 0.02996307448335439,
+            "slip_m_s": 0.12545681744858694,
+            "slide_rate": 0.09994582046908387,
+            "stumble": 0.0,
+            "root_xy_error_m": 1.90466294216779,
+            "tilt_deg": 4.186389736782299,
+            "reward_rate": 7.167521357564993
+          },
+          "candidate": {
+            "joint_rmse": 0.10122968824081537,
+            "key_rmse_m": 0.020668344616362678,
+            "slip_m_s": 0.1033850830236529,
+            "slide_rate": 0.051912477319100696,
+            "stumble": 0.0,
+            "root_xy_error_m": 4.3803610889445554,
+            "tilt_deg": 3.935843528812608,
+            "reward_rate": 7.456137953613733
+          }
+        },
+        "paired_samples": 33962,
+        "tolerances": {
+          "tracking": 0.05,
+          "sliding": 0.02,
+          "minimum_improvement": 0.02
+        }
+      }
+    },
+    {
+      "file": "checkpoint_001000.onnx",
+      "id": "quest-111260-1000",
+      "actor_updates": 1000,
+      "bytes": 3183314,
+      "sha256": "8d386bf94724d1dccc7050e1bb3dee40315e20e1bba20a31debb5d9b0b61cae3",
+      "torch_onnx_parity": {
+        "max_absolute_error": 2.384185791015625e-06,
+        "samples": 128
+      },
+      "validation": {
+        "checkpoint": "checkpoint_001000.pt",
+        "non_regressing": false,
+        "accepted": false,
+        "improved": true,
+        "reasons": [
+          "root_xy_error_m_regression"
+        ],
+        "new_falls": [],
+        "matched_prefix_means": {
+          "baseline": {
+            "joint_rmse": 0.11718471082369881,
+            "key_rmse_m": 0.02996307448335439,
+            "slip_m_s": 0.12545681744858694,
+            "slide_rate": 0.09994582046908387,
+            "stumble": 0.0,
+            "root_xy_error_m": 1.90466294216779,
+            "tilt_deg": 4.186389736782299,
+            "reward_rate": 7.167521357564993
+          },
+          "candidate": {
+            "joint_rmse": 0.09633429888796323,
+            "key_rmse_m": 0.021843010335361016,
+            "slip_m_s": 0.11513551223194995,
+            "slide_rate": 0.07499374386426251,
+            "stumble": 0.0,
+            "root_xy_error_m": 3.8128667814373487,
+            "tilt_deg": 4.060515608428037,
+            "reward_rate": 7.327344217443462
+          }
+        },
+        "paired_samples": 33962,
+        "tolerances": {
+          "tracking": 0.05,
+          "sliding": 0.02,
+          "minimum_improvement": 0.02
+        }
+      }
+    }
+  ],
+  "license_notice": "../../THIRD_PARTY_NOTICES.txt"
+}

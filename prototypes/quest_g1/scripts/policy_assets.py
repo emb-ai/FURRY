@@ -9,6 +9,8 @@ import shutil
 import numpy as np
 import onnxruntime as ort
 
+DEFAULT_POLICY_CONFIG = Path(__file__).resolve().parents[1] / 'android/config/policies.json'
+
 
 def export_policies(assets, upstream, config=None):
     assets, upstream = Path(assets), Path(upstream)
@@ -16,7 +18,7 @@ def export_policies(assets, upstream, config=None):
                  path=str(upstream / 'assets/ckpts/twist2_1017_20k.onnx')),
             dict(id='twist2-25k', title='TWIST2: авторская 25k', note='Авторский checkpoint',
                  path=str(upstream / 'assets/ckpts/twist2_1017_25k.onnx'))]
-    config = config or os.environ.get('G1_POLICY_CONFIG')
+    config = config or os.environ.get('G1_POLICY_CONFIG') or DEFAULT_POLICY_CONFIG
     if config:
         config = Path(config).resolve()
         extra = json.loads(config.read_text(encoding='utf-8'))
@@ -40,7 +42,10 @@ def export_policies(assets, upstream, config=None):
             if not row.get(key) or len(row[key].encode()) > limit or any(ord(c) < 32 for c in row[key]):
                 raise ValueError(f'Invalid policy {key}')
         source = Path(row['path'])
-        digest = hashlib.sha256(source.read_bytes()).hexdigest()
+        data = source.read_bytes()
+        if data.startswith(b'version https://git-lfs.github.com/spec/v1\n'):
+            raise ValueError(f'Policy {ident} is a Git LFS pointer; run git lfs pull')
+        digest = hashlib.sha256(data).hexdigest()
         if row.get('sha256') and row['sha256'] != digest:
             raise ValueError(f'Policy hash mismatch: {ident}')
         session = ort.InferenceSession(str(source), sess_options=opts, providers=['CPUExecutionProvider'])
