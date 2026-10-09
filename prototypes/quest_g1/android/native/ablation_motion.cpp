@@ -284,7 +284,9 @@ int main(int argc, char** argv) {
             }
             out << t << ',' << sim.data->time << ',' << sim.data->qpos[2] << ',' << TiltDegrees(sim.data);
             for (float value : command) out << ',' << value;
-            AblationRow(out, sim, g, 1, t >= kStartupSeconds);
+            std::array<double, 2> toe{std::nan(""), std::nan("")};
+            if (useMeta) toe = ToeTargetClearance(meta);
+            AblationRow(out, sim, g, 1, t >= kStartupSeconds, true, toe);
             for (double value : pose) out << ',' << value;
             out << '\n';
 

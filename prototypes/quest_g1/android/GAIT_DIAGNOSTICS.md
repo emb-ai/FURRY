@@ -106,3 +106,37 @@ its exit code indicates valid replay, not that the robot never fell.
 The statistics parser reports the incomplete final runtime CSV row, which
 was captured while the app was writing. Episode streams are complete and
 are validated strictly.
+
+## Foot trips and toe targets — 2026-10-09
+
+Replay CSVs from `replay_gmr_dynamics` and `ablation_motion` now add per-foot
+`floor_force_*`, `floor_brake_*` and `toe_target_*` columns. `toe_target` is the
+GMR toe-task height relative to a flat grounded foot; it exists only where the
+Meta adapter solved the frame and is NaN in `saved`/`direct` rows.
+
+```sh
+.venv/bin/python scripts/analyze_foot_trips.py outputs/retarget.csv --output outputs/trips.json
+```
+
+A trip is a physical touchdown while the commanded foot is still in swing:
+more than 1 cm above the other commanded foot and moving faster than 0.3 m/s.
+A braking trip also meets more than 50 N of horizontal floor force against the
+foot's travel. The command, not the GMR qpos, defines the reference, so every
+replay mode is scored the same way. Trips are not falls.
+
+Baseline without a headset: nine pinned public walks in the production scene
+with props removed, policy and gains unchanged. Clip 004 is rejected by the
+upright-calibration check in both modes; 009 and 010 fall during startup and
+have no scored window. The remaining seven give 91 s of scored walking.
+
+| Input path | Trips/s | Braking trips/s | Toe target below −5 mm | Trips with toe below in previous 100 ms |
+|---|---:|---:|---:|---:|
+| `direct` (source robot motion) | 1.58 | 1.09 | N/A | N/A |
+| `meta` (synthetic Meta from robot FK) | 1.66 | 1.23 | 14.4% of foot-rows | 1 / 145 |
+
+Trips occur with exact source motion, so they are not created by Meta or GMR.
+With exact synthetic landmarks, below-floor toe targets come from source feet
+pitched toe-down by about 4–6° (median); 44–76% of such rows are on the foot
+with the lower ankle, which the grounded adapter places at ankle height.
+They almost never precede a trip here. Meta's estimated foot pitch is not
+modelled by this fixture; compare a real Quest recording against this table.

@@ -11,6 +11,7 @@ class MetaRetargeter {
     std::array<TrackedPose,14> offsets{},calibrationRest{};
     std::array<double,14> scales{};
     double rootScale=1,footHeight=0,cameraScale=1;
+    std::array<double,2> flatToeHeight{};
     TrackedPose cameraOrigin,cameraHeadOrigin;
     std::array<double,4> cameraRotationOffset{1,0,0,0};
     bool cameraTracking=false;
@@ -43,6 +44,8 @@ public:
     const double* StageToRobotRotation()const{return basis;}
     const TrackedPose& CameraCalibrationPose()const{return cameraOrigin;}
     const TrackedPose& HeadCalibrationPose()const{return cameraHeadOrigin;}
+    // GMR toe-task height of a flat foot on the grounded reference floor.
+    double FlatToeHeight(int side)const{return flatToeHeight[side];}
     void Pause(){lastTime=0;}
     bool Compatible(const TrackingFrame& f)const;
     GmrRetargeter& solver(){return gmr;}

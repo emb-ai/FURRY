@@ -57,6 +57,9 @@ void MetaRetargeter::Calibrate(const mjModel* model,const mjData* data,const Tra
     }
     double armScale=robotReach/humanArm;
     footHeight=ankleHeight;
+    // Bind-pose toe frames of the flat robot feet. The lower Meta ankle maps
+    // to footHeight, so a flat grounded foot's toe target returns here.
+    flatToeHeight={robot[6].position[2],robot[7].position[2]};
     for(int i=0;i<14;i++){
         scales[i]=i>=8?armScale:rootScale;
         double restR[9],aligned[9],robotR[9],offsetR[9];mju_quat2Mat(restR,rest[i].quaternion.data());mju_mulMatMat(aligned,restBasis,restR,3,3,3);mju_quat2Mat(robotR,robot[i].quaternion.data());
