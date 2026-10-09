@@ -11,20 +11,25 @@ import sys
 import time
 
 p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True);p.add_argument('--num-envs',type=int,default=4096);p.add_argument('--iterations',type=int,default=1000)
+p.add_argument('--window-reward',action='store_true');p.add_argument('--sole-urdf',type=Path);p.add_argument('--eval-assets',type=Path);p.add_argument('--eval-dataset',type=Path)
 a=p.parse_args();root=a.root.resolve();out=root/'runs'/os.environ['SLURM_JOB_ID'];out.mkdir(parents=True,exist_ok=False)
 old=Path.home()/'furry/quest-adapt-v3-night-20261008-r3'
 py=Path.home()/'furry/quest-adapt-20261008/venv/bin/python'
-# Use immutable runtime physics and the exact original Quest validation files.
+# Use one explicit, immutable runtime/dataset variant for both baseline and candidates.
 env=dict(os.environ,PYTHONPATH=str(old/'training'),OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1')
-base_cmd=[str(py),str(root/'adapter/author_eval.py'),'--assets',str(old/'assets'),'--dataset',str(old/'dataset'),'--source',str(old/'upstream/actor_critic_future.py')]
+base_cmd=[str(py),str(root/'adapter/author_eval.py'),'--assets',str(a.eval_assets or old/'assets'),'--dataset',str(a.eval_dataset or old/'dataset'),'--source',str(old/'upstream/actor_critic_future.py')]
+if a.window_reward:base_cmd+=['--window-metrics']
 def evaluate(policy,dest,baseline=None):
     cmd=base_cmd+['--policy',str(policy),'--output',str(dest)]
     if baseline:cmd+=['--baseline',str(baseline)]
     with dest.with_suffix('.log').open('w') as log:subprocess.run(cmd,env=env,stdout=log,stderr=subprocess.STDOUT,check=True)
+(out/'pipeline-config.json').write_text(json.dumps({k:str(v) if isinstance(v,Path) else v for k,v in vars(a).items()},indent=2))
 baseline=out/'baseline.json'
 evaluate(root/'TWIST2/assets/ckpts/twist2_1017_20k.onnx',baseline)
 train_out=out/'training'
 cmd=[sys.executable,str(root/'adapter/author_finetune.py'),'--root',str(root),'--output',str(train_out),'--headless','--num_envs',str(a.num_envs),'--iterations',str(a.iterations)]
+if a.window_reward:cmd+=['--window-reward']
+if a.sole_urdf:cmd+=['--sole-urdf',str(a.sole_urdf)]
 results=[];done=set()
 with (out/'training.log').open('w') as log:
     proc=subprocess.Popen(cmd,stdout=log,stderr=subprocess.STDOUT)
@@ -38,7 +43,10 @@ with (out/'training.log').open('w') as log:
                 results.append({'checkpoint':checkpoint.name,**verdict});done.add(checkpoint.name)
                 (out/'runtime-results.json').write_text(json.dumps(results,indent=2))
                 print(json.dumps({'checkpoint':checkpoint.name,'accepted':verdict['accepted'],'reasons':verdict['reasons']}),flush=True)
-            if proc.poll() is not None:break
+            if proc.poll() is not None:
+                if proc.returncode:raise RuntimeError(f'Trainer exited {proc.returncode}; inspect training.log')
+                if any(c.name not in done for c in train_out.glob('checkpoint_*.pt')):continue
+                break
             time.sleep(20)
         if proc.returncode:raise RuntimeError(f'Trainer exited {proc.returncode}; inspect training.log')
     finally:
@@ -46,5 +54,5 @@ with (out/'training.log').open('w') as log:
             (train_out/'STOP').touch()
             try:proc.wait(timeout=60)
             except subprocess.TimeoutExpired:proc.terminate()
-status={'phase':'pipeline_complete','results':results,'training_output':str(train_out),'deployment':False,'validation':'12 original held-out Quest clips, seeds 0/1. Previously inspected validation, not an independent test.','selection':'Report baseline acceptance only; no automatic deployment.'}
+status={'phase':'pipeline_complete','results':results,'training_output':str(train_out),'deployment':False,'validation':'12 held-out Quest clips, seeds 0/1; explicit eval-dataset and eval-assets used identically for baseline/checkpoints. Previously inspected validation, not an independent test.','selection':'Report baseline acceptance only; no automatic deployment.'}
 (out/'result.json').write_text(json.dumps(status,indent=2));print(json.dumps(status),flush=True)

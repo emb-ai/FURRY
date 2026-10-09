@@ -116,3 +116,49 @@ The source trainer requires a separate Python 3.8 / Isaac Gym Preview 4 environm
 The prepared cluster environment is `~/furry/twist2-author-20261009` on `mipt-stud`.
 Keep the dataset, actor weights and generated runs out of Git. Run frozen simulator
 and disposable optimizer smoke checks before submitting `run_author_pipeline.py`.
+## Window-displacement experiment, 2026-10-09
+
+This is an explicit new reward experiment, not an exact author reproduction.
+It starts again from the published 20k actor and runs 500 actor updates with
+the source PPO/std/dropout settings. No whole-run KL stop or validation stop.
+The fresh critic is prefitted with actor/std frozen before actor updates; it is
+not assumed to be valid after changing rewards, contacts and critic inputs.
+
+`--window-reward` adds two negative Huber terms to the unchanged source reward:
+`-sum(Huber((actual_xy_delta - reference_xy_delta) / 0.25 m))`
+and `-Huber(wrap(actual_yaw_delta - reference_yaw_delta) / 0.5 rad)`.
+Each coefficient is 0.25 reward units/second, multiplied by policy dt exactly once.
+These scales are experimental, not author coefficients. A frozen-actor smoke
+with coefficients 1 produced about 1.55–1.65 penalty units/second against about
+1.34 source reward units/second. Coefficients were reduced to 0.25 before the
+training run, to keep this an auxiliary objective (about 30% at initialization).
+The terms are dense over consecutive 1-second windows, not a delayed endpoint
+loss: score the boundary sample, then rebase. Both displacements are expressed
+in their own trajectory's heading at window start. Thus world origin and an
+old heading offset do not create an invisible catch-up objective. Reset/RSI
+also rebases the window. This does not enforce absolute position recovery.
+The actor gets no new inputs or servo. The critic gets nine additional features:
+actual/reference XY displacement, sin/cos of both yaw changes, and window age.
+The source velocity, pose, contact/slip rewards and termination remain present;
+correct displacement alone cannot distinguish a good step from sliding.
+
+`--sole-urdf` selects a derived copy of the source G1 URDF with only the two
+cylinders per sole replaced by main's four 5 mm spheres. Inertias and other
+collisions are unchanged. This aligns sole geometry, not the entire PhysX and
+MuJoCo contact solvers or policy frequencies. Runtime evaluation uses the
+corresponding MuJoCo sphere scene, without catch-up, for both baseline and
+checkpoints. Baseline is recalculated before optimization. Existing validation
+is diagnostic, not a new independent test set.
+
+Quest references are reconstructed with main `3d0164f` Meta toe clamp from the
+same continuous calibrated GMR epochs. The no-clamp reconstruction must exactly
+match each original clip before accepting its derivative. Train/validation
+cuts, anatomy scaling, filtering and the existing sole-floor preprocessing are
+unchanged; 33 train originals are mirrored again, all 12 validation clips retain
+their held-out stages (2, 9, 14). The 1,024 author train clips, sampling weights
+and author/Quest initial sampling masses remain unchanged. No author train
+motion enters validation. Evaluation scores both policies against this same
+clamped derivative; its numbers should not be spliced into old-reference tables.
+
+Local provenance/data: `outputs/quest-finetune-20261009/window-displacement/`.
+Remote isolated root: `~/furry/twist2-window-20261009`.

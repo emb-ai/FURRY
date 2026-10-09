@@ -9,7 +9,35 @@ from rewards import RewardConfig
 p=argparse.ArgumentParser()
 for name in ['assets','dataset','policy','source','output']:p.add_argument('--'+name,required=True,type=Path)
 p.add_argument('--baseline',type=Path)
+p.add_argument('--window-metrics',action='store_true')
 a=p.parse_args()
+if a.window_metrics:
+    # Same observable progress metric at runtime Hz; diagnostic only. No changes
+    # to policy inputs, dynamics, rewards, initialization or acceptance criteria.
+    import torch
+    import evaluate as evaluator
+    from window_reward import WindowReward, yaw_xyzw, wrap
+    torch.set_num_threads(1)
+    OriginalEnv = evaluator.Env
+    class WindowMetricEnv(OriginalEnv):
+        def window_state(self):
+            actual = torch.as_tensor(self.data.qpos[:7].copy(),dtype=torch.float32)[None]
+            reference = torch.as_tensor(self.motion['q'][self.k,:7].copy(),dtype=torch.float32)[None]
+            return actual[:,:2],yaw_xyzw(actual[:,[4,5,6,3]]),reference[:,:2],yaw_xyzw(reference[:,[4,5,6,3]])
+        def reset(self,*args,**kwargs):
+            obs=super().reset(*args,**kwargs)
+            self.window=WindowReward(1,'cpu',self.dt)
+            self.window.reset(torch.tensor([0]),*self.window_state())
+            return obs
+        def step(self,action):
+            obs,reward,done,info=super().step(action)
+            self.window.advance(*self.window_state())
+            info['window_displacement_error_m']=float(self.window.distance_error)
+            info['window_displacement_huber']=float(self.window.position_penalty)
+            info['window_turn_huber']=float(self.window.yaw_penalty)
+            return obs,reward,done,info
+    evaluator.Env=WindowMetricEnv
+    evaluator.METRICS.extend(['window_displacement_error_m','window_displacement_huber','window_turn_huber'])
 report=evaluate(a.assets,a.dataset,a.policy,a.source,split='validation',seeds=(0,1),output=a.output,reward_config=RewardConfig(slide_weight=2.))
 if a.baseline:
     base=json.loads(a.baseline.read_text())

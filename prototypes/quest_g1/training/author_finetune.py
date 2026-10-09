@@ -2,7 +2,8 @@
 
 Explicit finetune changes: pretrained/frozen actor normalization, new critic
 normalization and requested critic-only warmup. PPO/std settings come from source.
-No teacher, added slip/fall reward, or custom simulator approximation.
+Optional window reward and sole URDF are explicit experiment overrides.
+No teacher, catch-up, whole-run KL stop, or custom simulator approximation.
 """
 import argparse
 import hashlib
@@ -15,6 +16,8 @@ import time
 
 def main():
     p = argparse.ArgumentParser()
+    p.add_argument('--window-reward', action='store_true', help='One-second displacement/turn penalty; 9 extra critic features; no catch-up')
+    p.add_argument('--sole-urdf', type=Path, help='Derived URDF with main sole spheres and unchanged dynamics')
     p.add_argument('--smoke', action='store_true', help='Only 2 critic updates + 1 actor update in disposable output; not critic readiness')
     p.add_argument('--root', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
@@ -42,7 +45,16 @@ def main():
     cfg, tc = task_registry.get_cfgs('g1_stu_future')
     cfg.motion.motion_file = str(root/'dataset/train.yaml')
     cfg.motion.sample_ratio = 1.
+    if a.sole_urdf:
+        cfg.asset.file = str(a.sole_urdf.resolve())
     env, cfg = task_registry.make_env('g1_stu_future', args=args, env_cfg=cfg)
+    window_state = None
+    if a.window_reward:
+        from window_reward import install
+        window_state = install(env)
+    critic_dim = env.num_privileged_obs + (window_state.feature_dim if window_state else 0)
+    def augment_priv(x):
+        return torch.cat((x, window_state.features), -1) if window_state else x
     manifest = json.loads((root/'dataset/manifest.json').read_text())
     if manifest.get('schema') != 'twist2-quest-mixture-v2':
         raise ValueError('Dataset must have verified root-oriented PKL export')
@@ -52,7 +64,7 @@ def main():
     if expected != actual: raise ValueError('Upstream loader skipped or added motions')
     if any('validation' in x for x in actual): raise ValueError('Validation leakage')
     released = recover(root/'TWIST2/assets/ckpts/twist2_1017_20k.onnx',root/'TWIST2/rsl_rl/rsl_rl/modules/actor_critic_future.py').to(env.device)
-    ac = ActorCriticFuture(num_observations=env.num_obs,num_critic_observations=env.num_privileged_obs,num_motion_observations=cfg.env.n_mimic_obs,num_motion_steps=len(cfg.env.tar_motion_steps),num_priop_observations=cfg.env.n_proprio,num_history_steps=cfg.env.history_len,num_actions=env.num_actions,**class_to_dict(tc.policy)).to(env.device)
+    ac = ActorCriticFuture(num_observations=env.num_obs,num_critic_observations=critic_dim,num_motion_observations=cfg.env.n_mimic_obs,num_motion_steps=len(cfg.env.tar_motion_steps),num_priop_observations=cfg.env.n_proprio,num_history_steps=cfg.env.history_len,num_actions=env.num_actions,**class_to_dict(tc.policy)).to(env.device)
     ac.actor.load_state_dict(released.actor.state_dict(),strict=True)
     ac.train()  # Same training mode as the upstream runner.
     frozen_actor = {k:v.detach().clone() for k,v in ac.actor.state_dict().items()}
@@ -63,18 +75,19 @@ def main():
     # Critic-only prefit: do not adapt its LR from a frozen actor's dropout KL.
     alg.schedule='fixed'
     steps = tc.runner.num_steps_per_env
-    alg.init_storage(env.num_envs,steps,[env.num_obs],[env.num_privileged_obs],[env.num_actions])
+    alg.init_storage(env.num_envs,steps,[env.num_obs],[critic_dim],[env.num_actions])
     obs = env.get_observations()
-    priv = env.get_privileged_observations()
+    priv = augment_priv(env.get_privileged_observations())
     # Freeze actor affine transform exactly. Fit a separate critic transform once.
     def actor_obs(x): return (x-released.mean)/released.divisor
-    s = torch.zeros(env.num_privileged_obs,device=env.device,dtype=torch.float64)
+    s = torch.zeros(critic_dim,device=env.device,dtype=torch.float64)
     ss = torch.zeros_like(s); count = 0
     with torch.no_grad():
         for _ in range(128):
             z = priv.double(); s += z.sum(0); ss += z.square().sum(0); count += len(z)
             action = ac.act(actor_obs(obs))
             obs,priv,_,_,_ = env.step(action)
+            priv = augment_priv(priv)
     cm = (s/count).float(); cd = torch.sqrt(torch.clamp(ss/count-(s/count).square(),min=1e-4)).float()
     def critic_obs(x): return (x-cm)/cd
     def emit(record):
@@ -89,6 +102,8 @@ def main():
     started=time.time()
     save('baseline.pt','baseline',0)
     config={'source_revision':manifest['source_revision'],'source_actor_sha256':hashlib.sha256((root/'TWIST2/assets/ckpts/twist2_1017_20k.onnx').read_bytes()).hexdigest(),'dataset_manifest_sha256':hashlib.sha256((root/'dataset/manifest.json').read_bytes()).hexdigest(),'environment':class_to_dict(cfg),'upstream_training':class_to_dict(tc),'ppo_config_matches_upstream':algorithm==class_to_dict(tc.algorithm),'initial_std_from_upstream':float(ac.std.mean()),'finetune_overrides':{k:str(v) if isinstance(v,Path) else v for k,v in vars(a).items()},'critic_gate':'On-policy pre-update TD-lambda prediction, 50-iteration windows; proxy only, not independent Monte Carlo certification. Validation never enters optimizer.','deployment':False}
+    config['window_reward'] = {'enabled':a.window_reward, 'seconds':1., 'type':'dense Huber on progress since start of consecutive windows; separate initial heading frames', 'position_scale_m':.25, 'yaw_scale_rad':.5, 'position_weight':.25, 'yaw_weight':.25, 'critic_extra_features':critic_dim-env.num_privileged_obs, 'catch_up':False}
+    config['sole_urdf_sha256'] = hashlib.sha256(a.sole_urdf.read_bytes()).hexdigest() if a.sole_urdf else None
     (out/'config.json').write_text(json.dumps(config,indent=2,default=str))
     counts=torch.zeros(len(rows),device=env.device,dtype=torch.long)
     quest_ids=torch.tensor([i for i,f in enumerate(env._motion_lib._motion_files) if str(f).startswith('./quest/') or str(f).startswith('quest/')],device=env.device)
@@ -97,13 +112,18 @@ def main():
         if (out/'STOP').exists():
             emit({'phase':'stopped_by_file','actor_updates':actor_updates});save('stopped.pt',phase,iteration);return
         iteration+=1
-        value_loss_previous=[]; resets=0; failures=0; reward_sum=0.; quest_frames=0
+        value_loss_previous=[]; resets=0; failures=0; reward_sum=0.; quest_frames=0; displacement_sum=0.; turn_sum=0.; distance_sum=0.
         with torch.no_grad():
             for _ in range(steps):
                 ids=env._motion_ids.clone(); counts.scatter_add_(0,ids,torch.ones_like(ids))
                 quest_frames+=int(torch.isin(ids,quest_ids).sum())
                 actions=alg.act(actor_obs(obs),critic_obs(priv),{})
                 obs,priv,r,d,info=env.step(actions)
+                priv = augment_priv(priv)
+                if window_state is not None:
+                    displacement_sum += float(window_state.position_penalty.mean())
+                    turn_sum += float(window_state.yaw_penalty.mean())
+                    distance_sum += float(window_state.distance_error.mean())
                 alg.process_env_step(r,d,info)
                 resets+=int(d.sum());failures+=int((d.bool() & ~info['time_outs'].bool()).sum());reward_sum+=float(r.mean())
             alg.compute_returns(critic_obs(priv))
@@ -122,6 +142,8 @@ def main():
         if not np.isfinite([result[0],result[1],ev,nrmse,update_kl]).all():
             raise FloatingPointError('Nonfinite optimization statistics')
         record={'phase':phase,'iteration':iteration,'actor_updates':actor_updates,'lr':lr,'value_loss':result[0],'surrogate_loss':result[1],'pre_update_critic_ev':ev,'pre_update_critic_nrmse':nrmse,'post_update_kl_includes_dropout':update_kl,'lr_before_update':lr_before_update,'reward_rate':reward_sum/steps/env.dt,'resets':resets,'tracking_terminations':failures,'quest_frame_fraction':quest_frames/(steps*env.num_envs),'visited_motions':int((counts>0).sum()),'std_mean':float(ac.std.mean())}
+        if window_state is not None:
+            record.update(window_displacement_penalty_rate=displacement_sum/steps*env.reward_scales['window_displacement']/env.dt, window_turn_penalty_rate=turn_sum/steps*env.reward_scales['window_turn']/env.dt, window_distance_error_m=distance_sum/steps)
         emit(record)
         if phase=='critic':
             if a.smoke and iteration==2:
