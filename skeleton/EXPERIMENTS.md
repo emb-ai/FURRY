@@ -29,7 +29,7 @@ documents the YOLOX detector and RTMW3D-X ONNX downloads. Place the extracted
 detector at `models/rtmw3d/detector.onnx` and pose model at
 `models/rtmw3d/pose.onnx`. Model licenses and exports are separate from this code.
 
-```
+```bash
 python rtmw_probe.py data/frame.npy --models models/rtmw3d \
   --provider CoreMLExecutionProvider --output recordings/probe.json
 python compare_rgbd.py recordings/<session> yolo --output recordings/yolo.jsonl
@@ -65,14 +65,14 @@ profile JSON `{"lengths_m": [hip_width, left_thigh, right_thigh, left_shin,
 right_shin]}`. Camera-calibrated surface distances are provisional estimates,
 not measured anatomical joint-centre distances. No robot-height scaling is used.
 
-```
+```bash
 python evaluate_human_fit.py <calibration-camera.jsonl> <evaluation-camera.jsonl> \
   recordings/fit-output [--profile <operator-profile.json>]
 ```
 
 For a `compare_rgbd.py` result, use an explicitly chosen static interval:
 
-```
+```bash
 python fit_rgbd.py recordings/rtmw.jsonl --calibration-start 10 \
   --calibration-end 20 --use-prior --output recordings/rtmw-fitted.jsonl
 ```
@@ -91,6 +91,6 @@ Constant output lengths are imposed by construction; they cannot prove better
 pose accuracy or robot stability. Before enabling control, validate position,
 orientation, latency, person identity, occlusion and physical robot rollouts.
 
-```
+```bash
 python -m unittest test_human_fit test_rtmw_probe test_rgbd_recording test_camera_open
 ```

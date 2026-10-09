@@ -1,0 +1,947 @@
+{
+  "schema": "quest-g1-motion-v1",
+  "source_episode": "episode-1791467626074995",
+  "source_sha256": {
+    "input.csv": "4368d7a3f65d30ddbba2c179a5117e357de12773e0343a4072feeb0392431dae",
+    "body.csv": "ac122e5be6bc1ed65b62cc7c770ec8f7461e611a9e4b6019672b0aa13e1b10ec",
+    "capture_timeline.csv": "792436a1a17de139c9998372190acf835a3f4863c1871f2b64dc308ed952ec11",
+    "capture_plan.json": "a78ef645732c05483af1a6d9ca573854d0d3eaae85705995f1706f48f275dca8"
+  },
+  "fps": 100,
+  "validation_stages": [
+    2,
+    9,
+    14
+  ],
+  "split_unit": "whole protocol stage before chunking",
+  "exclusions_wall_seconds": [
+    [
+      1100.2276078300001,
+      1101.2276078300001
+    ],
+    [
+      1100.2415952270003,
+      1101.2415952270003
+    ],
+    [
+      1151.8252183860004,
+      1152.8252183860004
+    ]
+  ],
+  "scaling": "native MetaRetargeter: fixed rest-based leg/root and arm scales; camera tracking OFF; sole floor guard ON",
+  "filter": "6 Hz zero-phase Butterworth, order 2 on positions and joint angles; quaternion SLERP; floor guard reapplied after smoothing",
+  "duration_seconds": {
+    "train": 713.1,
+    "validation": 174.22
+  },
+  "validation_fraction": 0.19634404724338456,
+  "pre_curation_duration_seconds": {
+    "train": 713.67,
+    "validation": 178.57
+  },
+  "curation": {
+    "leg_torso_speed_ceiling_rad_s": 12,
+    "arm_speed_ceiling_rad_s": 16,
+    "exclude_margin_s": 0.25,
+    "min_clip_s": 2,
+    "note": "Conservative curation thresholds, not hardware specifications"
+  },
+  "clips": [
+    {
+      "id": "stage01-run01-000000-part00",
+      "file": "train/stage01-run01-000000-part00.npz",
+      "split": "train",
+      "stage": 1,
+      "calibration_sequence": 8720,
+      "source_start_wall_s": 8.971887456000331,
+      "source_end_wall_s": 38.961887456000326,
+      "seconds": 29.99,
+      "max_joint_speed_rad_s": 3.7187592374987255,
+      "p99_joint_speed_rad_s": 1.57650245191322,
+      "max_floor_lift_m": 0.0016235658756818712,
+      "sha256": "58744b8eceb6303bcb75011c4fdc2c67530cf6544355f4a4e19fdad80d7645da"
+    },
+    {
+      "id": "stage01-run01-003000-part00",
+      "file": "train/stage01-run01-003000-part00.npz",
+      "split": "train",
+      "stage": 1,
+      "calibration_sequence": 8720,
+      "source_start_wall_s": 38.97188745600033,
+      "source_end_wall_s": 67.33188745600033,
+      "seconds": 28.36,
+      "max_joint_speed_rad_s": 4.172522973450415,
+      "p99_joint_speed_rad_s": 1.5145508379908716,
+      "max_floor_lift_m": 0.002260110790926792,
+      "sha256": "76d1b81d0124e774d38ca816fc774021969707aa0c31cadf8729350807985a4e"
+    },
+    {
+      "id": "stage02-run00-000000-part00",
+      "file": "validation/stage02-run00-000000-part00.npz",
+      "split": "validation",
+      "stage": 2,
+      "calibration_sequence": 8720,
+      "source_start_wall_s": 72.36088189600014,
+      "source_end_wall_s": 74.95088189600014,
+      "seconds": 2.59,
+      "max_joint_speed_rad_s": 5.582213977503658,
+      "p99_joint_speed_rad_s": 3.757832767414515,
+      "max_floor_lift_m": 0.003529394021775833,
+      "sha256": "7c844ad9f166c5a4375c0379b872403a43374bac521d0066bc12fd20906f5052"
+    },
+    {
+      "id": "stage02-run01-000000-part00",
+      "file": "validation/stage02-run01-000000-part00.npz",
+      "split": "validation",
+      "stage": 2,
+      "calibration_sequence": 8720,
+      "source_start_wall_s": 74.98612283399962,
+      "source_end_wall_s": 82.93612283399962,
+      "seconds": 7.95,
+      "max_joint_speed_rad_s": 5.839929043759273,
+      "p99_joint_speed_rad_s": 3.6270358798941555,
+      "max_floor_lift_m": 0.004331275260531186,
+      "sha256": "17f11fa6ae189b70fc2515942939646a80a8e9e2f9042664e1517998a870e050"
+    },
+    {
+      "id": "stage02-run02-000000-part00",
+      "file": "validation/stage02-run02-000000-part00.npz",
+      "split": "validation",
+      "stage": 2,
+      "calibration_sequence": 8720,
+      "source_start_wall_s": 82.95835149300001,
+      "source_end_wall_s": 112.948351493,
+      "seconds": 29.99,
+      "max_joint_speed_rad_s": 6.789253029928299,
+      "p99_joint_speed_rad_s": 4.023349298036529,
+      "max_floor_lift_m": 0.005752800004034903,
+      "sha256": "bf0159cf09c64df3c2aa826f337bf1435cf137d42e5f382ef97bf7f535efad2d"
+    },
+    {
+      "id": "stage02-run02-003000-part00",
+      "file": "validation/stage02-run02-003000-part00.npz",
+      "split": "validation",
+      "stage": 2,
+      "calibration_sequence": 8720,
+      "source_start_wall_s": 112.95835149300001,
+      "source_end_wall_s": 132.338351493,
+      "seconds": 19.38,
+      "max_joint_speed_rad_s": 7.377922449967899,
+      "p99_joint_speed_rad_s": 4.3865360095028185,
+      "max_floor_lift_m": 0.010671125605628443,
+      "sha256": "cedd91ef3504b01f416a4d8d23335513596f182e497b35e22f4b8ba611106366"
+    },
+    {
+      "id": "stage03-run01-000000-part00",
+      "file": "train/stage03-run01-000000-part00.npz",
+      "split": "train",
+      "stage": 3,
+      "calibration_sequence": 8720,
+      "source_start_wall_s": 217.27785414499886,
+      "source_end_wall_s": 247.26785414499886,
+      "seconds": 29.99,
+      "max_joint_speed_rad_s": 4.402458750558758,
+      "p99_joint_speed_rad_s": 2.253163426808229,
+      "max_floor_lift_m": 0.0028946765375038944,
+      "sha256": "556f532e12e624b4982b21a61f9f17f3165843b0b67c323c16bd695e5a1d5321"
+    },
+    {
+      "id": "stage03-run01-003000-part00",
+      "file": "train/stage03-run01-003000-part00.npz",
+      "split": "train",
+      "stage": 3,
+      "calibration_sequence": 8720,
+      "source_start_wall_s": 247.27785414499886,
+      "source_end_wall_s": 255.93785414499885,
+      "seconds": 8.66,
+      "max_joint_speed_rad_s": 4.436123630244948,
+      "p99_joint_speed_rad_s": 2.561290617549371,
+      "max_floor_lift_m": 0.0029982689359345158,
+      "sha256": "2c826787e7824bbaa0fb93d60112b985662d5d193955504b4ec89f28e35fbcdd"
+    },
+    {
+      "id": "stage03-run02-000000-part00",
+      "file": "train/stage03-run02-000000-part00.npz",
+      "split": "train",
+      "stage": 3,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 318.0190120449988,
+      "source_end_wall_s": 337.2890120449988,
+      "seconds": 19.27,
+      "max_joint_speed_rad_s": 4.911619843064025,
+      "p99_joint_speed_rad_s": 2.337405475486396,
+      "max_floor_lift_m": 0.002661323717728637,
+      "sha256": "ee334ed4a1805fe8c547b618463119113e8990a3650835acde545497d251b942"
+    },
+    {
+      "id": "stage04-run00-000000-part00",
+      "file": "train/stage04-run00-000000-part00.npz",
+      "split": "train",
+      "stage": 4,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 342.32505274699906,
+      "source_end_wall_s": 372.3150527469991,
+      "seconds": 29.99,
+      "max_joint_speed_rad_s": 4.856788664169942,
+      "p99_joint_speed_rad_s": 2.1911010113821394,
+      "max_floor_lift_m": 0.003850310830579892,
+      "sha256": "5a268a65651abfd9f66b49bb890c8fbb3aa90a1506e78828fb6346cfd489cfab"
+    },
+    {
+      "id": "stage04-run00-003000-part00",
+      "file": "train/stage04-run00-003000-part00.npz",
+      "split": "train",
+      "stage": 4,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 372.32505274699906,
+      "source_end_wall_s": 379.91505274699904,
+      "seconds": 7.59,
+      "max_joint_speed_rad_s": 6.545613540749795,
+      "p99_joint_speed_rad_s": 2.845385573328843,
+      "max_floor_lift_m": 0.00783597462751761,
+      "sha256": "bdd2c8d73039862817fb4b596b59097637afc604f921bf5eac8027e6d978977a"
+    },
+    {
+      "id": "stage04-run01-000000-part00",
+      "file": "train/stage04-run01-000000-part00.npz",
+      "split": "train",
+      "stage": 4,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 379.9525111309995,
+      "source_end_wall_s": 402.3225111309995,
+      "seconds": 22.37,
+      "max_joint_speed_rad_s": 4.71812105096896,
+      "p99_joint_speed_rad_s": 2.366709772188625,
+      "max_floor_lift_m": 0.0036943686124074823,
+      "sha256": "d95360a4916d63d906eaa9d5767a442d134d9c6b27faf961d91bc60bcabc0618"
+    },
+    {
+      "id": "stage05-run00-000000-part00",
+      "file": "train/stage05-run00-000000-part00.npz",
+      "split": "train",
+      "stage": 5,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 437.6443126079994,
+      "source_end_wall_s": 467.6343126079994,
+      "seconds": 29.99,
+      "max_joint_speed_rad_s": 4.452542639504581,
+      "p99_joint_speed_rad_s": 1.7835683048485746,
+      "max_floor_lift_m": 0.002196545083545269,
+      "sha256": "13a40ebe41fdfe0aed62c0a9d377972a3e6c5520958b3735352dfd11ef9dd162"
+    },
+    {
+      "id": "stage05-run00-003000-part00",
+      "file": "train/stage05-run00-003000-part00.npz",
+      "split": "train",
+      "stage": 5,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 467.6443126079994,
+      "source_end_wall_s": 497.6343126079994,
+      "seconds": 29.99,
+      "max_joint_speed_rad_s": 4.435916022337416,
+      "p99_joint_speed_rad_s": 1.8106176149089108,
+      "max_floor_lift_m": 0.0021799840851004365,
+      "sha256": "bfe657569d5fc4954897d5c6ae5ae3eef1fc38df81593c141efa0caf8ae977b2"
+    },
+    {
+      "id": "stage06-run00-000000-part00",
+      "file": "train/stage06-run00-000000-part00.npz",
+      "split": "train",
+      "stage": 6,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 502.67238184599955,
+      "source_end_wall_s": 532.6623818459996,
+      "seconds": 29.99,
+      "max_joint_speed_rad_s": 2.6833320469929536,
+      "p99_joint_speed_rad_s": 1.4402918453716613,
+      "max_floor_lift_m": 0.00193910990233042,
+      "sha256": "d3af1699fafb7c82bda5e686eecf58bbf7dcb141c0722c2db82d0a51dfcb22cb"
+    },
+    {
+      "id": "stage06-run00-003000-part00",
+      "file": "train/stage06-run00-003000-part00.npz",
+      "split": "train",
+      "stage": 6,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 532.6723818459996,
+      "source_end_wall_s": 562.6523818459996,
+      "seconds": 29.98,
+      "max_joint_speed_rad_s": 3.8296673525954783,
+      "p99_joint_speed_rad_s": 1.4730189823068567,
+      "max_floor_lift_m": 0.0023269227434351766,
+      "sha256": "2daad8f8e96667e5e8be5574969506d756e76ac133e1d7b0fad79cda82ca7d97"
+    },
+    {
+      "id": "stage07-run00-000000-part00",
+      "file": "train/stage07-run00-000000-part00.npz",
+      "split": "train",
+      "stage": 7,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 567.6863857179997,
+      "source_end_wall_s": 572.3463857179996,
+      "seconds": 4.66,
+      "max_joint_speed_rad_s": 2.5382393922196043,
+      "p99_joint_speed_rad_s": 1.5633975290567772,
+      "max_floor_lift_m": 0.002111922925029505,
+      "sha256": "1fab251c6c2d41dd1bd497a4b78cc62609fc53296fb154b2c240cf46a7914cde"
+    },
+    {
+      "id": "stage07-run01-000000-part00",
+      "file": "train/stage07-run01-000000-part00.npz",
+      "split": "train",
+      "stage": 7,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 572.3806730609995,
+      "source_end_wall_s": 602.3706730609995,
+      "seconds": 29.99,
+      "max_joint_speed_rad_s": 6.945703327649761,
+      "p99_joint_speed_rad_s": 2.280599593768446,
+      "max_floor_lift_m": 0.002122680732693675,
+      "sha256": "1f2a5d429e89d290b48b22b8b190caf8a10871ecb82cbd15f2482f210c6a79d8"
+    },
+    {
+      "id": "stage07-run01-003000-part00",
+      "file": "train/stage07-run01-003000-part00.npz",
+      "split": "train",
+      "stage": 7,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 602.3806730609995,
+      "source_end_wall_s": 610.6206730609995,
+      "seconds": 8.24,
+      "max_joint_speed_rad_s": 5.485260025993055,
+      "p99_joint_speed_rad_s": 1.4893728281745495,
+      "max_floor_lift_m": 0.0012695562993234842,
+      "sha256": "c2d4593d983d9287f6e97497247cfb63e4559ee7cb770ffd10e2977cbd7ccec9"
+    },
+    {
+      "id": "stage07-run02-000000-part00",
+      "file": "train/stage07-run02-000000-part00.npz",
+      "split": "train",
+      "stage": 7,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 610.6581407800004,
+      "source_end_wall_s": 627.6681407800004,
+      "seconds": 17.01,
+      "max_joint_speed_rad_s": 3.2800454483822294,
+      "p99_joint_speed_rad_s": 1.7222434196483793,
+      "max_floor_lift_m": 0.002015574175741632,
+      "sha256": "51770a3d8f6fe26ca9345503083ac69225b9bbadffede58eebf9ab7487bacc4f"
+    },
+    {
+      "id": "stage08-run00-000000-part00",
+      "file": "train/stage08-run00-000000-part00.npz",
+      "split": "train",
+      "stage": 8,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 632.69998657,
+      "source_end_wall_s": 635.21998657,
+      "seconds": 2.52,
+      "max_joint_speed_rad_s": 0.6568440697648087,
+      "p99_joint_speed_rad_s": 0.45386518386342883,
+      "max_floor_lift_m": 0.0,
+      "sha256": "666601e0b2fc69980847eee5185f4186a5804cb6d29652226c90f7fd8e3f775e"
+    },
+    {
+      "id": "stage08-run01-000000-part00",
+      "file": "train/stage08-run01-000000-part00.npz",
+      "split": "train",
+      "stage": 8,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 635.255644896999,
+      "source_end_wall_s": 665.245644896999,
+      "seconds": 29.99,
+      "max_joint_speed_rad_s": 4.69863281069029,
+      "p99_joint_speed_rad_s": 2.1893245373954566,
+      "max_floor_lift_m": 0.002861227896971595,
+      "sha256": "352b43dcdcaa6943b20e5d121e5eecbbb2ffeea885b19f8e890dcf914475795d"
+    },
+    {
+      "id": "stage08-run01-003000-part00",
+      "file": "train/stage08-run01-003000-part00.npz",
+      "split": "train",
+      "stage": 8,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 665.255644896999,
+      "source_end_wall_s": 692.685644896999,
+      "seconds": 27.43,
+      "max_joint_speed_rad_s": 5.641279333033022,
+      "p99_joint_speed_rad_s": 2.3217324989822012,
+      "max_floor_lift_m": 0.003158563185133134,
+      "sha256": "e0dd08fcea430b35a32302ae6e116654a205f06d411fe58f11e98d375b48043e"
+    },
+    {
+      "id": "stage09-run00-000000-part00",
+      "file": "validation/stage09-run00-000000-part00.npz",
+      "split": "validation",
+      "stage": 9,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 697.7140260670003,
+      "source_end_wall_s": 727.7040260670003,
+      "seconds": 29.99,
+      "max_joint_speed_rad_s": 5.435410005271724,
+      "p99_joint_speed_rad_s": 2.729795339560782,
+      "max_floor_lift_m": 0.0035235291941587837,
+      "sha256": "50ac35aa066b8556b0c3d653a868fb3c714c8a95bcb5aa0da139bf2e7ba71ef9"
+    },
+    {
+      "id": "stage09-run00-003000-part00",
+      "file": "validation/stage09-run00-003000-part00.npz",
+      "split": "validation",
+      "stage": 9,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 727.7140260670003,
+      "source_end_wall_s": 757.7040260670003,
+      "seconds": 29.99,
+      "max_joint_speed_rad_s": 5.423178550192754,
+      "p99_joint_speed_rad_s": 3.134949690836312,
+      "max_floor_lift_m": 0.0037182344756307092,
+      "sha256": "12c69199adc622eb7f429c928d83a8f897f81f8ef32ff163cee9f5e81e001287"
+    },
+    {
+      "id": "stage10-run00-000000-part00",
+      "file": "train/stage10-run00-000000-part00.npz",
+      "split": "train",
+      "stage": 10,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 762.727859053999,
+      "source_end_wall_s": 792.7178590539991,
+      "seconds": 29.99,
+      "max_joint_speed_rad_s": 5.736957230950146,
+      "p99_joint_speed_rad_s": 3.166500330248383,
+      "max_floor_lift_m": 0.004946753273880122,
+      "sha256": "aef80f4d1a25dd20183ace4eb8082e3f5955c8301ce03bae93dcc4880a65bae5"
+    },
+    {
+      "id": "stage10-run00-003000-part00",
+      "file": "train/stage10-run00-003000-part00.npz",
+      "split": "train",
+      "stage": 10,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 792.727859053999,
+      "source_end_wall_s": 803.9178590539991,
+      "seconds": 11.19,
+      "max_joint_speed_rad_s": 5.493361668538787,
+      "p99_joint_speed_rad_s": 3.137406231185386,
+      "max_floor_lift_m": 0.003559061565122694,
+      "sha256": "9bf53d872daa716ecac12797f398a8e80cd0bdac52222961c1ef68caeb87c46d"
+    },
+    {
+      "id": "stage10-run01-000000-part00",
+      "file": "train/stage10-run01-000000-part00.npz",
+      "split": "train",
+      "stage": 10,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 803.9499429529988,
+      "source_end_wall_s": 822.7199429529987,
+      "seconds": 18.77,
+      "max_joint_speed_rad_s": 5.110084802225101,
+      "p99_joint_speed_rad_s": 3.2417480396603144,
+      "max_floor_lift_m": 0.004588046500185863,
+      "sha256": "cf5305b4e39538ab3916ed1c3aa440f00b123c4a3785d53b9c7657242bcdfb17"
+    },
+    {
+      "id": "stage11-run00-000000-part00",
+      "file": "train/stage11-run00-000000-part00.npz",
+      "split": "train",
+      "stage": 11,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 860.6307439640004,
+      "source_end_wall_s": 890.6207439640004,
+      "seconds": 29.99,
+      "max_joint_speed_rad_s": 4.646136647542731,
+      "p99_joint_speed_rad_s": 1.826928938639547,
+      "max_floor_lift_m": 0.0028975470374260764,
+      "sha256": "9a66e893b710da3adac1bcfc3938f6a2a87ee5f313d2d14791d638b8fb550936"
+    },
+    {
+      "id": "stage11-run00-003000-part00",
+      "file": "train/stage11-run00-003000-part00.npz",
+      "split": "train",
+      "stage": 11,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 890.6307439640004,
+      "source_end_wall_s": 914.1907439640004,
+      "seconds": 23.56,
+      "max_joint_speed_rad_s": 7.088747837678389,
+      "p99_joint_speed_rad_s": 2.954703337308281,
+      "max_floor_lift_m": 0.009160666807853424,
+      "sha256": "c2ad1ad25d4547dcd80dd6ee8d1be1feb646c127f53bf4ecac51593730bd8ea7"
+    },
+    {
+      "id": "stage11-run00-003000-part01",
+      "file": "train/stage11-run00-003000-part01.npz",
+      "split": "train",
+      "stage": 11,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 914.7607439640004,
+      "source_end_wall_s": 920.6107439640004,
+      "seconds": 5.85,
+      "max_joint_speed_rad_s": 4.67538213153651,
+      "p99_joint_speed_rad_s": 2.954703337308281,
+      "max_floor_lift_m": 0.009160666807853424,
+      "sha256": "0d7c8ea8496ef8689e8c6abedc686d7fc3283262c47d10cb737fdcdfc07dc635"
+    },
+    {
+      "id": "stage12-run00-000000-part00",
+      "file": "train/stage12-run00-000000-part00.npz",
+      "split": "train",
+      "stage": 12,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 925.6447264819999,
+      "source_end_wall_s": 951.8847264819999,
+      "seconds": 26.24,
+      "max_joint_speed_rad_s": 8.40913428424951,
+      "p99_joint_speed_rad_s": 3.678623736943927,
+      "max_floor_lift_m": 0.0022284342390363893,
+      "sha256": "90b677f69af4fe6ed3de9c5cebcc79d0b43bd8d4231a77b1275d7a27d2a9d26a"
+    },
+    {
+      "id": "stage12-run01-000000-part00",
+      "file": "train/stage12-run01-000000-part00.npz",
+      "split": "train",
+      "stage": 12,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 951.9220451410001,
+      "source_end_wall_s": 981.9120451410001,
+      "seconds": 29.99,
+      "max_joint_speed_rad_s": 7.843791018438323,
+      "p99_joint_speed_rad_s": 3.001192860160377,
+      "max_floor_lift_m": 0.0025786292787691872,
+      "sha256": "d63f81e866384fefcae6fc244755578a486fe83f4dee30cd3abe3c38beeda148"
+    },
+    {
+      "id": "stage12-run01-003000-part00",
+      "file": "train/stage12-run01-003000-part00.npz",
+      "split": "train",
+      "stage": 12,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 981.9220451410001,
+      "source_end_wall_s": 985.6420451410002,
+      "seconds": 3.72,
+      "max_joint_speed_rad_s": 1.8252109228382745,
+      "p99_joint_speed_rad_s": 0.5554173734825743,
+      "max_floor_lift_m": 0.00031647924844185014,
+      "sha256": "7019ee14247cc6c1ab6cf45bc6313b0502670e16ee8ff16d87e9041f9631d50e"
+    },
+    {
+      "id": "stage13-run00-000000-part00",
+      "file": "train/stage13-run00-000000-part00.npz",
+      "split": "train",
+      "stage": 13,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 990.6583966039998,
+      "source_end_wall_s": 1008.4483966039998,
+      "seconds": 17.79,
+      "max_joint_speed_rad_s": 4.848225835578668,
+      "p99_joint_speed_rad_s": 2.0968130593436407,
+      "max_floor_lift_m": 0.005258803994102501,
+      "sha256": "a219a76318ad8445c475bd7a658097b2cc575c847b06bab1e9dc1090c7861648"
+    },
+    {
+      "id": "stage13-run01-000000-part00",
+      "file": "train/stage13-run01-000000-part00.npz",
+      "split": "train",
+      "stage": 13,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 1008.4776981189989,
+      "source_end_wall_s": 1038.457698118999,
+      "seconds": 29.98,
+      "max_joint_speed_rad_s": 5.538651194736843,
+      "p99_joint_speed_rad_s": 2.0096844196973906,
+      "max_floor_lift_m": 0.004413215105371793,
+      "sha256": "29e2074fabd55d4f44afcfd8aaf5b015cefb71663ae97176e784f094c9b1c944"
+    },
+    {
+      "id": "stage13-run02-000000-part00",
+      "file": "train/stage13-run02-000000-part00.npz",
+      "split": "train",
+      "stage": 13,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 1038.4914459009997,
+      "source_end_wall_s": 1050.6514459009998,
+      "seconds": 12.16,
+      "max_joint_speed_rad_s": 6.104586021878683,
+      "p99_joint_speed_rad_s": 2.270684551109628,
+      "max_floor_lift_m": 0.0053508914615002165,
+      "sha256": "784d099f3400130ac29e5b4539e787ca27f0aa34933c0394d8c0754108145639"
+    },
+    {
+      "id": "stage14-run00-000000-part00",
+      "file": "validation/stage14-run00-000000-part00.npz",
+      "split": "validation",
+      "stage": 14,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 1055.6861274049988,
+      "source_end_wall_s": 1059.9761274049988,
+      "seconds": 4.29,
+      "max_joint_speed_rad_s": 4.297532857610681,
+      "p99_joint_speed_rad_s": 1.738763234212825,
+      "max_floor_lift_m": 0.002382582886070621,
+      "sha256": "d52aae321a4d4f9c3fd8a7869fefa6c0afd6ec299ac1111546d00eff883e15c5"
+    },
+    {
+      "id": "stage14-run01-000000-part00",
+      "file": "validation/stage14-run01-000000-part00.npz",
+      "split": "validation",
+      "stage": 14,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 1060.0058067419995,
+      "source_end_wall_s": 1088.7858067419995,
+      "seconds": 28.78,
+      "max_joint_speed_rad_s": 10.306114008008095,
+      "p99_joint_speed_rad_s": 2.2075323994999345,
+      "max_floor_lift_m": 0.0,
+      "sha256": "27e30d9f2ba969d230b4b5ffcde1d2d4e0ccc5c447ea5315c7064749c913b637"
+    },
+    {
+      "id": "stage14-run01-003000-part00",
+      "file": "validation/stage14-run01-003000-part00.npz",
+      "split": "validation",
+      "stage": 14,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 1090.0058067419995,
+      "source_end_wall_s": 1092.3558067419995,
+      "seconds": 2.35,
+      "max_joint_speed_rad_s": 8.538836236631209,
+      "p99_joint_speed_rad_s": 4.434996365113795,
+      "max_floor_lift_m": 0.0013409640817874432,
+      "sha256": "dc4ef4a3a45c6f61c5865aff0a0d447be93e1f4390bd915814563003384101c2"
+    },
+    {
+      "id": "stage14-run01-003000-part01",
+      "file": "validation/stage14-run01-003000-part01.npz",
+      "split": "validation",
+      "stage": 14,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 1093.2358067419996,
+      "source_end_wall_s": 1098.5658067419995,
+      "seconds": 5.33,
+      "max_joint_speed_rad_s": 15.567176937157873,
+      "p99_joint_speed_rad_s": 4.434996365113795,
+      "max_floor_lift_m": 0.0013409640817874432,
+      "sha256": "c8dc5d8e71d55ae33c7c9a82abefed397aa3d193eeca59df40050aa1426d2c2f"
+    },
+    {
+      "id": "stage14-run03-000000-part00",
+      "file": "validation/stage14-run03-000000-part00.npz",
+      "split": "validation",
+      "stage": 14,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 1101.2554097049997,
+      "source_end_wall_s": 1109.0054097049997,
+      "seconds": 7.75,
+      "max_joint_speed_rad_s": 14.779749449801027,
+      "p99_joint_speed_rad_s": 2.7953649660732443,
+      "max_floor_lift_m": 0.0,
+      "sha256": "341bc36d60eb938e0f7005890948065568b0bb5d86912a5e74915ec28f6b6699"
+    },
+    {
+      "id": "stage14-run03-000000-part01",
+      "file": "validation/stage14-run03-000000-part01.npz",
+      "split": "validation",
+      "stage": 14,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 1109.8554097049996,
+      "source_end_wall_s": 1115.6854097049998,
+      "seconds": 5.83,
+      "max_joint_speed_rad_s": 3.733361477291419,
+      "p99_joint_speed_rad_s": 2.7953649660732443,
+      "max_floor_lift_m": 0.0,
+      "sha256": "a44c7402fbda20024fd1a7a113d1193837ab7ade2f29368be5c1716d2f027c6c"
+    },
+    {
+      "id": "stage15-run00-000000-part00",
+      "file": "train/stage15-run00-000000-part00.npz",
+      "split": "train",
+      "stage": 15,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 1120.700224922999,
+      "source_end_wall_s": 1150.690224922999,
+      "seconds": 29.99,
+      "max_joint_speed_rad_s": 4.9114895493596045,
+      "p99_joint_speed_rad_s": 0.42562281277614233,
+      "max_floor_lift_m": 0.0,
+      "sha256": "548d97b36c64ba9d7637b02da667b670e93f2dcbe2f70fd67b33a85f6c34037c"
+    },
+    {
+      "id": "stage15-run01-000000-part00",
+      "file": "train/stage15-run01-000000-part00.npz",
+      "split": "train",
+      "stage": 15,
+      "calibration_sequence": 30925,
+      "source_start_wall_s": 1152.825282447,
+      "source_end_wall_s": 1180.695282447,
+      "seconds": 27.87,
+      "max_joint_speed_rad_s": 1.808284225572926,
+      "p99_joint_speed_rad_s": 0.2724910095489847,
+      "max_floor_lift_m": 0.0,
+      "sha256": "2b229c98f65be88a5bb8b5e0b244f163ebfe5e1fb4838f3fc74ceef6a5632510"
+    },
+    {
+      "id": "0807_yanjie_walk_001",
+      "file": "replay/0807_yanjie_walk_001.npz",
+      "stage": 0,
+      "split": "replay",
+      "seconds": 13.89,
+      "sha256": "ee49dc214f2e71f21e674417a533ace917f24d9c413355168cf92d2992cab00a",
+      "source_sha256": "ab264dea49acd42b0e90959e07b2c973183bb90ecc6b7303b8385ff112b7843f"
+    },
+    {
+      "id": "0807_yanjie_walk_003",
+      "file": "replay/0807_yanjie_walk_003.npz",
+      "stage": 0,
+      "split": "replay",
+      "seconds": 16.36,
+      "sha256": "be740b8b0005333608678ed4a7975e4406343ab578bfc37966472054c239e28e",
+      "source_sha256": "f43e05e7ff8f565d6445181924abe35d72ddd5a2758d5250eb53db8e9ad5d47e"
+    },
+    {
+      "id": "0807_yanjie_walk_005",
+      "file": "replay/0807_yanjie_walk_005.npz",
+      "stage": 0,
+      "split": "replay",
+      "seconds": 17.23,
+      "sha256": "1df41f7bb334b43c52037da1027f4ddf78b83614000c01c0a47462c94b48359e",
+      "source_sha256": "c0c33b953cf78fc45238f369f85a6f5c7332a5a2d09619940dd78d18b765925d"
+    },
+    {
+      "id": "0807_yanjie_walk_006",
+      "file": "replay/0807_yanjie_walk_006.npz",
+      "stage": 0,
+      "split": "replay",
+      "seconds": 14.99,
+      "sha256": "13b135adedb27a28dc2593c82016c2c45ff61be153877cc9c0fd3b11ebaacc97",
+      "source_sha256": "feb513be7686e0397b54e6e033d331fe600e682c2b7b979ac3141338f9150723"
+    }
+  ],
+  "dropped_bursts": [
+    {
+      "id": "stage01-run01-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage01-run01-003000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage02-run00-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage02-run01-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage02-run02-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage02-run02-003000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage03-run01-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage03-run01-003000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage03-run02-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage04-run00-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage04-run00-003000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage04-run01-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage05-run00-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage05-run00-003000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage06-run00-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage06-run00-003000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage07-run00-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage07-run01-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage07-run01-003000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage07-run02-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage08-run00-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage08-run01-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage08-run01-003000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage09-run00-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage09-run00-003000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage10-run00-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage10-run00-003000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage10-run01-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage11-run00-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage11-run00-003000",
+      "flagged_frames": 6,
+      "excluded_frames": 56
+    },
+    {
+      "id": "stage12-run00-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage12-run01-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage12-run01-003000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage13-run00-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage13-run01-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage13-run02-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage14-run00-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage14-run01-000000",
+      "flagged_frames": 4,
+      "excluded_frames": 54
+    },
+    {
+      "id": "stage14-run01-003000",
+      "flagged_frames": 16,
+      "excluded_frames": 143
+    },
+    {
+      "id": "stage14-run03-000000",
+      "flagged_frames": 6,
+      "excluded_frames": 84
+    },
+    {
+      "id": "stage15-run00-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    },
+    {
+      "id": "stage15-run01-000000",
+      "flagged_frames": 0,
+      "excluded_frames": 0
+    }
+  ],
+  "replay_sampling_fraction": 0.2,
+  "replay_source_revision": "b06178f19a22f2138cbd31f60c6d494bc263f67d",
+  "replay_eligibility": {
+    "criterion": "full baseline survival on same MuJoCo embodiment, seed 0; no Quest validation used",
+    "kept": [
+      "0807_yanjie_walk_001",
+      "0807_yanjie_walk_003",
+      "0807_yanjie_walk_005",
+      "0807_yanjie_walk_006"
+    ],
+    "excluded": [
+      "0807_yanjie_walk_004",
+      "0807_yanjie_walk_007",
+      "0807_yanjie_walk_008",
+      "0807_yanjie_walk_009",
+      "0807_yanjie_walk_010"
+    ]
+  }
+}

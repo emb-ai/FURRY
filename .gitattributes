@@ -1,0 +1,2 @@
+datasets/quest-virtual-legs-v2/**/*.npz filter=lfs diff=lfs merge=lfs -text
+datasets/quest-virtual-legs-v2/**/*.zip filter=lfs diff=lfs merge=lfs -text

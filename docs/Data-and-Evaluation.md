@@ -2,7 +2,15 @@
 
 [Home](Home.md) | [Common Ground](Common-Ground.md) | [Contributing](Contributing.md)
 
-**Status: proposed requirements, not a file format or measured benchmark.**
+The [Quest virtual legs v2 training snapshot](../datasets/quest-virtual-legs-v2/2026-10-08/README.md)
+is now included: the original 900 accepted seconds, 33 curated train and 12
+validation clips, train-only mirrors and four separately attributed public replay
+examples. Download its binary payloads through Git LFS and run the included
+integrity verifier. This is one session with estimated Meta legs and no
+independent test set; it is not a task-success or walking benchmark.
+
+**Status of the requirements below: proposed, not an implemented general format
+or measured benchmark.**
 Implementation belongs to [data #8](https://github.com/emb-ai/FURRY/issues/8) and
 [evaluation #9](https://github.com/emb-ai/FURRY/issues/9).
 

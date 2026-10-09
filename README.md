@@ -17,6 +17,7 @@ deployment is outside this project's scope.
 - [Getting started](docs/Getting-Started.md)
 - [Compressed literature review](docs/Literature-Review.md)
 - [TWIST2 baseline audit](docs/TWIST2-Baseline.md)
+- [Quest training dataset: source, curated clips and mirrors](datasets/quest-virtual-legs-v2/2026-10-08/README.md)
 - [Research roadmap and umbrella issues](https://github.com/emb-ai/FURRY/issues/1)
 - [Contribution workflow](docs/Contributing.md)
 - [GitHub Wiki mirror](https://github.com/emb-ai/FURRY/wiki)
@@ -42,4 +43,6 @@ Architecture choices remain provisional research decisions.
 - [FURRY license: Apache-2.0](LICENSE)
 
 Upstream software, models and datasets have their own licenses. FURRY's license
-does not relicense them, and they are not bundled here.
+does not relicense them. The Quest training snapshot includes four TWIST2
+example-motion replay fixtures with their original MIT notice; see its dataset
+README for provenance.
