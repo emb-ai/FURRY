@@ -166,5 +166,42 @@ Pads reduce trips in both input paths beyond that noise. The clamp's further
 effect on pads (1.31 → 1.27) is within it. Requested toe targets stay below
 −5 mm in 14.2% of foot-rows, so the clamp is active that often. The 008 fall
 (about 6.6 s) and the 009/010 startup falls occur in every variant. The
-synthetic fixture does not model Meta's estimated foot pitch, so the clamp's
-effect on real Quest input remains to be measured.
+synthetic fixture does not model Meta's estimated foot pitch; real Quest
+skeletons follow.
+
+### Real Quest skeletons: toe clamp
+
+The 2026-10-08 capture in
+[`datasets/quest-virtual-legs-v2`](../../../datasets/quest-virtual-legs-v2/2026-10-08/README.md)
+is `human_skeleton_only`: the robot never ran, so it has no resets or commands
+for `replay_gmr_dynamics`. `replay_meta_skeleton` drives the current adapter,
+GMR and policy from its Meta body frames instead. Each of the 17 accepted
+segments is cut into windows of at most 30 s; every window resets the robot,
+calibrates on its first usable frame and blends in over 0.5 s. Stand scene,
+default build (no floor guard, swing clearance or TWIST2 grounding):
+
+| Toe clamp | Scored s | trips/s | braking trips/s | touchdowns/s | falls |
+|---|---:|---:|---:|---:|---|
+| no | 854 | 0.71 | 0.37 | 3.05 | stage 6 at 16 s |
+| **yes (shipped)** | 849 | **0.49** | **0.27** | 3.04 | stage 13 at 12 s |
+
+The clamp lowers trips in 13 of the 14 segments that contain walking; stage 13
+is unchanged. The largest drops are variable-pace walking (stage 2, 1.52 →
+0.57) and turns with a carried object (stage 10, 1.76 → 0.90), where 37% of
+foot-rows ask for the toe below −5 mm. Over the whole capture that share is
+17%, mostly on the supporting foot. One operator and one session; windows
+restart the robot, unlike a continuous session. Rates are comparable only
+between variants on the same input, not with the public walks above.
+
+```sh
+python3 -c "import json,sys; print('stage,first,last'); [print(f\"{s['stage']},{s['first_sequence']},{s['last_sequence']}\") for s in json.load(open(sys.argv[1]))['accepted_segments']]" \
+  ../../datasets/quest-virtual-legs-v2/2026-10-08/audit/audit.json > outputs/segments.csv
+unzip -q ../../datasets/quest-virtual-legs-v2/2026-10-08/raw/source-episode.zip -d outputs
+for mode in clamp noclamp; do
+  android/build/replay_meta_skeleton android/assets stand outputs/episode-1791467626074995 \
+    outputs/segments.csv $mode outputs/quest-$mode.csv
+done
+.venv/bin/python scripts/analyze_foot_trips.py outputs/quest-*.csv
+```
+
+Running each segment as a separate file gives identical counts.

@@ -15,7 +15,7 @@ class MetaRetargeter {
     TrackedPose cameraOrigin,cameraHeadOrigin;
     std::array<double,4> cameraRotationOffset{1,0,0,0};
     bool cameraTracking=false;
-    bool twistGrounding=false;
+    bool twistGrounding=false,toeClamp=true;
     SwingClearance swing;
     double swingClearance=0;
     bool baselinePoseStored=false;
@@ -30,6 +30,8 @@ public:
     void Calibrate(const mjModel* model,const mjData* data,const TrackingFrame& input);
     const std::array<float,35>& Solve(const TrackingFrame& input);
     void EnableCameraTracking(bool value){cameraTracking=value;if(!value)gmr.ClearCameraTarget();}
+    // Offline ablation only; the device always clamps toe targets.
+    void EnableToeClamp(bool value){toeClamp=value;}
     void EnableTwistGrounding(bool value){
         if(value && swingClearance>0)throw std::runtime_error("Choose TWIST2 grounding or swing correction");
         twistGrounding=value;

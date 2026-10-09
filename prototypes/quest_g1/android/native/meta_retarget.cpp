@@ -125,7 +125,7 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& input){
     }else for(int side=0;side<2;side++){
         double& z=targets[6+side].position[2];
         toeClearance[side]=z-flatToeHeight[side];
-        z=std::max(z,flatToeHeight[side]);
+        if(toeClamp)z=std::max(z,flatToeHeight[side]);
     }
     gmr.SetTargets(targets);
     if(cameraTracking && (input.location_flags[0]&3)==3){
