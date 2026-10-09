@@ -231,3 +231,45 @@ the original physics loop, timestep, substeps and synchronization.
 The diagnostic rerun then segfaulted during simulator creation for its third
 variant, before the optimized metrics/critic code ran; its no-fetch case did
 not run. Job 111526 completed all five variants and the CUDA parity checks.
+
+## 50 Hz evaluation and gait diagnostics (2026-10-09)
+
+`author_eval.py` and `run_author_pipeline.py` default to `--control-hz 50`.
+The actor and its history update every 20 ms, with actions held between calls.
+The existing MuJoCo physics stays at 1 kHz; reference frames, diagnostics and
+legacy reward reporting stay at 100 Hz. Dataset files are not resampled and
+source Isaac Gym training remains 50 Hz. `evaluate()` retains 100 Hz as its
+backward-compatible default. Reports record actor/history/trace frequencies;
+comparison rejects different frequencies, scenes, splits and diagnostic schemas.
+
+`gait_evaluation.py` adds read-only foot contact and full-quaternion heading
+measurements. Swing labels use the unchanged dataset qpos reference, >=1 cm
+relative clearance and >0.3 m/s foot speed. Complete reference swings must last
+at least 80 ms; partial swings at warmup/prefix boundaries are excluded. This
+reference construction differs from the Meta/GMR replay study in main, so its
+absolute numbers must not be spliced into that study's tables. Existing sliding,
+fall and XY tracking measurements remain present. Braking uses net horizontal
+floor force opposing the foot body's horizontal velocity, with a 50 N threshold.
+
+Gait/heading/progress comparisons are recomputed on each shared survival prefix,
+excluding its first second. Directed progress projects robot displacement onto
+the corresponding reference path segments sampled every 0.5 s. It can be zero
+for sideways motion or negative for opposite motion even when path lengths are
+equal. It is separate from along-track/cross-track displacement error, heading
+error and path length ratio. Static reference segments have no progress ratio.
+Legacy acceptance remains diagnostic, with no new metric thresholds or early
+termination of training. All per-clip metrics are available for checkpoint review.
+
+The pipeline evaluates baseline and every 100-update checkpoint at 50 Hz, then
+baseline/final at 100 Hz for compatibility. Stage 5 backward walking is a separate
+TRAIN diagnostic, never a new validation slice. `--previous-training` requests
+retrospective 50 Hz evaluation of the previous run's saved checkpoints. Existing
+12 validation clips/stages 2, 9, 14 and all ancestor train membership are preserved
+by the same lineage guards. No train-to-validation transfer, catch-up, new reward,
+friction, sole or clearance change is introduced by this work.
+
+The requested new run starts again from user-selected `111260/checkpoint_001000.pt`
+with the existing displacement/turn reward, fresh critic warmup and 500 actor
+updates. This is a repeat with improved evaluation and optional fast critic,
+not continuation from the previous run's additional 500 updates and not a claim
+that the reward changed. Previous run 111501 completed its 500 actor updates.

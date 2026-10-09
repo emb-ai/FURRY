@@ -9,6 +9,11 @@ from rewards import RewardConfig
 p=argparse.ArgumentParser()
 for name in ['assets','dataset','policy','source','output']:p.add_argument('--'+name,required=True,type=Path)
 p.add_argument('--baseline',type=Path)
+p.add_argument('--control-hz',type=int,choices=(50,100),default=50)
+p.add_argument('--split',choices=('train','validation'),default='validation')
+p.add_argument('--stage',type=int)
+p.add_argument('--seeds',nargs='+',type=int,default=[0,1])
+p.add_argument('--limit',type=int)
 p.add_argument('--window-metrics',action='store_true')
 a=p.parse_args()
 if a.window_metrics:
@@ -38,7 +43,13 @@ if a.window_metrics:
             return obs,reward,done,info
     evaluator.Env=WindowMetricEnv
     evaluator.METRICS.extend(['window_displacement_error_m','window_displacement_huber','window_turn_huber'])
-report=evaluate(a.assets,a.dataset,a.policy,a.source,split='validation',seeds=(0,1),output=a.output,reward_config=RewardConfig(slide_weight=2.))
+indices=None
+if a.stage is not None:
+    from env import Motions
+    motions=Motions(a.dataset,a.split)
+    indices=[i for i,item in enumerate(motions.items) if item['meta']['stage']==a.stage]
+    if not indices:raise ValueError('No clips in requested stage/split')
+report=evaluate(a.assets,a.dataset,a.policy,a.source,split=a.split,seeds=tuple(a.seeds),output=a.output,reward_config=RewardConfig(slide_weight=2.),clip_indices=indices,limit=a.limit,control_hz=a.control_hz,gait_metrics=True)
 if a.baseline:
     base=json.loads(a.baseline.read_text())
     with np.load(a.baseline.with_suffix('.npz'),allow_pickle=False) as z:base['_traces']={k:z[k] for k in z.files}
