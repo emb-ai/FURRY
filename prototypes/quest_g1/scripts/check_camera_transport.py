@@ -42,6 +42,8 @@ def handler(ws):
             if data.get('type') == 'ping':
                 ws.send(json.dumps({'type': 'pong', 't': data['t'], 'server_t': time.time_ns()/1e6-700}))
                 value['seq'] = 3
+                value['joints']['lwrist'] = {'p': [.4, 1.2, -.3], 'conf': .9, 'src': 'window'}
+                value['joints']['lelbow'] = {'p': [.3, 1.3, -.2], 'conf': .8, 'src': 'window'}
                 value['t'] = time.time_ns()/1e6-700
                 ws.send(json.dumps(value))
             elif all(k in data for k in ['t', 'hmd', 'ctrl_l', 'ctrl_r']):

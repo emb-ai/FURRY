@@ -35,7 +35,47 @@ jobs:
           git -C vendor/TWIST2 remote add origin https://github.com/amazon-far/TWIST2.git
           git -C vendor/TWIST2 fetch --depth 1 origin b06178f19a22f2138cbd31f60c6d494bc263f67d
           git -C vendor/TWIST2 checkout --detach FETCH_HEAD
+      - name: Fetch pinned OpenXR source for controller-binding checks
+        run: |
+          git init vendor/OpenXR-SDK-Source
+          git -C vendor/OpenXR-SDK-Source remote add origin https://github.com/KhronosGroup/OpenXR-SDK-Source.git
+          git -C vendor/OpenXR-SDK-Source fetch --depth 1 origin 47c4761d05b27f884247480ac3fb8a6657907325
+          git -C vendor/OpenXR-SDK-Source checkout --detach FETCH_HEAD
+      - name: Verify menu input patch against pinned OpenXR without skips
+        run: |
+          python - <<'PY'
+          import unittest
+          suite = unittest.defaultTestLoader.loadTestsFromName('tests.test_menu_input_patch')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped or not result.testsRun:
+              raise SystemExit('Pinned OpenXR menu checks must execute and pass without skips')
+          PY
       - run: python -m unittest discover -s tests -v
+      - name: Check session-menu controls, recording locks and ray selection
+        run: |
+          c++ -std=c++17 -Wall -Wextra -Werror -Iandroid/native tests/check_quest_menu.cpp -o /tmp/check-quest-menu
+          /tmp/check-quest-menu
+      - name: Check guided capture timing, pause, tracking loss and completion
+        run: |
+          c++ -std=c++17 -Wall -Wextra -Werror -Iandroid/native android/native/check_guided_capture.cpp -o /tmp/check-guided-capture
+          /tmp/check-guided-capture
+      - name: Check independent Meta and camera debug overlays
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess
+          import mujoco
+          package = Path(mujoco.__file__).parent
+          library = sorted(package.glob('libmujoco.so*'))[0]
+          for name, sources in [('world_skeleton', ['android/native/camera_fusion.cpp']),
+                                ('operator_skeleton', [])]:
+              binary = '/tmp/check-' + name.replace('_', '-')
+              subprocess.run(['c++', '-O2', '-std=c++17', '-Iandroid/native',
+                              '-I' + str(package / 'include'), 'tests/check_' + name + '.cpp',
+                              *sources, str(library), '-Wl,-rpath,' + str(package),
+                              '-o', binary], check=True)
+              subprocess.run([binary], check=True)
+          PY
       - name: Check camera fusion and pose servo
         run: python scripts/check_camera_fusion.py
       - name: Check threaded physics equality and reset

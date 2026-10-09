@@ -67,7 +67,8 @@ public:
         glFramebufferTexture2D(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_TEXTURE_2D,it->second,0);
         if(glCheckFramebufferStatus(GL_FRAMEBUFFER)!=GL_FRAMEBUFFER_COMPLETE)throw std::runtime_error("Incomplete XR framebuffer");
         glViewport(rect.offset.x,rect.offset.y,rect.extent.width,rect.extent.height);
-        glClearColor(0,0,0,0);glClearDepthf(1);glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        if(G1PassthroughVisible())glClearColor(0,0,0,0);else glClearColor(.06f,.07f,.06f,1);
+        glClearDepthf(1);glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         XrMatrix4x4f projection,toView,viewMatrix,vp;
         XrMatrix4x4f_CreateProjectionFov(&projection,GRAPHICS_OPENGL_ES,view.fov,.04f,50.f);
         XrMatrix4x4f_CreateFromRigidTransform(&toView,&view.pose);

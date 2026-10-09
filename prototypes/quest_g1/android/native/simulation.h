@@ -10,7 +10,7 @@
 // Shared by the Android app and the native desktop integration check.
 class Simulation {
 public:
-    explicit Simulation(const std::string& assets, int physicsWorkers=2);
+    explicit Simulation(const std::string& assets, int physicsWorkers=2, const std::string& sceneName="lab");
     ~Simulation();
     void Reset();
     void Step(bool demo = true, double grip = 0, double right_grip = -1);
@@ -19,6 +19,7 @@ public:
     double inference_ms = 0;
     int steps = 0;
     int physics_workers = 0;
+    std::string scene_name;
     void SetArmReference(const std::array<float,29>& joints);
     void SetWholeBodyReference(const std::array<float,35>& reference);
     void PauseWholeBodyReference();

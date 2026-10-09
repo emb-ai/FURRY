@@ -74,6 +74,9 @@ TrackingFrame CameraFusion::Apply(const TrackingFrame&raw,const CameraSkeleton*c
  TrackingFrame out=raw;stats.legs=0;stats.weight=0;stats.state=c?1:0;stats.ageMs=c?std::max(now-c->sourceMs,now-c->receivedMs):-1;
  double dt=lastApplyMs?std::clamp((now-lastApplyMs)/1000.,0.,.05):.01;lastApplyMs=now;
  bool fresh=c && stats.ageMs>=0 && stats.ageMs<150 && now-c->sourceMs>=-100;
+ // Delayed measurements still correct the matched historical Meta pose.
+ // 150 ms controls fading/status; 500 ms remains the hard expiry.
+ bool usableAge=c && stats.ageMs>=0 && stats.ageMs<500 && now-c->sourceMs>=-100;
  bool newPacket=c && c->sequence!=lastSequence;
  if(newPacket){
   lastSequence=c->sequence;weights={};
@@ -86,7 +89,7 @@ TrackingFrame CameraFusion::Apply(const TrackingFrame&raw,const CameraSkeleton*c
     bool usable=aligned && c->frame=="camera";
     // pelvis-relative packets already use STAGE axes and need no camera R.
     bool stage=c->frame=="pelvis-relative";
-    if(fresh && (usable || stage) && Good(c->pelvis)){
+    if(usableAge && (usable || stage) && Good(c->pelvis)){
      for(int side=0;side<2;side++){
       bool good=Good(c->joints[side]) && Good(c->joints[2+side]) && Good(c->joints[4+side]);
       if(!good){weights[side]=0;continue;}
@@ -137,11 +140,11 @@ CameraOverlay CameraFusion::MapForDisplay(const CameraSkeleton*c,const TrackingF
  CameraOverlay out;if(!c)return out;
  out.ageMs=std::max(now-c->sourceMs,now-c->receivedMs);
  bool relative=c->frame=="pelvis-relative";
- out.aligned=(aligned && c->frame=="camera") || (relative && raw.body.valid);
+ out.aligned=(aligned && c->frame=="camera") || (relative && Good(c->pelvis));
  if(!out.aligned || out.ageMs<0 || out.ageMs>=500)return out;
- for(int i=0;i<12;i++){
-  const auto&j=i==11?c->pelvis:c->joints[i];if(!Good(j))continue;
-  out.points[i]=relative?Add(raw.body.joints[0].position,i==11?V{}:j.p):Add(Rotate(rotation,j.p),translation);
+ for(int i=0;i<14;i++){
+  const auto&j=i==13?c->pelvis:c->joints[i];if(!Good(j))continue;
+  out.points[i]=relative?Add(c->pelvis.p,i==13?V{}:j.p):Add(Rotate(rotation,j.p),translation);
   out.valid[i]=true;
  }
  return out;

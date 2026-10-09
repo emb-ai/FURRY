@@ -3,14 +3,52 @@
 #include <GLES3/gl32.h>
 #include <stdexcept>
 
+namespace operatorskeleton_detail {
+// Both first-call resource setup and later overlay passes run inside the
+// simulator render pass; restore precisely the state they change.
+struct StateGuard {
+    GLint program = 0, vao = 0, buffer = 0, depthFunc = 0;
+    GLint srcRGB = 0, dstRGB = 0, srcAlpha = 0, dstAlpha = 0, eqRGB = 0, eqAlpha = 0;
+    GLboolean depth = false, blend = false, cull = false, depthMask = true;
+    StateGuard() {
+        glGetIntegerv(GL_CURRENT_PROGRAM, &program);
+        glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &vao);
+        glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &buffer);
+        glGetIntegerv(GL_DEPTH_FUNC, &depthFunc);
+        glGetIntegerv(GL_BLEND_SRC_RGB, &srcRGB);
+        glGetIntegerv(GL_BLEND_DST_RGB, &dstRGB);
+        glGetIntegerv(GL_BLEND_SRC_ALPHA, &srcAlpha);
+        glGetIntegerv(GL_BLEND_DST_ALPHA, &dstAlpha);
+        glGetIntegerv(GL_BLEND_EQUATION_RGB, &eqRGB);
+        glGetIntegerv(GL_BLEND_EQUATION_ALPHA, &eqAlpha);
+        depth = glIsEnabled(GL_DEPTH_TEST); blend = glIsEnabled(GL_BLEND); cull = glIsEnabled(GL_CULL_FACE);
+        glGetBooleanv(GL_DEPTH_WRITEMASK, &depthMask);
+    }
+    ~StateGuard() {
+        glUseProgram(GLuint(program));
+        glBindVertexArray(GLuint(vao));
+        glBindBuffer(GL_ARRAY_BUFFER, GLuint(buffer));
+        glDepthFunc(GLenum(depthFunc)); glDepthMask(depthMask);
+        glBlendFuncSeparate(GLenum(srcRGB), GLenum(dstRGB), GLenum(srcAlpha), GLenum(dstAlpha));
+        glBlendEquationSeparate(GLenum(eqRGB), GLenum(eqAlpha));
+        set(GL_DEPTH_TEST, depth); set(GL_BLEND, blend); set(GL_CULL_FACE, cull);
+    }
+    static void set(GLenum capability, bool enabled) {
+        if (enabled) glEnable(capability); else glDisable(capability);
+    }
+};
+} // namespace operatorskeleton_detail
+
 // Two passes: solid where the bone is in front of the robot, translucent where
 // the ego mesh covers the operator. Both use STAGE coordinates.
 inline int DrawOperatorSkeleton(const float* vp, const TrackingFrame& raw, double rawAgeMs,
-                                const CameraOverlay& optical, double now, double published) {
-    OperatorSkeleton mesh = BuildOperatorSkeleton(raw, rawAgeMs, optical, now, published);
+                                const CameraOverlay& optical, double now, double published,
+                                bool showMeta = true, bool showCamera = true) {
+    OperatorSkeleton mesh = BuildOperatorSkeleton(raw, rawAgeMs, optical, now, published, showMeta, showCamera);
     if (mesh.Triangles() == 0) return 0;
     if (mesh.Triangles() > kOperatorSkeletonMaxTriangles)
         throw std::runtime_error("Operator skeleton exceeds triangle budget");
+    operatorskeleton_detail::StateGuard guard;
     static GLuint program = 0, vao = 0, vbo = 0;
     if (!program) {
         auto compile = [](GLenum type, const char* source) {
@@ -59,8 +97,10 @@ void main(){color=tint;})");
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STREAM_DRAW);
     glEnable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     GLint tint = glGetUniformLocation(program, "tint");
     auto draw = [&](int first, int count, float r, float g, float b, float a, bool occluded) {
         if (count <= 0 || a <= 0) return;
@@ -76,10 +116,5 @@ void main(){color=tint;})");
     draw(0, upper, .30f, .85f, 1.f, 1.f, false);
     draw(upper, legs, 1.f, .65f, .25f, 1.f, false);
     draw(upper + legs, camera, 1.f, .25f, .85f, mesh.cameraAlpha, false);
-    glDepthMask(GL_TRUE);
-    glDepthFunc(GL_LESS);
-    glDisable(GL_BLEND);
-    glBindVertexArray(0);
-    glUseProgram(0);
     return mesh.Triangles() * 2;
 }

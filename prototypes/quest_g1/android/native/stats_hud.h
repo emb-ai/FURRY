@@ -13,7 +13,7 @@
 // Lightweight native glyph atlas; drawn every eye even when physics is stalled.
 inline int DrawStatsHud(const float* headViewProjection,const std::string& assets,const RuntimeStats& s,
                          double fps,double drawMs,uint64_t skipped,double now,int status,bool active,int exportStatus,
-                         const TrackingFrame& raw,double rawAgeMs,bool firstPerson,float visualScale,int recording,double recordingStarted){
+                         const TrackingFrame& raw,double rawAgeMs,bool firstPerson,float visualScale,int recording,double recordingStarted,bool showSkeletonInset=true){
     static GLuint program=0,texture=0,vao=0,vbo=0;
     if(!program){
         auto shader=[](GLenum type,const char* source){GLuint h=glCreateShader(type);glShaderSource(h,1,&source,nullptr);glCompileShader(h);GLint ok;glGetShaderiv(h,GL_COMPILE_STATUS,&ok);if(!ok)throw std::runtime_error("Stats shader failed");return h;};
@@ -33,9 +33,9 @@ void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
         glEnableVertexAttribArray(0);glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,4*sizeof(float),nullptr);
         glEnableVertexAttribArray(1);glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,4*sizeof(float),(void*)(2*sizeof(float)));
     }
-    const char* states[]={"CALIBRATE A","TRACKING","PAUSED B","BODY INVALID","PHYSICS FAULT: X","TRACKING / IK MISMATCH"};
+    const char* states[]={"CALIBRATE A","TRACKING","PAUSED B","BODY INVALID","PHYSICS FAULT: MENU","TRACKING / IK MISMATCH"};
     const char* exports[]={"Y: RECORD / SAVE ZIP","ZIP: COPYING TO DOWNLOADS","ZIP: Download/G1Quest","ZIP EXPORT FAILED (data kept)"};
-    const char* reasons[]={"-","STAGE RECENTER: A","BODY RECALIBRATED: A","FALL/EXCEPTION: X"};
+    const char* reasons[]={"-","STAGE RECENTER: A","BODY RECALIBRATED: A","FALL/EXCEPTION: MENU"};
     char text[2048],cameraText[80],opticalText[100],recordText[100];
     int duration=int(std::max(0.,now-recordingStarted));
     if(recording==1)std::snprintf(recordText,sizeof(recordText),"REC %02d:%02d  Y: STOP",duration/60,duration%60);
@@ -46,7 +46,7 @@ void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
     if(s.cameraPositionError>=0)std::snprintf(cameraText,sizeof(cameraText),"HEAD %.1f cm / %.1f deg",100*s.cameraPositionError,s.cameraOrientationError);
     else std::snprintf(cameraText,sizeof(cameraText),"HEAD target: OFF");
     std::snprintf(text,sizeof(text),
-        "VIEW %s [L-stick]\nFPS %4.0f  CPU %.1f ms\nSIM %.2fx  MT %d  WARN %d\nPHYS %.1f GMR %.1f NN %.1f ms\nCONTACT %d  DEPTH %.1f mm\n%s\nINPUT %.0f  AGE %.0f ms\nROOT %.2f m LEG %.0f deg\nIK %.1f cm / %.0f deg\n%s\nSCALE %.2fx  TILT %.0f deg\nCMD %+.2f / %+.2f m/s\n%s\n%s\n%s",
+        "VIEW %s\nFPS %4.0f  CPU %.1f ms\nSIM %.2fx  MT %d  WARN %d\nPHYS %.1f GMR %.1f NN %.1f ms\nCONTACT %d  DEPTH %.1f mm\n%s\nINPUT %.0f  AGE %.0f ms\nROOT %.2f m LEG %.0f deg\nIK %.1f cm / %.0f deg\n%s\nSCALE %.2fx  TILT %.0f deg\nCMD %+.2f / %+.2f m/s\n%s\n%s\n%s",
         firstPerson?"EGO":"OBSERVER",fps,drawMs,active?s.realTimeFactor:0.,s.physicsWorkers,s.warnings,
         s.physicsMs,s.gmrMs,s.inferenceMs,s.contacts,s.depthMm,opticalText,
         s.inputAgeMs,s.published>0?std::max(0.,now-s.published)*1000:0.,s.positionError,s.legErrorDegrees,s.ikPositionCm,s.ikOrientationDeg,
@@ -62,6 +62,7 @@ void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
     struct Batch{int first,count;std::array<float,4> color;};
     std::vector<Batch> batches;
     auto batch=[&](int first,std::array<float,4> color){batches.push_back({first,int(vertices.size()/4)-first,color});};
+    if(showSkeletonInset){
     int first=vertices.size()/4;quad(.35f,.96f,.83f,.85f,127);batch(first,{.025f,.04f,.06f,.82f});
     auto label=[&](float y,const std::string& value,std::array<float,4> color){
         int begin=vertices.size()/4;float x=.375f;
@@ -122,7 +123,7 @@ void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
     double opticalAge=optical.ageMs+std::max(0.,now-s.published)*1000;
     if(optical.aligned && optical.ageMs>=0 && opticalAge<500){
         valid.fill(false);
-        for(int j=0;j<12;j++)if(optical.valid[j]){
+        for(int j=0;j<14;j++)if(optical.valid[j]){
             const auto& p=optical.points[j];
             double dx=p[0]-raw.body.joints[0].position[0],dz=p[2]-raw.body.joints[0].position[2];
             double horizontal=.94*(-fz*dx+fx*dz)+.34*(fx*dx+fz*dz);
@@ -131,15 +132,16 @@ void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
                 points[j][0]>.37 && points[j][0]<1.16 && points[j][1]>.19 && points[j][1]<.875;
         }
         first=vertices.size()/4;
-        const std::pair<int,int> cameraEdges[]={{0,2},{2,4},{1,3},{3,5},{0,1},{7,8},{7,0},{8,1},{6,7},{6,8}};
+        const std::pair<int,int> cameraEdges[]={{0,2},{2,4},{1,3},{3,5},{0,1},{7,8},{7,0},{8,1},{6,7},{6,8},{7,11},{11,9},{8,12},{12,10}};
         for(auto e:cameraEdges)line(e.first,e.second,.0018f);
-        for(int j=0;j<12;j++)if(valid[j])for(int k=0;k<12;k++){
+        for(int j=0;j<14;j++)if(valid[j])for(int k=0;k<12;k++){
             float a=k*6.2831853f/12,b=(k+1)*6.2831853f/12,x=points[j][0],y=points[j][1];
             float ax=x+.011f*std::cos(a),ay=y+.011f*std::sin(a),bx=x+.011f*std::cos(b),by=y+.011f*std::sin(b);
             float cx=x+.007f*std::cos(a),cy=y+.007f*std::sin(a),dx=x+.007f*std::cos(b),dy=y+.007f*std::sin(b);
             solidTriangle(ax,ay,cx,cy,bx,by);solidTriangle(cx,cy,dx,dy,bx,by);
         }
         float alpha=float(std::clamp((500-opticalAge)/350.,0.,1.));batch(first,{1.f,.25f,.85f,alpha});
+    }
     }
     // Shared metre coordinates in the central head frame, not per-eye NDC.
     // The real eye poses and asymmetric FOVs provide the stereo disparity.

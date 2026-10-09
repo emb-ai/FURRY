@@ -22,8 +22,11 @@ std::vector<std::string> JointNames() {
 }
 }
 
-Simulation::Simulation(const std::string& assets, int physicsWorkers) {
+Simulation::Simulation(const std::string& assets, int physicsWorkers, const std::string& sceneName)
+    : scene_name(sceneName) {
     if(physicsWorkers<0 || physicsWorkers>4)throw std::runtime_error("Invalid MuJoCo worker count");
+    if(sceneName!="lab" && sceneName!="stand" && sceneName!="cup" && sceneName!="push_t")
+        throw std::runtime_error("Unknown Quest scene: "+sceneName);
     options.SetIntraOpNumThreads(1);
     options.SetInterOpNumThreads(1);
     session = std::make_unique<Ort::Session>(env, (assets+"/policy.onnx").c_str(), options);
@@ -31,7 +34,8 @@ Simulation::Simulation(const std::string& assets, int physicsWorkers) {
     input_name = session->GetInputNameAllocated(0,alloc).get();
     output_name = session->GetOutputNameAllocated(0,alloc).get();
     char error[2048] = {};
-    model = mj_loadXML((assets+"/scene.xml").c_str(), nullptr, error, sizeof(error));
+    const std::string sceneFile=sceneName=="lab"?"scene.xml":"scene-"+sceneName+".xml";
+    model = mj_loadXML((assets+"/"+sceneFile).c_str(), nullptr, error, sizeof(error));
     if (!model) throw std::runtime_error(std::string("MuJoCo model: ")+error);
     data = mj_makeData(model);
     if (!data) throw std::runtime_error("mj_makeData failed");

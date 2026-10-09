@@ -1,5 +1,6 @@
 #include "meta_retarget.h"
 #include "simulation.h"
+#include "episode_manifest.h"
 #include <fstream>
 #include <sstream>
 #include <map>
@@ -10,7 +11,8 @@ static std::vector<double> Row(const std::string& line){std::stringstream s(line
 int main(int argc,char**argv){
     if(argc!=3)return 2;
     try{
-        std::string folder=argv[2];Simulation sim(argv[1]);MetaRetargeter meta(argv[1]);
+        std::string folder=argv[2];auto manifest=episodereplay::LoadManifest(folder);
+        Simulation sim(argv[1],2,manifest.scene);manifest.ValidateDimensions(sim.model->nq,sim.model->nv,sim.model->nu);MetaRetargeter meta(argv[1]);
         std::ifstream inputs(folder+"/input.csv"),bodies(folder+"/body.csv"),frames(folder+"/frames.csv"),commands(folder+"/mimic.csv");
         if(!inputs||!bodies||!frames||!commands)throw std::runtime_error("GMR replay requires input/body/frames/mimic streams");
         std::map<uint64_t,TrackingFrame> poses;std::string line;
@@ -24,13 +26,7 @@ int main(int argc,char**argv){
             b.time_ns=r[1];b.supported=r[2];b.valid=r[3];b.confidence=r[4];b.skeleton_version=r[5];
             for(int i=0;i<14;i++){int a=6+15*i;b.flags[i]=r[a];for(int k=0;k<2;k++){auto&p=k?b.rest[i]:b.joints[i];std::copy_n(r.begin()+a+1+7*k,3,p.position.begin());std::copy_n(r.begin()+a+4+7*k,4,p.quaternion.begin());}}
         }
-        std::vector<int64_t> focusPauses;
-        std::ifstream events(folder+"/events.csv");std::getline(events,line);
-        while(std::getline(events,line)){
-            std::stringstream row(line);std::string time,sequence,event;
-            std::getline(row,time,',');std::getline(row,sequence,',');std::getline(row,event);
-            if(event=="focus_pause")focusPauses.push_back(std::stoll(time));
-        }
+        auto focusPauses=episodereplay::PauseTimes(folder);
         size_t pauseIndex=0;
         std::array<float,35> origin{};double blendStart=0,maxError=0;bool wasApplying=false;int count=0,skipped=0;
         std::getline(frames,line);std::string command;std::getline(commands,command);

@@ -22,8 +22,8 @@ bool CameraStream::Parse(const std::string&s,double received,CameraSkeleton&out)
  CameraSkeleton c;c.sourceMs=v["t"].asDouble();c.receivedMs=received;c.sequence=v["seq"].asUInt64();c.frame=v["frame"].asString();
  if(!std::isfinite(c.sourceMs) || c.sourceMs<=0 || (c.frame!="camera" && c.frame!="pelvis-relative"))return false;
  if(!Joint(v["pelvis"],c.pelvis))return false;
- const char*names[]={"lhip","rhip","lknee","rknee","lankle","rankle","nose","lshoulder","rshoulder","lwrist","rwrist"};
- for(int i=0;i<11;i++){if(i>=9 && !v["joints"].isMember(names[i]))continue;if(!Joint(v["joints"][names[i]],c.joints[i]))return false;}
+ const char*names[]={"lhip","rhip","lknee","rknee","lankle","rankle","nose","lshoulder","rshoulder","lwrist","rwrist","lelbow","relbow"};
+ for(int i=0;i<13;i++){if(i>=9 && !v["joints"].isMember(names[i]))continue;if(!Joint(v["joints"][names[i]],c.joints[i]))return false;}
  out=c;return true;
 }
 CameraStream::CameraStream(const std::string&url):socket(std::make_unique<ix::WebSocket>()){

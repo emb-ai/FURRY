@@ -30,7 +30,8 @@ int main(){
   if(n>=3){auto old=packets[n-3];old.receivedMs=now;delayed.Apply(frames[n],&old,now);}
  }
  Require(delayed.Aligned(),"Timestamp-matched delayed stream cannot calibrate");
- Require(delayed.stats.legs==0,"Delayed registration bypasses physical freshness gate");
+ Require(delayed.stats.legs==2,"240 ms stream cannot contribute camera corrections");
+ Require(delayed.stats.state==3,"Delayed corrections must retain the STALE indication");
  auto delayedOverlay=delayed.MapForDisplay(&packets[packets.size()-4],frames.back(),packets.back().sourceMs);
  Require(delayedOverlay.valid[4],"Calibrated delayed stream is not visible");
  Require(fusion.Aligned(),"Rigid fit did not converge");Require(fusion.stats.fitMm<.001,"Rigid fit wrong / reflected");
@@ -52,5 +53,27 @@ int main(){
  fusion.Reset();for(int n=0;n<50;n++){c.sourceMs=c.receivedMs=t+n*80;c.sequence++;c.pelvis.confidence=1;raw.body.time_ns=raw.xr_time_ns=int64_t(c.sourceMs*1e6);fusion.Observe(raw,c.sourceMs);fusion.Apply(raw,&c,c.sourceMs);}
  Require(!fusion.Aligned(),"Static shoulders silently accepted ambiguous alignment");
  auto unaligned=fusion.MapForDisplay(&c,raw,c.sourceMs);Require(!unaligned.aligned,"Uncalibrated overlay pretends to be mapped");
- puts("Camera rigid fit, bone projection, stale, expiry, invalid heartbeat and degeneracy checks passed");
+ // Delayed STAGE packets move the legs; fresh receipt cannot revive old data.
+ for(double age:{165.,240.,450.,500.,650.}){
+  CameraFusion stage;auto body=frames.back();CameraSkeleton packet=packets.back();
+  packet.frame="pelvis-relative";packet.sequence=1;packet.sourceMs=200000;packet.receivedMs=packet.sourceMs+age;
+  body.xr_time_ns=body.body.time_ns=int64_t(packet.sourceMs*1e6);
+  stage.Observe(body,packet.sourceMs);
+  packet.pelvis.p=body.body.joints[0].position;
+  for(int side=0;side<2;side++)for(int k=0;k<3;k++)for(int a=0;a<3;a++)
+   packet.joints[2*k+side].p[a]=body.body.joints[2+2*k+side].position[a]-packet.pelvis.p[a];
+  packet.joints[2].p[2]+=.08;packet.joints[4].p[2]+=.12;
+  auto result=stage.Apply(body,&packet,packet.receivedMs);
+  if(age<500){
+   Require(stage.stats.legs==2,"Delayed STAGE packet rejected before expiry");
+   Require(result.body.joints[6].position[2]>body.body.joints[6].position[2]+1e-6,"Delayed STAGE correction did not move ankle");
+   Require(stage.stats.state==3,"Delayed STAGE correction hides its age");
+   auto gone=stage.Apply(body,&packet,packet.sourceMs+500);
+   for(int j=0;j<14;j++)Require(gone.body.joints[j].position==body.body.joints[j].position,"STAGE correction survives exact expiry");
+  }else{
+   Require(stage.stats.legs==0,"Fresh arrival revives expired source frame");
+   for(int j=0;j<14;j++)Require(result.body.joints[j].position==body.body.joints[j].position,"Expired STAGE packet changes body");
+  }
+ }
+ puts("Camera rigid fit, delayed correction, bone projection, stale, expiry, invalid heartbeat and degeneracy checks passed");
 }

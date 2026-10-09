@@ -2,9 +2,13 @@
 
 **Автономный Quest 3:** `android/build/g1-quest.apk`, приложение **G1 Quest Lab**. MuJoCo, ONNX Runtime и OpenGL ES работают внутри шлема; компьютер и сеть после установки не нужны. Сборка и управление установкой описаны в [android/README.md](android/README.md).
 
-Ранее на Quest после исправления индексов визуальных сеток измерено 72 FPS, в том числе с passthrough, при 68 091 треугольнике на глаз. Новая геометрия содержит **89 629 треугольников на глаз**; лимит 100 000 проверяется сборкой и рендерером. FPS новой версии на шлеме ещё не измерен. Подробности визуальных сеток и гибридных коллизий: [Geometry](assets/g1/README.md).
+Ранее на Quest после исправления индексов визуальных сеток измерено 72 FPS, в том числе с passthrough, при 68 091 треугольнике на глаз. Общая сцена `lab` с переработанной геометрией содержит **89 629 треугольников на глаз**; бюджеты новых отдельных сцен находятся в `android/assets/mesh_budget-*.json`. Лимит 100 000 проверяется сборкой и рендерером. FPS версии с меню на шлеме ещё не измерен. Подробности визуальных сеток и гибридных коллизий: [Geometry](assets/g1/README.md).
 
-Реальная комната видна через passthrough; виртуальный пол скрыт. **A** калибрует полный скелет Meta и точку начала перемещения тела. Нативный GMR формирует полный референс для TWIST2; **B** ставит трекинг на паузу, **X** перезапускает симуляцию, **Y** записывает движения и состояние робота. Grip сжимает кисти. Порт GMR прошёл сравнение с оригиналом на синтетических данных; точность реального Quest-трекинга, ходьба, поднятие чашки и Kick-T ещё не подтверждены. [Подробности переноса и проверки](android/GMR_PORT.md).
+Приложение открывается на паузе с простой панелью **«Сессия / Вид / Отладка»**. В сессии выбираются два режима: **«Симуляция»** и **«Сбор траекторий»**, а для симуляции и записи взаимодействий — три отдельные сцены: **«Пустая»**, **«Стол и чашка»**, **«Push-T»**. В сборе траекторий доступны форматы **«Человек + робот»** и **«Движения человека»**; второй использует реальную комнату и протокол обучения на 15 минут или отдельного теста на 5 минут.
+
+**Menu** слева открывает панель и замораживает физику. Наведите луч любого контроллера и нажмите триггер для выбора. Откалибруйтесь через меню или **A** на паузе, затем нажмите «Запустить» / «Начать запись». **B** ставит сессию на паузу или продолжает её; **Y** начинает и сохраняет запись в режиме сбора траекторий. Grip сжимает кисти. Смена режима, сцены, формата и плана записи заблокирована до сохранения эпизода. Рестарт, размещение сцены и выбор вида перенесены в меню.
+
+Отладка по умолчанию выключена; отдельно включаются показатели вычислений, скелеты Meta и внешней камеры, цели ретаргетинга и коллизии/контакты. Статус паузы, записи и ошибок остаётся видимым. Нативный GMR формирует полный референс для TWIST2; нижняя часть скелета Meta является оценкой. Порт прошёл сравнение с оригиналом на синтетических данных. **Меню и новые привязки кнопок ещё не проверены в шлеме**; ходьба, поднятие чашки и полное решение Push-T/Kick-T также не подтверждены. [Управление и запись](android/README.md), [перенос GMR](android/GMR_PORT.md).
 
 ## Настольная версия
 
@@ -42,8 +46,33 @@
 - Чашка с полостью и ручкой, стол, цельная T-коробка из двух коллизионных боксов. Предметы движутся под действием физики.
 - Запись фактических состояний и команд; воспроизведение сохранённых состояний.
 - Общий и монокулярный вид от первого лица в настольном окне.
+- Настольный `state-v1` exporter, scripted reach и низкоразмерная diffusion policy для reach.
+- Автоматические проверки успеха, таймаута и падения для cup и push-T в настольных прогонах.
 
-Сцены подготовлены для последующей разработки задач. Автоматический захват/поднятие чашки, управление ногами для Kick-T и критерии успеха задач пока не реализованы. Демонстрация рук не является демонстрацией захвата. Политика TWIST2 — контроллер движения, а не готовая политика решения этих задач.
+Scripted reach подводит открытую кисть к чашке; он не решает захват. Успешные полные cup/Kick-T прогоны пока не подтверждены. Политика TWIST2 — контроллер движения, а не готовая политика решения этих задач. [Команды обучения, state contract и результаты](../../docs/Policy-Learning.md).
+
+## Настольный reach и оценка задач
+
+Эти возможности остаются доступны независимо от меню Quest:
+
+```sh
+./run_sim.command --scene cup --reach --seed 0 --seconds 3
+.venv/bin/python -m g1_sim.reach outputs/reach --demos 16 --seconds 3 --seed 0
+.venv/bin/python -m g1_sim.state outputs/episode.npz outputs/episode-state.npz
+.venv/bin/python -m g1_sim.tasks --task cup --source script --seed 0 1 --seconds 8
+.venv/bin/python -m g1_sim.tasks --task push_t --source standing --seed 0 1 --seconds 8
+```
+
+Для обучения и rollout diffusion policy нужны отдельные зависимости `requirements-policy.txt`:
+
+```sh
+.venv/bin/python -m pip install -r requirements-policy.txt
+.venv/bin/python -m g1_sim.diffusion train outputs/reach outputs/reach_policy.pt --steps 2000 --seed 0
+.venv/bin/python -m g1_sim.diffusion rollout outputs/reach_policy.pt --seed 0 16 100 101 --seconds 3
+./run_sim.command --scene cup --policy outputs/reach_policy.pt --seed 0 --seconds 3
+```
+
+Это низкоразмерная политика по состоянию симулятора; её наблюдения не являются изображениями и не заменяют TWIST2-контроллер тела. Критерии cup/push-T фиксированы в `g1_sim/tasks.py`; наличие критерия или успешно собранного APK не означает успешного выполнения задачи.
 
 ## Запись и воспроизведение
 
@@ -110,8 +139,10 @@ fresh environment with `requirements.lock` and the pinned vendor revisions:
 Commands above use `.venv/bin/python`; on this host the native checks use
 `DEVELOPER_DIR=/Library/Developer/CommandLineTools` because the selected Xcode
 installation requires license acceptance. No license was accepted by automation.
-The `Quest G1 Prototype` CI workflow covers the Python checks and native
-reference-space timing test independently of headset hardware.
+The `Quest G1 Prototype` CI workflow covers the Python checks, native menu
+layout/ray/recording-lock checks, independent Meta/camera overlays and
+reference-space timing. Controller-binding patch tests use the pinned OpenXR
+source and fail if they are skipped. These checks do not validate headset interaction.
 
 Review adaptations invalidate calibration on headset recenter, stop the worker
 on XR exception paths, preserve incomplete recordings after errors, retain the

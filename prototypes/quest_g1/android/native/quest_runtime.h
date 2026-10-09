@@ -16,3 +16,6 @@ void G1Calibrate();
 void G1ToggleTracking();
 void G1ToggleRecording();
 void G1ToggleView();
+void G1ToggleMenu();
+void G1SubmitMenuRay(int hand,const TrackedPose& pose,bool valid,bool triggerActive,float trigger);
+bool G1PassthroughVisible();

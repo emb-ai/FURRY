@@ -15,7 +15,10 @@ cmake -S android -B android/build/arm64 \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_TOOLCHAIN_FILE="$G1_NDK/build/cmake/android.toolchain.cmake" \
   -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-29 \
-  -DANDROID_STL=c++_shared -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+  -DANDROID_STL=c++_shared -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+  -DG1_ENABLE_FOOT_FLOOR_GUARD="${G1_FOOT_FLOOR_GUARD:-OFF}" \
+  -DG1_SWING_CLEARANCE_MM="${G1_SWING_CLEARANCE_MM:-0}" \
+  -DG1_ENABLE_TWIST_GROUNDING="${G1_TWIST_GROUNDING:-OFF}"
 cmake --build android/build/arm64 --target g1_quest -j 6
 mkdir -p android/build/package/lib/arm64-v8a
 cp android/build/arm64/libg1_quest.so android/build/package/lib/arm64-v8a/

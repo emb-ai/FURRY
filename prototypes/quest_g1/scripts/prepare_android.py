@@ -120,6 +120,25 @@ for code in range(32, 127):
     i=code-32;draw.text(((i%16)*32+2, (i//16)*40+2), chr(code), font=font, fill=255)
 draw.rectangle((15*32,5*40,512,240),fill=255)
 (assets/'stats_font.bin').write_bytes(atlas.tobytes())
+# Russian guided-capture text, independent of the existing diagnostics atlas.
+capture_atlas = Image.new('L', (512, 440), 0)
+capture_draw = ImageDraw.Draw(capture_atlas)
+capture_chars = [chr(c) for c in range(32,128)] + [chr(c) for c in range(1040,1104)] + ['Ё','ё']
+for i,char in enumerate(capture_chars):
+    if i != 95:
+        capture_draw.text(((i%16)*32+2,(i//16)*40+2),char,font=font,fill=255)
+capture_draw.rectangle((15*32,5*40,511,239),fill=255)
+(assets/'capture_font.bin').write_bytes(capture_atlas.tobytes())
+# Menu labels use proportional advances with the same Russian/ASCII mapping.
+menu_font = ImageFont.truetype(font_path, 26)
+menu_atlas = Image.new('L', (512, 440), 0)
+menu_draw = ImageDraw.Draw(menu_atlas)
+for i, char in enumerate(capture_chars):
+    if i != 95:
+        menu_draw.text(((i % 16) * 32 + 2, (i // 16) * 40 + 2), char, font=menu_font, fill=255)
+menu_draw.rectangle((15 * 32, 5 * 40, 511, 239), fill=255)
+(assets/'menu_font.bin').write_bytes(menu_atlas.tobytes())
+(assets/'menu_font_widths.bin').write_bytes(bytes(max(1, min(32, round(menu_font.getlength(c)))) for c in capture_chars))
 
 
 src = ROOT/'vendor/OpenXR-SDK-Source/src/tests/hello_xr'
@@ -146,9 +165,9 @@ for name in names:
     if name == 'openxr_program.cpp':
         text = text.replace('#include "pch.h"', '#include "pch.h"\n#include "quest_runtime.h"\n#include "passthrough.h"\n#include "body_tracking.h"\n#include "button_latch.h"')
         text = text.replace('struct OpenXrProgram : IOpenXrProgram {',
-                            'struct OpenXrProgram : IOpenXrProgram {\n    Passthrough passthrough; BodyTracking bodyTracking; uint64_t trackingSequence=0; ButtonLatch recordLatch;')
+                            'struct OpenXrProgram : IOpenXrProgram {\n    Passthrough passthrough; BodyTracking bodyTracking; uint64_t trackingSequence=0; ButtonLatch recordLatch, captureLatch;')
         text = text.replace('XrAction quitAction{XR_NULL_HANDLE};',
-                            'XrAction quitAction{XR_NULL_HANDLE};\n        XrAction calibrateAction{XR_NULL_HANDLE}, pauseAction{XR_NULL_HANDLE}, resetAction{XR_NULL_HANDLE}, recordAction{XR_NULL_HANDLE}, viewAction{XR_NULL_HANDLE};')
+                            'XrAction quitAction{XR_NULL_HANDLE};\n        XrAction calibrateAction{XR_NULL_HANDLE}, pauseAction{XR_NULL_HANDLE}, resetAction{XR_NULL_HANDLE}, recordAction{XR_NULL_HANDLE}, viewAction{XR_NULL_HANDLE}, captureModeAction{XR_NULL_HANDLE};')
         text = text.replace('CHECK_XRCMD(xrCreateAction(m_input.actionSet, &actionInfo, &m_input.quitAction));', '''CHECK_XRCMD(xrCreateAction(m_input.actionSet, &actionInfo, &m_input.quitAction));
             strcpy_s(actionInfo.actionName, "calibrate_tracking");
             strcpy_s(actionInfo.localizedActionName, "Calibrate tracking");
@@ -164,7 +183,10 @@ for name in names:
             CHECK_XRCMD(xrCreateAction(m_input.actionSet, &actionInfo, &m_input.recordAction));
             strcpy_s(actionInfo.actionName, "toggle_view");
             strcpy_s(actionInfo.localizedActionName, "Toggle first person view");
-            CHECK_XRCMD(xrCreateAction(m_input.actionSet, &actionInfo, &m_input.viewAction));''')
+            CHECK_XRCMD(xrCreateAction(m_input.actionSet, &actionInfo, &m_input.viewAction));
+            strcpy_s(actionInfo.actionName, "capture_mode");
+            strcpy_s(actionInfo.localizedActionName, "Select guided walking capture");
+            CHECK_XRCMD(xrCreateAction(m_input.actionSet, &actionInfo, &m_input.captureModeAction));''')
         text = text.replace('suggestedBindings.interactionProfile = oculusTouchInteractionProfilePath;', '''suggestedBindings.interactionProfile = oculusTouchInteractionProfilePath;
             XrPath aButton, bButton, xButton, yButton;
             CHECK_XRCMD(xrStringToPath(m_instance,"/user/hand/right/input/a/click",&aButton));
@@ -177,17 +199,20 @@ for name in names:
             bindings.push_back({m_input.recordAction,yButton});
             XrPath viewClick;
             CHECK_XRCMD(xrStringToPath(m_instance,"/user/hand/left/input/thumbstick/click",&viewClick));
-            bindings.push_back({m_input.viewAction,viewClick});''')
-        text = text.replace('// There were no subaction paths specified for the quit action,', '''for(int button=0;button<5;button++){
+            bindings.push_back({m_input.viewAction,viewClick});
+            XrPath captureClick;
+            CHECK_XRCMD(xrStringToPath(m_instance,"/user/hand/right/input/thumbstick/click",&captureClick));
+            bindings.push_back({m_input.captureModeAction,captureClick});''')
+        text = text.replace('// There were no subaction paths specified for the quit action,', '''for(int button=0;button<6;button++){
             XrActionStateGetInfo info{XR_TYPE_ACTION_STATE_GET_INFO};
-            const XrAction buttons[]={m_input.calibrateAction,m_input.pauseAction,m_input.resetAction,m_input.recordAction,m_input.viewAction};
+            const XrAction buttons[]={m_input.calibrateAction,m_input.pauseAction,m_input.resetAction,m_input.recordAction,m_input.viewAction,m_input.captureModeAction};
             info.action=buttons[button];
             XrActionStateBoolean state{XR_TYPE_ACTION_STATE_BOOLEAN};
             CHECK_XRCMD(xrGetActionStateBoolean(m_session,&info,&state));
-            bool press=button==3?recordLatch.Update(state.isActive,state.currentState):(state.isActive && state.changedSinceLastSync && state.currentState);
+            bool press=button==3?recordLatch.Update(state.isActive,state.currentState):button==5?captureLatch.Update(state.isActive,state.currentState):(state.isActive && state.changedSinceLastSync && state.currentState);
             if(press){
                 if(button==0)G1Calibrate();else if(button==1)G1ToggleTracking();
-                else if(button==2)G1Reset();else if(button==3)G1ToggleRecording();else G1ToggleView();
+                else if(button==2)G1Reset();else if(button==3)G1ToggleRecording();else if(button==4)G1ToggleView();else G1CycleCaptureMode();
             }
         }
         // There were no subaction paths specified for the quit action,''')
@@ -256,6 +281,9 @@ for name in names:
 
 '''
         text = text[:a] + tracking + text[b:]
+    if name == 'openxr_program.cpp':
+        from menu_input_patch import adapt_menu_input
+        text = adapt_menu_input(text)
     (dest/name).write_text(text)
 print('Android scene and OpenXR lifecycle prepared:',assets)
 
@@ -282,7 +310,9 @@ export_gmr()
 
 for file in ['gmr_model.xml','gmr_config.txt']:
     metadata['sha256'][file]=hashlib.sha256((assets/file).read_bytes()).hexdigest()
-for file in ['gmr.cpp','gmr.h','meta_retarget.cpp','meta_retarget.h','body_tracking.h','quest_runtime.cpp','runtime_stats.h','stats_hud.h','recording_export.h']:
+for file in ['gmr.cpp','gmr.h','meta_retarget.cpp','meta_retarget.h','foot_floor.h','swing_clearance.h','body_tracking.h','quest_runtime.cpp','runtime_stats.h','stats_hud.h','recording_export.h','guided_capture.h','capture_hud.h']:
+    metadata['sha256']['android/native/'+file]=hashlib.sha256((ROOT/'android/native'/file).read_bytes()).hexdigest()
+for file in ['world_skeleton.h','world_skeleton_gl.h','operator_skeleton.h','operator_skeleton_draw.h','camera_fusion.cpp','camera_fusion.h','camera_stream.cpp','quest_menu.h','quest_menu_gl.h']:
     metadata['sha256']['android/native/'+file]=hashlib.sha256((ROOT/'android/native'/file).read_bytes()).hexdigest()
 metadata['ik_error_semantics']='unweighted GMR stage-2 SE3 residual norm; mixed metres/radians, not wrist distance'
 metadata['body_tracking']={'source':'XR_FB_body_tracking + XR_META_body_tracking_full_body','lower_body':'runtime-estimated, not measured foot trackers','retargeting':'GMR two-stage SE3 box QP; Meta bind-skeleton adapter','root_xy':'Meta pelvis displacement from A, scaled to robot proportions; head-relative sway excluded','scaling':'leg height and arm lengths from Meta bind skeleton; source-specific bone-axis offsets','joints':['Pelvis','Spine3','Left_Hip','Right_Hip','Left_Knee','Right_Knee','Left_Foot','Right_Foot','Left_Shoulder','Right_Shoulder','Left_Elbow','Right_Elbow','Left_Wrist','Right_Wrist']}
@@ -290,3 +320,6 @@ metadata['limitations']=['Meta lower-body poses are estimates','no video','no co
 (assets/'recording_metadata.json').write_text(json.dumps(metadata,indent=2)+'\n')
 for name in ['GMR','MINK']:
     shutil.copy2(ROOT/'third_party'/f'{name}_LICENSE.txt',assets/f'{name}_LICENSE.txt')
+
+from scene_assets import export_scenes
+export_scenes(assets)

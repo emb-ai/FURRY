@@ -109,14 +109,17 @@ int main() {
     Require(BuildOperatorSkeleton(invalid, 0, none, 1, 1).bones.empty(), "Invalid body remains");
 
     CameraOverlay optical;
+    constexpr int cameraPoints = int(std::tuple_size<decltype(optical.points)>::value);
+    constexpr int cameraPelvis = cameraPoints - 1;
     optical.aligned = true;
     optical.ageMs = 0;
     const std::array<double,3> shift{0.30, 0, 0};
-    for (int j = 0; j < 12; j++) {
+    for (int j = 0; j < 11; j++) {
         optical.valid[j] = true;
         optical.points[j] = {shift[0], 1.0, 0};
     }
-    optical.points[11] = {shift[0], 1.00, 0};
+    optical.valid[cameraPelvis] = true;
+    optical.points[cameraPelvis] = {shift[0], 1.00, 0};
     optical.points[0] = {shift[0] - 0.10, 0.95, 0};
     optical.points[2] = {shift[0] - 0.10, 0.50, 0};
     optical.points[4] = {shift[0] - 0.10, 0.08, 0};
@@ -136,6 +139,55 @@ int main() {
     for (const auto& bone : mapped.bones)
         if (bone.group < 2) Require(HasBone(mesh, bone.from, bone.to, bone.group), "Camera shift moved the Meta skeleton");
 
+    auto bothHidden = BuildOperatorSkeleton(standing, 10, optical, 1, 1, false, false);
+    Require(bothHidden.bones.empty() && bothHidden.joints.empty() && bothHidden.Triangles() == 0 &&
+            bothHidden.cameraAlpha == 0, "Disabled overlays produced geometry");
+    auto metaOnly = BuildOperatorSkeleton(standing, 10, optical, 1, 1, true, false);
+    Require(metaOnly.upper == mesh.upper && metaOnly.legs == mesh.legs && metaOnly.camera.empty() &&
+            metaOnly.cameraAlpha == 0, "Meta-only toggle changes Meta or retains camera geometry");
+    Require(std::all_of(metaOnly.joints.begin(), metaOnly.joints.end(), [](const auto& joint) { return joint.group < 2; }),
+            "Meta-only toggle retains camera joints");
+    auto cameraOnly = BuildOperatorSkeleton(standing, 10, optical, 1, 1, false, true);
+    Require(cameraOnly.upper.empty() && cameraOnly.legs.empty() && cameraOnly.camera == mapped.camera &&
+            cameraOnly.cameraAlpha == mapped.cameraAlpha, "Camera-only toggle changes placement or retains Meta geometry");
+    Require(std::all_of(cameraOnly.bones.begin(), cameraOnly.bones.end(), [](const auto& bone) { return bone.group == 2; }) &&
+            std::all_of(cameraOnly.joints.begin(), cameraOnly.joints.end(), [](const auto& joint) { return joint.group == 2; }),
+            "Camera-only toggle retains Meta bones or joints");
+
+    // Hiding Meta must not switch the reach gate to the displaced camera's own
+    // pelvis, which would otherwise make a gross alignment error look valid.
+    auto displacedCamera = optical;
+    for (auto& p : displacedCamera.points) p[0] += 10;
+    auto gatedCamera = BuildOperatorSkeleton(standing, 10, displacedCamera, 1, 1, false, true);
+    Require(gatedCamera.camera.empty() && gatedCamera.joints.empty() && gatedCamera.bones.empty(),
+            "Camera reach gate vanished with the Meta overlay");
+    auto absentMeta = standing;
+    absentMeta.body.valid = false;
+    auto independentCamera = BuildOperatorSkeleton(absentMeta, 10, displacedCamera, 1, 1, false, true);
+    Require(!independentCamera.camera.empty(), "Independent camera lost its pelvis reach anchor without Meta tracking");
+
+    if constexpr (cameraPoints >= 14) {
+        auto measuredArms = optical;
+        measuredArms.valid[11] = measuredArms.valid[12] = true;
+        measuredArms.points[7] = {shift[0] - .20, 1.45, 0};
+        measuredArms.points[8] = {shift[0] + .20, 1.45, 0};
+        measuredArms.points[11] = {shift[0] - .45, 1.20, 0};
+        measuredArms.points[12] = {shift[0] + .45, 1.20, 0};
+        auto armMesh = BuildOperatorSkeleton(standing, 10, measuredArms, 1, 1, false, true);
+        Require(HasBone(armMesh, measuredArms.points[7], measuredArms.points[11], 2) &&
+                HasBone(armMesh, measuredArms.points[11], measuredArms.points[9], 2) &&
+                HasBone(armMesh, measuredArms.points[8], measuredArms.points[12], 2) &&
+                HasBone(armMesh, measuredArms.points[12], measuredArms.points[10], 2),
+                "Measured camera elbows are not connected to shoulders and wrists");
+        Require(!HasBone(armMesh, measuredArms.points[7], measuredArms.points[9], 2),
+                "Camera arm bypasses a measured elbow");
+        measuredArms.valid[11] = false;
+        auto noElbow = BuildOperatorSkeleton(standing, 10, measuredArms, 1, 1, false, true);
+        Require(!HasBone(noElbow, measuredArms.points[7], measuredArms.points[11], 2) &&
+                !HasBone(noElbow, measuredArms.points[11], measuredArms.points[9], 2),
+                "Camera draws an invalid elbow");
+    }
+
     optical.points[4] = {shift[0], -8, 0};
     auto farCamera = BuildOperatorSkeleton(standing, 10, optical, 1, 1);
     Require(!HasBone(farCamera, optical.points[2], optical.points[4], 2), "Distant camera ankle still connected");
@@ -153,5 +205,5 @@ int main() {
     optical.ageMs = 500;
     Require(BuildOperatorSkeleton(standing, 10, optical, 1, 1).camera.empty(), "Expired camera overlay drawn");
 
-    puts("Operator skeleton placement, expiry, camera registration and triangle cap checks passed");
+    puts("Operator skeleton placement, expiry, independent visibility, camera reach gate and triangle cap checks passed");
 }

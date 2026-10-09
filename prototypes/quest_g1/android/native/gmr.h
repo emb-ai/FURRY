@@ -28,11 +28,14 @@ public:
     const mjModel* model()const{return model_;}
     mjData* data(){return data_;}
     const std::vector<GmrTask>& tasks()const{return tasks_;}
+    const std::vector<TrackedPose>& Targets()const{return targets;}
     void Reset(const double* qpos=nullptr);
     // Upstream xrobot input, in GMR world coordinates, quaternion wxyz.
     void SetHumanTargets(const std::vector<TrackedPose>& human,double height,bool offsetToGround);
     // Device adapter may supply already-scaled, anatomically aligned targets.
     void SetTargets(const std::vector<TrackedPose>& value);
+    // Upstream offset_to_ground=True: foot task origin, not sole, at 0.1 m.
+    void GroundFootTargets(std::vector<TrackedPose>& value)const;
     // Optional Meta extension; disabled for the unmodified upstream oracle.
     void SetCameraTarget(const TrackedPose& target);
     // Translate the reference constellation together; retain floor height.

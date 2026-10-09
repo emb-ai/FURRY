@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <tuple>
 #include <vector>
 
 // World-space skeleton on the operator. Positions stay in STAGE metres and are
@@ -82,8 +83,10 @@ inline void AppendCylinder(std::vector<float>& out, const std::array<double,3>& 
     }
 }
 
-inline OperatorSkeleton BuildOperatorSkeleton(const TrackingFrame& raw, double rawAgeMs, const CameraOverlay& optical, double now, double published) {
+inline OperatorSkeleton BuildOperatorSkeleton(const TrackingFrame& raw, double rawAgeMs, const CameraOverlay& optical, double now, double published,
+                                               bool showMeta = true, bool showCamera = true) {
     OperatorSkeleton mesh;
+    if (!showMeta && !showCamera) return mesh;
     auto buffer = [&](int group) -> std::vector<float>& {
         return group == 0 ? mesh.upper : group == 1 ? mesh.legs : mesh.camera;
     };
@@ -113,40 +116,54 @@ inline OperatorSkeleton BuildOperatorSkeleton(const TrackingFrame& raw, double r
         else if (metaOk[14]) { anchor = meta[14]; haveAnchor = true; }
         if (!haveAnchor) metaOk.fill(false);
         for (int j = 0; j < 15; j++) if (metaOk[j] && SkeletonDistance(meta[j], anchor) > kOperatorReach) metaOk[j] = false;
-        const std::pair<int,int> upperEdges[] = {{0,1},{1,8},{8,10},{10,12},{1,9},{9,11},{11,13}};
-        const std::pair<int,int> legEdges[] = {{0,2},{2,4},{4,6},{0,3},{3,5},{5,7}};
-        for (auto e : upperEdges) if (metaOk[e.first] && metaOk[e.second]) addBone(0, meta[e.first], meta[e.second], kMetaBoneRadius);
-        for (auto e : legEdges) if (metaOk[e.first] && metaOk[e.second]) addBone(1, meta[e.first], meta[e.second], kMetaBoneRadius);
-        if (metaOk[1] && metaOk[14]) {
-            auto chest = meta[1], head = meta[14];
-            double length = SkeletonDistance(chest, head);
-            if (length > kNeckClearance + 0.04 && length <= 1.5) {
-                std::array<double,3> tip{};
-                for (int k = 0; k < 3; k++) tip[k] = head[k] - (head[k] - chest[k]) * (kNeckClearance / length);
-                addBone(0, chest, tip, kMetaBoneRadius);
-                addJoint(0, tip, kMetaJointRadius);
+        // The hidden Meta skeleton still supplies the physical reach anchor
+        // used to reject distant camera points. Visibility changes geometry.
+        if (showMeta) {
+            const std::pair<int,int> upperEdges[] = {{0,1},{1,8},{8,10},{10,12},{1,9},{9,11},{11,13}};
+            const std::pair<int,int> legEdges[] = {{0,2},{2,4},{4,6},{0,3},{3,5},{5,7}};
+            for (auto e : upperEdges) if (metaOk[e.first] && metaOk[e.second]) addBone(0, meta[e.first], meta[e.second], kMetaBoneRadius);
+            for (auto e : legEdges) if (metaOk[e.first] && metaOk[e.second]) addBone(1, meta[e.first], meta[e.second], kMetaBoneRadius);
+            if (metaOk[1] && metaOk[14]) {
+                auto chest = meta[1], head = meta[14];
+                double length = SkeletonDistance(chest, head);
+                if (length > kNeckClearance + 0.04 && length <= 1.5) {
+                    std::array<double,3> tip{};
+                    for (int k = 0; k < 3; k++) tip[k] = head[k] - (head[k] - chest[k]) * (kNeckClearance / length);
+                    addBone(0, chest, tip, kMetaBoneRadius);
+                    addJoint(0, tip, kMetaJointRadius);
+                }
             }
+            for (int j = 0; j < 14; j++) if (metaOk[j]) addJoint(j >= 2 && j <= 7 ? 1 : 0, meta[j], kMetaJointRadius);
         }
-        for (int j = 0; j < 14; j++) if (metaOk[j]) addJoint(j >= 2 && j <= 7 ? 1 : 0, meta[j], kMetaJointRadius);
     }
     double opticalAge = optical.ageMs + std::max(0.0, now - published) * 1000.0;
-    if (optical.aligned && optical.ageMs >= 0 && opticalAge < 500) {
+    if (showCamera && optical.aligned && optical.ageMs >= 0 && opticalAge < 500) {
+        constexpr size_t cameraCount = std::tuple_size<decltype(optical.points)>::value;
+        constexpr int pelvisIndex = int(cameraCount) - 1;
         mesh.cameraAlpha = float(std::clamp((500.0 - opticalAge) / 350.0, 0.0, 1.0));
         std::array<double,3> camAnchor = anchor;
         bool gate = haveAnchor;
-        if (!gate && optical.valid[11] && SkeletonFinite(optical.points[11])) { camAnchor = optical.points[11]; gate = true; }
-        std::array<std::array<double,3>,12> pts{};
-        std::array<bool,12> ok{};
-        for (int j = 0; j < 12; j++) {
+        if (!gate && optical.valid[pelvisIndex] && SkeletonFinite(optical.points[pelvisIndex])) {
+            camAnchor = optical.points[pelvisIndex]; gate = true;
+        }
+        std::array<std::array<double,3>,cameraCount> pts{};
+        std::array<bool,cameraCount> ok{};
+        for (size_t j = 0; j < cameraCount; j++) {
             if (!optical.valid[j] || !SkeletonFinite(optical.points[j])) continue;
             if (gate && SkeletonDistance(optical.points[j], camAnchor) > kOperatorReach) continue;
             pts[j] = optical.points[j];
             ok[j] = true;
         }
-        // Same measured chains as the inset. No shoulder-wrist bone: elbows are absent.
-        const std::pair<int,int> edges[] = {{0,2},{2,4},{1,3},{3,5},{0,1},{11,0},{11,1},{7,8},{7,0},{8,1},{6,7},{6,8}};
+        // Pelvis is the last overlay point in both legacy and current packets.
+        // Never shortcut shoulders to wrists when no measured elbow exists.
+        const std::pair<int,int> edges[] = {{0,2},{2,4},{1,3},{3,5},{0,1},
+            {pelvisIndex,0},{pelvisIndex,1},{7,8},{7,0},{8,1},{6,7},{6,8}};
         for (auto e : edges) if (ok[e.first] && ok[e.second]) addBone(2, pts[e.first], pts[e.second], kCameraBoneRadius);
-        for (int j = 0; j < 12; j++) if (ok[j]) addJoint(2, pts[j], kCameraJointRadius);
+        if constexpr (cameraCount >= 14) {
+            const std::pair<int,int> arms[] = {{7,11},{11,9},{8,12},{12,10}};
+            for (auto e : arms) if (ok[e.first] && ok[e.second]) addBone(2, pts[e.first], pts[e.second], kCameraBoneRadius);
+        }
+        for (size_t j = 0; j < cameraCount; j++) if (ok[j]) addJoint(2, pts[j], kCameraJointRadius);
     }
     return mesh;
 }

@@ -1,4 +1,5 @@
 #include "retarget.h"
+#include "episode_manifest.h"
 #include <fstream>
 #include <sstream>
 #include <map>
@@ -13,12 +14,12 @@ static std::vector<double> Row(const std::string& line){
 int main(int argc,char** argv){
     if(argc!=3){std::cerr<<"Usage: g1_replay_human ASSETS EPISODE\n";return 2;}
     try{
-        std::ifstream manifest(std::string(argv[2])+"/manifest.json");
-        std::string metadata((std::istreambuf_iterator<char>(manifest)),std::istreambuf_iterator<char>());
-        if(metadata.find("native_gmr_meta_full_body")!=std::string::npos)
+        auto manifest=episodereplay::LoadManifest(argv[2]);
+        if(manifest.raw.find("native_gmr_meta_full_body")!=std::string::npos)
             throw std::runtime_error("This is a GMR recording: use g1_replay_gmr instead of legacy wrist replay");
-        char error[1024];auto* m=mj_loadXML((std::string(argv[1])+"/scene.xml").c_str(),nullptr,error,sizeof(error));
+        char error[1024];auto* m=mj_loadXML(manifest.ModelPath(argv[1]).c_str(),nullptr,error,sizeof(error));
         if(!m)throw std::runtime_error(error);
+        manifest.ValidateDimensions(m->nq,m->nv,m->nu);
         auto* d=mj_makeData(m);
         ArmRetargeter retarget(m);
         std::ifstream inputs(std::string(argv[2])+"/input.csv"),frames(std::string(argv[2])+"/frames.csv");

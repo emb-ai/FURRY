@@ -4,13 +4,13 @@
 #include <string>
 struct CameraJoint {std::array<double,3> p{};double confidence=0;bool measured=false;};
 struct CameraSkeleton {
- // hips L/R, knees L/R, ankles L/R, nose, shoulders L/R, wrists L/R
- std::array<CameraJoint,11> joints{};CameraJoint pelvis;
+ // hips L/R, knees L/R, ankles L/R, nose, shoulders L/R, wrists L/R, elbows L/R
+ std::array<CameraJoint,13> joints{};CameraJoint pelvis;
  uint64_t sequence=0;double sourceMs=0,receivedMs=0;std::string frame;
 };
 struct CameraOverlay {
- std::array<std::array<double,3>,12> points{}; // camera joints, then pelvis
- std::array<bool,12> valid{};bool aligned=false;double ageMs=-1;
+ std::array<std::array<double,3>,14> points{}; // camera joints, then pelvis
+ std::array<bool,14> valid{};bool aligned=false;double ageMs=-1;
 };
 struct CameraFusionStats {int state=0,legs=0;double ageMs=-1,fitMm=-1,weight=0;};
 class CameraFusion {
