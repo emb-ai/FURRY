@@ -162,3 +162,26 @@ clamped derivative; its numbers should not be spliced into old-reference tables.
 
 Local provenance/data: `outputs/quest-finetune-20261009/window-displacement/`.
 Remote isolated root: `~/furry/twist2-window-20261009`.
+
+## Continue from the user-selected 1000 checkpoint
+
+The user selected `Quest: дообучение 1000` (`111260/checkpoint_001000.pt`)
+after trying it in the headset. The initial published-actor window run 111484
+was stopped at the user's request after 15 critic updates, zero actor updates.
+The replacement lives in `~/furry/twist2-window-from1000-20261009`.
+
+`--init-checkpoint` restores the exact actor, frozen input normalization and
+learned exploration std. It does not restore the old optimizer or critic: the
+critic has nine new inputs and a changed reward/contact distribution. Critic
+warmup precedes 500 additional actor updates. Source PPO settings, new window
+reward, geometry, toe-clamped references, sampling and holdout remain unchanged.
+The comparison baseline is now checkpoint 1000 on the same new runtime inputs,
+not the released actor. This is actor continuation, not an exact optimizer resume.
+
+`--init-manifest` is mandatory with the checkpoint. Its bytes must match the
+checkpoint's recorded dataset hash. `checkpoint_lineage.py` requires every
+ancestor clip to keep its split, author train content to remain unchanged, and
+Quest stages/mirror parents to remain fixed. It rejects old train hashes or
+train stages in validation, even under new IDs. Validation contains only the
+same held-out Quest stages 2, 9 and 14; all 1090 ancestor train motions remain
+in train. The check runs both before baseline evaluation and before optimization.

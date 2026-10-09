@@ -16,6 +16,8 @@ import time
 
 def main():
     p = argparse.ArgumentParser()
+    p.add_argument('--init-checkpoint', type=Path, help='Initialize actor, frozen normalization and exploration std from this checkpoint')
+    p.add_argument('--init-manifest', type=Path, help='Exact training manifest recorded in the initialization checkpoint')
     p.add_argument('--window-reward', action='store_true', help='One-second displacement/turn penalty; 9 extra critic features; no catch-up')
     p.add_argument('--sole-urdf', type=Path, help='Derived URDF with main sole spheres and unchanged dynamics')
     p.add_argument('--smoke', action='store_true', help='Only 2 critic updates + 1 actor update in disposable output; not critic readiness')
@@ -26,6 +28,8 @@ def main():
     p.add_argument('--critic-max', type=int, default=1000)
     p.add_argument('--save-every', type=int, default=100)
     a, rest = p.parse_known_args()
+    if bool(a.init_checkpoint) != bool(a.init_manifest):
+        p.error("--init-checkpoint and --init-manifest must be provided together")
     root = a.root.resolve(); out = a.output.resolve()
     out.mkdir(parents=True, exist_ok=False)
     sys.argv = [sys.argv[0]] + rest
@@ -37,7 +41,7 @@ def main():
     from legged_gym.gym_utils import task_registry, get_args, class_to_dict
     from rsl_rl.modules import ActorCriticFuture
     from rsl_rl.algorithms import DaggerPPO
-    from policy import recover
+    from policy import recover, load
     torch.set_num_threads(1)
     torch.backends.cuda.matmul.allow_tf32 = False
     torch.backends.cudnn.allow_tf32 = False
@@ -63,9 +67,21 @@ def main():
     actual = {str(Path(f).resolve()) for f in env._motion_lib._motion_files}
     if expected != actual: raise ValueError('Upstream loader skipped or added motions')
     if any('validation' in x for x in actual): raise ValueError('Validation leakage')
-    released = recover(root/'TWIST2/assets/ckpts/twist2_1017_20k.onnx',root/'TWIST2/rsl_rl/rsl_rl/modules/actor_critic_future.py').to(env.device)
+    lineage = None; initial = None
+    if a.init_checkpoint:
+        from checkpoint_lineage import audit
+        initial = torch.load(a.init_checkpoint, map_location='cpu', weights_only=True)
+        lineage = audit(initial, a.init_manifest, manifest)
+        released = load(a.init_checkpoint,root/'TWIST2/rsl_rl/rsl_rl/modules/actor_critic_future.py',env.device)
+    else:
+        released = recover(root/'TWIST2/assets/ckpts/twist2_1017_20k.onnx',root/'TWIST2/rsl_rl/rsl_rl/modules/actor_critic_future.py').to(env.device)
     ac = ActorCriticFuture(num_observations=env.num_obs,num_critic_observations=critic_dim,num_motion_observations=cfg.env.n_mimic_obs,num_motion_steps=len(cfg.env.tar_motion_steps),num_priop_observations=cfg.env.n_proprio,num_history_steps=cfg.env.history_len,num_actions=env.num_actions,**class_to_dict(tc.policy)).to(env.device)
     ac.actor.load_state_dict(released.actor.state_dict(),strict=True)
+    if initial is not None:
+        std = initial['actor_critic']['std'].to(env.device)
+        if std.shape != ac.std.shape or not torch.isfinite(std).all() or not (std>0).all():
+            raise ValueError('Invalid ancestor exploration std')
+        with torch.no_grad():ac.std.copy_(std)
     ac.train()  # Same training mode as the upstream runner.
     frozen_actor = {k:v.detach().clone() for k,v in ac.actor.state_dict().items()}
     ac.std.requires_grad_(False)
@@ -97,11 +113,12 @@ def main():
     def save(name,phase,iteration):
         # Compatible with our independent 100Hz MuJoCo evaluator/exporter.
         released.actor.load_state_dict(ac.actor.state_dict())
-        ck={'policy':released.state_dict(),'actor_critic':ac.state_dict(),'critic_mean':cm,'critic_divisor':cd,'optimizer':alg.optimizer.state_dict(),'phase':phase,'iteration':iteration,'source_revision':manifest['source_revision'],'dataset_manifest_sha256':hashlib.sha256((root/'dataset/manifest.json').read_bytes()).hexdigest(),'critic_restored':False}
+        ck={'policy':released.state_dict(),'actor_critic':ac.state_dict(),'critic_mean':cm,'critic_divisor':cd,'optimizer':alg.optimizer.state_dict(),'phase':phase,'iteration':iteration,'source_revision':manifest['source_revision'],'dataset_manifest_sha256':hashlib.sha256((root/'dataset/manifest.json').read_bytes()).hexdigest(),'critic_restored':False,'initial_checkpoint_sha256':hashlib.sha256(a.init_checkpoint.read_bytes()).hexdigest() if a.init_checkpoint else None,'ancestor_dataset_audit':lineage}
         tmp=out/(name+'.tmp');torch.save(ck,tmp);tmp.rename(out/name)
     started=time.time()
     save('baseline.pt','baseline',0)
-    config={'source_revision':manifest['source_revision'],'source_actor_sha256':hashlib.sha256((root/'TWIST2/assets/ckpts/twist2_1017_20k.onnx').read_bytes()).hexdigest(),'dataset_manifest_sha256':hashlib.sha256((root/'dataset/manifest.json').read_bytes()).hexdigest(),'environment':class_to_dict(cfg),'upstream_training':class_to_dict(tc),'ppo_config_matches_upstream':algorithm==class_to_dict(tc.algorithm),'initial_std_from_upstream':float(ac.std.mean()),'finetune_overrides':{k:str(v) if isinstance(v,Path) else v for k,v in vars(a).items()},'critic_gate':'On-policy pre-update TD-lambda prediction, 50-iteration windows; proxy only, not independent Monte Carlo certification. Validation never enters optimizer.','deployment':False}
+    config={'source_revision':manifest['source_revision'],'source_actor_sha256':hashlib.sha256((root/'TWIST2/assets/ckpts/twist2_1017_20k.onnx').read_bytes()).hexdigest(),'dataset_manifest_sha256':hashlib.sha256((root/'dataset/manifest.json').read_bytes()).hexdigest(),'environment':class_to_dict(cfg),'upstream_training':class_to_dict(tc),'ppo_config_matches_upstream':algorithm==class_to_dict(tc.algorithm),'initial_std_mean':float(ac.std.mean()),'initial_std_from_upstream':not bool(a.init_checkpoint),'finetune_overrides':{k:str(v) if isinstance(v,Path) else v for k,v in vars(a).items()},'critic_gate':'On-policy pre-update TD-lambda prediction, 50-iteration windows; proxy only, not independent Monte Carlo certification. Validation never enters optimizer.','deployment':False}
+    config['initialization'] = {'checkpoint':str(a.init_checkpoint) if a.init_checkpoint else None, 'sha256':hashlib.sha256(a.init_checkpoint.read_bytes()).hexdigest() if a.init_checkpoint else None, 'actor_and_normalization_restored':bool(a.init_checkpoint), 'std_restored':bool(a.init_checkpoint), 'critic_restored':False, 'optimizer_restored':False, 'dataset_audit':lineage}
     config['window_reward'] = {'enabled':a.window_reward, 'seconds':1., 'type':'dense Huber on progress since start of consecutive windows; separate initial heading frames', 'position_scale_m':.25, 'yaw_scale_rad':.5, 'position_weight':.25, 'yaw_weight':.25, 'critic_extra_features':critic_dim-env.num_privileged_obs, 'catch_up':False}
     config['sole_urdf_sha256'] = hashlib.sha256(a.sole_urdf.read_bytes()).hexdigest() if a.sole_urdf else None
     (out/'config.json').write_text(json.dumps(config,indent=2,default=str))
