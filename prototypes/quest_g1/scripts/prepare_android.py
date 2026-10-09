@@ -75,9 +75,11 @@ print('Authored visual mesh triangles:', triangles)
 scene_triangles = primitive_triangles + sum(mesh_counts[i]*uses for i, uses in mesh_usage.items())
 collision_spec = json.loads((ROOT/'assets/g1/collision.json').read_text())
 hud_max_triangles = 8192  # bounded text buffer plus raw skeleton inset/labels
-assert scene_triangles + hud_max_triangles <= 100000, f'Scene exceeds polygon budget: {scene_triangles}'
+operator_skeleton_max_triangles = 2048  # both depth passes; unique cap is kOperatorSkeletonMaxTriangles
+assert scene_triangles + hud_max_triangles + operator_skeleton_max_triangles <= 100000, f'Scene exceeds polygon budget: {scene_triangles}'
 budget = dict(maximum_triangles_per_eye=100000, scene_triangles_per_eye=scene_triangles,
-              hud_max_triangles=hud_max_triangles, total_max_triangles_per_eye=scene_triangles+hud_max_triangles,
+              hud_max_triangles=hud_max_triangles, operator_skeleton_max_triangles=operator_skeleton_max_triangles,
+              total_max_triangles_per_eye=scene_triangles+hud_max_triangles+operator_skeleton_max_triangles,
               primitive_triangles=primitive_triangles, unique_visual_mesh_triangles=triangles,
               source_visual_mesh_triangles=629338, method='authored exterior shells with crease-aware normals',
               mesh_instances=sum(mesh_usage.values()), collision_model='mjx_body_articulated_hands_v1',

@@ -122,3 +122,15 @@ Camera nose is a nose landmark, not an HMD origin. Missing elbows are not drawn.
 Only measured points with confidence at least 0.55 are shown; absent joints and
 uncalibrated camera-space packets are hidden. The overlay fades after 150 ms
 and disappears at 500 ms, including when physics publishing stalls.
+
+The same samples are also drawn on the operator in the room. Bones use STAGE
+metres and the eye view directly; they are not moved by the robot scene anchor.
+Meta's upper body is cyan and its estimated legs are orange. Camera landmarks
+are a slightly thicker pink shell, so a registration error sits beside the Meta
+bone instead of being hidden inside it. Measured camera wrists are markers
+only; no shoulder-to-wrist bone is invented. The neck stops 18 cm short of the
+headset, because that joint is the HMD pose. A point farther than 2.5 m from
+the pelvis is dropped. Where the ego robot covers the body, the hidden part of
+a bone stays visible at half opacity. The Meta skeleton disappears when the
+body sample is older than 200 ms. Camera fade and the 500 ms cutoff match the
+miniature, including a stalled physics publish.

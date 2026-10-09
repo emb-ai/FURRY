@@ -7,6 +7,7 @@
 #include "tracking_space.h"
 #include "runtime_stats.h"
 #include "stats_hud.h"
+#include "operator_skeleton_draw.h"
 #include "camera_stream.h"
 #include "camera_pose_servo.h"
 #include "recording_export.h"
@@ -529,6 +530,8 @@ void G1Render(const float* vp,const float* projection){
     static bool reported=false;
     if(!reported){__android_log_print(ANDROID_LOG_INFO,"G1Quest","Rendered scene: %d triangles per eye",renderedTriangles);reported=true;}
     glBindVertexArray(0);glUseProgram(0);
+    // Joints are already in STAGE metres. `world` maps the robot, not the operator.
+    renderedTriangles+=DrawOperatorSkeleton(vp,frameTracking,frameAgeMs,frameStats.cameraOverlay,frameNow,frameStats.published);
     // Card is authored in the original observer frame; move it with the scene.
     XrMatrix4x4f originalInverse{{0,1,0,0, 0,0,1,0, 1,0,0,0, 2.5,0,0,1}};
     XrMatrix4x4f cardWorld,cardVP,viewProjection;std::copy_n(vp,16,viewProjection.m);
