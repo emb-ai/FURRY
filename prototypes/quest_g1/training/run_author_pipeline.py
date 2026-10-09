@@ -10,7 +10,7 @@ import subprocess
 import sys
 import time
 
-p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True);p.add_argument('--num-envs',type=int,default=512);p.add_argument('--iterations',type=int,default=1000)
+p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True);p.add_argument('--num-envs',type=int,default=4096);p.add_argument('--iterations',type=int,default=1000)
 a=p.parse_args();root=a.root.resolve();out=root/'runs'/os.environ['SLURM_JOB_ID'];out.mkdir(parents=True,exist_ok=False)
 old=Path.home()/'furry/quest-adapt-v3-night-20261008-r3'
 py=Path.home()/'furry/quest-adapt-20261008/venv/bin/python'
@@ -25,7 +25,7 @@ baseline=out/'baseline.json'
 evaluate(root/'TWIST2/assets/ckpts/twist2_1017_20k.onnx',baseline)
 train_out=out/'training'
 cmd=[sys.executable,str(root/'adapter/author_finetune.py'),'--root',str(root),'--output',str(train_out),'--headless','--num_envs',str(a.num_envs),'--iterations',str(a.iterations)]
-results=[];done=set();regressions=0
+results=[];done=set()
 with (out/'training.log').open('w') as log:
     proc=subprocess.Popen(cmd,stdout=log,stderr=subprocess.STDOUT)
     try:
@@ -36,10 +36,8 @@ with (out/'training.log').open('w') as log:
                 evaluate(checkpoint,dest,baseline)
                 verdict=json.loads(dest.with_suffix('.comparison.json').read_text())
                 results.append({'checkpoint':checkpoint.name,**verdict});done.add(checkpoint.name)
-                regressions=regressions+1 if not verdict['non_regressing'] else 0
                 (out/'runtime-results.json').write_text(json.dumps(results,indent=2))
                 print(json.dumps({'checkpoint':checkpoint.name,'accepted':verdict['accepted'],'reasons':verdict['reasons']}),flush=True)
-                if regressions>=3:(train_out/'STOP').touch()
             if proc.poll() is not None:break
             time.sleep(20)
         if proc.returncode:raise RuntimeError(f'Trainer exited {proc.returncode}; inspect training.log')

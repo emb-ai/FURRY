@@ -1,7 +1,7 @@
 """Small-data finetune using pinned TWIST2 simulator, reward and DaggerPPO.
 
 Explicit finetune changes: pretrained/frozen actor normalization, new critic
-normalization, critic-only warmup, lower actor LR with warmup, std=.05.
+normalization and requested critic-only warmup. PPO/std settings come from source.
 No teacher, added slip/fall reward, or custom simulator approximation.
 """
 import argparse
@@ -21,9 +21,6 @@ def main():
     p.add_argument('--iterations', type=int, default=1000)
     p.add_argument('--critic-warmup', type=int, default=500)
     p.add_argument('--critic-max', type=int, default=1000)
-    p.add_argument('--actor-lr', type=float, default=1e-5)
-    p.add_argument('--actor-warmup', type=int, default=100)
-    p.add_argument('--initial-std', type=float, default=.05)
     p.add_argument('--save-every', type=int, default=100)
     a, rest = p.parse_known_args()
     root = a.root.resolve(); out = a.output.resolve()
@@ -57,14 +54,14 @@ def main():
     released = recover(root/'TWIST2/assets/ckpts/twist2_1017_20k.onnx',root/'TWIST2/rsl_rl/rsl_rl/modules/actor_critic_future.py').to(env.device)
     ac = ActorCriticFuture(num_observations=env.num_obs,num_critic_observations=env.num_privileged_obs,num_motion_observations=cfg.env.n_mimic_obs,num_motion_steps=len(cfg.env.tar_motion_steps),num_priop_observations=cfg.env.n_proprio,num_history_steps=cfg.env.history_len,num_actions=env.num_actions,**class_to_dict(tc.policy)).to(env.device)
     ac.actor.load_state_dict(released.actor.state_dict(),strict=True)
-    ac.actor.eval()
+    ac.train()  # Same training mode as the upstream runner.
     frozen_actor = {k:v.detach().clone() for k,v in ac.actor.state_dict().items()}
-    ac.std.data.fill_(a.initial_std)
     ac.std.requires_grad_(False)
     for param in ac.actor.parameters(): param.requires_grad_(False)
     algorithm = class_to_dict(tc.algorithm)
-    algorithm.update(learning_rate=3e-4,schedule='fixed',use_clipped_value_loss=False)
     alg = DaggerPPO(env,ac,ac,teacher_loaded=False,device=env.device,**algorithm)
+    # Critic-only prefit: do not adapt its LR from a frozen actor's dropout KL.
+    alg.schedule='fixed'
     steps = tc.runner.num_steps_per_env
     alg.init_storage(env.num_envs,steps,[env.num_obs],[env.num_privileged_obs],[env.num_actions])
     obs = env.get_observations()
@@ -91,7 +88,7 @@ def main():
         tmp=out/(name+'.tmp');torch.save(ck,tmp);tmp.rename(out/name)
     started=time.time()
     save('baseline.pt','baseline',0)
-    config={'source_revision':manifest['source_revision'],'source_actor_sha256':hashlib.sha256((root/'TWIST2/assets/ckpts/twist2_1017_20k.onnx').read_bytes()).hexdigest(),'dataset_manifest_sha256':hashlib.sha256((root/'dataset/manifest.json').read_bytes()).hexdigest(),'environment':class_to_dict(cfg),'upstream_training':class_to_dict(tc),'finetune_overrides':{k:str(v) if isinstance(v,Path) else v for k,v in vars(a).items()},'critic_gate':'On-policy pre-update TD-lambda prediction, 50-iteration windows; proxy only, not independent Monte Carlo certification. Validation never enters optimizer.','deployment':False}
+    config={'source_revision':manifest['source_revision'],'source_actor_sha256':hashlib.sha256((root/'TWIST2/assets/ckpts/twist2_1017_20k.onnx').read_bytes()).hexdigest(),'dataset_manifest_sha256':hashlib.sha256((root/'dataset/manifest.json').read_bytes()).hexdigest(),'environment':class_to_dict(cfg),'upstream_training':class_to_dict(tc),'ppo_config_matches_upstream':algorithm==class_to_dict(tc.algorithm),'initial_std_from_upstream':float(ac.std.mean()),'finetune_overrides':{k:str(v) if isinstance(v,Path) else v for k,v in vars(a).items()},'critic_gate':'On-policy pre-update TD-lambda prediction, 50-iteration windows; proxy only, not independent Monte Carlo certification. Validation never enters optimizer.','deployment':False}
     (out/'config.json').write_text(json.dumps(config,indent=2,default=str))
     counts=torch.zeros(len(rows),device=env.device,dtype=torch.long)
     quest_ids=torch.tensor([i for i,f in enumerate(env._motion_lib._motion_files) if str(f).startswith('./quest/') or str(f).startswith('quest/')],device=env.device)
@@ -114,23 +111,26 @@ def main():
             mse=float((values-targets).square().mean());var=float(targets.var(unbiased=False));ev=1-float((values-targets).var(unbiased=False))/max(var,1e-8)
             nrmse=(mse/max(var,1e-8))**.5
             old_means=alg.storage.mu.detach().clone(); saved_obs=alg.storage.observations.detach().clone()
-        if phase=='actor':
-            lr=a.actor_lr*min(1.,(actor_updates+1)/a.actor_warmup)
-        else:lr=3e-4
-        alg.learning_rate=lr
-        for group in alg.optimizer.param_groups:group['lr']=lr
+        # The unchanged upstream DaggerPPO adapts LR per minibatch using KL.
+        # Do not overwrite its persistent LR each rollout or turn KL into termination.
+        lr_before_update=alg.learning_rate
         result=alg.update()
+        lr=alg.learning_rate
         with torch.no_grad():
             current=ac.actor(saved_obs.reshape(-1,env.num_obs)).reshape_as(old_means)
             update_kl=float(((current-old_means).square()/(2*ac.std.square())).sum(-1).mean())
         if not np.isfinite([result[0],result[1],ev,nrmse,update_kl]).all():
             raise FloatingPointError('Nonfinite optimization statistics')
-        record={'phase':phase,'iteration':iteration,'actor_updates':actor_updates,'lr':lr,'value_loss':result[0],'surrogate_loss':result[1],'pre_update_critic_ev':ev,'pre_update_critic_nrmse':nrmse,'post_update_kl':update_kl,'reward_rate':reward_sum/steps/env.dt,'resets':resets,'tracking_terminations':failures,'quest_frame_fraction':quest_frames/(steps*env.num_envs),'visited_motions':int((counts>0).sum()),'std_mean':float(ac.std.mean())}
+        record={'phase':phase,'iteration':iteration,'actor_updates':actor_updates,'lr':lr,'value_loss':result[0],'surrogate_loss':result[1],'pre_update_critic_ev':ev,'pre_update_critic_nrmse':nrmse,'post_update_kl_includes_dropout':update_kl,'lr_before_update':lr_before_update,'reward_rate':reward_sum/steps/env.dt,'resets':resets,'tracking_terminations':failures,'quest_frame_fraction':quest_frames/(steps*env.num_envs),'visited_motions':int((counts>0).sum()),'std_mean':float(ac.std.mean())}
         emit(record)
         if phase=='critic':
             if a.smoke and iteration==2:
                 save('smoke-critic.pt',phase,iteration)
                 for param in ac.actor.parameters():param.requires_grad_(True)
+                ac.std.requires_grad_(not ac.if_fix_std())
+                alg.schedule=tc.algorithm.schedule
+                alg.learning_rate=tc.algorithm.learning_rate
+                for group in alg.optimizer.param_groups:group['lr']=alg.learning_rate
                 phase='actor'
             if any(not torch.equal(v,frozen_actor[k]) for k,v in ac.actor.state_dict().items()):
                 raise RuntimeError('Actor weights changed during critic warmup')
@@ -143,8 +143,10 @@ def main():
                     save('critic-ready.pt',phase,iteration)
                     phase='actor'
                     for param in ac.actor.parameters():param.requires_grad_(True)
-                    alg.use_clipped_value_loss=tc.algorithm.use_clipped_value_loss
-                    # Fresh Adam state for the newly unfrozen actor, keeping critic moments.
+                    ac.std.requires_grad_(not ac.if_fix_std())
+                    alg.schedule=tc.algorithm.schedule
+                    alg.learning_rate=tc.algorithm.learning_rate
+                    for group in alg.optimizer.param_groups:group['lr']=alg.learning_rate
                     emit({'phase':'critic_ready','warmup_iterations':iteration})
                 elif iteration>=a.critic_max:
                     emit({'phase':'critic_not_ready','actor_updates':0});return
@@ -152,9 +154,6 @@ def main():
             actor_updates+=1
             if actor_updates%a.save_every==0:
                 save(f'checkpoint_{actor_updates:06d}.pt',phase,actor_updates)
-            if update_kl>.05:
-                save('large-update.pt',phase,actor_updates)
-                emit({'phase':'stopped_large_policy_update','actor_updates':actor_updates,'kl':update_kl});return
             if actor_updates>=(1 if a.smoke else a.iterations):
                 save('final.pt','complete',actor_updates);emit({'phase':'complete','actor_updates':actor_updates});return
 

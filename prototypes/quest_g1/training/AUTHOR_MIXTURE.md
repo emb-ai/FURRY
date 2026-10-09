@@ -60,28 +60,44 @@ Its actor parameters and frozen input affine normalization are recovered exactly
 FP32 GPU/ONNX parity on simulator observations was within 2.7e-6 absolute error.
 The released ONNX has no critic, optimizer or exploration distribution to resume.
 
-The adapter keeps the source actor/critic architectures and PPO objective, without
-a DAgger teacher. Explicit differences needed for the small-data continuation:
+The first pilot `111224` incorrectly overrode source PPO settings with fixed LR
+1e-5, fixed std .05, 512 environments and a whole-run KL stop. It stopped after
+118 updates. That pilot is not a faithful source-settings baseline.
 
-- New critic with separately fitted, frozen normalization; the upstream runner's
-  teacher-normalizer/critic-normalizer mismatch is not copied.
-- Critic-only warmup, 500–1,000 iterations. Actor parameters are checked bit-for-bit.
-  Actor unfreezes only after two 50-iteration windows with pre-update TD-lambda
-  EV >= 0.7, normalized RMSE <= 0.65, and all train motions visited. This is an
-  on-policy readiness proxy, not independent Monte Carlo proof near falls.
-- Actor LR ramps to 1e-5 over 100 updates, fixed thereafter; critic warmup LR 3e-4.
-  No upstream adaptive-LR escalation toward 1e-2 during this small-data finetune.
-- Fixed action std 0.05; original learned exploration std was not released.
-- Actor dropout disabled for consistent rollout/update likelihoods; FP32, TF32 off.
-- Checkpoints every 100 actor updates. Stop on nonfinite statistics, a single
-  measured post-update KL > 0.05, or a stop file. No new custom slip/fall penalty.
+The corrected adapter passes `class_to_dict(tc.algorithm)` unchanged to upstream
+`DaggerPPO`. Actor training uses the original initial LR 2e-4, adaptive schedule,
+desired KL .008, 5 optimization epochs, 4 minibatches, 24 rollout steps, PPO clip
+.2, gamma .99, lambda .95, entropy .005 and gradient norm 1. Original action std
+starts at 1.0 and is learned, with `fix_action_std=False`; the separate `action_std`
+list in the config is inactive in this mode. Training mode includes the original
+dropout. The main allocation uses 4,096 environments as in the source config.
+The unchanged source PPO reduces LR for high minibatch KL and continues all
+updates; there is no added minibatch skip or whole-run stop based on KL.
 
-`run_author_pipeline.py` runs an independent baseline and checkpoint evaluation in
-our immutable MuJoCo runtime at 100 Hz, on the exact 12 original validation clips,
-seeds 0/1. These samples never enter PPO or critic normalization. Three successive
-runtime regressions stop further optimization. Acceptance is reported only;
-weights are not automatically installed or promoted. One training seed is a pilot,
+Explicit remaining differences for this requested continuation:
+
+- Published pretrained actor with its frozen input normalization, replacing random
+  actor initialization. Neither original critic nor learned std was released.
+- Smaller non-PICO subset + Quest replacement, with protected stage validation.
+- Requested critic-only warmup, 500–1,000 iterations. Actor/std are frozen during
+  this phase; critic uses source initial LR, held fixed during warmup only. Two
+  50-iteration readiness windows require TD-lambda EV >= .7, normalized RMSE <=
+  .65 and all motions visited. This proxy is not independent Monte Carlo proof.
+- Separate frozen critic normalization, avoiding the upstream runner's mismatched
+  teacher/critic normalizer objects. Source actor/critic networks and losses stay.
+- FP32/TF32 off for repeatable actor parity, checkpoint interval 100, finite pilot
+  budget of 1,000 actor updates rather than a 30,001-iteration from-scratch run.
+
+`run_author_pipeline.py` independently evaluates baseline/checkpoints in the
+immutable MuJoCo runtime at 100 Hz on all 12 original validation clips, seeds 0/1.
+Validation never enters PPO or critic normalization. Regression reports do not
+silently stop the run, and no checkpoint is automatically installed/promoted.
+Explicit stop files, invalid/nonfinite data, a failed critic-readiness prerequisite,
+and the declared iteration/Slurm budget can still end a run. One training seed is
 not evidence of statistical improvement.
+
+`check_upstream_kl.py` exercises the real source PPO with deliberately high KL and
+checks that LR decreases while the update and following rollout both complete.
 
 ## Entry points
 
