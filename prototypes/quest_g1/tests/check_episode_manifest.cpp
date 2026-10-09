@@ -45,6 +45,10 @@ int main() {
         auto legacy = load();
         Check(legacy.scene == "lab", "Nested scene overrode legacy fallback");
         legacy.ValidateDimensions(50, 48, 43);
+        Check(!legacy.catchUp&&!legacy.firstPerson,"Legacy episode acquired catch-up");
+        write("{\"catch_up\":true,\"first_person\":false}");
+        Check(load().catchUp&&!load().firstPerson,"Episode control settings lost");
+        for(const auto* bad:{"{\"catch_up\":1}","{\"first_person\":null}","{\"catch_up\":false,\"catch_up\":true}"}){write(bad);Reject([&]{load();});}
         Check(legacy.PolicyPath("assets",folder.string())=="assets/policy.onnx","Legacy policy fallback changed");
         std::ofstream(folder/"policy.onnx",std::ios::binary)<<"abc";
         const std::string digest="ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad";

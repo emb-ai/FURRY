@@ -1,6 +1,7 @@
 #include "meta_retarget.h"
 #include "simulation.h"
 #include "episode_manifest.h"
+#include "camera_pose_servo.h"
 #include "ablation_metrics.h"
 #include <fstream>
 #include <sstream>
@@ -39,14 +40,18 @@ int Run(int argc,char**argv){
  std::map<uint64_t,TrackingFrame> poses;std::ifstream inputs(folder+"/input.csv"),bodies(folder+"/body.csv"),frames(folder+"/frames.csv"),commands(folder+"/mimic.csv");
  if(!inputs||!bodies||!frames||!commands)throw std::runtime_error("Missing episode streams");
  auto pauses=episodereplay::PauseTimes(folder);size_t pauseIndex=0;
+ auto viewChanges=episodereplay::ViewChanges(folder);size_t viewIndex=0;bool cameraTracking=manifest.firstPerson;
+ int egoCamera=mj_name2id(sim.model,mjOBJ_CAMERA,"ego");
  std::ifstream events(folder+"/events.csv");while(std::getline(events,line)){if(line.find("reference_space_change")!=std::string::npos)throw std::runtime_error("This dynamics replay requires an episode without reference-space events");}
- std::getline(inputs,line);while(std::getline(inputs,line)){auto r=Row(line);if(r.size()!=32)throw std::runtime_error("Invalid input row");TrackingFrame f;f.sequence=r[0];f.xr_time_ns=r[1];f.valid=r[3];TrackedPose*p[]={&f.head,&f.hands[0],&f.hands[1]};for(int j=0;j<3;j++){std::copy_n(r.begin()+11+7*j,3,p[j]->position.begin());std::copy_n(r.begin()+14+7*j,4,p[j]->quaternion.begin());}poses[f.sequence]=f;}
+ std::getline(inputs,line);while(std::getline(inputs,line)){auto r=Row(line);if(r.size()!=32)throw std::runtime_error("Invalid input row");TrackingFrame f;f.sequence=r[0];f.xr_time_ns=r[1];f.valid=r[3];for(int j=0;j<3;j++)f.location_flags[j]=r[4+j];f.hand_active={r[7]!=0,r[8]!=0};TrackedPose*p[]={&f.head,&f.hands[0],&f.hands[1]};for(int j=0;j<3;j++){std::copy_n(r.begin()+11+7*j,3,p[j]->position.begin());std::copy_n(r.begin()+14+7*j,4,p[j]->quaternion.begin());}poses[f.sequence]=f;}
  std::getline(bodies,line);while(std::getline(bodies,line)){auto r=Row(line);if(r.size()!=216)throw std::runtime_error("Invalid body row");auto& b=poses.at(r[0]).body;b.time_ns=r[1];b.supported=r[2];b.valid=r[3];b.confidence=r[4];b.skeleton_version=r[5];for(int j=0;j<14;j++){int a=6+15*j;b.flags[j]=r[a];for(int k=0;k<2;k++){auto&p=k?b.rest[j]:b.joints[j];std::copy_n(r.begin()+a+1+7*k,3,p.position.begin());std::copy_n(r.begin()+a+4+7*k,4,p.quaternion.begin());}}}
  std::ofstream out(argv[4]);if(!out)throw std::runtime_error("Cannot create output");out<<std::setprecision(17)<<"wall_s,sim_s,height,tilt,q_error,cmd_error";for(int k=0;k<35;k++)out<<",cmd_"<<k;AblationHeader(out);out<<"\n";
  bool started=false,fell=false,wasApplying=false;std::array<float,35> origin{};double blendStart=0,firstWall=0,minz=1,maxError=0;int segment=0;
  std::getline(frames,line);std::string command;std::getline(commands,command);
  while(std::getline(frames,line)){if(!std::getline(commands,command))throw std::runtime_error("Missing mimic row");auto r=Row(line),c=Row(command);if(r.size()!=size_t(42+sim.model->nq+sim.model->nv+sim.model->nu)||c.size()!=38||c[0]!=r[1]||c[1]!=r[2]||c[2]!=r[3])throw std::runtime_error("Mismatched frame streams");if(!firstWall)firstWall=r[0];
   while(pauseIndex<pauses.size()&&pauses[pauseIndex]<=r[0]){wasApplying=false;meta.Pause();sim.PauseWholeBodyReference();pauseIndex++;}
+  while(viewIndex<viewChanges.size()&&viewChanges[viewIndex].first<=r[0])cameraTracking=viewChanges[viewIndex++].second;
+  meta.EnableCameraTracking(cameraTracking);
   // Paused calibration writes a state snapshot, followed by the next physical
   // row at the same step/time. A snapshot cannot advance the policy history.
   bool calibrationSnapshot=false;
@@ -56,7 +61,7 @@ int Run(int argc,char**argv){
   auto& f=poses.at(r[1]);std::array<float,35> cmd{};std::copy_n(c.begin()+3,35,cmd.begin());
   if(mode!="saved"){
    if(r[5])meta.Calibrate(sim.model,sim.data,f);
-   if(r[6]&&meta.calibrated){if(r[5]||!wasApplying){origin.fill(0);origin[2]=sim.data->qpos[2];blendStart=r[3];auto*gm=meta.solver().model();for(int j=1;j<gm->njnt;j++){int s=mj_name2id(sim.model,mjOBJ_JOINT,mj_id2name(gm,mjOBJ_JOINT,j));origin[gm->jnt_qposadr[j]-1]=sim.data->qpos[sim.model->jnt_qposadr[s]];}}cmd=meta.Solve(f);double u=std::clamp((r[3]-blendStart)/.5,0.,1.);for(int k=0;k<35;k++)cmd[k]=origin[k]+u*(cmd[k]-origin[k]);wasApplying=true;}
+   if(r[6]&&meta.calibrated){if(r[5]||!wasApplying){origin.fill(0);origin[2]=sim.data->qpos[2];blendStart=r[3];auto*gm=meta.solver().model();for(int j=1;j<gm->njnt;j++){int s=mj_name2id(sim.model,mjOBJ_JOINT,mj_id2name(gm,mjOBJ_JOINT,j));origin[gm->jnt_qposadr[j]-1]=sim.data->qpos[sim.model->jnt_qposadr[s]];}}cmd=meta.Solve(f);if(manifest.catchUp){auto& solver=meta.solver();cmd=ApplyCameraCatchUp(cmd,solver.HasCameraTarget()?solver.CameraTarget():solver.CameraPose(),sim.model,sim.data,egoCamera,true);}double u=std::clamp((r[3]-blendStart)/.5,0.,1.);for(int k=0;k<35;k++)cmd[k]=origin[k]+u*(cmd[k]-origin[k]);wasApplying=true;}
    else{meta.Pause();wasApplying=false;}
   }
   double err=0,cmdErr=0;for(int k=0;k<sim.model->nq;k++)err=std::max(err,std::abs(sim.data->qpos[k]-r[42+k]));for(int k=0;k<35;k++)cmdErr=std::max(cmdErr,std::abs(double(cmd[k])-c[k+3]));maxError=std::max(maxError,err);

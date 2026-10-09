@@ -51,6 +51,7 @@ std::deque<MenuCommand> pendingMenuActions;
 questmenu::State menuState;
 std::vector<questpolicy::Entry> policyCatalog;
 std::atomic<int> selectedPolicy{0};
+std::atomic<bool> catchUpEnabled{true};
 std::atomic<int> sessionMode{0},sessionCapture{0},sessionPlan{0},sessionScene{1},requestedScene{-1};
 std::atomic<bool> menuOpen{true},userPaused{true},calibrationReady{false},anchorMenu{true};
 std::atomic<bool> passthroughVisible{true},debugEnabled{false},debugStats{true},debugMeta{false},debugCamera{false},debugTargets{false},debugContacts{false};
@@ -313,7 +314,7 @@ std::vector<std::vector<float>> LoadVisualMeshes(const std::string& name,const m
     return out;
 }
 void LoadPreferences(){
-    selectedPolicy=0;
+    selectedPolicy=0;catchUpEnabled=true;
     std::ifstream input(assetsPath+"/menu_settings.txt");
     int version,mode,sc,kind,plan,view,pass,enabled,ds,dm,dc,dt,dcontacts;
     if(input>>version>>mode>>sc>>kind>>plan>>view>>pass>>enabled>>ds>>dm>>dc>>dt>>dcontacts && version==1 && mode>=0&&mode<2 && sc>=0&&sc<3 && kind>=0&&kind<2 && plan>=0&&plan<2){
@@ -322,12 +323,13 @@ void LoadPreferences(){
     }
     std::string savedPolicy;
     if(input>>savedPolicy)for(size_t i=0;i<policyCatalog.size();i++)if(policyCatalog[i].id==savedPolicy)selectedPolicy=int(i);
+    int savedCatchUp;if(input>>savedCatchUp && (savedCatchUp==0||savedCatchUp==1))catchUpEnabled=savedCatchUp!=0;
     capture.mode=HumanCapture()?sessionPlan.load()+1:0;
     if(HumanCapture())firstPerson=false;
 }
 void SavePreferences(){
     std::ofstream output(assetsPath+"/menu_settings.txt",std::ios::trunc);
-    output<<"1 "<<sessionMode<<' '<<sessionScene<<' '<<sessionCapture<<' '<<sessionPlan<<' '<<firstPerson<<' '<<passthroughVisible<<' '<<debugEnabled<<' '<<debugStats<<' '<<debugMeta<<' '<<debugCamera<<' '<<debugTargets<<' '<<debugContacts<<' '<<policyCatalog.at(selectedPolicy.load()).id<<'\n';
+    output<<"1 "<<sessionMode<<' '<<sessionScene<<' '<<sessionCapture<<' '<<sessionPlan<<' '<<firstPerson<<' '<<passthroughVisible<<' '<<debugEnabled<<' '<<debugStats<<' '<<debugMeta<<' '<<debugCamera<<' '<<debugTargets<<' '<<debugContacts<<' '<<policyCatalog.at(selectedPolicy.load()).id<<' '<<catchUpEnabled<<'\n';
 }
 void ChangeConfiguration(questmenu::Action action){
     using A=questmenu::Action;
@@ -347,6 +349,12 @@ void ChangeConfiguration(questmenu::Action action){
 }
 void ApplyMenuAction(questmenu::Action action,bool fresh,uint64_t sequence,int policyIndex=-1){
     using A=questmenu::Action;
+    if(action==A::CatchUp){
+        if(recorder.active){Notice("Сначала сохраните запись.");return;}
+        if(HumanCapture())return;
+        catchUpEnabled=!catchUpEnabled.load();settingsDirty=true;restartAfterCalibration=false;
+        reset=true;userPaused=true;menuOpen=true;return;
+    }
     int policyRow=questmenu::PolicyRow(action);
     if(policyRow>=0){
         if(recorder.active){Notice("Сначала сохраните запись.");return;}
@@ -558,7 +566,7 @@ void G1Initialize(android_app* app){
                             if(capture.mode){
                                 firstPerson=false;retarget->EnableCameraTracking(false);capture.Start(ClockSeconds());capture.Calibrate();
                             }
-                            recorder.Start(assetsPath,sim->model,questpolicy::Metadata(sim->scene_name,policyCatalog.at(selectedPolicy.load())),policyCatalog.at(selectedPolicy.load()).file);recordingStarted=ClockSeconds();acceptedRecordingSeconds=0;
+                            recorder.Start(assetsPath,sim->model,questpolicy::Metadata(sim->scene_name,policyCatalog.at(selectedPolicy.load())),policyCatalog.at(selectedPolicy.load()).file,catchUpEnabled.load(),firstPerson.load());recordingStarted=ClockSeconds();acceptedRecordingSeconds=0;
                             std::ofstream config;config.exceptions(std::ios::badbit|std::ios::failbit);config.open(recorder.path()+"/session_config.json");
                             config<<"{\"schema_version\":1,\"mode\":\"trajectories\",\"scene\":\""<<sim->scene_name
                                 <<"\",\"capture\":\""<<(capture.mode?"human_skeleton_only":"human_and_robot")
@@ -678,10 +686,10 @@ void G1Initialize(android_app* app){
                     }
                     double gmrStart=ClockSeconds();
                     auto whole=retarget->Solve(fused);
-                    if(retarget->solver().HasCameraTarget()){
-                        TrackedPose actual;std::copy_n(sim->data->cam_xpos+3*egoCamera,3,actual.position.begin());
-                        mju_mat2Quat(actual.quaternion.data(),sim->data->cam_xmat+9*egoCamera);
-                        whole=CameraPoseServo(whole,retarget->solver().CameraTarget(),actual,sim->data->qpos+3);
+                    if(catchUpEnabled){
+                        auto& solver=retarget->solver();
+                        const auto goal=solver.HasCameraTarget()?solver.CameraTarget():solver.CameraPose();
+                        whole=ApplyCameraCatchUp(whole,goal,sim->model,sim->data,egoCamera,true);
                     }
                     sample.gmrMs=(ClockSeconds()-gmrStart)*1000;
                     double u=std::clamp((sim->data->time-blendStarted)/.5,0.,1.);
@@ -871,7 +879,7 @@ void G1PrepareFrame(){
         }
     }else optical={};
     frameOperatorCamera=optical;
-    menuState.policyIndex=selectedPolicy;
+    menuState.policyIndex=selectedPolicy;menuState.catchUp=catchUpEnabled;
     menuState.mode=questmenu::Mode(sessionMode.load());menuState.scene=questmenu::Scene(sessionScene.load());
     menuState.capture=questmenu::Capture(sessionCapture.load());menuState.plan=questmenu::Plan(sessionPlan.load());
     menuState.open=menuOpen;menuState.paused=SessionPaused()||!active;menuState.recording=recordingStatus==1;

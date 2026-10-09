@@ -19,7 +19,7 @@ public:
     bool active=false;
     bool failed=false;
     std::string path()const{return directory.string();}
-    void Start(const std::string& root,const mjModel* model,const std::string& metadata="recording_metadata.json",const std::string& policyFile=""){
+    void Start(const std::string& root,const mjModel* model,const std::string& metadata="recording_metadata.json",const std::string& policyFile="",bool catchUp=false,bool firstPerson=false){
         if(active)return;
         failed=false;inputs=samples=0;
         auto stamp=std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
@@ -27,7 +27,15 @@ public:
         try{
             std::filesystem::create_directories(directory.parent_path());
             if(!std::filesystem::create_directory(directory))throw std::runtime_error("Episode already exists");
-            std::filesystem::copy_file(std::filesystem::path(root)/metadata,directory/"manifest.json");
+            std::ifstream source(std::filesystem::path(root)/metadata);
+            if(!source)throw std::runtime_error("Missing episode metadata");
+            std::string raw{std::istreambuf_iterator<char>(source),std::istreambuf_iterator<char>()};
+            size_t open=raw.find_first_not_of(" \t\r\n"),next=raw.find_first_not_of(" \t\r\n",open+1);
+            if(open==std::string::npos||raw[open]!='{'||next==std::string::npos)throw std::runtime_error("Invalid episode metadata");
+            std::ofstream manifest;manifest.exceptions(std::ios::badbit|std::ios::failbit);manifest.open(directory/"manifest.json");
+            manifest<<raw.substr(0,open+1)<<"\n\"catch_up\":"<<(catchUp?"true":"false")
+                <<",\"first_person\":"<<(firstPerson?"true":"false")<<(raw[next]=='}'?"":",")<<raw.substr(open+1);
+            manifest.close();
             if(!policyFile.empty())std::filesystem::copy_file(std::filesystem::path(root)/policyFile,directory/"policy.onnx");
             for(auto* f:{&input,&frames,&events,&body,&mimic})f->exceptions(std::ios::badbit|std::ios::failbit);
             input.open(directory/"input.csv");frames.open(directory/"frames.csv");events.open(directory/"events.csv");

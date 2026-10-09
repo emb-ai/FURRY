@@ -110,14 +110,17 @@ int main() {
     for(int i=0;i<11;i++)state.policies.push_back({"p"+std::to_string(i),"policy.onnx","","Candidate "+std::to_string(i),"Experimental"});
     state.policyIndex=5;state.policyPage=1;
     layout=BuildLayout(state);
+    Check(Find(layout,Action::CatchUp).selected&&CentreHit(layout,Action::CatchUp)==Action::CatchUp,"Catch-up toggle unavailable/default wrong");
     Check(Find(layout,Action::PolicySelect1).selected,"Active policy highlight missing");
     Check(Find(layout,Action::PolicySelect0).text=="Candidate 4","Wrong policy page");
     Check(CentreHit(layout,Action::PolicySelect0)==Action::PolicySelect0,"Candidate cannot be selected");
     Check(CentreHit(layout,Action::PolicyNext)==Action::PolicyNext,"Next policy page missing");
     state.recording=true;layout=BuildLayout(state);
     Check(CentreHit(layout,Action::PolicySelect0)==Action::None,"Policy can change during recording");
+    Check(CentreHit(layout,Action::CatchUp)==Action::None,"Catch-up can change during recording");
     state.recording=false;state.mode=Mode::Trajectories;state.capture=Capture::Human;
     Check(CentreHit(BuildLayout(state),Action::PolicySelect0)==Action::None,"Human-only capture edits policy");
+    Check(CentreHit(BuildLayout(state),Action::CatchUp)==Action::None,"Human-only capture edits catch-up");
     state.policyPage=2;layout=BuildLayout(state);
     Check(CentreHit(layout,Action::PolicyNext)==Action::None,"Policy paging exceeds catalog");
     CheckGeometry(state);

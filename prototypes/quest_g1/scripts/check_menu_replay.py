@@ -36,11 +36,15 @@ def main():
             subprocess.run([os.environ.get('CXX', 'c++'), '-O1', '-std=c++17', '-I'+str(ROOT/'android/native'),
                             '-I'+str(ROOT/'vendor/mujoco/include'), '-I'+str(ROOT/'vendor/onnxruntime-android/headers'),
                             str(source), *common, str(mjlib), str(ortlib), '-o', str(folder/name)], check=True)
-        cases = [(name, None) for name in ('lab', 'stand', 'cup', 'push_t')]
+        cases = [(name, None, False, 'observer') for name in ('lab', 'stand', 'cup', 'push_t')]
         catalog = json.loads((ROOT/'android/assets/policy_catalog.json').read_text())
-        cases += [('cup', row) for row in catalog[1:]]
-        for scene, policy in cases:
+        cases += [('cup', row, False, 'observer') for row in catalog[1:]]
+        cases += [('cup', row, True, 'observer') for row in catalog]
+        cases += [('cup', catalog[0], True, view) for view in ('first', 'switch')]
+        for scene, policy, catch_up, view in cases:
             case = scene if policy is None else scene+"-"+policy["id"]
+            if catch_up:
+                case += "-catch-up-"+view
             episode_root = folder/case
             episode_root.mkdir()
             metadata = 'recording_metadata.json' if scene == 'lab' else f'recording_metadata-{scene}.json'
@@ -51,9 +55,12 @@ def main():
             command = [str(folder/'check_replay_menu'), str(ROOT/'android/assets'), str(episode_root), scene]
             if policy:
                 command.append(policy['id'])
+                command += ['on' if catch_up else 'off', view]
             episode = subprocess.check_output(command, env=env, text=True).strip()
             if policy:
                 manifest = json.loads((Path(episode)/'manifest.json').read_text())
+                if manifest['catch_up'] != catch_up or manifest['first_person'] != (view == 'first'):
+                    raise AssertionError('Wrong catch-up/view settings in recording')
                 if manifest['policy_id'] != policy['id'] or manifest['policy_sha256'] != policy['sha256']:
                     raise AssertionError('Recording has the wrong policy identity')
                 if not (Path(episode)/'policy.onnx').is_file():

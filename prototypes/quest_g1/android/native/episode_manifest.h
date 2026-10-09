@@ -125,7 +125,7 @@ class JsonFields {
                 Space();
                 size_t start = pos;
                 Value();
-                if (collect && (key == "scene" || key == "nq" || key == "nv" || key == "nu" || key == "policy_file" || key == "policy_sha256")) {
+                if (collect && (key == "scene" || key == "nq" || key == "nv" || key == "nu" || key == "policy_file" || key == "policy_sha256" || key == "catch_up" || key == "first_person")) {
                     if (!out.emplace(key, text.substr(start, pos - start)).second)
                         throw std::runtime_error("Duplicate episode manifest field: " + key);
                 }
@@ -224,6 +224,7 @@ inline int Dimension(const std::string &value) {
 
 struct Manifest {
     std::string scene = "lab", raw, policyFile, policySha256;
+    bool catchUp=false,firstPerson=false;
     std::string PolicyPath(const std::string& assets,const std::string& folder) const {
         if(policyFile.empty())return assets+"/policy.onnx"; // legacy baseline episodes
         std::string path=std::filesystem::exists(folder+"/policy.onnx")?folder+"/policy.onnx":assets+"/"+policyFile;
@@ -256,6 +257,12 @@ inline Manifest LoadManifest(const std::string &folder) {
     if (out.scene != "lab" && out.scene != "stand" && out.scene != "cup" && out.scene != "push_t")
         throw std::runtime_error("Unknown episode scene: " + out.scene);
     auto readString=[&](const std::string& key){detail::JsonFields reader(fields.at(key));auto value=reader.String();reader.End();return value;};
+    auto readBool=[&](const std::string& key){
+        if(!fields.count(key))return false;
+        if(fields.at(key)!="true"&&fields.at(key)!="false")throw std::runtime_error("Invalid episode boolean: "+key);
+        return fields.at(key)=="true";
+    };
+    out.catchUp=readBool("catch_up");out.firstPerson=readBool("first_person");
     if(fields.count("policy_file")!=fields.count("policy_sha256"))throw std::runtime_error("Incomplete episode policy identity");
     if(fields.count("policy_file")){
         out.policyFile=readString("policy_file");out.policySha256=readString("policy_sha256");
@@ -295,5 +302,19 @@ inline std::vector<int64_t> PauseTimes(const std::string &folder) {
         }
     }
     return times;
+}
+inline std::vector<std::pair<int64_t,bool>> ViewChanges(const std::string& folder){
+    std::vector<std::pair<int64_t,bool>> changes;std::ifstream input(folder+"/events.csv");std::string line;
+    std::getline(input,line);
+    while(std::getline(input,line)){
+        size_t first=line.find(','),second=first==std::string::npos?first:line.find(',',first+1);
+        if(second==std::string::npos)throw std::runtime_error("Invalid episode event row");
+        std::string event=line.substr(second+1);if(!event.empty()&&event.back()=='\r')event.pop_back();
+        if(event!="ego_world"&&event!="observer_view")continue;
+        size_t end=0;int64_t time=std::stoll(line.substr(0,first),&end);
+        if(end!=first||time<0||(!changes.empty()&&time<changes.back().first))throw std::runtime_error("Invalid episode view time");
+        changes.emplace_back(time,event=="ego_world");
+    }
+    return changes;
 }
 } // namespace episodereplay

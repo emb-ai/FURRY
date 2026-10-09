@@ -20,7 +20,7 @@ enum class Action {
     ModeSimulation, ModeTrajectories, CaptureRobot, CaptureHuman, PlanTrain, PlanTest,
     SceneEmpty, SceneCup, ScenePushT, ViewObserver, ViewFirstPerson, Passthrough,
     DebugEnabled, DebugStats, DebugMeta, DebugCamera, DebugTargets, DebugContacts,
-    PageSession, PageView, PageDebug, PagePolicy, PolicyPrevious, PolicyNext,
+    PageSession, PageView, PageDebug, PagePolicy, CatchUp, PolicyPrevious, PolicyNext,
     PolicySelect0, PolicySelect1, PolicySelect2, PolicySelect3
 };
 enum class Kind { Text, MutedText, Divider, Tab, Button, Primary, Radio, Checkbox };
@@ -40,6 +40,7 @@ struct State {
     int exportStatus = 0;
     std::vector<questpolicy::Entry> policies;
     int policyIndex = 0, policyPage = 0;
+    bool catchUp = true;
 };
 
 inline constexpr int PoliciesPerPage = 4;
@@ -200,13 +201,14 @@ inline std::vector<Widget> BuildLayout(const State& s) {
         const int count=int(s.policies.size());
         const int pages=std::max(1,(count+PoliciesPerPage-1)/PoliciesPerPage);
         const int page=std::clamp(s.policyPage,0,pages-1);
-        add({-.352f,.214f,.704f,.04f}, "Выбор сбросит робота и калибровку", Action::None,true,false,Kind::MutedText);
+        check(.211f,"Догоняние позиции и поворота",Action::CatchUp,s.catchUp,!s.recording&&!human);
+        add({-.352f,.160f,.704f,.032f}, "Изменение сбросит робота и калибровку", Action::None,true,false,Kind::MutedText);
         for(int row=0;row<PoliciesPerPage;row++){
             int index=page*PoliciesPerPage+row;if(index>=count)break;
-            float y=.124f-row*.078f;const auto& policy=s.policies[index];
+            float y=.100f-row*.072f;const auto& policy=s.policies[index];
             add({-.352f,y,.704f,.052f},policy.title,Action(int(Action::PolicySelect0)+row),
                 !s.recording&&!human,s.policyIndex==index,Kind::Radio);
-            add({-.312f,y-.023f,.664f,.022f},policy.note,Action::None,true,false,Kind::MutedText);
+            add({-.312f,y-.020f,.664f,.018f},policy.note,Action::None,true,false,Kind::MutedText);
         }
         if(pages>1){
             add({-.352f,-.198f,.18f,.052f},"Назад",Action::PolicyPrevious,page>0,false,Kind::Button);
