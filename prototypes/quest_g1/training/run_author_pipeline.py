@@ -11,6 +11,7 @@ import sys
 import time
 
 p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True);p.add_argument('--num-envs',type=int,default=4096);p.add_argument('--iterations',type=int,default=1000)
+p.add_argument('--fast-critic',action='store_true')
 p.add_argument('--init-checkpoint',type=Path);p.add_argument('--init-manifest',type=Path)
 p.add_argument('--window-reward',action='store_true');p.add_argument('--sole-urdf',type=Path);p.add_argument('--eval-assets',type=Path);p.add_argument('--eval-dataset',type=Path)
 a=p.parse_args()
@@ -43,6 +44,7 @@ evaluate(a.init_checkpoint or root/'TWIST2/assets/ckpts/twist2_1017_20k.onnx',ba
 train_out=out/'training'
 cmd=[sys.executable,str(root/'adapter/author_finetune.py'),'--root',str(root),'--output',str(train_out),'--headless','--num_envs',str(a.num_envs),'--iterations',str(a.iterations)]
 if a.init_checkpoint:cmd+=['--init-checkpoint',str(a.init_checkpoint),'--init-manifest',str(a.init_manifest)]
+if a.fast_critic:cmd+=['--fast-critic']
 if a.window_reward:cmd+=['--window-reward']
 if a.sole_urdf:cmd+=['--sole-urdf',str(a.sole_urdf)]
 results=[];done=set()

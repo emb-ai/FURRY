@@ -16,6 +16,8 @@ import time
 
 def main():
     p = argparse.ArgumentParser()
+    p.add_argument('--fast-critic', action='store_true', help='Skip gradient-free actor work during critic warmup; actor PPO unchanged')
+    p.add_argument('--legacy-rollout-metrics', action='store_true', help='Reference scalar metrics implementation for performance/parity tests')
     p.add_argument('--init-checkpoint', type=Path, help='Initialize actor, frozen normalization and exploration std from this checkpoint')
     p.add_argument('--init-manifest', type=Path, help='Exact training manifest recorded in the initialization checkpoint')
     p.add_argument('--window-reward', action='store_true', help='One-second displacement/turn penalty; 9 extra critic features; no catch-up')
@@ -42,6 +44,7 @@ def main():
     from rsl_rl.modules import ActorCriticFuture
     from rsl_rl.algorithms import DaggerPPO
     from policy import recover, load
+    from training_performance import critic_only_update, RolloutMetrics
     torch.set_num_threads(1)
     torch.backends.cuda.matmul.allow_tf32 = False
     torch.backends.cudnn.allow_tf32 = False
@@ -118,31 +121,39 @@ def main():
     started=time.time()
     save('baseline.pt','baseline',0)
     config={'source_revision':manifest['source_revision'],'source_actor_sha256':hashlib.sha256((root/'TWIST2/assets/ckpts/twist2_1017_20k.onnx').read_bytes()).hexdigest(),'dataset_manifest_sha256':hashlib.sha256((root/'dataset/manifest.json').read_bytes()).hexdigest(),'environment':class_to_dict(cfg),'upstream_training':class_to_dict(tc),'ppo_config_matches_upstream':algorithm==class_to_dict(tc.algorithm),'initial_std_mean':float(ac.std.mean()),'initial_std_from_upstream':not bool(a.init_checkpoint),'finetune_overrides':{k:str(v) if isinstance(v,Path) else v for k,v in vars(a).items()},'critic_gate':'On-policy pre-update TD-lambda prediction, 50-iteration windows; proxy only, not independent Monte Carlo certification. Validation never enters optimizer.','deployment':False}
+    config['performance']={'batched_rollout_metrics':not a.legacy_rollout_metrics,'critic_value_only_update':a.fast_critic,'actor_ppo_unchanged':True,'critic_rng_stream_matches_upstream':not a.fast_critic}
     config['initialization'] = {'checkpoint':str(a.init_checkpoint) if a.init_checkpoint else None, 'sha256':hashlib.sha256(a.init_checkpoint.read_bytes()).hexdigest() if a.init_checkpoint else None, 'actor_and_normalization_restored':bool(a.init_checkpoint), 'std_restored':bool(a.init_checkpoint), 'critic_restored':False, 'optimizer_restored':False, 'dataset_audit':lineage}
     config['window_reward'] = {'enabled':a.window_reward, 'seconds':1., 'type':'dense Huber on progress since start of consecutive windows; separate initial heading frames', 'position_scale_m':.25, 'yaw_scale_rad':.5, 'position_weight':.25, 'yaw_weight':.25, 'critic_extra_features':critic_dim-env.num_privileged_obs, 'catch_up':False}
     config['sole_urdf_sha256'] = hashlib.sha256(a.sole_urdf.read_bytes()).hexdigest() if a.sole_urdf else None
     (out/'config.json').write_text(json.dumps(config,indent=2,default=str))
     counts=torch.zeros(len(rows),device=env.device,dtype=torch.long)
     quest_ids=torch.tensor([i for i,f in enumerate(env._motion_lib._motion_files) if str(f).startswith('./quest/') or str(f).startswith('quest/')],device=env.device)
+    quest_mask=torch.zeros(len(rows),device=env.device,dtype=torch.bool);quest_mask[quest_ids]=True
     phase='critic'; iteration=0; stable=0; window=[]; actor_updates=0
     while True:
         if (out/'STOP').exists():
             emit({'phase':'stopped_by_file','actor_updates':actor_updates});save('stopped.pt',phase,iteration);return
         iteration+=1
         value_loss_previous=[]; resets=0; failures=0; reward_sum=0.; quest_frames=0; displacement_sum=0.; turn_sum=0.; distance_sum=0.
+        metrics=None if a.legacy_rollout_metrics else RolloutMetrics(env.device,quest_mask)
         with torch.no_grad():
             for _ in range(steps):
                 ids=env._motion_ids.clone(); counts.scatter_add_(0,ids,torch.ones_like(ids))
-                quest_frames+=int(torch.isin(ids,quest_ids).sum())
+                if metrics is None:quest_frames+=int(torch.isin(ids,quest_ids).sum())
+                else:metrics.record_motion_ids(ids)
                 actions=alg.act(actor_obs(obs),critic_obs(priv),{})
                 obs,priv,r,d,info=env.step(actions)
                 priv = augment_priv(priv)
-                if window_state is not None:
+                if metrics is None and window_state is not None:
                     displacement_sum += float(window_state.position_penalty.mean())
                     turn_sum += float(window_state.yaw_penalty.mean())
                     distance_sum += float(window_state.distance_error.mean())
                 alg.process_env_step(r,d,info)
-                resets+=int(d.sum());failures+=int((d.bool() & ~info['time_outs'].bool()).sum());reward_sum+=float(r.mean())
+                if metrics is None:
+                    resets+=int(d.sum());failures+=int((d.bool() & ~info['time_outs'].bool()).sum());reward_sum+=float(r.mean())
+                else:metrics.record_step(r,d,info['time_outs'],window_state)
+            if metrics is not None:
+                quest_frames,resets,failures,reward_sum,displacement_sum,turn_sum,distance_sum=metrics.result()
             alg.compute_returns(critic_obs(priv))
             values=alg.storage.values.flatten(); targets=alg.storage.returns.flatten()
             mse=float((values-targets).square().mean());var=float(targets.var(unbiased=False));ev=1-float((values-targets).var(unbiased=False))/max(var,1e-8)
@@ -151,7 +162,8 @@ def main():
         # The unchanged upstream DaggerPPO adapts LR per minibatch using KL.
         # Do not overwrite its persistent LR each rollout or turn KL into termination.
         lr_before_update=alg.learning_rate
-        result=alg.update()
+        fast_critic_active=a.fast_critic and phase=='critic'
+        result=critic_only_update(alg) if fast_critic_active else alg.update()
         lr=alg.learning_rate
         with torch.no_grad():
             current=ac.actor(saved_obs.reshape(-1,env.num_obs)).reshape_as(old_means)
@@ -159,6 +171,8 @@ def main():
         if not np.isfinite([result[0],result[1],ev,nrmse,update_kl]).all():
             raise FloatingPointError('Nonfinite optimization statistics')
         record={'phase':phase,'iteration':iteration,'actor_updates':actor_updates,'lr':lr,'value_loss':result[0],'surrogate_loss':result[1],'pre_update_critic_ev':ev,'pre_update_critic_nrmse':nrmse,'post_update_kl_includes_dropout':update_kl,'lr_before_update':lr_before_update,'reward_rate':reward_sum/steps/env.dt,'resets':resets,'tracking_terminations':failures,'quest_frame_fraction':quest_frames/(steps*env.num_envs),'visited_motions':int((counts>0).sum()),'std_mean':float(ac.std.mean())}
+        record['critic_only_update']=fast_critic_active
+        record['surrogate_evaluated']=not fast_critic_active
         if window_state is not None:
             record.update(window_displacement_penalty_rate=displacement_sum/steps*env.reward_scales['window_displacement']/env.dt, window_turn_penalty_rate=turn_sum/steps*env.reward_scales['window_turn']/env.dt, window_distance_error_m=distance_sum/steps)
         emit(record)

@@ -185,3 +185,49 @@ Quest stages/mirror parents to remain fixed. It rejects old train hashes or
 train stages in validation, even under new IDs. Validation contains only the
 same held-out Quest stages 2, 9 and 14; all 1090 ancestor train motions remain
 in train. The check runs both before baseline evaluation and before optimization.
+
+## Training performance (2026-10-09)
+
+`--fast-critic` (trainer or pipeline) omits actor forward/log-probability/entropy
+work during the frozen-actor critic warmup. It uses the source minibatch
+permutation, clipped value objective, gradient clipping and Adam updates.
+It refuses trainable actor/std, a teacher, recurrent policies or adaptive LR.
+Actor-phase updates still call the unmodified source `DaggerPPO.update()`.
+The skipped dropout/action samples change the subsequent RNG stream, so this
+is opt-in and is not a bitwise replay of a whole upstream training run.
+The unevaluated surrogate is explicitly marked in metrics.
+
+Rollout statistics now accumulate on GPU and transfer once per rollout.
+Float32 reductions are accumulated in float64 to match the former Python-float
+sums. `--legacy-rollout-metrics` retains the reference path for benchmarking.
+This does not change reward tensors or the optimizer. The standalone timing
+effect was within the variation of the short benchmark; do not claim a separate
+speedup from it.
+
+`check_training_performance.py --device cuda` runs against the pinned source
+PPO. On GPU job 111526, both the tiny fixture and source ActorCriticFuture,
+with clipped and unclipped value losses, produced bitwise-identical parameters,
+Adam states and value loss for two updates (40 minibatches) per case.
+All seven rollout metrics matched exactly for 24 steps of 4096 environments.
+
+Sequential same-GPU benchmark 111526 used 4096 environments and six critic plus
+six actor updates per variant, excluding startup/transition samples. The two
+reference critic medians were 3.134/3.127 s; fast critic was 2.964 s (about 5%
+less time per warmup iteration). Actor medians were 3.643/3.640 s vs 3.660 s:
+this optimization does not accelerate actor training. These are short-run
+measurements, not a claim about total job duration. Existing training job 111501
+was not restarted or modified. Full benchmark artifacts are under
+`outputs/quest-finetune-20261009/performance-optimization/` in the project workspace
+and `~/furry/performance-optimization-20261009/` on MIPT.
+
+Removing the per-substep `fetch_results` was tested only in a disposable
+benchmark. It reduced short-run iteration times, but was not adopted: repeated
+unmodified simulator runs already diverged on the first step, preventing the
+planned full-state equivalence certification. In diagnostic job 111531, initial
+root/joint/observation tensors, RNG states and first actions matched, but
+post-step states did not. This does not prove the candidate changes physics;
+it means the current test cannot establish its equivalence. Production keeps
+the original physics loop, timestep, substeps and synchronization.
+The diagnostic rerun then segfaulted during simulator creation for its third
+variant, before the optimized metrics/critic code ran; its no-fetch case did
+not run. Job 111526 completed all five variants and the CUDA parity checks.
