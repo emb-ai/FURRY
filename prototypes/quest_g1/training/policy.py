@@ -20,7 +20,7 @@ def recover(onnx_path,source):
  import onnx
  from onnx import numpy_helper
  graph=onnx.load(str(onnx_path));weights={x.name:numpy_helper.to_array(x).copy() for x in graph.graph.initializer};p=Policy(source)
- p.actor.load_state_dict({k.removeprefix('actor.'):torch.from_numpy(v) for k,v in weights.items() if k.startswith('actor.')},strict=True)
+ p.actor.load_state_dict({k[len('actor.') :]:torch.from_numpy(v) for k,v in weights.items() if k.startswith('actor.')},strict=True)
  # Resolve normalization through graph edges, not exporter-generated tensor names.
  sub=next(n for n in graph.graph.node if n.op_type=='Sub' and n.input[0]=='input');div=next(n for n in graph.graph.node if n.op_type=='Div' and n.input[0]==sub.output[0])
  p.mean.copy_(torch.from_numpy(weights[sub.input[1]]));p.divisor.copy_(torch.from_numpy(weights[div.input[1]]))

@@ -7,6 +7,7 @@ import argparse,csv,hashlib,json,os,pickle,subprocess,sys
 from pathlib import Path
 import numpy as np
 import mujoco
+from motion_coordinates import world_offsets_to_root
 from scipy.spatial.transform import Rotation,Slerp
 from scipy.signal import butter,sosfiltfilt
 
@@ -96,7 +97,7 @@ def main():
    for start in range(0,len(new)-199,3000):
     stop=min(start+3000,len(new));clipq=new[start:stop].copy();clipq[:,:2]-=clipq[0,:2];clipid=f'{name}-{start:06d}'
     path=out/split/f'{clipid}.npz';np.savez_compressed(path,qpos=clipq,fps=100,local_body_pos=local[start:stop],link_body_list=links)
-    payload={'fps':100,'root_pos':clipq[:,:3],'root_rot':clipq[:,[4,5,6,3]],'dof_pos':clipq[:,7:],'local_body_pos':local[start:stop],'link_body_list':links}
+    payload={'fps':100,'root_pos':clipq[:,:3],'root_rot':clipq[:,[4,5,6,3]],'dof_pos':clipq[:,7:],'local_body_pos':world_offsets_to_root(local[start:stop],clipq[:,[4,5,6,3]]),'link_body_list':links}
     with path.with_suffix('.pkl').open('wb') as f:pickle.dump(payload,f,protocol=4)
     vel=np.diff(clipq[:,7:],axis=0)*100
     manifest['clips'].append({'id':clipid,'file':str(path.relative_to(out)),'split':split,'stage':s,'calibration_sequence':int(seq[cj]),'source_start_wall_s':float(wall[ids[0]]+grid[start]),'source_end_wall_s':float(wall[ids[0]]+grid[stop-1]),'seconds':float((stop-start-1)/100),'max_joint_speed_rad_s':float(abs(vel).max()),'p99_joint_speed_rad_s':float(np.quantile(abs(vel),.99)),'max_floor_lift_m':float(max(lifts[start:stop])),'sha256':sha(path)})
