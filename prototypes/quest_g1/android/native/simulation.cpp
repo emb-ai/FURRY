@@ -22,17 +22,14 @@ std::vector<std::string> JointNames() {
 }
 }
 
-Simulation::Simulation(const std::string& assets, int physicsWorkers, const std::string& sceneName)
+Simulation::Simulation(const std::string& assets, int physicsWorkers, const std::string& sceneName, const std::string& policyPath)
     : scene_name(sceneName) {
     if(physicsWorkers<0 || physicsWorkers>4)throw std::runtime_error("Invalid MuJoCo worker count");
     if(sceneName!="lab" && sceneName!="stand" && sceneName!="cup" && sceneName!="push_t")
         throw std::runtime_error("Unknown Quest scene: "+sceneName);
     options.SetIntraOpNumThreads(1);
     options.SetInterOpNumThreads(1);
-    session = std::make_unique<Ort::Session>(env, (assets+"/policy.onnx").c_str(), options);
-    Ort::AllocatorWithDefaultOptions alloc;
-    input_name = session->GetInputNameAllocated(0,alloc).get();
-    output_name = session->GetOutputNameAllocated(0,alloc).get();
+    SelectPolicy(policyPath.empty()?assets+"/policy.onnx":policyPath);
     char error[2048] = {};
     const std::string sceneFile=sceneName=="lab"?"scene.xml":"scene-"+sceneName+".xml";
     model = mj_loadXML((assets+"/"+sceneFile).c_str(), nullptr, error, sizeof(error));
@@ -58,6 +55,34 @@ Simulation::Simulation(const std::string& assets, int physicsWorkers, const std:
     Reset();
 }
 Simulation::~Simulation(){ mj_deleteData(data); mj_deleteModel(model); }
+void Simulation::SelectPolicy(const std::string& path) {
+    auto candidate=std::make_unique<Ort::Session>(env,path.c_str(),options);
+    if(candidate->GetInputCount()!=1||candidate->GetOutputCount()!=1)
+        throw std::runtime_error("Policy requires one input and one output");
+    auto validate=[&](bool input,int width){
+        auto type=input?candidate->GetInputTypeInfo(0):candidate->GetOutputTypeInfo(0);
+        if(type.GetONNXType()!=ONNX_TYPE_TENSOR)throw std::runtime_error("Policy requires tensors");
+        auto tensor=type.GetTensorTypeAndShapeInfo();auto shape=tensor.GetShape();
+        if(tensor.GetElementType()!=ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT||shape.size()!=2||
+           (shape[0]!=1&&shape[0]!=-1)||shape[1]!=width)
+            throw std::runtime_error("Incompatible Quest policy shape/type");
+    };
+    validate(true,1432);validate(false,29);
+    Ort::AllocatorWithDefaultOptions alloc;
+    std::string nextInput=candidate->GetInputNameAllocated(0,alloc).get();
+    std::string nextOutput=candidate->GetOutputNameAllocated(0,alloc).get();
+    std::array<float,1432> zeros{};std::array<int64_t,2> shape{1,1432};
+    auto memory=Ort::MemoryInfo::CreateCpu(OrtArenaAllocator,OrtMemTypeDefault);
+    auto tensor=Ort::Value::CreateTensor<float>(memory,zeros.data(),zeros.size(),shape.data(),shape.size());
+    const char* inputs[]={nextInput.c_str()};const char* outputs[]={nextOutput.c_str()};
+    auto result=candidate->Run(Ort::RunOptions{nullptr},inputs,&tensor,1,outputs,1);
+    if(result[0].GetTensorTypeAndShapeInfo().GetShape()!=std::vector<int64_t>{1,29})
+        throw std::runtime_error("Invalid policy output shape");
+    for(int i=0;i<29;i++)if(!std::isfinite(result[0].GetTensorData<float>()[i]))
+        throw std::runtime_error("Invalid policy output");
+    session=std::move(candidate);input_name=std::move(nextInput);output_name=std::move(nextOutput);
+    if(model&&data)Reset();
+}
 void Simulation::Reset() {
     mj_resetData(model,data);
     data->qpos[2]=.793; data->qpos[3]=1;

@@ -1,14 +1,21 @@
 #include "meta_retarget.h"
 #include "simulation.h"
 #include "recording.h"
+#include "policy_catalog.h"
 #include <iostream>
 
 // Synthetic source poses only. Exercise per-scene streams, menu/user/focus
 // pauses and calibration snapshots without any participant trajectory.
 int main(int argc,char** argv){
-    if(argc!=4)return 2;
+    if(argc!=4&&argc!=5)return 2;
     try{
-        std::string name=argv[3];Simulation sim(argv[1],2,name);MetaRetargeter meta(argv[1]);auto& solver=meta.solver();
+        std::string name=argv[3],policyPath,metadata=name=="lab"?"recording_metadata.json":"recording_metadata-"+name+".json",policyFile;
+        if(argc==5){
+            auto catalog=questpolicy::Load(argv[1]);bool found=false;
+            for(const auto& entry:catalog)if(entry.id==argv[4]){policyPath=questpolicy::VerifiedPath(argv[1],entry);metadata=questpolicy::Metadata(name,entry);policyFile=entry.file;found=true;}
+            if(!found)throw std::runtime_error("Unknown test policy");
+        }
+        Simulation sim(argv[1],2,name,policyPath);MetaRetargeter meta(argv[1]);auto& solver=meta.solver();
         auto* m=solver.model();std::unique_ptr<mjData,decltype(&mj_deleteData)> data(mj_makeData(m),mj_deleteData);auto* d=data.get();
         TrackingFrame input;input.valid=input.body.valid=input.body.supported=true;input.location_flags={15,15,15};input.hand_active={true,true};input.body.confidence=1;input.head.position={0,1.65,0};
         auto fill=[&](bool rest){
@@ -29,7 +36,7 @@ int main(int argc,char** argv){
         mj_kinematics(m,d);mj_comPos(m,d);fill(true);
         for(int j=1;j<m->njnt;j++){int actual=mj_name2id(sim.model,mjOBJ_JOINT,mj_id2name(m,mjOBJ_JOINT,j));d->qpos[m->jnt_qposadr[j]]=sim.data->qpos[sim.model->jnt_qposadr[actual]];}
         mj_kinematics(m,d);mj_comPos(m,d);fill(false);
-        EpisodeRecorder recorder;recorder.Start(argv[2],sim.model,name=="lab"?"recording_metadata.json":"recording_metadata-"+name+".json");
+        EpisodeRecorder recorder;recorder.Start(argv[2],sim.model,metadata,policyFile);
         uint64_t sequence=0;
         auto sample=[&]{input.sequence=++sequence;input.xr_time_ns=input.body.time_ns=1000000000LL+sequence*10000000LL;recorder.Input(input,0,0,EpisodeRecorder::Now());};
         std::array<float,35> origin{};double blendStart=0;

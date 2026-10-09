@@ -36,17 +36,32 @@ def main():
             subprocess.run([os.environ.get('CXX', 'c++'), '-O1', '-std=c++17', '-I'+str(ROOT/'android/native'),
                             '-I'+str(ROOT/'vendor/mujoco/include'), '-I'+str(ROOT/'vendor/onnxruntime-android/headers'),
                             str(source), *common, str(mjlib), str(ortlib), '-o', str(folder/name)], check=True)
-        for scene in ('lab', 'stand', 'cup', 'push_t'):
-            episode_root = folder/scene
+        cases = [(name, None) for name in ('lab', 'stand', 'cup', 'push_t')]
+        catalog = json.loads((ROOT/'android/assets/policy_catalog.json').read_text())
+        cases += [('cup', row) for row in catalog[1:]]
+        for scene, policy in cases:
+            case = scene if policy is None else scene+"-"+policy["id"]
+            episode_root = folder/case
             episode_root.mkdir()
             metadata = 'recording_metadata.json' if scene == 'lab' else f'recording_metadata-{scene}.json'
+            if policy:
+                metadata = f'recording_metadata-{scene}-policy-{policy["id"]}.json'
+                shutil.copy2(ROOT/'android/assets'/policy['file'], episode_root/policy['file'])
             shutil.copy2(ROOT/'android/assets'/metadata, episode_root/metadata)
-            episode = subprocess.check_output([str(folder/'check_replay_menu'), str(ROOT/'android/assets'),
-                                               str(episode_root), scene], env=env, text=True).strip()
+            command = [str(folder/'check_replay_menu'), str(ROOT/'android/assets'), str(episode_root), scene]
+            if policy:
+                command.append(policy['id'])
+            episode = subprocess.check_output(command, env=env, text=True).strip()
+            if policy:
+                manifest = json.loads((Path(episode)/'manifest.json').read_text())
+                if manifest['policy_id'] != policy['id'] or manifest['policy_sha256'] != policy['sha256']:
+                    raise AssertionError('Recording has the wrong policy identity')
+                if not (Path(episode)/'policy.onnx').is_file():
+                    raise AssertionError('Recording did not preserve selected weights')
             # lab metadata has no scene field: this also checks legacy fallback.
             subprocess.run([str(folder/'replay_gmr'), str(ROOT/'android/assets'), episode], env=env, check=True)
             for mode in ('saved', 'retarget'):
-                output = folder/f'{scene}-{mode}.csv'
+                output = folder/f'{case}-{mode}.csv'
                 subprocess.run([str(folder/'replay_gmr_dynamics'), str(ROOT/'android/assets'), episode,
                                 mode, str(output)], env=env, check=True)
                 with output.open() as stream:
@@ -57,7 +72,7 @@ def main():
                     raise AssertionError(f'{scene}: dynamic scene/snapshot replay diverged')
                 if max(float(row['cmd_error']) for row in rows) > 1e-5:
                     raise AssertionError(f'{scene}: pause blending/reference replay diverged')
-            print(f'{scene}: scene, dimensions, pauses and calibration snapshots passed', flush=True)
+            print(f'{case}: policy, scene, dimensions, pauses and calibration snapshots passed', flush=True)
 
 
 if __name__ == '__main__':

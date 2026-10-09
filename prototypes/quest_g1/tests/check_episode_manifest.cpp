@@ -45,6 +45,19 @@ int main() {
         auto legacy = load();
         Check(legacy.scene == "lab", "Nested scene overrode legacy fallback");
         legacy.ValidateDimensions(50, 48, 43);
+        Check(legacy.PolicyPath("assets",folder.string())=="assets/policy.onnx","Legacy policy fallback changed");
+        std::ofstream(folder/"policy.onnx",std::ios::binary)<<"abc";
+        const std::string digest="ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad";
+        Check(questpolicy::FileSha256((folder/"policy.onnx").string())==digest,"SHA256 abc vector failed");
+        write("{\"policy_file\":\"policy-candidate.onnx\",\"policy_sha256\":\""+digest+"\"}");
+        Check(load().PolicyPath("missing-assets",folder.string())==(folder/"policy.onnx").string(),"Archived policy was not used");
+        std::ofstream(folder/"policy.onnx",std::ios::binary)<<"modified";
+        Reject([&]{load().PolicyPath("assets",folder.string());});
+        for(const auto* invalid:{"{\"policy_file\":\"policy.onnx\"}",
+            "{\"policy_file\":\"../policy.onnx\",\"policy_sha256\":\"bad\"}",
+            "{\"policy_sha256\":\"bad\"}"}){write(invalid);Reject([&]{load();});}
+        std::ofstream(folder/"empty",std::ios::binary);
+        Check(questpolicy::FileSha256((folder/"empty").string())=="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855","SHA256 empty vector failed");
         write("{\"sc\\u0065ne\":\"c\\u0075p\",\"nested\":[true,false,null,-1.2e+3,{\"unicode\":"
               "\"\\uD83D\\uDC3B\"}]}");
         Check(load().scene == "cup", "Valid JSON escape failed");

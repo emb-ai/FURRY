@@ -46,8 +46,11 @@ struct InputSample{TrackingFrame frame;float left,right;int64_t received;};
 std::mutex inputMutex,statsMutex;
 std::deque<InputSample> pendingInputs;
 std::vector<std::string> pendingEvents;
-std::deque<questmenu::Action> pendingMenuActions;
+struct MenuCommand { questmenu::Action action; int policyIndex=-1; };
+std::deque<MenuCommand> pendingMenuActions;
 questmenu::State menuState;
+std::vector<questpolicy::Entry> policyCatalog;
+std::atomic<int> selectedPolicy{0};
 std::atomic<int> sessionMode{0},sessionCapture{0},sessionPlan{0},sessionScene{1},requestedScene{-1};
 std::atomic<bool> menuOpen{true},userPaused{true},calibrationReady{false},anchorMenu{true};
 std::atomic<bool> passthroughVisible{true},debugEnabled{false},debugStats{true},debugMeta{false},debugCamera{false},debugTargets{false},debugContacts{false};
@@ -63,7 +66,7 @@ std::string menuNotice;
 bool SessionPaused(){return menuOpen.load()||userPaused.load();}
 bool HumanCapture(){return sessionMode.load()==1&&sessionCapture.load()==1;}
 void Notice(const std::string& value){std::lock_guard<std::mutex> guard(inputMutex);menuNotice=value;}
-void QueueMenuAction(questmenu::Action action){std::lock_guard<std::mutex> guard(inputMutex);pendingMenuActions.push_back(action);}
+void QueueMenuAction(questmenu::Action action,int policyIndex=-1){std::lock_guard<std::mutex> guard(inputMutex);pendingMenuActions.push_back({action,policyIndex});}
 std::atomic<bool> spaceInvalidated{false};
 std::unique_ptr<CameraStream> cameraStream;
 CameraFusion cameraFusion;
@@ -310,18 +313,21 @@ std::vector<std::vector<float>> LoadVisualMeshes(const std::string& name,const m
     return out;
 }
 void LoadPreferences(){
+    selectedPolicy=0;
     std::ifstream input(assetsPath+"/menu_settings.txt");
     int version,mode,sc,kind,plan,view,pass,enabled,ds,dm,dc,dt,dcontacts;
     if(input>>version>>mode>>sc>>kind>>plan>>view>>pass>>enabled>>ds>>dm>>dc>>dt>>dcontacts && version==1 && mode>=0&&mode<2 && sc>=0&&sc<3 && kind>=0&&kind<2 && plan>=0&&plan<2){
         sessionMode=mode;sessionScene=sc;sessionCapture=kind;sessionPlan=plan;firstPerson=view!=0;passthroughVisible=pass!=0;
         debugEnabled=enabled!=0;debugStats=ds!=0;debugMeta=dm!=0;debugCamera=dc!=0;debugTargets=dt!=0;debugContacts=dcontacts!=0;
     }
+    std::string savedPolicy;
+    if(input>>savedPolicy)for(size_t i=0;i<policyCatalog.size();i++)if(policyCatalog[i].id==savedPolicy)selectedPolicy=int(i);
     capture.mode=HumanCapture()?sessionPlan.load()+1:0;
     if(HumanCapture())firstPerson=false;
 }
 void SavePreferences(){
     std::ofstream output(assetsPath+"/menu_settings.txt",std::ios::trunc);
-    output<<"1 "<<sessionMode<<' '<<sessionScene<<' '<<sessionCapture<<' '<<sessionPlan<<' '<<firstPerson<<' '<<passthroughVisible<<' '<<debugEnabled<<' '<<debugStats<<' '<<debugMeta<<' '<<debugCamera<<' '<<debugTargets<<' '<<debugContacts<<'\n';
+    output<<"1 "<<sessionMode<<' '<<sessionScene<<' '<<sessionCapture<<' '<<sessionPlan<<' '<<firstPerson<<' '<<passthroughVisible<<' '<<debugEnabled<<' '<<debugStats<<' '<<debugMeta<<' '<<debugCamera<<' '<<debugTargets<<' '<<debugContacts<<' '<<policyCatalog.at(selectedPolicy.load()).id<<'\n';
 }
 void ChangeConfiguration(questmenu::Action action){
     using A=questmenu::Action;
@@ -339,8 +345,29 @@ void ChangeConfiguration(questmenu::Action action){
     retarget->Pause();sim->PauseWholeBodyReference();userPaused=true;menuOpen=true;
     settingsDirty=true;refreshGeometry=true;Notice("");
 }
-void ApplyMenuAction(questmenu::Action action,bool fresh,uint64_t sequence){
+void ApplyMenuAction(questmenu::Action action,bool fresh,uint64_t sequence,int policyIndex=-1){
     using A=questmenu::Action;
+    int policyRow=questmenu::PolicyRow(action);
+    if(policyRow>=0){
+        if(recorder.active){Notice("Сначала сохраните запись.");return;}
+        if(HumanCapture())return;
+        // Selection carries the catalog index from the UI, including page.
+        int index=policyIndex;
+        if(index<0||index>=int(policyCatalog.size())||index==selectedPolicy.load())return;
+        userPaused=true;menuOpen=true;restartAfterCalibration=false;
+        try{
+            sim->SelectPolicy(questpolicy::VerifiedPath(assetsPath,policyCatalog[index]));
+            selectedPolicy=index;settingsDirty=true;
+            calibrationSnapshot.reset();retarget->calibrated=false;retarget->Pause();calibrationReady=false;
+            trackingEnabled=false;wasApplying=false;faulted=false;lastReference={};grip[0]=0;grip[1]=0;
+            calibrate=false;toggleRecording=false;cameraFusion.Reset();capture.Invalidate();trackingStatus=0;pauseReason=0;
+            refreshGeometry=true;refreshEgoAnchor=true;
+            {std::lock_guard<std::mutex> statsGuard(statsMutex);stats={};stats.physicsWorkers=sim->physics_workers;}
+            Notice("Политика выбрана. Калибруйте кнопкой A.");
+            __android_log_print(ANDROID_LOG_INFO,"G1Quest","Selected policy %s sha256=%s",policyCatalog[index].id.c_str(),policyCatalog[index].sha256.c_str());
+        }catch(const std::exception& e){Notice("Ошибка загрузки. Сохранена прежняя политика.");__android_log_print(ANDROID_LOG_ERROR,"G1Quest","Policy selection: %s",e.what());}
+        return;
+    }
     if(action==A::ModeSimulation||action==A::ModeTrajectories||action==A::CaptureRobot||action==A::CaptureHuman||action==A::PlanTrain||action==A::PlanTest){ChangeConfiguration(action);return;}
     if(action==A::SceneEmpty||action==A::SceneCup||action==A::ScenePushT){
         if(recorder.active){Notice("Сначала сохраните запись.");return;}
@@ -389,7 +416,7 @@ void ReloadScene(){
     if(recorder.active){Notice("Сначала сохраните запись.");return;}
     try{
         std::string name=questmenu::SceneName(questmenu::Scene(selected));
-        auto nextSim=std::make_unique<Simulation>(assetsPath,2,name);
+        auto nextSim=std::make_unique<Simulation>(assetsPath,2,name,questpolicy::VerifiedPath(assetsPath,policyCatalog.at(selectedPolicy.load())));
         auto nextVisuals=LoadVisualMeshes(name,nextSim->model);
         int nextCamera=mj_name2id(nextSim->model,mjOBJ_CAMERA,"ego");
         if(nextCamera<0)throw std::runtime_error("Missing ego camera");
@@ -414,10 +441,18 @@ void G1Initialize(android_app* app){
     assetsPath=assets;
     CopyAssets(app->activity->assetManager,"",assets);
     CopyAssets(app->activity->assetManager,"meshes",assets+"/meshes");
+    policyCatalog=questpolicy::Load(assets);menuState.policies=policyCatalog;
     LoadPreferences();
     std::ifstream cameraConfig(assets+"/camera_stream_url.txt");std::string cameraUrl;std::getline(cameraConfig,cameraUrl);
     cameraStream=std::make_unique<CameraStream>(cameraUrl);
-    sim=std::make_unique<Simulation>(assets,2,questmenu::SceneName(questmenu::Scene(sessionScene.load())));
+    try{
+        sim=std::make_unique<Simulation>(assets,2,questmenu::SceneName(questmenu::Scene(sessionScene.load())),questpolicy::VerifiedPath(assets,policyCatalog.at(selectedPolicy.load())));
+    }catch(const std::exception& e){
+        if(selectedPolicy==0)throw;
+        __android_log_print(ANDROID_LOG_WARN,"G1Quest","Saved policy failed: %s; restoring baseline",e.what());
+        selectedPolicy=0;settingsDirty=true;Notice("Политика недоступна. Загружена авторская 20k.");
+        sim=std::make_unique<Simulation>(assets,2,questmenu::SceneName(questmenu::Scene(sessionScene.load())),questpolicy::VerifiedPath(assets,policyCatalog.at(0)));
+    }
     retarget=std::make_unique<MetaRetargeter>(assets);
 #ifdef G1_ENABLE_TWIST_GROUNDING
     retarget->EnableTwistGrounding(true);
@@ -454,7 +489,7 @@ void G1Initialize(android_app* app){
         while(running){
             double cycleStart=ClockSeconds();
             TrackingFrame input;std::chrono::steady_clock::time_point receivedAt;
-            std::deque<InputSample> inputs;std::vector<std::string> events;std::deque<questmenu::Action> actions;
+            std::deque<InputSample> inputs;std::vector<std::string> events;std::deque<MenuCommand> actions;
             bool captureOnly=false,calibratedThisCycle=false;
             {std::lock_guard<std::mutex> guard(inputMutex);input=latestTracking;receivedAt=trackingTime;inputs.swap(pendingInputs);events.swap(pendingEvents);actions.swap(pendingMenuActions);}
             bool fresh=input.body.valid && (input.location_flags[0]&3)==3 &&
@@ -474,7 +509,7 @@ void G1Initialize(android_app* app){
                     Record([&]{recorder.Event("reference_space_change",input.sequence);});
                     capture.Invalidate();
                 }
-                for(auto action:actions)ApplyMenuAction(action,fresh,input.sequence);
+                for(const auto& command:actions)ApplyMenuAction(command.action,fresh,input.sequence,command.policyIndex);
                 if(reset.exchange(false)){
                     cameraFusion.Reset();pauseReason=0;sim->Reset();wasApplying=false;trackingEnabled=false;retarget->calibrated=false;
                     trackingStatus=0;calibrate=restartAfterCalibration;faulted=false;lastReference={};grip[0]=0;grip[1]=0;capture.Invalidate();refreshGeometry=true;
@@ -523,7 +558,7 @@ void G1Initialize(android_app* app){
                             if(capture.mode){
                                 firstPerson=false;retarget->EnableCameraTracking(false);capture.Start(ClockSeconds());capture.Calibrate();
                             }
-                            recorder.Start(assetsPath,sim->model,"recording_metadata-"+sim->scene_name+".json");recordingStarted=ClockSeconds();acceptedRecordingSeconds=0;
+                            recorder.Start(assetsPath,sim->model,questpolicy::Metadata(sim->scene_name,policyCatalog.at(selectedPolicy.load())),policyCatalog.at(selectedPolicy.load()).file);recordingStarted=ClockSeconds();acceptedRecordingSeconds=0;
                             std::ofstream config;config.exceptions(std::ios::badbit|std::ios::failbit);config.open(recorder.path()+"/session_config.json");
                             config<<"{\"schema_version\":1,\"mode\":\"trajectories\",\"scene\":\""<<sim->scene_name
                                 <<"\",\"capture\":\""<<(capture.mode?"human_skeleton_only":"human_and_robot")
@@ -836,6 +871,7 @@ void G1PrepareFrame(){
         }
     }else optical={};
     frameOperatorCamera=optical;
+    menuState.policyIndex=selectedPolicy;
     menuState.mode=questmenu::Mode(sessionMode.load());menuState.scene=questmenu::Scene(sessionScene.load());
     menuState.capture=questmenu::Capture(sessionCapture.load());menuState.plan=questmenu::Plan(sessionPlan.load());
     menuState.open=menuOpen;menuState.paused=SessionPaused()||!active;menuState.recording=recordingStatus==1;
@@ -872,8 +908,11 @@ void G1PrepareFrame(){
             if(action==A::PageSession)menuState.page=questmenu::Page::Session;
             else if(action==A::PageView)menuState.page=questmenu::Page::View;
             else if(action==A::PageDebug)menuState.page=questmenu::Page::Debug;
+            else if(action==A::PagePolicy){menuState.page=questmenu::Page::Policy;menuState.policyPage=selectedPolicy.load()/questmenu::PoliciesPerPage;}
+            else if(action==A::PolicyPrevious)menuState.policyPage=std::max(0,menuState.policyPage-1);
+            else if(action==A::PolicyNext)menuState.policyPage=std::min((int(policyCatalog.size())-1)/questmenu::PoliciesPerPage,menuState.policyPage+1);
             else if(action==A::Close)G1ToggleMenu();
-            else if(action!=A::None)QueueMenuAction(action);
+            else if(action!=A::None)QueueMenuAction(action,questmenu::PolicyRow(action)<0?-1:menuState.policyPage*questmenu::PoliciesPerPage+questmenu::PolicyRow(action));
         }
     }
 

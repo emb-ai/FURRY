@@ -106,7 +106,25 @@ int main() {
     for (Action a : {Action::DebugStats, Action::DebugMeta, Action::DebugCamera, Action::DebugTargets, Action::DebugContacts})
         Check(CentreHit(layout, a) == a, "Enabled debug option cannot be selected");
 
-    for (auto page : {Page::Session, Page::View, Page::Debug})
+    state.page=Page::Policy;state.mode=Mode::Simulation;state.recording=false;
+    for(int i=0;i<11;i++)state.policies.push_back({"p"+std::to_string(i),"policy.onnx","","Candidate "+std::to_string(i),"Experimental"});
+    state.policyIndex=5;state.policyPage=1;
+    layout=BuildLayout(state);
+    Check(Find(layout,Action::PolicySelect1).selected,"Active policy highlight missing");
+    Check(Find(layout,Action::PolicySelect0).text=="Candidate 4","Wrong policy page");
+    Check(CentreHit(layout,Action::PolicySelect0)==Action::PolicySelect0,"Candidate cannot be selected");
+    Check(CentreHit(layout,Action::PolicyNext)==Action::PolicyNext,"Next policy page missing");
+    state.recording=true;layout=BuildLayout(state);
+    Check(CentreHit(layout,Action::PolicySelect0)==Action::None,"Policy can change during recording");
+    state.recording=false;state.mode=Mode::Trajectories;state.capture=Capture::Human;
+    Check(CentreHit(BuildLayout(state),Action::PolicySelect0)==Action::None,"Human-only capture edits policy");
+    state.policyPage=2;layout=BuildLayout(state);
+    Check(CentreHit(layout,Action::PolicyNext)==Action::None,"Policy paging exceeds catalog");
+    CheckGeometry(state);
+    state.policyPage=0;layout=BuildLayout(state);
+    Check(CentreHit(layout,Action::PolicyPrevious)==Action::None,"Policy paging underflows catalog");
+
+    for (auto page : {Page::Session, Page::View, Page::Debug, Page::Policy})
         for (auto mode : {Mode::Simulation, Mode::Trajectories})
             for (auto capture : {Capture::Robot, Capture::Human}) {
                 state.page = page; state.mode = mode; state.capture = capture;

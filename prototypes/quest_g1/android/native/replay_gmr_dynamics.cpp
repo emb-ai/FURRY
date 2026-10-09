@@ -35,7 +35,7 @@ static void CheckedStep(Simulation& sim,double leftGrip,double rightGrip) {
  CheckPhysicsNumerics(sim,previousTime);
 }
 int Run(int argc,char**argv){
- if(argc!=5){std::cerr<<"Usage: replay_gmr_dynamics assets episode saved|retarget output.csv\n";return 2;}std::string folder=argv[2],mode=argv[3];if(mode!="saved"&&mode!="retarget")throw std::runtime_error("Unknown replay mode");auto manifest=episodereplay::LoadManifest(folder);Simulation sim(argv[1],2,manifest.scene);manifest.ValidateDimensions(sim.model->nq,sim.model->nv,sim.model->nu);MetaRetargeter meta(argv[1]);std::string line;
+ if(argc!=5){std::cerr<<"Usage: replay_gmr_dynamics assets episode saved|retarget output.csv\n";return 2;}std::string folder=argv[2],mode=argv[3];if(mode!="saved"&&mode!="retarget")throw std::runtime_error("Unknown replay mode");auto manifest=episodereplay::LoadManifest(folder);Simulation sim(argv[1],2,manifest.scene,manifest.PolicyPath(argv[1],folder));manifest.ValidateDimensions(sim.model->nq,sim.model->nv,sim.model->nu);MetaRetargeter meta(argv[1]);std::string line;
  std::map<uint64_t,TrackingFrame> poses;std::ifstream inputs(folder+"/input.csv"),bodies(folder+"/body.csv"),frames(folder+"/frames.csv"),commands(folder+"/mimic.csv");
  if(!inputs||!bodies||!frames||!commands)throw std::runtime_error("Missing episode streams");
  auto pauses=episodereplay::PauseTimes(folder);size_t pauseIndex=0;

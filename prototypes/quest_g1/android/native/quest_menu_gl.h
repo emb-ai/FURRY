@@ -326,6 +326,7 @@ inline int DrawMinimalStatus(const float* headVP, const std::string& assetsPath,
     std::string detail = state.recordingInfo;
     if (detail.empty()) detail = HumanCapture(state) ?
         (state.plan == Plan::Train ? "Движения человека - обучение" : "Движения человека - тест") : SceneTitle(state.scene);
+    if(!HumanCapture(state)&&state.policyIndex>=0&&state.policyIndex<int(state.policies.size()))detail += " / " + state.policies[state.policyIndex].title;
     draw.Label({-.35f, bottom + .037f, .70f, .034f}, detail, glmenu::Muted, .027f);
     const char* exportText = state.exportStatus == 1 ? "Архив копируется" :
         state.exportStatus == 2 ? "Архив сохранён в Download/G1Quest" :

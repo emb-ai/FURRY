@@ -19,7 +19,7 @@ public:
     bool active=false;
     bool failed=false;
     std::string path()const{return directory.string();}
-    void Start(const std::string& root,const mjModel* model,const std::string& metadata="recording_metadata.json"){
+    void Start(const std::string& root,const mjModel* model,const std::string& metadata="recording_metadata.json",const std::string& policyFile=""){
         if(active)return;
         failed=false;inputs=samples=0;
         auto stamp=std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
@@ -28,6 +28,7 @@ public:
             std::filesystem::create_directories(directory.parent_path());
             if(!std::filesystem::create_directory(directory))throw std::runtime_error("Episode already exists");
             std::filesystem::copy_file(std::filesystem::path(root)/metadata,directory/"manifest.json");
+            if(!policyFile.empty())std::filesystem::copy_file(std::filesystem::path(root)/policyFile,directory/"policy.onnx");
             for(auto* f:{&input,&frames,&events,&body,&mimic})f->exceptions(std::ios::badbit|std::ios::failbit);
             input.open(directory/"input.csv");frames.open(directory/"frames.csv");events.open(directory/"events.csv");
             input<<"sequence,xr_time_ns,receive_ns,valid,head_flags,left_flags,right_flags,left_active,right_active,grip_left,grip_right";

@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <filesystem>
+#include "policy_catalog.h"
 
 namespace episodereplay {
 namespace detail {
@@ -123,7 +125,7 @@ class JsonFields {
                 Space();
                 size_t start = pos;
                 Value();
-                if (collect && (key == "scene" || key == "nq" || key == "nv" || key == "nu")) {
+                if (collect && (key == "scene" || key == "nq" || key == "nv" || key == "nu" || key == "policy_file" || key == "policy_sha256")) {
                     if (!out.emplace(key, text.substr(start, pos - start)).second)
                         throw std::runtime_error("Duplicate episode manifest field: " + key);
                 }
@@ -221,7 +223,12 @@ inline int Dimension(const std::string &value) {
 } // namespace detail
 
 struct Manifest {
-    std::string scene = "lab", raw;
+    std::string scene = "lab", raw, policyFile, policySha256;
+    std::string PolicyPath(const std::string& assets,const std::string& folder) const {
+        if(policyFile.empty())return assets+"/policy.onnx"; // legacy baseline episodes
+        std::string path=std::filesystem::exists(folder+"/policy.onnx")?folder+"/policy.onnx":assets+"/"+policyFile;
+        questpolicy::VerifySha256(path,policySha256);return path;
+    }
     int nq = -1, nv = -1, nu = -1;
     std::string ModelPath(const std::string &assets) const {
         return assets + (scene == "lab" ? "/scene.xml" : "/scene-" + scene + ".xml");
@@ -248,6 +255,13 @@ inline Manifest LoadManifest(const std::string &folder) {
     }
     if (out.scene != "lab" && out.scene != "stand" && out.scene != "cup" && out.scene != "push_t")
         throw std::runtime_error("Unknown episode scene: " + out.scene);
+    auto readString=[&](const std::string& key){detail::JsonFields reader(fields.at(key));auto value=reader.String();reader.End();return value;};
+    if(fields.count("policy_file")!=fields.count("policy_sha256"))throw std::runtime_error("Incomplete episode policy identity");
+    if(fields.count("policy_file")){
+        out.policyFile=readString("policy_file");out.policySha256=readString("policy_sha256");
+        if(!questpolicy::ModelFile(out.policyFile)||out.policySha256.size()!=64)throw std::runtime_error("Invalid episode policy identity");
+        for(char c:out.policySha256)if(!((c>='0'&&c<='9')||(c>='a'&&c<='f')))throw std::runtime_error("Invalid episode policy SHA256");
+    }
     if (fields.count("nq"))
         out.nq = detail::Dimension(fields.at("nq"));
     if (fields.count("nv"))

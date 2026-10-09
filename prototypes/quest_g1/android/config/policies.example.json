@@ -1,0 +1,8 @@
+[
+  {
+    "id": "quest-checkpoint-500",
+    "title": "Quest: дообучение 500",
+    "note": "Эксперимент: checkpoint 500",
+    "path": "../../outputs/policies/checkpoint_000500.onnx"
+  }
+]

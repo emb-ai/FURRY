@@ -12,7 +12,7 @@ int main(int argc,char**argv){
     if(argc!=3)return 2;
     try{
         std::string folder=argv[2];auto manifest=episodereplay::LoadManifest(folder);
-        Simulation sim(argv[1],2,manifest.scene);manifest.ValidateDimensions(sim.model->nq,sim.model->nv,sim.model->nu);MetaRetargeter meta(argv[1]);
+        Simulation sim(argv[1],2,manifest.scene,manifest.PolicyPath(argv[1],folder));manifest.ValidateDimensions(sim.model->nq,sim.model->nv,sim.model->nu);MetaRetargeter meta(argv[1]);
         std::ifstream inputs(folder+"/input.csv"),bodies(folder+"/body.csv"),frames(folder+"/frames.csv"),commands(folder+"/mimic.csv");
         if(!inputs||!bodies||!frames||!commands)throw std::runtime_error("GMR replay requires input/body/frames/mimic streams");
         std::map<uint64_t,TrackingFrame> poses;std::string line;

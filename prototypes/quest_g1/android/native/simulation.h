@@ -10,9 +10,11 @@
 // Shared by the Android app and the native desktop integration check.
 class Simulation {
 public:
-    explicit Simulation(const std::string& assets, int physicsWorkers=2, const std::string& sceneName="lab");
+    explicit Simulation(const std::string& assets, int physicsWorkers=2, const std::string& sceneName="lab", const std::string& policyPath="");
     ~Simulation();
     void Reset();
+    // Load and probe before committing; a failure preserves the active session.
+    void SelectPolicy(const std::string& path);
     void Step(bool demo = true, double grip = 0, double right_grip = -1);
     mjModel* model = nullptr;
     mjData* data = nullptr;

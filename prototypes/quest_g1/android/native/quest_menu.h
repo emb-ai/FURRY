@@ -4,12 +4,13 @@
 #include <cmath>
 #include <string>
 #include <vector>
+#include "policy_catalog.h"
 
 // The menu is a physical, upright plane. Coordinates are metres, +Y is up,
 // +Z faces the user. The runtime owns state transitions and anchoring.
 namespace questmenu {
 
-enum class Page { Session, View, Debug };
+enum class Page { Session, View, Debug, Policy };
 enum class Mode { Simulation, Trajectories };
 enum class Scene { Empty, Cup, PushT };
 enum class Capture { Robot, Human };
@@ -19,7 +20,8 @@ enum class Action {
     ModeSimulation, ModeTrajectories, CaptureRobot, CaptureHuman, PlanTrain, PlanTest,
     SceneEmpty, SceneCup, ScenePushT, ViewObserver, ViewFirstPerson, Passthrough,
     DebugEnabled, DebugStats, DebugMeta, DebugCamera, DebugTargets, DebugContacts,
-    PageSession, PageView, PageDebug
+    PageSession, PageView, PageDebug, PagePolicy, PolicyPrevious, PolicyNext,
+    PolicySelect0, PolicySelect1, PolicySelect2, PolicySelect3
 };
 enum class Kind { Text, MutedText, Divider, Tab, Button, Primary, Radio, Checkbox };
 
@@ -36,7 +38,15 @@ struct State {
     bool debugCamera = false, debugTargets = false, debugContacts = false;
     std::string notice, recordingInfo, cameraInfo;
     int exportStatus = 0;
+    std::vector<questpolicy::Entry> policies;
+    int policyIndex = 0, policyPage = 0;
 };
+
+inline constexpr int PoliciesPerPage = 4;
+inline int PolicyRow(Action action) {
+    const int row=int(action)-int(Action::PolicySelect0);
+    return row>=0&&row<PoliciesPerPage?row:-1;
+}
 
 struct Rect {
     float x = 0, y = 0, w = 0, h = 0; // lower left and extent
@@ -131,6 +141,7 @@ inline std::vector<Widget> BuildLayout(const State& s) {
     add({-.352f, .291f, .144f, .055f}, "Сессия", Action::PageSession, true, s.page == Page::Session, Kind::Tab);
     add({-.183f, .291f, .102f, .055f}, "Вид", Action::PageView, true, s.page == Page::View, Kind::Tab);
     add({-.056f, .291f, .166f, .055f}, "Отладка", Action::PageDebug, true, s.page == Page::Debug, Kind::Tab);
+    add({.135f, .291f, .217f, .055f}, "Политика", Action::PagePolicy, true, s.page == Page::Policy, Kind::Tab);
     line(.289f);
 
     const bool human = HumanCapture(s);
@@ -185,6 +196,23 @@ inline std::vector<Widget> BuildLayout(const State& s) {
         line(-.051f);
         label(-.121f, "RGB-D");
         text(-.121f, s.cameraInfo.empty() ? "Не подключена" : s.cameraInfo);
+    } else if(s.page == Page::Policy) {
+        const int count=int(s.policies.size());
+        const int pages=std::max(1,(count+PoliciesPerPage-1)/PoliciesPerPage);
+        const int page=std::clamp(s.policyPage,0,pages-1);
+        add({-.352f,.214f,.704f,.04f}, "Выбор сбросит робота и калибровку", Action::None,true,false,Kind::MutedText);
+        for(int row=0;row<PoliciesPerPage;row++){
+            int index=page*PoliciesPerPage+row;if(index>=count)break;
+            float y=.124f-row*.078f;const auto& policy=s.policies[index];
+            add({-.352f,y,.704f,.052f},policy.title,Action(int(Action::PolicySelect0)+row),
+                !s.recording&&!human,s.policyIndex==index,Kind::Radio);
+            add({-.312f,y-.023f,.664f,.022f},policy.note,Action::None,true,false,Kind::MutedText);
+        }
+        if(pages>1){
+            add({-.352f,-.198f,.18f,.052f},"Назад",Action::PolicyPrevious,page>0,false,Kind::Button);
+            add({-.152f,-.198f,.304f,.052f},std::to_string(page+1)+" / "+std::to_string(pages));
+            add({.172f,-.198f,.18f,.052f},"Далее",Action::PolicyNext,page+1<pages,false,Kind::Button);
+        }
     } else {
         check(.213f, "Показывать отладку", Action::DebugEnabled, s.debugEnabled);
         check(.137f, "FPS и время вычислений", Action::DebugStats, s.debugStats, s.debugEnabled);
