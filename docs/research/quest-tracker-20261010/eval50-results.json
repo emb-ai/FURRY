@@ -1,0 +1,396 @@
+{
+  "RTX": {
+    "last": {
+      "phase": "complete",
+      "actor_updates": 500,
+      "wall_seconds": 3320.9323477745056
+    },
+    "iteration_seconds": {
+      "critic": 2.881,
+      "actor": 3.467
+    },
+    "pipeline_complete": true,
+    "checkpoints": [
+      {
+        "checkpoint": "checkpoint_000100",
+        "accepted": true,
+        "reasons": [],
+        "falls": 0,
+        "metrics": {
+          "slide_rate": 0.07109,
+          "root_xy_error_m": 3.26163,
+          "key_rmse_m": 0.0195
+        },
+        "change_pct": {
+          "slide_rate": -8.1,
+          "root_xy_error_m": -10.2,
+          "key_rmse_m": -4.6
+        },
+        "gait": {
+          "baseline": {
+            "trips_per_s": 0.2188,
+            "braking_per_s": 0.0493,
+            "heading_deg": 65.7,
+            "lateral_m": 2.831,
+            "directed_progress_ratio": 0.142
+          },
+          "candidate": {
+            "trips_per_s": 0.2342,
+            "braking_per_s": 0.0647,
+            "heading_deg": 62.42,
+            "lateral_m": 2.592,
+            "directed_progress_ratio": 0.105
+          }
+        }
+      },
+      {
+        "checkpoint": "checkpoint_000200",
+        "accepted": true,
+        "reasons": [],
+        "falls": 0,
+        "metrics": {
+          "slide_rate": 0.06033,
+          "root_xy_error_m": 3.0385,
+          "key_rmse_m": 0.01943
+        },
+        "change_pct": {
+          "slide_rate": -22.0,
+          "root_xy_error_m": -16.4,
+          "key_rmse_m": -4.9
+        },
+        "gait": {
+          "baseline": {
+            "trips_per_s": 0.2188,
+            "braking_per_s": 0.0493,
+            "heading_deg": 65.7,
+            "lateral_m": 2.831,
+            "directed_progress_ratio": 0.142
+          },
+          "candidate": {
+            "trips_per_s": 0.2404,
+            "braking_per_s": 0.0678,
+            "heading_deg": 63.2,
+            "lateral_m": 2.33,
+            "directed_progress_ratio": 0.126
+          }
+        }
+      },
+      {
+        "checkpoint": "checkpoint_000300",
+        "accepted": true,
+        "reasons": [],
+        "falls": 0,
+        "metrics": {
+          "slide_rate": 0.06488,
+          "root_xy_error_m": 3.40101,
+          "key_rmse_m": 0.02028
+        },
+        "change_pct": {
+          "slide_rate": -16.1,
+          "root_xy_error_m": -6.4,
+          "key_rmse_m": -0.7
+        },
+        "gait": {
+          "baseline": {
+            "trips_per_s": 0.2188,
+            "braking_per_s": 0.0493,
+            "heading_deg": 65.7,
+            "lateral_m": 2.831,
+            "directed_progress_ratio": 0.142
+          },
+          "candidate": {
+            "trips_per_s": 0.2096,
+            "braking_per_s": 0.0586,
+            "heading_deg": 64.08,
+            "lateral_m": 2.52,
+            "directed_progress_ratio": 0.137
+          }
+        }
+      },
+      {
+        "checkpoint": "checkpoint_000400",
+        "accepted": false,
+        "reasons": [
+          "key_rmse_m_regression"
+        ],
+        "falls": 0,
+        "metrics": {
+          "slide_rate": 0.05854,
+          "root_xy_error_m": 3.49489,
+          "key_rmse_m": 0.02176
+        },
+        "change_pct": {
+          "slide_rate": -24.3,
+          "root_xy_error_m": -3.8,
+          "key_rmse_m": 6.5
+        },
+        "gait": {
+          "baseline": {
+            "trips_per_s": 0.2188,
+            "braking_per_s": 0.0493,
+            "heading_deg": 65.7,
+            "lateral_m": 2.831,
+            "directed_progress_ratio": 0.142
+          },
+          "candidate": {
+            "trips_per_s": 0.2404,
+            "braking_per_s": 0.0493,
+            "heading_deg": 62.19,
+            "lateral_m": 2.555,
+            "directed_progress_ratio": 0.174
+          }
+        }
+      },
+      {
+        "checkpoint": "checkpoint_000500",
+        "accepted": false,
+        "reasons": [
+          "key_rmse_m_regression"
+        ],
+        "falls": 0,
+        "metrics": {
+          "slide_rate": 0.06223,
+          "root_xy_error_m": 2.84453,
+          "key_rmse_m": 0.02175
+        },
+        "change_pct": {
+          "slide_rate": -19.5,
+          "root_xy_error_m": -21.7,
+          "key_rmse_m": 6.5
+        },
+        "gait": {
+          "baseline": {
+            "trips_per_s": 0.2188,
+            "braking_per_s": 0.0493,
+            "heading_deg": 65.7,
+            "lateral_m": 2.831,
+            "directed_progress_ratio": 0.142
+          },
+          "candidate": {
+            "trips_per_s": 0.262,
+            "braking_per_s": 0.0863,
+            "heading_deg": 61.89,
+            "lateral_m": 2.166,
+            "directed_progress_ratio": 0.123
+          }
+        }
+      }
+    ],
+    "compatibility-100hz": {
+      "accepted": false,
+      "reasons": [
+        "key_rmse_m_regression"
+      ],
+      "falls": 0,
+      "baseline_falls": 4
+    },
+    "train-stage05": {
+      "accepted": false,
+      "reasons": [
+        "sliding_regression"
+      ],
+      "falls": 0,
+      "baseline_falls": 0
+    }
+  },
+  "A100": {
+    "last": {
+      "phase": "complete",
+      "actor_updates": 500,
+      "wall_seconds": 3444.274589776993
+    },
+    "iteration_seconds": {
+      "critic": 3.056,
+      "actor": 3.524
+    },
+    "pipeline_complete": true,
+    "checkpoints": [
+      {
+        "checkpoint": "checkpoint_000100",
+        "accepted": false,
+        "reasons": [
+          "sliding_regression"
+        ],
+        "falls": 0,
+        "metrics": {
+          "slide_rate": 0.08632,
+          "root_xy_error_m": 3.31895,
+          "key_rmse_m": 0.01997
+        },
+        "change_pct": {
+          "slide_rate": 11.6,
+          "root_xy_error_m": -8.6,
+          "key_rmse_m": -2.2
+        },
+        "gait": {
+          "baseline": {
+            "trips_per_s": 0.2188,
+            "braking_per_s": 0.0493,
+            "heading_deg": 65.7,
+            "lateral_m": 2.831,
+            "directed_progress_ratio": 0.142
+          },
+          "candidate": {
+            "trips_per_s": 0.2774,
+            "braking_per_s": 0.0925,
+            "heading_deg": 64.07,
+            "lateral_m": 2.613,
+            "directed_progress_ratio": 0.117
+          }
+        }
+      },
+      {
+        "checkpoint": "checkpoint_000200",
+        "accepted": true,
+        "reasons": [],
+        "falls": 0,
+        "metrics": {
+          "slide_rate": 0.07134,
+          "root_xy_error_m": 3.2242,
+          "key_rmse_m": 0.02009
+        },
+        "change_pct": {
+          "slide_rate": -7.8,
+          "root_xy_error_m": -11.2,
+          "key_rmse_m": -1.6
+        },
+        "gait": {
+          "baseline": {
+            "trips_per_s": 0.2188,
+            "braking_per_s": 0.0493,
+            "heading_deg": 65.7,
+            "lateral_m": 2.831,
+            "directed_progress_ratio": 0.142
+          },
+          "candidate": {
+            "trips_per_s": 0.225,
+            "braking_per_s": 0.0616,
+            "heading_deg": 63.19,
+            "lateral_m": 2.441,
+            "directed_progress_ratio": 0.144
+          }
+        }
+      },
+      {
+        "checkpoint": "checkpoint_000300",
+        "accepted": true,
+        "reasons": [],
+        "falls": 0,
+        "metrics": {
+          "slide_rate": 0.07378,
+          "root_xy_error_m": 3.21771,
+          "key_rmse_m": 0.02056
+        },
+        "change_pct": {
+          "slide_rate": -4.6,
+          "root_xy_error_m": -11.4,
+          "key_rmse_m": 0.6
+        },
+        "gait": {
+          "baseline": {
+            "trips_per_s": 0.2188,
+            "braking_per_s": 0.0493,
+            "heading_deg": 65.7,
+            "lateral_m": 2.831,
+            "directed_progress_ratio": 0.142
+          },
+          "candidate": {
+            "trips_per_s": 0.2096,
+            "braking_per_s": 0.0555,
+            "heading_deg": 60.61,
+            "lateral_m": 2.332,
+            "directed_progress_ratio": 0.112
+          }
+        }
+      },
+      {
+        "checkpoint": "checkpoint_000400",
+        "accepted": false,
+        "reasons": [
+          "sliding_regression"
+        ],
+        "falls": 0,
+        "metrics": {
+          "slide_rate": 0.07983,
+          "root_xy_error_m": 3.5282,
+          "key_rmse_m": 0.02076
+        },
+        "change_pct": {
+          "slide_rate": 3.2,
+          "root_xy_error_m": -2.9,
+          "key_rmse_m": 1.6
+        },
+        "gait": {
+          "baseline": {
+            "trips_per_s": 0.2188,
+            "braking_per_s": 0.0493,
+            "heading_deg": 65.7,
+            "lateral_m": 2.831,
+            "directed_progress_ratio": 0.142
+          },
+          "candidate": {
+            "trips_per_s": 0.2342,
+            "braking_per_s": 0.0986,
+            "heading_deg": 62.74,
+            "lateral_m": 2.535,
+            "directed_progress_ratio": 0.117
+          }
+        }
+      },
+      {
+        "checkpoint": "checkpoint_000500",
+        "accepted": false,
+        "reasons": [
+          "key_rmse_m_regression",
+          "sliding_regression"
+        ],
+        "falls": 0,
+        "metrics": {
+          "slide_rate": 0.08185,
+          "root_xy_error_m": 3.10715,
+          "key_rmse_m": 0.02163
+        },
+        "change_pct": {
+          "slide_rate": 5.8,
+          "root_xy_error_m": -14.5,
+          "key_rmse_m": 5.9
+        },
+        "gait": {
+          "baseline": {
+            "trips_per_s": 0.2188,
+            "braking_per_s": 0.0493,
+            "heading_deg": 65.7,
+            "lateral_m": 2.831,
+            "directed_progress_ratio": 0.142
+          },
+          "candidate": {
+            "trips_per_s": 0.2527,
+            "braking_per_s": 0.1171,
+            "heading_deg": 57.58,
+            "lateral_m": 2.309,
+            "directed_progress_ratio": 0.19
+          }
+        }
+      }
+    ],
+    "compatibility-100hz": {
+      "accepted": false,
+      "reasons": [
+        "key_rmse_m_regression",
+        "sliding_regression"
+      ],
+      "falls": 1,
+      "baseline_falls": 4
+    },
+    "train-stage05": {
+      "accepted": false,
+      "reasons": [
+        "key_rmse_m_regression",
+        "root_xy_error_m_regression",
+        "sliding_regression"
+      ],
+      "falls": 0,
+      "baseline_falls": 0
+    }
+  }
+}

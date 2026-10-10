@@ -1,0 +1,1628 @@
+{
+  "source_revision": "b06178f19a22f2138cbd31f60c6d494bc263f67d",
+  "source_actor_sha256": "2d1fb3a31e4e967f70ecfefc3ad1e7b2ac491677068b89f60b565a94e7735061",
+  "dataset_manifest_sha256": "f6cde2c4f205831ac38c832ab84c1b83d5b3fb5ed6e8ce427cdf7fdeac1803b4",
+  "environment": {
+    "asset": {
+      "angular_damping": 0.0,
+      "armature": 0.0,
+      "chest_name": "imu_in_torso",
+      "collapse_fixed_joints": false,
+      "default_dof_drive_mode": 3,
+      "density": 0.001,
+      "disable_gravity": false,
+      "dof_armature": [
+        0.0103,
+        0.0251,
+        0.0103,
+        0.0251,
+        0.003597,
+        0.003597,
+        0.0103,
+        0.0251,
+        0.0103,
+        0.0251,
+        0.003597,
+        0.003597,
+        0.0103,
+        0.0103,
+        0.0103,
+        0.003597,
+        0.003597,
+        0.003597,
+        0.003597,
+        0.003597,
+        0.00425,
+        0.00425,
+        0.003597,
+        0.003597,
+        0.003597,
+        0.003597,
+        0.003597,
+        0.00425,
+        0.00425
+      ],
+      "feet_bodies": [
+        "left_ankle_roll_link",
+        "right_ankle_roll_link"
+      ],
+      "file": "/home/STUDY/LITR/studlitr01_01/furry/twist2-window-20261009/assets/g1_main_spheres.urdf",
+      "fix_base_link": false,
+      "flip_visual_attachments": false,
+      "foot_name": "ankle_roll_link",
+      "hand_name": [
+        "right_rubber_hand",
+        "left_rubber_hand"
+      ],
+      "linear_damping": 0.0,
+      "lower_arm_name": "elbow_link",
+      "max_angular_velocity": 1000.0,
+      "max_linear_velocity": 1000.0,
+      "n_lower_body_dofs": 12,
+      "penalize_contacts_on": [
+        "shoulder",
+        "elbow",
+        "hip",
+        "knee"
+      ],
+      "replace_cylinder_with_capsule": true,
+      "self_collisions": 0,
+      "shank_name": "knee",
+      "terminate_after_contacts_on": [],
+      "thickness": 0.01,
+      "thigh_name": "hip",
+      "torso_name": "pelvis",
+      "upper_arm_name": "shoulder_roll_link",
+      "waist_name": [
+        "torso_link",
+        "waist_roll_link",
+        "waist_yaw_link"
+      ],
+      "xml_file": ""
+    },
+    "commands": {
+      "ang_vel_clip": 0.1,
+      "curriculum": false,
+      "lin_vel_clip": 0.1,
+      "num_commands": 3,
+      "ranges": {
+        "ang_vel_yaw": [
+          -0.6,
+          0.6
+        ],
+        "lin_vel_x": [
+          -0.3,
+          1.5
+        ],
+        "lin_vel_y": [
+          -0.3,
+          0.3
+        ]
+      },
+      "resampling_time": 3.0,
+      "stand_prob": 0.3
+    },
+    "control": {
+      "action_scale": 0.5,
+      "control_type": "P",
+      "damping": {
+        "hip_yaw": 2,
+        "hip_roll": 2,
+        "hip_pitch": 2,
+        "knee": 4,
+        "ankle": 2,
+        "waist": 4,
+        "shoulder": 5,
+        "elbow": 5,
+        "wrist": 5
+      },
+      "decimation": 10,
+      "stiffness": {
+        "hip_yaw": 100,
+        "hip_roll": 100,
+        "hip_pitch": 100,
+        "knee": 150,
+        "ankle": 40,
+        "waist": 150,
+        "shoulder": 40,
+        "elbow": 40,
+        "wrist": 40
+      }
+    },
+    "domain_rand": {
+      "action_buf_len": 8,
+      "action_delay": true,
+      "added_com_range": [
+        -0.05,
+        0.05
+      ],
+      "added_mass_range": [
+        -3.0,
+        3
+      ],
+      "domain_rand_general": true,
+      "friction_range": [
+        0.1,
+        2.0
+      ],
+      "gravity_rand_interval": 200.0,
+      "gravity_rand_interval_s": 4,
+      "gravity_range": [
+        -0.1,
+        0.1
+      ],
+      "max_push_force_end_effector": 10.0,
+      "max_push_vel_xy": 1.0,
+      "motor_strength_range": [
+        0.8,
+        1.2
+      ],
+      "push_end_effector": false,
+      "push_end_effector_interval": 100.0,
+      "push_end_effector_interval_s": 2,
+      "push_interval": 200.0,
+      "push_interval_s": 4,
+      "push_robots": true,
+      "randomize_base_com": true,
+      "randomize_base_mass": true,
+      "randomize_friction": true,
+      "randomize_gravity": true,
+      "randomize_motor": true
+    },
+    "env": {
+      "contact_buf_len": 10,
+      "dof_err_w": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "enable_early_termination": true,
+      "enable_force_curriculum": false,
+      "enable_tar_obs": false,
+      "env_spacing": 3.0,
+      "episode_length_s": 10,
+      "extra_critic_obs": 3,
+      "force_curriculum": {
+        "apply_force_x_range": [
+          -40.0,
+          40.0
+        ],
+        "apply_force_y_range": [
+          -40.0,
+          40.0
+        ],
+        "apply_force_z_range": [
+          -50.0,
+          5.0
+        ],
+        "force_apply_links": [
+          "left_rubber_hand",
+          "right_rubber_hand"
+        ],
+        "force_filter_alpha": 0.05,
+        "force_scale_curriculum": true,
+        "force_scale_down": 0.02,
+        "force_scale_down_threshold": 200,
+        "force_scale_initial_scale": 1.0,
+        "force_scale_max": 1.0,
+        "force_scale_min": 0.0,
+        "force_scale_up": 0.02,
+        "force_scale_up_threshold": 210,
+        "max_force_estimation": true,
+        "only_apply_resistance_when_walking": true,
+        "only_apply_z_force_when_walking": false,
+        "randomize_force_duration": [
+          10,
+          50
+        ],
+        "use_lpf": false,
+        "zero_force_prob": [
+          0.25,
+          0.25,
+          0.25
+        ]
+      },
+      "global_obs": false,
+      "history_encoding": true,
+      "history_len": 10,
+      "n_future_obs": 35,
+      "n_future_obs_single": 35,
+      "n_mimic_obs": 35,
+      "n_mimic_obs_single": 35,
+      "n_obs_single": 127,
+      "n_priv": 0,
+      "n_priv_info": 102,
+      "n_priv_latent": 63,
+      "n_priv_mimic_obs": 1540,
+      "n_priv_obs_single": 1734,
+      "n_proprio": 92,
+      "normalize_obs": true,
+      "num_actions": 29,
+      "num_envs": 4096,
+      "num_observations": 1432,
+      "num_privileged_obs": 1734,
+      "obs_type": "student_future",
+      "pose_termination": true,
+      "pose_termination_dist": 0.7,
+      "rand_reset": true,
+      "rand_yaw_range": 1.2,
+      "randomize_start_pos": true,
+      "randomize_start_yaw": false,
+      "record_video": false,
+      "ref_char_offset": 0.0,
+      "root_tracking_termination_dist": 2.0,
+      "send_timeouts": true,
+      "tar_motion_steps": [
+        0
+      ],
+      "tar_motion_steps_future": [
+        0
+      ],
+      "tar_motion_steps_priv": [
+        1,
+        5,
+        10,
+        15,
+        20,
+        25,
+        30,
+        35,
+        40,
+        45,
+        50,
+        55,
+        60,
+        65,
+        70,
+        75,
+        80,
+        85,
+        90,
+        95
+      ],
+      "teleop_mode": false,
+      "track_root": false
+    },
+    "evaluations": {
+      "tracking_joint_dof": true,
+      "tracking_joint_vel": true,
+      "tracking_keybody_pos": true,
+      "tracking_root_ang_vel": true,
+      "tracking_root_pose_delta_local": true,
+      "tracking_root_rotation": true,
+      "tracking_root_rotation_delta_local": true,
+      "tracking_root_translation": true,
+      "tracking_root_vel": true
+    },
+    "init_member_classes": {},
+    "init_state": {
+      "ang_vel": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "default_joint_angles": {
+        "left_hip_pitch_joint": -0.2,
+        "left_hip_roll_joint": 0.0,
+        "left_hip_yaw_joint": 0.0,
+        "left_knee_joint": 0.4,
+        "left_ankle_pitch_joint": -0.2,
+        "left_ankle_roll_joint": 0.0,
+        "right_hip_pitch_joint": -0.2,
+        "right_hip_roll_joint": 0.0,
+        "right_hip_yaw_joint": 0.0,
+        "right_knee_joint": 0.4,
+        "right_ankle_pitch_joint": -0.2,
+        "right_ankle_roll_joint": 0.0,
+        "waist_yaw_joint": 0.0,
+        "waist_roll_joint": 0.0,
+        "waist_pitch_joint": 0.0,
+        "left_shoulder_pitch_joint": 0.0,
+        "left_shoulder_roll_joint": 0.4,
+        "left_shoulder_yaw_joint": 0.0,
+        "left_elbow_joint": 1.2,
+        "left_wrist_roll_joint": 0.0,
+        "left_wrist_pitch_joint": 0.0,
+        "left_wrist_yaw_joint": 0.0,
+        "right_shoulder_pitch_joint": 0.0,
+        "right_shoulder_roll_joint": -0.4,
+        "right_shoulder_yaw_joint": 0.0,
+        "right_elbow_joint": 1.2,
+        "right_wrist_roll_joint": 0.0,
+        "right_wrist_pitch_joint": 0.0,
+        "right_wrist_yaw_joint": 0.0
+      },
+      "lin_vel": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "pos": [
+        0,
+        0,
+        1.0
+      ],
+      "rot": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    "motion": {
+      "error_sampling_power": 5.0,
+      "error_sampling_threshold": 0.15,
+      "height_offset": 0.0,
+      "joint_position_noise": [
+        0.05,
+        0.1
+      ],
+      "key_bodies": [
+        "left_rubber_hand",
+        "right_rubber_hand",
+        "left_ankle_roll_link",
+        "right_ankle_roll_link",
+        "left_knee_link",
+        "right_knee_link",
+        "left_elbow_link",
+        "right_elbow_link",
+        "head_mocap"
+      ],
+      "motion_curriculum": true,
+      "motion_curriculum_gamma": 0.01,
+      "motion_decompose": false,
+      "motion_dr_enabled": false,
+      "motion_dr_resampling": true,
+      "motion_file": "/home/STUDY/LITR/studlitr01_01/furry/twist2-eval50-from1000-20261009/dataset/train.yaml",
+      "motion_smooth": true,
+      "reset_consec_frames": 30,
+      "root_orientation_noise": [
+        0.1,
+        0.2
+      ],
+      "root_position_noise": [
+        0.01,
+        0.05
+      ],
+      "root_velocity_noise": [
+        0.05,
+        0.1
+      ],
+      "sample_ratio": 1.0,
+      "upper_key_bodies": [
+        "left_rubber_hand",
+        "right_rubber_hand",
+        "left_elbow_link",
+        "right_elbow_link",
+        "head_mocap"
+      ],
+      "use_adaptive_pose_termination": false,
+      "use_error_aware_sampling": false
+    },
+    "noise": {
+      "add_noise": true,
+      "noise_increasing_steps": 50000,
+      "noise_level": 1.0,
+      "noise_scales": {
+        "ang_vel": 0.1,
+        "dof_pos": 0.01,
+        "dof_vel": 0.1,
+        "gravity": 0.05,
+        "imu": 0.1,
+        "lin_vel": 0.1
+      }
+    },
+    "normalization": {
+      "clip_actions": 5.0,
+      "clip_observations": 100.0,
+      "obs_scales": {
+        "ang_vel": 0.25,
+        "dof_pos": 1.0,
+        "dof_vel": 0.05,
+        "imu": 0.5
+      }
+    },
+    "rewards": {
+      "clip_rewards": false,
+      "cycle_time": 0.64,
+      "feet_air_time_target": 0.5,
+      "feet_height_target": 0.2,
+      "max_contact_force": 500,
+      "max_dist": 0.4,
+      "max_knee_dist": 0.4,
+      "min_dist": 0.1,
+      "num_lower_body": 0,
+      "only_positive_rewards": false,
+      "regularization_names": [],
+      "regularization_scale": 1.0,
+      "regularization_scale_curriculum": false,
+      "regularization_scale_gamma": 0.0001,
+      "regularization_scale_range": [
+        0.8,
+        2.0
+      ],
+      "root_height_diff_threshold": 0.3,
+      "scales": {
+        "action_rate": -0.05,
+        "alive": 0.5,
+        "ang_vel_xy": -0.01,
+        "ankle_dof_acc": -1e-07,
+        "ankle_dof_vel": -0.0002,
+        "dof_acc": -5e-08,
+        "dof_pos_limits": -5.0,
+        "dof_torque_limits": -1.0,
+        "dof_vel": -0.0001,
+        "feet_air_time": 5.0,
+        "feet_contact_forces": -0.0005,
+        "feet_slip": -0.1,
+        "feet_stumble": -1.25,
+        "tracking_joint_dof": 2.0,
+        "tracking_joint_vel": 0.2,
+        "tracking_keybody_pos": 2.0,
+        "tracking_keybody_pos_global": 2.0,
+        "tracking_root_angular_vel": 1.0,
+        "tracking_root_linear_vel": 1.0,
+        "tracking_root_rotation": 1.0,
+        "tracking_root_translation_z": 1.0
+      },
+      "soft_dof_pos_limit": 0.95,
+      "soft_dof_vel_limit": 0.95,
+      "soft_torque_limit": 0.95,
+      "target_feet_height": 0.1,
+      "termination_height": 0.5,
+      "termination_pitch": 4.0,
+      "termination_roll": 4.0,
+      "torque_safety_limit": 0.9,
+      "tracking_sigma": 0.2,
+      "tracking_sigma_ang": 0.125
+    },
+    "seed": 1,
+    "sim": {
+      "dt": 0.002,
+      "gravity": [
+        0.0,
+        0.0,
+        -9.81
+      ],
+      "physx": {
+        "bounce_threshold_velocity": 0.5,
+        "contact_collection": 2,
+        "contact_offset": 0.01,
+        "default_buffer_size_multiplier": 5,
+        "max_depenetration_velocity": 1.0,
+        "max_gpu_contact_pairs": 16777216,
+        "num_position_iterations": 4,
+        "num_threads": 10,
+        "num_velocity_iterations": 0,
+        "rest_offset": 0.0,
+        "solver_type": 1
+      },
+      "substeps": 1,
+      "up_axis": 1
+    },
+    "terrain": {
+      "all_vertical": false,
+      "border_size": 5,
+      "curriculum": false,
+      "downsampled_scale": 0.075,
+      "dynamic_friction": 1.0,
+      "edge_width_thresh": 0.05,
+      "gap_size": [
+        0.02,
+        0.1
+      ],
+      "height": [
+        0,
+        0.0
+      ],
+      "hf2mesh_method": "grid",
+      "horizontal_scale": 0.1,
+      "horizontal_scale_camera": 0.1,
+      "max_error": 0.1,
+      "max_error_camera": 2,
+      "max_init_terrain_level": 5,
+      "measure_heights": false,
+      "measure_horizontal_noise": 0.0,
+      "measured_points_x": [
+        -0.45,
+        -0.3,
+        -0.15,
+        0,
+        0.15,
+        0.3,
+        0.45,
+        0.6,
+        0.75,
+        0.9,
+        1.05,
+        1.2
+      ],
+      "measured_points_y": [
+        -0.75,
+        -0.6,
+        -0.45,
+        -0.3,
+        -0.15,
+        0.0,
+        0.15,
+        0.3,
+        0.45,
+        0.6,
+        0.75
+      ],
+      "mesh_type": "plane",
+      "no_flat": true,
+      "num_cols": 40,
+      "num_goals": 8,
+      "num_rows": 10,
+      "origin_zero_z": true,
+      "restitution": 0.0,
+      "selected": false,
+      "simplify_grid": false,
+      "slope_treshold": 1.5,
+      "static_friction": 1.0,
+      "stepping_stone_distance": [
+        0.02,
+        0.08
+      ],
+      "terrain_dict": {
+        "smooth slope": 0.0,
+        "rough slope up": 0.0,
+        "rough slope down": 0.0,
+        "rough stairs up": 0.0,
+        "rough stairs down": 0.0,
+        "discrete": 0.0,
+        "stepping stones": 0.0,
+        "gaps": 0.0,
+        "smooth flat": 0,
+        "pit": 0.0,
+        "wall": 0.0,
+        "platform": 0.0,
+        "large stairs up": 0.0,
+        "large stairs down": 0.0,
+        "parkour": 0.0,
+        "parkour_hurdle": 0.0,
+        "parkour_flat": 0.05,
+        "parkour_step": 0.0,
+        "parkour_gap": 0.0,
+        "demo": 0.0
+      },
+      "terrain_kwargs": null,
+      "terrain_length": 18.0,
+      "terrain_proportions": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.05,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "terrain_width": 4,
+      "vertical_scale": 0.005,
+      "y_range": [
+        -0.4,
+        0.4
+      ]
+    },
+    "viewer": {
+      "lookat": [
+        11.0,
+        5,
+        3.0
+      ],
+      "pos": [
+        10,
+        0,
+        6
+      ],
+      "ref_env": 0
+    }
+  },
+  "upstream_training": {
+    "algorithm": {
+      "clip_param": 0.2,
+      "dagger_coef": 0.2,
+      "dagger_coef_anneal_steps": 60000,
+      "dagger_coef_min": 0.1,
+      "dagger_update_freq": 20,
+      "desired_kl": 0.008,
+      "entropy_coef": 0.005,
+      "future_consistency_loss": 0.1,
+      "future_weight_decay": 0.95,
+      "gamma": 0.99,
+      "grad_penalty_coef": 0.0,
+      "grad_penalty_coef_schedule": [
+        0.0,
+        0.0,
+        700,
+        1000
+      ],
+      "lam": 0.95,
+      "learning_rate": 0.0002,
+      "max_grad_norm": 1.0,
+      "normalizer_update_iterations": 3000,
+      "num_learning_epochs": 5,
+      "num_mini_batches": 4,
+      "priv_reg_coef_schedual": [
+        0,
+        0.1,
+        2000,
+        3000
+      ],
+      "priv_reg_coef_schedual_resume": [
+        0,
+        0.1,
+        0,
+        1
+      ],
+      "schedule": "adaptive",
+      "std_schedule": [
+        1.0,
+        0.4,
+        4000,
+        1500
+      ],
+      "use_clipped_value_loss": true,
+      "value_loss_coef": 1.0
+    },
+    "asset": {
+      "angular_damping": 0.0,
+      "armature": 0.0,
+      "chest_name": "imu_in_torso",
+      "collapse_fixed_joints": false,
+      "default_dof_drive_mode": 3,
+      "density": 0.001,
+      "disable_gravity": false,
+      "dof_armature": [
+        0.0103,
+        0.0251,
+        0.0103,
+        0.0251,
+        0.003597,
+        0.003597,
+        0.0103,
+        0.0251,
+        0.0103,
+        0.0251,
+        0.003597,
+        0.003597,
+        0.0103,
+        0.0103,
+        0.0103,
+        0.003597,
+        0.003597,
+        0.003597,
+        0.003597,
+        0.003597,
+        0.00425,
+        0.00425,
+        0.003597,
+        0.003597,
+        0.003597,
+        0.003597,
+        0.003597,
+        0.00425,
+        0.00425
+      ],
+      "feet_bodies": [
+        "left_ankle_roll_link",
+        "right_ankle_roll_link"
+      ],
+      "file": "/home/STUDY/LITR/studlitr01_01/furry/twist2-author-20261009/TWIST2/legged_gym/../assets/g1/g1_custom_collision_29dof.urdf",
+      "fix_base_link": false,
+      "flip_visual_attachments": false,
+      "foot_name": "ankle_roll_link",
+      "hand_name": [
+        "right_rubber_hand",
+        "left_rubber_hand"
+      ],
+      "linear_damping": 0.0,
+      "lower_arm_name": "elbow_link",
+      "max_angular_velocity": 1000.0,
+      "max_linear_velocity": 1000.0,
+      "n_lower_body_dofs": 12,
+      "penalize_contacts_on": [
+        "shoulder",
+        "elbow",
+        "hip",
+        "knee"
+      ],
+      "replace_cylinder_with_capsule": true,
+      "self_collisions": 0,
+      "shank_name": "knee",
+      "terminate_after_contacts_on": [],
+      "thickness": 0.01,
+      "thigh_name": "hip",
+      "torso_name": "pelvis",
+      "upper_arm_name": "shoulder_roll_link",
+      "waist_name": [
+        "torso_link",
+        "waist_roll_link",
+        "waist_yaw_link"
+      ],
+      "xml_file": ""
+    },
+    "commands": {
+      "ang_vel_clip": 0.1,
+      "curriculum": false,
+      "lin_vel_clip": 0.1,
+      "num_commands": 3,
+      "ranges": {
+        "ang_vel_yaw": [
+          -0.6,
+          0.6
+        ],
+        "lin_vel_x": [
+          -0.3,
+          1.5
+        ],
+        "lin_vel_y": [
+          -0.3,
+          0.3
+        ]
+      },
+      "resampling_time": 3.0,
+      "stand_prob": 0.3
+    },
+    "control": {
+      "action_scale": 0.5,
+      "control_type": "P",
+      "damping": {
+        "hip_yaw": 2,
+        "hip_roll": 2,
+        "hip_pitch": 2,
+        "knee": 4,
+        "ankle": 2,
+        "waist": 4,
+        "shoulder": 5,
+        "elbow": 5,
+        "wrist": 5
+      },
+      "decimation": 10,
+      "stiffness": {
+        "hip_yaw": 100,
+        "hip_roll": 100,
+        "hip_pitch": 100,
+        "knee": 150,
+        "ankle": 40,
+        "waist": 150,
+        "shoulder": 40,
+        "elbow": 40,
+        "wrist": 40
+      }
+    },
+    "domain_rand": {
+      "action_buf_len": 8,
+      "action_delay": true,
+      "added_com_range": [
+        -0.05,
+        0.05
+      ],
+      "added_mass_range": [
+        -3.0,
+        3
+      ],
+      "domain_rand_general": true,
+      "friction_range": [
+        0.1,
+        2.0
+      ],
+      "gravity_rand_interval_s": 4,
+      "gravity_range": [
+        -0.1,
+        0.1
+      ],
+      "max_push_force_end_effector": 10.0,
+      "max_push_vel_xy": 1.0,
+      "motor_strength_range": [
+        0.8,
+        1.2
+      ],
+      "push_end_effector": false,
+      "push_end_effector_interval_s": 2,
+      "push_interval_s": 4,
+      "push_robots": true,
+      "randomize_base_com": true,
+      "randomize_base_mass": true,
+      "randomize_friction": true,
+      "randomize_gravity": true,
+      "randomize_motor": true
+    },
+    "env": {
+      "contact_buf_len": 10,
+      "dof_err_w": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "enable_early_termination": true,
+      "enable_force_curriculum": false,
+      "enable_tar_obs": false,
+      "env_spacing": 3.0,
+      "episode_length_s": 10,
+      "extra_critic_obs": 3,
+      "force_curriculum": {
+        "apply_force_x_range": [
+          -40.0,
+          40.0
+        ],
+        "apply_force_y_range": [
+          -40.0,
+          40.0
+        ],
+        "apply_force_z_range": [
+          -50.0,
+          5.0
+        ],
+        "force_apply_links": [
+          "left_rubber_hand",
+          "right_rubber_hand"
+        ],
+        "force_filter_alpha": 0.05,
+        "force_scale_curriculum": true,
+        "force_scale_down": 0.02,
+        "force_scale_down_threshold": 200,
+        "force_scale_initial_scale": 1.0,
+        "force_scale_max": 1.0,
+        "force_scale_min": 0.0,
+        "force_scale_up": 0.02,
+        "force_scale_up_threshold": 210,
+        "max_force_estimation": true,
+        "only_apply_resistance_when_walking": true,
+        "only_apply_z_force_when_walking": false,
+        "randomize_force_duration": [
+          10,
+          50
+        ],
+        "use_lpf": false,
+        "zero_force_prob": [
+          0.25,
+          0.25,
+          0.25
+        ]
+      },
+      "global_obs": false,
+      "history_encoding": true,
+      "history_len": 10,
+      "n_future_obs": 35,
+      "n_future_obs_single": 35,
+      "n_mimic_obs": 35,
+      "n_mimic_obs_single": 35,
+      "n_obs_single": 127,
+      "n_priv": 0,
+      "n_priv_info": 102,
+      "n_priv_latent": 63,
+      "n_priv_mimic_obs": 1540,
+      "n_priv_obs_single": 1734,
+      "n_proprio": 92,
+      "normalize_obs": true,
+      "num_actions": 29,
+      "num_envs": 4096,
+      "num_observations": 1432,
+      "num_privileged_obs": 1734,
+      "obs_type": "student_future",
+      "pose_termination": true,
+      "pose_termination_dist": 0.7,
+      "rand_reset": true,
+      "rand_yaw_range": 1.2,
+      "randomize_start_pos": true,
+      "randomize_start_yaw": false,
+      "record_video": false,
+      "ref_char_offset": 0.0,
+      "root_tracking_termination_dist": 2.0,
+      "send_timeouts": true,
+      "tar_motion_steps": [
+        0
+      ],
+      "tar_motion_steps_future": [
+        0
+      ],
+      "tar_motion_steps_priv": [
+        1,
+        5,
+        10,
+        15,
+        20,
+        25,
+        30,
+        35,
+        40,
+        45,
+        50,
+        55,
+        60,
+        65,
+        70,
+        75,
+        80,
+        85,
+        90,
+        95
+      ],
+      "teleop_mode": false,
+      "track_root": false
+    },
+    "evaluations": {
+      "tracking_joint_dof": true,
+      "tracking_joint_vel": true,
+      "tracking_keybody_pos": true,
+      "tracking_root_ang_vel": true,
+      "tracking_root_pose_delta_local": true,
+      "tracking_root_rotation": true,
+      "tracking_root_rotation_delta_local": true,
+      "tracking_root_translation": true,
+      "tracking_root_vel": true
+    },
+    "init_member_classes": {},
+    "init_state": {
+      "ang_vel": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "default_joint_angles": {
+        "left_hip_pitch_joint": -0.2,
+        "left_hip_roll_joint": 0.0,
+        "left_hip_yaw_joint": 0.0,
+        "left_knee_joint": 0.4,
+        "left_ankle_pitch_joint": -0.2,
+        "left_ankle_roll_joint": 0.0,
+        "right_hip_pitch_joint": -0.2,
+        "right_hip_roll_joint": 0.0,
+        "right_hip_yaw_joint": 0.0,
+        "right_knee_joint": 0.4,
+        "right_ankle_pitch_joint": -0.2,
+        "right_ankle_roll_joint": 0.0,
+        "waist_yaw_joint": 0.0,
+        "waist_roll_joint": 0.0,
+        "waist_pitch_joint": 0.0,
+        "left_shoulder_pitch_joint": 0.0,
+        "left_shoulder_roll_joint": 0.4,
+        "left_shoulder_yaw_joint": 0.0,
+        "left_elbow_joint": 1.2,
+        "left_wrist_roll_joint": 0.0,
+        "left_wrist_pitch_joint": 0.0,
+        "left_wrist_yaw_joint": 0.0,
+        "right_shoulder_pitch_joint": 0.0,
+        "right_shoulder_roll_joint": -0.4,
+        "right_shoulder_yaw_joint": 0.0,
+        "right_elbow_joint": 1.2,
+        "right_wrist_roll_joint": 0.0,
+        "right_wrist_pitch_joint": 0.0,
+        "right_wrist_yaw_joint": 0.0
+      },
+      "lin_vel": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "pos": [
+        0,
+        0,
+        1.0
+      ],
+      "rot": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    "motion": {
+      "error_sampling_power": 5.0,
+      "error_sampling_threshold": 0.15,
+      "height_offset": 0.0,
+      "joint_position_noise": [
+        0.05,
+        0.1
+      ],
+      "key_bodies": [
+        "left_rubber_hand",
+        "right_rubber_hand",
+        "left_ankle_roll_link",
+        "right_ankle_roll_link",
+        "left_knee_link",
+        "right_knee_link",
+        "left_elbow_link",
+        "right_elbow_link",
+        "head_mocap"
+      ],
+      "motion_curriculum": true,
+      "motion_curriculum_gamma": 0.01,
+      "motion_decompose": false,
+      "motion_dr_enabled": false,
+      "motion_dr_resampling": true,
+      "motion_file": "/home/STUDY/LITR/studlitr01_01/furry/twist2-author-20261009/TWIST2/legged_gym/motion_data_configs/twist2_dataset.yaml",
+      "motion_smooth": true,
+      "reset_consec_frames": 30,
+      "root_orientation_noise": [
+        0.1,
+        0.2
+      ],
+      "root_position_noise": [
+        0.01,
+        0.05
+      ],
+      "root_velocity_noise": [
+        0.05,
+        0.1
+      ],
+      "sample_ratio": 1.0,
+      "upper_key_bodies": [
+        "left_rubber_hand",
+        "right_rubber_hand",
+        "left_elbow_link",
+        "right_elbow_link",
+        "head_mocap"
+      ],
+      "use_adaptive_pose_termination": false,
+      "use_error_aware_sampling": false
+    },
+    "noise": {
+      "add_noise": true,
+      "noise_increasing_steps": 50000,
+      "noise_level": 1.0,
+      "noise_scales": {
+        "ang_vel": 0.1,
+        "dof_pos": 0.01,
+        "dof_vel": 0.1,
+        "gravity": 0.05,
+        "imu": 0.1,
+        "lin_vel": 0.1
+      }
+    },
+    "normalization": {
+      "clip_actions": 5.0,
+      "clip_observations": 100.0,
+      "obs_scales": {
+        "ang_vel": 0.25,
+        "dof_pos": 1.0,
+        "dof_vel": 0.05,
+        "imu": 0.5
+      }
+    },
+    "policy": {
+      "action_std": [
+        0.7,
+        0.7,
+        0.7,
+        0.7,
+        0.7,
+        0.7,
+        0.7,
+        0.7,
+        0.7,
+        0.7,
+        0.7,
+        0.7,
+        0.4,
+        0.4,
+        0.4,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "activation": "silu",
+      "actor_hidden_dims": [
+        512,
+        512,
+        256,
+        128
+      ],
+      "critic_hidden_dims": [
+        512,
+        512,
+        256,
+        128
+      ],
+      "expert_hidden_dims": [
+        256,
+        128
+      ],
+      "fix_action_std": false,
+      "future_attention_heads": 4,
+      "future_dropout": 0.1,
+      "future_encoder_dims": [
+        256,
+        256,
+        128
+      ],
+      "future_latent_dim": 128,
+      "gating_hidden_dim": 128,
+      "init_noise_std": 1.0,
+      "layer_norm": true,
+      "load_balancing_loss_weight": 0.01,
+      "moe_temperature": 1.0,
+      "moe_topk": null,
+      "motion_latent_dim": 128,
+      "num_experts": 4,
+      "num_future_observations": 35,
+      "num_future_steps": 1,
+      "obs_context_len": 11,
+      "priv_encoder_dims": [
+        64,
+        20
+      ],
+      "tanh_encoder_output": false,
+      "temporal_embedding_dim": 64
+    },
+    "rewards": {
+      "clip_rewards": false,
+      "cycle_time": 0.64,
+      "feet_air_time_target": 0.5,
+      "feet_height_target": 0.2,
+      "max_contact_force": 500,
+      "max_dist": 0.4,
+      "max_knee_dist": 0.4,
+      "min_dist": 0.1,
+      "num_lower_body": 0,
+      "only_positive_rewards": false,
+      "regularization_names": [],
+      "regularization_scale": 1.0,
+      "regularization_scale_curriculum": false,
+      "regularization_scale_gamma": 0.0001,
+      "regularization_scale_range": [
+        0.8,
+        2.0
+      ],
+      "root_height_diff_threshold": 0.3,
+      "scales": {
+        "action_rate": -0.05,
+        "alive": 0.5,
+        "ang_vel_xy": -0.01,
+        "ankle_dof_acc": -1e-07,
+        "ankle_dof_vel": -0.0002,
+        "dof_acc": -5e-08,
+        "dof_pos_limits": -5.0,
+        "dof_torque_limits": -1.0,
+        "dof_vel": -0.0001,
+        "feet_air_time": 5.0,
+        "feet_contact_forces": -0.0005,
+        "feet_slip": -0.1,
+        "feet_stumble": -1.25,
+        "tracking_joint_dof": 2.0,
+        "tracking_joint_vel": 0.2,
+        "tracking_keybody_pos": 2.0,
+        "tracking_keybody_pos_global": 2.0,
+        "tracking_root_angular_vel": 1.0,
+        "tracking_root_linear_vel": 1.0,
+        "tracking_root_rotation": 1.0,
+        "tracking_root_translation_z": 1.0
+      },
+      "soft_dof_pos_limit": 0.95,
+      "soft_dof_vel_limit": 0.95,
+      "soft_torque_limit": 0.95,
+      "target_feet_height": 0.1,
+      "termination_height": 0.5,
+      "termination_pitch": 4.0,
+      "termination_roll": 4.0,
+      "torque_safety_limit": 0.9,
+      "tracking_sigma": 0.2,
+      "tracking_sigma_ang": 0.125
+    },
+    "runner": {
+      "algorithm_class_name": "DaggerPPO",
+      "checkpoint": -1,
+      "eval_student": false,
+      "experiment_name": "test",
+      "load_run": -1,
+      "max_iterations": 30001,
+      "num_steps_per_env": 24,
+      "policy_class_name": "ActorCriticFuture",
+      "resume": false,
+      "resume_path": null,
+      "run_name": "",
+      "runner_class_name": "OnPolicyDaggerRunner",
+      "save_interval": 500,
+      "save_to_wandb": false,
+      "teacher_checkpoint": -1,
+      "teacher_experiment_name": "test",
+      "teacher_proj_name": "g1_priv_mimic",
+      "warm_iters": 100
+    },
+    "seed": 1,
+    "sim": {
+      "dt": 0.002,
+      "gravity": [
+        0.0,
+        0.0,
+        -9.81
+      ],
+      "physx": {
+        "bounce_threshold_velocity": 0.5,
+        "contact_collection": 2,
+        "contact_offset": 0.01,
+        "default_buffer_size_multiplier": 5,
+        "max_depenetration_velocity": 1.0,
+        "max_gpu_contact_pairs": 16777216,
+        "num_position_iterations": 4,
+        "num_threads": 10,
+        "num_velocity_iterations": 0,
+        "rest_offset": 0.0,
+        "solver_type": 1
+      },
+      "substeps": 1,
+      "up_axis": 1
+    },
+    "teachercfg": {
+      "algorithm": {
+        "clip_param": 0.2,
+        "dagger_update_freq": 20,
+        "desired_kl": 0.008,
+        "entropy_coef": 0.005,
+        "gamma": 0.99,
+        "grad_penalty_coef": 0.0,
+        "grad_penalty_coef_schedule": [
+          0.0,
+          0.0,
+          700,
+          1000
+        ],
+        "lam": 0.95,
+        "learning_rate": 0.0002,
+        "max_grad_norm": 1.0,
+        "normalizer_update_iterations": 3000,
+        "num_learning_epochs": 5,
+        "num_mini_batches": 4,
+        "priv_reg_coef_schedual": [
+          0,
+          0.1,
+          2000,
+          3000
+        ],
+        "priv_reg_coef_schedual_resume": [
+          0,
+          0.1,
+          0,
+          1
+        ],
+        "schedule": "adaptive",
+        "std_schedule": [
+          1.0,
+          0.4,
+          4000,
+          1500
+        ],
+        "use_clipped_value_loss": true,
+        "value_loss_coef": 1.0
+      },
+      "init_member_classes": {},
+      "policy": {
+        "action_std": [
+          0.7,
+          0.7,
+          0.7,
+          0.7,
+          0.7,
+          0.7,
+          0.7,
+          0.7,
+          0.7,
+          0.7,
+          0.7,
+          0.7,
+          0.4,
+          0.4,
+          0.4,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "activation": "silu",
+        "actor_hidden_dims": [
+          512,
+          512,
+          256,
+          128
+        ],
+        "critic_hidden_dims": [
+          512,
+          512,
+          256,
+          128
+        ],
+        "fix_action_std": false,
+        "init_noise_std": 1.0,
+        "layer_norm": true,
+        "motion_latent_dim": 128,
+        "obs_context_len": 11,
+        "priv_encoder_dims": [
+          64,
+          20
+        ],
+        "tanh_encoder_output": false
+      },
+      "runner": {
+        "algorithm_class_name": "PPO",
+        "checkpoint": -1,
+        "experiment_name": "test",
+        "load_run": -1,
+        "max_iterations": 1000002,
+        "num_steps_per_env": 24,
+        "policy_class_name": "ActorCriticMimic",
+        "resume": false,
+        "resume_path": null,
+        "run_name": "",
+        "runner_class_name": "OnPolicyRunnerMimic",
+        "save_interval": 500
+      },
+      "seed": 1
+    },
+    "terrain": {
+      "all_vertical": false,
+      "border_size": 5,
+      "curriculum": false,
+      "downsampled_scale": 0.075,
+      "dynamic_friction": 1.0,
+      "edge_width_thresh": 0.05,
+      "gap_size": [
+        0.02,
+        0.1
+      ],
+      "height": [
+        0,
+        0.0
+      ],
+      "hf2mesh_method": "grid",
+      "horizontal_scale": 0.1,
+      "horizontal_scale_camera": 0.1,
+      "max_error": 0.1,
+      "max_error_camera": 2,
+      "max_init_terrain_level": 5,
+      "measure_heights": false,
+      "measure_horizontal_noise": 0.0,
+      "measured_points_x": [
+        -0.45,
+        -0.3,
+        -0.15,
+        0,
+        0.15,
+        0.3,
+        0.45,
+        0.6,
+        0.75,
+        0.9,
+        1.05,
+        1.2
+      ],
+      "measured_points_y": [
+        -0.75,
+        -0.6,
+        -0.45,
+        -0.3,
+        -0.15,
+        0.0,
+        0.15,
+        0.3,
+        0.45,
+        0.6,
+        0.75
+      ],
+      "mesh_type": "plane",
+      "no_flat": true,
+      "num_cols": 40,
+      "num_goals": 8,
+      "num_rows": 10,
+      "origin_zero_z": true,
+      "restitution": 0.0,
+      "selected": false,
+      "simplify_grid": false,
+      "slope_treshold": 1.5,
+      "static_friction": 1.0,
+      "stepping_stone_distance": [
+        0.02,
+        0.08
+      ],
+      "terrain_dict": {
+        "smooth slope": 0.0,
+        "rough slope up": 0.0,
+        "rough slope down": 0.0,
+        "rough stairs up": 0.0,
+        "rough stairs down": 0.0,
+        "discrete": 0.0,
+        "stepping stones": 0.0,
+        "gaps": 0.0,
+        "smooth flat": 0,
+        "pit": 0.0,
+        "wall": 0.0,
+        "platform": 0.0,
+        "large stairs up": 0.0,
+        "large stairs down": 0.0,
+        "parkour": 0.0,
+        "parkour_hurdle": 0.0,
+        "parkour_flat": 0.05,
+        "parkour_step": 0.0,
+        "parkour_gap": 0.0,
+        "demo": 0.0
+      },
+      "terrain_kwargs": null,
+      "terrain_length": 18.0,
+      "terrain_proportions": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.05,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "terrain_width": 4,
+      "vertical_scale": 0.005,
+      "y_range": [
+        -0.4,
+        0.4
+      ]
+    },
+    "viewer": {
+      "lookat": [
+        11.0,
+        5,
+        3.0
+      ],
+      "pos": [
+        10,
+        0,
+        6
+      ],
+      "ref_env": 0
+    }
+  },
+  "ppo_config_matches_upstream": true,
+  "initial_std_mean": 0.5477688312530518,
+  "initial_std_from_upstream": false,
+  "finetune_overrides": {
+    "fast_critic": true,
+    "legacy_rollout_metrics": false,
+    "init_checkpoint": "/home/STUDY/LITR/studlitr01_01/furry/twist2-source-settings-20261009/runs/111260/training/checkpoint_001000.pt",
+    "init_manifest": "/home/STUDY/LITR/studlitr01_01/furry/twist2-author-20261009/dataset/manifest.json",
+    "window_reward": true,
+    "sole_urdf": "/home/STUDY/LITR/studlitr01_01/furry/twist2-eval50-from1000-20261009/assets/g1_main_spheres.urdf",
+    "smoke": false,
+    "root": "/home/STUDY/LITR/studlitr01_01/furry/twist2-eval50-from1000-20261009",
+    "output": "/home/STUDY/LITR/studlitr01_01/furry/twist2-eval50-from1000-20261009/runs/111586/training",
+    "iterations": 500,
+    "critic_warmup": 500,
+    "critic_max": 1000,
+    "save_every": 100
+  },
+  "critic_gate": "On-policy pre-update TD-lambda prediction, 50-iteration windows; proxy only, not independent Monte Carlo certification. Validation never enters optimizer.",
+  "deployment": false,
+  "performance": {
+    "batched_rollout_metrics": true,
+    "critic_value_only_update": true,
+    "actor_ppo_unchanged": true,
+    "critic_rng_stream_matches_upstream": false
+  },
+  "initialization": {
+    "checkpoint": "/home/STUDY/LITR/studlitr01_01/furry/twist2-source-settings-20261009/runs/111260/training/checkpoint_001000.pt",
+    "sha256": "5bbfbddf34b19d8be8c7b37ecfbe61cdef83f03c759f22305fb64d0ee0e06a7f",
+    "actor_and_normalization_restored": true,
+    "std_restored": true,
+    "critic_restored": false,
+    "optimizer_restored": false,
+    "dataset_audit": {
+      "ancestor_manifest_sha256": "e887731e2cb3c8c50c9de77634ef2cdf0640cc2cd2e8f98ad57f2d3850732b55",
+      "ancestor_train_preserved": 1090,
+      "validation_clips": 12,
+      "ancestor_train_in_validation": 0,
+      "quest_validation_stages": [
+        2,
+        9,
+        14
+      ]
+    }
+  },
+  "window_reward": {
+    "enabled": true,
+    "seconds": 1.0,
+    "type": "dense Huber on progress since start of consecutive windows; separate initial heading frames",
+    "position_scale_m": 0.25,
+    "yaw_scale_rad": 0.5,
+    "position_weight": 0.25,
+    "yaw_weight": 0.25,
+    "critic_extra_features": 9,
+    "catch_up": false
+  },
+  "sole_urdf_sha256": "5ce11a1df5da7a40636c494e5a0d257d0b259018dd31cce599b5098df7ef1659"
+}

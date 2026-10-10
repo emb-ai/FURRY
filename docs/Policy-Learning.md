@@ -2,6 +2,10 @@
 
 [Home](Home.md) | [TWIST2 Baseline](TWIST2-Baseline.md) | [Data](Data-and-Evaluation.md)
 
+For the separate low-level walking-controller experiments of October 8–10,
+see [Quest Tracker Research](Quest-Tracker-Research.md): dataset lineage, PPO
+finetuning, failed attempts, deployed weights and runtime corrections.
+
 **Status: proposed.** Written 2026-10-07. This page plans a state-based
 high-level policy in the spirit of the TWIST2 Diffusion Policy. A scripted
 cup reach, a small low-dimensional policy that drives it, and automatic

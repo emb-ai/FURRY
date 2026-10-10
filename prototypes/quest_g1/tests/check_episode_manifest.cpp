@@ -46,6 +46,17 @@ int main() {
         Check(legacy.scene == "lab", "Nested scene overrode legacy fallback");
         legacy.ValidateDimensions(50, 48, 43);
         Check(!legacy.catchUp&&!legacy.firstPerson,"Legacy episode acquired catch-up");
+        Check(!legacy.catchUpV2&&!legacy.neutralWrists&&legacy.travelGainPercent==100,
+              "Legacy episode acquired new retarget settings");
+        write("{\"catch_up_v2\":true,\"neutral_wrists\":true,\"travel_gain_percent\":90}");
+        auto updated=load();
+        Check(updated.catchUpV2&&updated.neutralWrists&&updated.travelGainPercent==90,
+              "New episode retarget settings lost");
+        for(const auto* bad:{"{\"catch_up_v2\":1}","{\"neutral_wrists\":null}",
+                            "{\"travel_gain_percent\":49}","{\"travel_gain_percent\":121}",
+                            "{\"travel_gain_percent\":90.5}","{\"neutral_wrists\":false,\"neutral_wrists\":true}"}){
+            write(bad);Reject([&]{load();});
+        }
         write("{\"catch_up\":true,\"first_person\":false}");
         Check(load().catchUp&&!load().firstPerson,"Episode control settings lost");
         for(const auto* bad:{"{\"catch_up\":1}","{\"first_person\":null}","{\"catch_up\":false,\"catch_up\":true}"}){write(bad);Reject([&]{load();});}

@@ -7,7 +7,7 @@
 // a claim of validation against actual Meta tracking on a human operator.
 int main(int argc,char**argv){
     if(argc<2 || argc>3)return 2;
-    Simulation sim(argv[1]);MetaRetargeter meta(argv[1]);auto& oracle=meta.solver();
+    Simulation sim(argv[1]);MetaRetargeter meta(argv[1]);meta.EnableNeutralWrists(true);auto& oracle=meta.solver();
     auto*m=oracle.model();auto*d=mj_makeData(m);
     auto fill=[&](TrackingFrame& f,bool rest){
         auto& poses=rest?f.body.rest:f.body.joints;
@@ -26,6 +26,22 @@ int main(int argc,char**argv){
     mj_kinematics(m,d);mj_comPos(m,d);fill(input,true);
     for(int j=1;j<m->njnt;j++){int sj=mj_name2id(sim.model,mjOBJ_JOINT,mj_id2name(m,mjOBJ_JOINT,j));d->qpos[m->jnt_qposadr[j]]=sim.data->qpos[sim.model->jnt_qposadr[sj]];}
     mj_kinematics(m,d);mj_comPos(m,d);fill(input,false);meta.Calibrate(sim.model,sim.data,input);
+    {
+        MetaRetargeter neutral(argv[1]);neutral.EnableNeutralWrists(true);neutral.Calibrate(sim.model,sim.data,input);
+        auto sample=input;sample.body.time_ns=1000000000LL;auto command=neutral.Solve(sample);
+        for(int k:{25,26,27,32,33,34})if(std::abs(command[k])>1e-5)throw std::runtime_error("Calibrated wrist is not neutral");
+        double delta[4]={std::cos(.1),std::sin(.1),0,0},changed[4];mju_mulQuat(changed,sample.body.joints[12].quaternion.data(),delta);
+        std::copy_n(changed,4,sample.body.joints[12].quaternion.begin());sample.body.time_ns+=10000000;command=neutral.Solve(sample);
+        double angle=std::sqrt(command[25]*command[25]+command[26]*command[26]+command[27]*command[27]);
+        if(angle<.18||angle>.22)throw std::runtime_error("Intentional wrist motion was suppressed");
+        for(int k:{32,33,34})if(std::abs(command[k])>1e-5)throw std::runtime_error("Opposite wrist moved");
+        MetaRetargeter original(argv[1]),reduced(argv[1]);original.EnableCameraTracking(true);reduced.EnableCameraTracking(true);reduced.SetTravelGain(.9);
+        original.Calibrate(sim.model,sim.data,input);reduced.Calibrate(sim.model,sim.data,input);sample=input;sample.body.time_ns=1000000000LL;sample.head.position[0]+=.1;
+        original.Solve(sample);reduced.Solve(sample);
+        auto a=original.solver().CameraTarget(),b=reduced.solver().CameraTarget(),origin=original.CameraCalibrationPose();
+        for(int k=0;k<2;k++)if(std::abs((b.position[k]-origin.position[k])-.9*(a.position[k]-origin.position[k]))>1e-9)throw std::runtime_error("Travel gain does not scale target displacement");
+        if(std::abs(a.position[2]-b.position[2])>1e-9)throw std::runtime_error("Travel gain changed vertical calibration");
+    }
     EpisodeRecorder recorder;
     if(argc==3)recorder.Start(argv[2],sim.model);
     std::array<float,35> blend{};blend[2]=sim.data->qpos[2];

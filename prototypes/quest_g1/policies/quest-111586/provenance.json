@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "training_date": "2026-10-09",
+  "slurm_job": 111586,
+  "trainer_commit": "5eb11ff9ed8ee20a5e604f9e282029a20da6f570",
+  "upstream_twist2_commit": "b06178f19a22f2138cbd31f60c6d494bc263f67d",
+  "parent_checkpoint": "111260/checkpoint_001000.pt",
+  "parent_checkpoint_sha256": "5bbfbddf34b19d8be8c7b37ecfbe61cdef83f03c759f22305fb64d0ee0e06a7f",
+  "initialization": "actor, frozen normalization and std restored; new critic and optimizer",
+  "runtime_policy_hz": 50,
+  "runtime_physics_hz": 1000,
+  "metadata_key": "g1_policy_hz",
+  "input_float32_shape": [
+    1,
+    1432
+  ],
+  "output_float32_shape": [
+    1,
+    29
+  ],
+  "default_actor_remains": "twist2-20k",
+  "status": "experimental menu candidates, not automatic promotion; +500 failed key-RMSE gate despite lower sliding/root error",
+  "artifacts": [
+    {
+      "file": "checkpoint_000200-50hz.onnx",
+      "id": "quest-111586-200",
+      "additional_actor_updates": 200,
+      "bytes": 3183335,
+      "sha256": "f7af32cacec3d697d902f5a19373895cba19cca04fb424d9664df11593a0c5ed",
+      "export": {
+        "sha256": "f7af32cacec3d697d902f5a19373895cba19cca04fb424d9664df11593a0c5ed",
+        "metadata_parity_max_error": 0,
+        "torch_parity": {
+          "max_absolute_error": 1.9073486328125e-06,
+          "samples": 128
+        }
+      },
+      "validation": {
+        "checkpoint": "checkpoint_000200",
+        "accepted": true,
+        "reasons": [],
+        "falls": 0,
+        "metrics": {
+          "slide_rate": 0.06033,
+          "root_xy_error_m": 3.0385,
+          "key_rmse_m": 0.01943
+        },
+        "change_pct": {
+          "slide_rate": -22.0,
+          "root_xy_error_m": -16.4,
+          "key_rmse_m": -4.9
+        },
+        "gait": {
+          "baseline": {
+            "trips_per_s": 0.2188,
+            "braking_per_s": 0.0493,
+            "heading_deg": 65.7,
+            "lateral_m": 2.831,
+            "directed_progress_ratio": 0.142
+          },
+          "candidate": {
+            "trips_per_s": 0.2404,
+            "braking_per_s": 0.0678,
+            "heading_deg": 63.2,
+            "lateral_m": 2.33,
+            "directed_progress_ratio": 0.126
+          }
+        }
+      }
+    },
+    {
+      "file": "checkpoint_000300-50hz.onnx",
+      "id": "quest-111586-300",
+      "additional_actor_updates": 300,
+      "bytes": 3183335,
+      "sha256": "a8fba7232e1d5079af5ce23c3c7fe40389c3965f7dde895ea07b45222b557c0d",
+      "export": {
+        "sha256": "a8fba7232e1d5079af5ce23c3c7fe40389c3965f7dde895ea07b45222b557c0d",
+        "metadata_parity_max_error": 0,
+        "torch_parity": {
+          "max_absolute_error": 2.1457672119140625e-06,
+          "samples": 128
+        }
+      },
+      "validation": {
+        "checkpoint": "checkpoint_000300",
+        "accepted": true,
+        "reasons": [],
+        "falls": 0,
+        "metrics": {
+          "slide_rate": 0.06488,
+          "root_xy_error_m": 3.40101,
+          "key_rmse_m": 0.02028
+        },
+        "change_pct": {
+          "slide_rate": -16.1,
+          "root_xy_error_m": -6.4,
+          "key_rmse_m": -0.7
+        },
+        "gait": {
+          "baseline": {
+            "trips_per_s": 0.2188,
+            "braking_per_s": 0.0493,
+            "heading_deg": 65.7,
+            "lateral_m": 2.831,
+            "directed_progress_ratio": 0.142
+          },
+          "candidate": {
+            "trips_per_s": 0.2096,
+            "braking_per_s": 0.0586,
+            "heading_deg": 64.08,
+            "lateral_m": 2.52,
+            "directed_progress_ratio": 0.137
+          }
+        }
+      }
+    },
+    {
+      "file": "checkpoint_000500-50hz.onnx",
+      "id": "quest-111586-500",
+      "additional_actor_updates": 500,
+      "bytes": 3183335,
+      "sha256": "57d6ac4b2461ac8884afeac86d32bcc9a7b4b72f376e15b898af7ac3d8a5241d",
+      "export": {
+        "sha256": "57d6ac4b2461ac8884afeac86d32bcc9a7b4b72f376e15b898af7ac3d8a5241d",
+        "metadata_parity_max_error": 0,
+        "torch_parity": {
+          "max_absolute_error": 1.9073486328125e-06,
+          "samples": 128
+        }
+      },
+      "validation": {
+        "checkpoint": "checkpoint_000500",
+        "accepted": false,
+        "reasons": [
+          "key_rmse_m_regression"
+        ],
+        "falls": 0,
+        "metrics": {
+          "slide_rate": 0.06223,
+          "root_xy_error_m": 2.84453,
+          "key_rmse_m": 0.02175
+        },
+        "change_pct": {
+          "slide_rate": -19.5,
+          "root_xy_error_m": -21.7,
+          "key_rmse_m": 6.5
+        },
+        "gait": {
+          "baseline": {
+            "trips_per_s": 0.2188,
+            "braking_per_s": 0.0493,
+            "heading_deg": 65.7,
+            "lateral_m": 2.831,
+            "directed_progress_ratio": 0.142
+          },
+          "candidate": {
+            "trips_per_s": 0.262,
+            "braking_per_s": 0.0863,
+            "heading_deg": 61.89,
+            "lateral_m": 2.166,
+            "directed_progress_ratio": 0.123
+          }
+        }
+      }
+    }
+  ],
+  "license_notice": "../../THIRD_PARTY_NOTICES.txt"
+}

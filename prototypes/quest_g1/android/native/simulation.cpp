@@ -69,6 +69,11 @@ void Simulation::SelectPolicy(const std::string& path) {
     };
     validate(true,1432);validate(false,29);
     Ort::AllocatorWithDefaultOptions alloc;
+    // Cadence travels with the actor, including episode copies used by replay.
+    auto rate=candidate->GetModelMetadata().LookupCustomMetadataMapAllocated("g1_policy_hz",alloc);
+    std::string rateText=rate?rate.get():"100";
+    if(rateText!="50"&&rateText!="100")throw std::runtime_error("Unsupported policy frequency");
+    int nextHz=rateText=="50"?50:100;
     std::string nextInput=candidate->GetInputNameAllocated(0,alloc).get();
     std::string nextOutput=candidate->GetOutputNameAllocated(0,alloc).get();
     std::array<float,1432> zeros{};std::array<int64_t,2> shape{1,1432};
@@ -81,6 +86,7 @@ void Simulation::SelectPolicy(const std::string& path) {
     for(int i=0;i<29;i++)if(!std::isfinite(result[0].GetTensorData<float>()[i]))
         throw std::runtime_error("Invalid policy output");
     session=std::move(candidate);input_name=std::move(nextInput);output_name=std::move(nextOutput);
+    policy_hz=nextHz;
     if(model&&data)Reset();
 }
 void Simulation::Reset() {
@@ -108,7 +114,7 @@ void Simulation::PauseWholeBodyReference(){
     if(has_whole_reference)whole_reference[0]=whole_reference[1]=whole_reference[5]=0;
 }
 void Simulation::Step(bool demo,double grip,double right_grip) {
-    if(steps%10==0) {
+    if(steps%(1000/policy_hz)==0) {
         std::array<float,1432> obs{};
         obs[2]=.8f;
         for(int i=0;i<29;i++) obs[6+i]=home[i];

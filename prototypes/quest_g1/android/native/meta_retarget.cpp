@@ -69,6 +69,13 @@ void MetaRetargeter::Calibrate(const mjModel* model,const mjData* data,const Tra
         for(int a=0;a<3;a++)difference[a]=robot[i].position[a]-robot[0].position[a]-scales[i]*mapped[a];
         mju_mulMatTVec(offsets[i].position.data(),robotR,difference,3,3);
     }
+    for(int h=0;h<2;h++){
+        double elbow[4],wrist[4],aligned[4],inverse[4],relative[4];
+        mju_mulQuat(aligned,basisQuat,input.body.joints[10+h].quaternion.data());mju_mulQuat(elbow,aligned,offsets[10+h].quaternion.data());
+        mju_mulQuat(aligned,basisQuat,input.body.joints[12+h].quaternion.data());mju_mulQuat(wrist,aligned,offsets[12+h].quaternion.data());
+        mju_negQuat(inverse,elbow);mju_mulQuat(relative,inverse,wrist);mju_negQuat(wristNeutralInverse[h].data(),relative);
+        mju_negQuat(inverse,robot[10+h].quaternion.data());mju_mulQuat(wristRest[h].data(),inverse,robot[12+h].quaternion.data());
+    }
     // Warm-start the genuine GMR model from the achieved physical robot pose.
     std::array<double,36> initial{};std::copy_n(data->qpos,7,initial.begin());
     for(int j=1;j<gm->njnt;j++){
@@ -104,7 +111,7 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& input){
     mju_mulMatVec(translation,basis,pelvisDelta,3,3);
     // Whole-world travel uses the same similarity scale as the stationary
     // first-person world. Anatomical limb/height scales remain separate.
-    double travelScale=cameraTracking?cameraScale:rootScale;
+    double travelScale=travelGain*(cameraTracking?cameraScale:rootScale);
     double root[3]={rootOrigin[0]+travelScale*translation[0],rootOrigin[1]+travelScale*translation[1],0};
     // Grounded GMR mode: preserve pelvis height above the lower foot. Estimated
     // feet are used explicitly; there is no hidden generated gait in this app.
@@ -114,6 +121,19 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& input){
         double alignedQ[4],rel[3],mapped[3],offset[3];mju_mulQuat(alignedQ,basisQuat,input.body.joints[i].quaternion.data());mju_mulQuat(targets[i].quaternion.data(),alignedQ,offsets[i].quaternion.data());
         mju_sub3(rel,input.body.joints[i].position.data(),input.body.joints[0].position.data());mju_mulMatVec(mapped,basis,rel,3,3);mju_rotVecQuat(offset,offsets[i].position.data(),targets[i].quaternion.data());
         for(int a=0;a<3;a++)targets[i].position[a]=root[a]+scales[i]*mapped[a]+offset[a];
+    }
+    std::array<std::array<double,3>,2> wristAngles{};
+    if(neutralWrists)for(int h=0;h<2;h++){
+        double inverse[4],relative[4],delta[4],corrected[4];
+        mju_negQuat(inverse,targets[10+h].quaternion.data());mju_mulQuat(relative,inverse,targets[12+h].quaternion.data());
+        mju_mulQuat(delta,wristNeutralInverse[h].data(),relative);mju_mulQuat(corrected,wristRest[h].data(),delta);
+        mju_mulQuat(targets[12+h].quaternion.data(),targets[10+h].quaternion.data(),corrected);
+        // G1 wrists are consecutive X/Y/Z hinges with identity fixed rotations.
+        // Extract the relative articulation; do not let shoulder IK residuals
+        // masquerade as wrist bending in the final command.
+        double R[9];mju_quat2Mat(R,corrected);
+        wristAngles[h]={std::atan2(-R[5],R[8]),std::asin(std::clamp(R[2],-1.,1.)),std::atan2(-R[1],R[0])};
+        for(double& angle:wristAngles[h])if(std::abs(angle)<1e-7)angle=0;
     }
     // Estimated foot pitch can put a toe target under the floor that the
     // lower ankle defines. Keep the toe position at or above a flat foot;
@@ -133,7 +153,7 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& input){
         // Absolute HMD goal in the fixed calibrated scene/STAGE transform.
         double headDelta[3],headMapped[3];mju_sub3(headDelta,input.head.position.data(),cameraHeadOrigin.position.data());
         mju_mulMatVec(headMapped,basis,headDelta,3,3);
-        for(int a=0;a<3;a++)camera.position[a]=cameraOrigin.position[a]+cameraScale*headMapped[a];
+        for(int a=0;a<3;a++)camera.position[a]=cameraOrigin.position[a]+cameraScale*travelGain*headMapped[a];
         camera.position[2]=cameraOrigin.position[2]+cameraScale*(input.head.position[1]-cameraHeadOrigin.position[1]);
         mju_mulQuat(aligned,basisQuat,input.head.quaternion.data());
         mju_mulQuat(camera.quaternion.data(),aligned,cameraRotationOffset.data());
@@ -145,6 +165,14 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& input){
         gmr.AlignTargetsToCameraXY(camera);gmr.SetCameraTarget(camera);
     }else gmr.ClearCameraTarget();
     gmr.Solve();error=gmr.error;
+    if(neutralWrists){
+        for(int h=0;h<2;h++)for(int k=0;k<3;k++){
+            const char* part[]={"wrist_roll_joint","wrist_pitch_joint","wrist_yaw_joint"};
+            std::string name=std::string(h?"right_":"left_")+part[k];int j=mj_name2id(gmr.model(),mjOBJ_JOINT,name.c_str());
+            gmr.data()->qpos[gmr.model()->jnt_qposadr[j]]=std::clamp(wristAngles[h][k],gmr.model()->jnt_range[2*j],gmr.model()->jnt_range[2*j+1]);
+        }
+        mj_kinematics(gmr.model(),gmr.data());mj_comPos(gmr.model(),gmr.data());
+    }
     std::array<double,36> sourceQ{};std::copy_n(gmr.data()->qpos,36,sourceQ.begin());
     if(swingClearance>0){
         auto raised=gmr.Targets();

@@ -19,12 +19,21 @@ class PolicyAssetsTests(unittest.TestCase):
                 (root / name).write_text(json.dumps({'sha256': {}, 'scene': scene}))
             catalog = export_policies(root, UPSTREAM)
             self.assertEqual([row['id'] for row in catalog],
-                             ['twist2-20k', 'twist2-25k', 'quest-111260-500', 'quest-111260-1000'])
-            provenance = json.loads((Path(__file__).resolve().parents[1] /
-                                     'policies/quest-111260/provenance.json').read_text())
-            for row, artifact in zip(catalog[2:], provenance['artifacts']):
+                             ['twist2-20k', 'twist2-25k', 'quest-111260-500', 'quest-111260-1000',
+                              'quest-111586-200', 'quest-111586-300', 'quest-111586-500'])
+            artifacts = {}
+            for run in ('quest-111260', 'quest-111586'):
+                provenance = json.loads((Path(__file__).resolve().parents[1] /
+                                         f'policies/{run}/provenance.json').read_text())
+                artifacts.update({item['id']: item for item in provenance['artifacts']})
+            for row in catalog[2:]:
+                artifact = artifacts[row['id']]
                 self.assertEqual(row['sha256'], artifact['sha256'])
                 self.assertEqual(hashlib.sha256((root / row['file']).read_bytes()).hexdigest(), artifact['sha256'])
+                expected_hz = 50 if row['id'].startswith('quest-111586-') else 100
+                self.assertEqual(row['policy_hz'], expected_hz)
+                metadata = json.loads((root / f'recording_metadata-stand-policy-{row["id"]}.json').read_text())
+                self.assertEqual(metadata['policy_hz'], expected_hz)
 
     def test_unfetched_lfs_pointer_explains_how_to_download(self):
         with tempfile.TemporaryDirectory() as directory:

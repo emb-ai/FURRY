@@ -6,6 +6,7 @@
 
 static void Check(bool value,const char* message){if(!value)throw std::runtime_error(message);}
 static void Equal(const Simulation& a,const Simulation& b){
+    Check(a.PolicyHz()==b.PolicyHz(),"Policy frequency differs");
     Check(a.steps==b.steps&&a.data->time==b.data->time,"Policy reset/time differs");
     for(int i=0;i<a.model->nq;i++)Check(std::abs(a.data->qpos[i]-b.data->qpos[i])<1e-10,"Policy/history/state differs");
 }
@@ -24,9 +25,10 @@ int main(int argc,char** argv){
             for(const auto& entry:policies){
                 auto path=questpolicy::VerifiedPath(assets,entry);
                 running.SelectPolicy(path);Simulation fresh(assets,2,name,path);Equal(running,fresh);
+                Check(running.PolicyHz()==50||running.PolicyHz()==100,"Unsupported active cadence");
                 for(int i=0;i<300;i++){running.Step(false,.6,.2);fresh.Step(false,.6,.2);}Equal(running,fresh);
                 Check(running.data->qpos[2]>.35,"Policy smoke fell");
-                std::cout<<name<<": "<<entry.id<<" reset and deterministic steps passed\n";
+                std::cout<<name<<": "<<entry.id<<" @ "<<running.PolicyHz()<<" Hz reset and deterministic steps passed\n";
             }
         }
     }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}

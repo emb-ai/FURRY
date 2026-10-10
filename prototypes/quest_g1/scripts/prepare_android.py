@@ -315,6 +315,7 @@ for file in ['gmr.cpp','gmr.h','meta_retarget.cpp','meta_retarget.h','foot_floor
 for file in ['world_skeleton.h','world_skeleton_gl.h','operator_skeleton.h','operator_skeleton_draw.h','camera_fusion.cpp','camera_fusion.h','camera_stream.cpp','quest_menu.h','quest_menu_gl.h','policy_catalog.h','file_sha256.h','camera_pose_servo.h']:
     metadata['sha256']['android/native/'+file]=hashlib.sha256((ROOT/'android/native'/file).read_bytes()).hexdigest()
 metadata['ik_error_semantics']='unweighted GMR stage-2 SE3 residual norm; mixed metres/radians, not wrist distance'
+metadata.update(catch_up_v2=True,neutral_wrists=True,travel_gain_percent=100)
 metadata['body_tracking']={'source':'XR_FB_body_tracking + XR_META_body_tracking_full_body','lower_body':'runtime-estimated, not measured foot trackers','retargeting':'GMR two-stage SE3 box QP; Meta bind-skeleton adapter','root_xy':'Meta pelvis displacement from A, scaled to robot proportions; head-relative sway excluded','scaling':'leg height and arm lengths from Meta bind skeleton; source-specific bone-axis offsets','joints':['Pelvis','Spine3','Left_Hip','Right_Hip','Left_Knee','Right_Knee','Left_Foot','Right_Foot','Left_Shoulder','Right_Shoulder','Left_Elbow','Right_Elbow','Left_Wrist','Right_Wrist']}
 metadata['limitations']=['Meta lower-body poses are estimates','no video','no complete policy hidden state for dynamic restart','Meta source adapter requires hardware validation']
 (assets/'recording_metadata.json').write_text(json.dumps(metadata,indent=2)+'\n')

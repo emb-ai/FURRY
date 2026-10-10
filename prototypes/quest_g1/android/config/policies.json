@@ -12,5 +12,26 @@
     "note": "Эксперимент: 09.10 / 111260",
     "path": "../../policies/quest-111260/checkpoint_001000.onnx",
     "sha256": "8d386bf94724d1dccc7050e1bb3dee40315e20e1bba20a31debb5d9b0b61cae3"
+  },
+  {
+    "id": "quest-111586-200",
+    "title": "Quest: новое +200 / 50 Гц",
+    "note": "Продолжение 1000 · 09.10 / RTX",
+    "path": "../../policies/quest-111586/checkpoint_000200-50hz.onnx",
+    "sha256": "f7af32cacec3d697d902f5a19373895cba19cca04fb424d9664df11593a0c5ed"
+  },
+  {
+    "id": "quest-111586-300",
+    "title": "Quest: новое +300 / 50 Гц",
+    "note": "Продолжение 1000 · 09.10 / RTX",
+    "path": "../../policies/quest-111586/checkpoint_000300-50hz.onnx",
+    "sha256": "a8fba7232e1d5079af5ce23c3c7fe40389c3965f7dde895ea07b45222b557c0d"
+  },
+  {
+    "id": "quest-111586-500",
+    "title": "Quest: новое +500 / 50 Гц",
+    "note": "Продолжение 1000 · 09.10 / RTX",
+    "path": "../../policies/quest-111586/checkpoint_000500-50hz.onnx",
+    "sha256": "57d6ac4b2461ac8884afeac86d32bcc9a7b4b72f376e15b898af7ac3d8a5241d"
   }
 ]

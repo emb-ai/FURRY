@@ -49,6 +49,9 @@ def export_policies(assets, upstream, config=None):
         if row.get('sha256') and row['sha256'] != digest:
             raise ValueError(f'Policy hash mismatch: {ident}')
         session = ort.InferenceSession(str(source), sess_options=opts, providers=['CPUExecutionProvider'])
+        rate = session.get_modelmeta().custom_metadata_map.get('g1_policy_hz', '100')
+        if rate not in ('50', '100'):
+            raise ValueError(f'Unsupported policy frequency: {ident}: {rate}')
         inputs, outputs = session.get_inputs(), session.get_outputs()
         if (len(inputs) != 1 or len(outputs) != 1 or inputs[0].type != 'tensor(float)'
                 or outputs[0].type != 'tensor(float)' or len(inputs[0].shape) != 2
@@ -62,7 +65,7 @@ def export_policies(assets, upstream, config=None):
         filename = 'policy.onnx' if i == 0 else f'policy-{ident}.onnx'
         shutil.copy2(source, assets / filename)
         entry = {key: row[key] for key in ('id', 'title', 'note')}
-        entry.update(file=filename, sha256=digest)
+        entry.update(file=filename, sha256=digest, policy_hz=int(rate))
         catalog.append(entry)
     for scene in ('lab', 'stand', 'cup', 'push_t'):
         base = assets / ('recording_metadata.json' if scene == 'lab' else f'recording_metadata-{scene}.json')
@@ -70,7 +73,7 @@ def export_policies(assets, upstream, config=None):
         for entry in catalog:
             item = deepcopy(metadata)
             item.update(policy_id=entry['id'], policy_title=entry['title'], policy_note=entry['note'],
-                        policy_file=entry['file'], policy_sha256=entry['sha256'])
+                        policy_file=entry['file'], policy_sha256=entry['sha256'], policy_hz=entry['policy_hz'])
             item['sha256'].pop('policy.onnx', None)
             item['sha256'][entry['file']] = entry['sha256']
             (assets / f'recording_metadata-{scene}-policy-{entry["id"]}.json').write_text(

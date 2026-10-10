@@ -15,6 +15,9 @@ class MetaRetargeter {
     TrackedPose cameraOrigin,cameraHeadOrigin;
     std::array<double,4> cameraRotationOffset{1,0,0,0};
     bool cameraTracking=false;
+    bool neutralWrists=false;
+    double travelGain=1;
+    std::array<std::array<double,4>,2> wristNeutralInverse{},wristRest{};
     bool twistGrounding=false,toeClamp=true;
     SwingClearance swing;
     double swingClearance=0;
@@ -30,6 +33,9 @@ public:
     void Calibrate(const mjModel* model,const mjData* data,const TrackingFrame& input);
     const std::array<float,35>& Solve(const TrackingFrame& input);
     void EnableCameraTracking(bool value){cameraTracking=value;if(!value)gmr.ClearCameraTarget();}
+    // Set before calibration. Keep anatomical lengths and vertical scale intact.
+    void SetTravelGain(double value){if(!std::isfinite(value)||value<.5||value>1.2)throw std::runtime_error("Invalid travel gain");travelGain=value;}
+    void EnableNeutralWrists(bool value){neutralWrists=value;}
     // Offline ablation only; the device always clamps toe targets.
     void EnableToeClamp(bool value){toeClamp=value;}
     void EnableTwistGrounding(bool value){

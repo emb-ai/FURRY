@@ -20,6 +20,7 @@ public:
     mjData* data = nullptr;
     double inference_ms = 0;
     int steps = 0;
+    int PolicyHz() const { return policy_hz; }
     int physics_workers = 0;
     std::string scene_name;
     void SetArmReference(const std::array<float,29>& joints);
@@ -28,6 +29,7 @@ public:
     const std::array<float,35>& WholeBodyReference()const{return whole_reference;}
     void ClearArmReference(){has_reference=false;}
 private:
+    int policy_hz = 100;
     std::unique_ptr<mjThreadPool, decltype(&mju_threadPoolDestroy)> physicsPool{nullptr, mju_threadPoolDestroy};
     Ort::Env env{ORT_LOGGING_LEVEL_WARNING, "G1Quest"};
     Ort::SessionOptions options;

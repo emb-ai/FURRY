@@ -18,7 +18,7 @@ int main(int argc,char** argv){
             for(const auto& entry:catalog)if(entry.id==argv[4]){policyPath=questpolicy::VerifiedPath(argv[1],entry);metadata=questpolicy::Metadata(name,entry);policyFile=entry.file;found=true;}
             if(!found)throw std::runtime_error("Unknown test policy");
         }
-        Simulation sim(argv[1],2,name,policyPath);MetaRetargeter meta(argv[1]);auto& solver=meta.solver();
+        Simulation sim(argv[1],2,name,policyPath);MetaRetargeter meta(argv[1]);meta.EnableNeutralWrists(true);auto& solver=meta.solver();
         meta.EnableCameraTracking(firstPerson);int egoCamera=mj_name2id(sim.model,mjOBJ_CAMERA,"ego");
         auto* m=solver.model();std::unique_ptr<mjData,decltype(&mj_deleteData)> data(mj_makeData(m),mj_deleteData);auto* d=data.get();
         TrackingFrame input;input.valid=input.body.valid=input.body.supported=true;input.location_flags={15,15,15};input.hand_active={true,true};input.body.confidence=1;input.head.position={0,1.65,0};
@@ -63,7 +63,7 @@ int main(int argc,char** argv){
                 recorder.Event(frame==40?"menu_close":frame==80?"session_resume":"focus_resume",input.sequence);
             }
             auto reference=meta.Solve(input);
-            if(catchUp)reference=ApplyCameraCatchUp(reference,solver.HasCameraTarget()?solver.CameraTarget():solver.CameraPose(),sim.model,sim.data,egoCamera,true);
+            if(catchUp)reference=ApplyCameraCatchUp(reference,solver.HasCameraTarget()?solver.CameraTarget():solver.CameraPose(),sim.model,sim.data,egoCamera,true,solver.data()->qpos+3);
             double amount=std::clamp((sim.data->time-blendStart)/.5,0.,1.);
             for(int k=0;k<35;k++)reference[k]=origin[k]+amount*(reference[k]-origin[k]);sim.SetWholeBodyReference(reference);
             std::array<float,29> joints{};std::copy_n(reference.begin()+6,29,joints.begin());

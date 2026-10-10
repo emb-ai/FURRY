@@ -36,7 +36,7 @@ static void CheckedStep(Simulation& sim,double leftGrip,double rightGrip) {
  CheckPhysicsNumerics(sim,previousTime);
 }
 int Run(int argc,char**argv){
- if(argc!=5){std::cerr<<"Usage: replay_gmr_dynamics assets episode saved|retarget output.csv\n";return 2;}std::string folder=argv[2],mode=argv[3];if(mode!="saved"&&mode!="retarget")throw std::runtime_error("Unknown replay mode");auto manifest=episodereplay::LoadManifest(folder);Simulation sim(argv[1],2,manifest.scene,manifest.PolicyPath(argv[1],folder));manifest.ValidateDimensions(sim.model->nq,sim.model->nv,sim.model->nu);MetaRetargeter meta(argv[1]);std::string line;
+ if(argc!=5){std::cerr<<"Usage: replay_gmr_dynamics assets episode saved|retarget output.csv\n";return 2;}std::string folder=argv[2],mode=argv[3];if(mode!="saved"&&mode!="retarget")throw std::runtime_error("Unknown replay mode");auto manifest=episodereplay::LoadManifest(folder);Simulation sim(argv[1],2,manifest.scene,manifest.PolicyPath(argv[1],folder));manifest.ValidateDimensions(sim.model->nq,sim.model->nv,sim.model->nu);MetaRetargeter meta(argv[1]);meta.EnableNeutralWrists(manifest.neutralWrists);meta.SetTravelGain(manifest.travelGainPercent/100.);std::string line;
  std::map<uint64_t,TrackingFrame> poses;std::ifstream inputs(folder+"/input.csv"),bodies(folder+"/body.csv"),frames(folder+"/frames.csv"),commands(folder+"/mimic.csv");
  if(!inputs||!bodies||!frames||!commands)throw std::runtime_error("Missing episode streams");
  auto pauses=episodereplay::PauseTimes(folder);size_t pauseIndex=0;
@@ -61,7 +61,7 @@ int Run(int argc,char**argv){
   auto& f=poses.at(r[1]);std::array<float,35> cmd{};std::copy_n(c.begin()+3,35,cmd.begin());
   if(mode!="saved"){
    if(r[5])meta.Calibrate(sim.model,sim.data,f);
-   if(r[6]&&meta.calibrated){if(r[5]||!wasApplying){origin.fill(0);origin[2]=sim.data->qpos[2];blendStart=r[3];auto*gm=meta.solver().model();for(int j=1;j<gm->njnt;j++){int s=mj_name2id(sim.model,mjOBJ_JOINT,mj_id2name(gm,mjOBJ_JOINT,j));origin[gm->jnt_qposadr[j]-1]=sim.data->qpos[sim.model->jnt_qposadr[s]];}}cmd=meta.Solve(f);if(manifest.catchUp){auto& solver=meta.solver();cmd=ApplyCameraCatchUp(cmd,solver.HasCameraTarget()?solver.CameraTarget():solver.CameraPose(),sim.model,sim.data,egoCamera,true);}double u=std::clamp((r[3]-blendStart)/.5,0.,1.);for(int k=0;k<35;k++)cmd[k]=origin[k]+u*(cmd[k]-origin[k]);wasApplying=true;}
+   if(r[6]&&meta.calibrated){if(r[5]||!wasApplying){origin.fill(0);origin[2]=sim.data->qpos[2];blendStart=r[3];auto*gm=meta.solver().model();for(int j=1;j<gm->njnt;j++){int s=mj_name2id(sim.model,mjOBJ_JOINT,mj_id2name(gm,mjOBJ_JOINT,j));origin[gm->jnt_qposadr[j]-1]=sim.data->qpos[sim.model->jnt_qposadr[s]];}}cmd=meta.Solve(f);if(manifest.catchUp){auto& solver=meta.solver();cmd=ApplyCameraCatchUp(cmd,solver.HasCameraTarget()?solver.CameraTarget():solver.CameraPose(),sim.model,sim.data,egoCamera,true,manifest.catchUpV2?solver.data()->qpos+3:nullptr);}double u=std::clamp((r[3]-blendStart)/.5,0.,1.);for(int k=0;k<35;k++)cmd[k]=origin[k]+u*(cmd[k]-origin[k]);wasApplying=true;}
    else{meta.Pause();wasApplying=false;}
   }
   double err=0,cmdErr=0;for(int k=0;k<sim.model->nq;k++)err=std::max(err,std::abs(sim.data->qpos[k]-r[42+k]));for(int k=0;k<35;k++)cmdErr=std::max(cmdErr,std::abs(double(cmd[k])-c[k+3]));maxError=std::max(maxError,err);

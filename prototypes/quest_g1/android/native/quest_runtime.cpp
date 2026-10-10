@@ -372,7 +372,7 @@ void ApplyMenuAction(questmenu::Action action,bool fresh,uint64_t sequence,int p
             refreshGeometry=true;refreshEgoAnchor=true;
             {std::lock_guard<std::mutex> statsGuard(statsMutex);stats={};stats.physicsWorkers=sim->physics_workers;}
             Notice("Политика выбрана. Калибруйте кнопкой A.");
-            __android_log_print(ANDROID_LOG_INFO,"G1Quest","Selected policy %s sha256=%s",policyCatalog[index].id.c_str(),policyCatalog[index].sha256.c_str());
+            __android_log_print(ANDROID_LOG_INFO,"G1Quest","Selected policy %s sha256=%s hz=%d",policyCatalog[index].id.c_str(),policyCatalog[index].sha256.c_str(),sim->PolicyHz());
         }catch(const std::exception& e){Notice("Ошибка загрузки. Сохранена прежняя политика.");__android_log_print(ANDROID_LOG_ERROR,"G1Quest","Policy selection: %s",e.what());}
         return;
     }
@@ -461,7 +461,9 @@ void G1Initialize(android_app* app){
         selectedPolicy=0;settingsDirty=true;Notice("Политика недоступна. Загружена авторская 20k.");
         sim=std::make_unique<Simulation>(assets,2,questmenu::SceneName(questmenu::Scene(sessionScene.load())),questpolicy::VerifiedPath(assets,policyCatalog.at(0)));
     }
+    __android_log_print(ANDROID_LOG_INFO,"G1Quest","Loaded policy %s sha256=%s hz=%d",policyCatalog.at(selectedPolicy.load()).id.c_str(),policyCatalog.at(selectedPolicy.load()).sha256.c_str(),sim->PolicyHz());
     retarget=std::make_unique<MetaRetargeter>(assets);
+    retarget->EnableNeutralWrists(true);
 #ifdef G1_ENABLE_TWIST_GROUNDING
     retarget->EnableTwistGrounding(true);
 #endif
@@ -689,7 +691,7 @@ void G1Initialize(android_app* app){
                     if(catchUpEnabled){
                         auto& solver=retarget->solver();
                         const auto goal=solver.HasCameraTarget()?solver.CameraTarget():solver.CameraPose();
-                        whole=ApplyCameraCatchUp(whole,goal,sim->model,sim->data,egoCamera,true);
+                        whole=ApplyCameraCatchUp(whole,goal,sim->model,sim->data,egoCamera,true,solver.data()->qpos+3);
                     }
                     sample.gmrMs=(ClockSeconds()-gmrStart)*1000;
                     double u=std::clamp((sim->data->time-blendStarted)/.5,0.,1.);

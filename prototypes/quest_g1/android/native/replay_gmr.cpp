@@ -13,7 +13,7 @@ int main(int argc,char**argv){
     if(argc!=3)return 2;
     try{
         std::string folder=argv[2];auto manifest=episodereplay::LoadManifest(folder);
-        Simulation sim(argv[1],2,manifest.scene,manifest.PolicyPath(argv[1],folder));manifest.ValidateDimensions(sim.model->nq,sim.model->nv,sim.model->nu);MetaRetargeter meta(argv[1]);
+        Simulation sim(argv[1],2,manifest.scene,manifest.PolicyPath(argv[1],folder));manifest.ValidateDimensions(sim.model->nq,sim.model->nv,sim.model->nu);MetaRetargeter meta(argv[1]);meta.EnableNeutralWrists(manifest.neutralWrists);meta.SetTravelGain(manifest.travelGainPercent/100.);
         std::ifstream inputs(folder+"/input.csv"),bodies(folder+"/body.csv"),frames(folder+"/frames.csv"),commands(folder+"/mimic.csv");
         if(!inputs||!bodies||!frames||!commands)throw std::runtime_error("GMR replay requires input/body/frames/mimic streams");
         std::map<uint64_t,TrackingFrame> poses;std::string line;
@@ -47,7 +47,7 @@ int main(int argc,char**argv){
             if(!meta.calibrated){skipped++;continue;}
             if(r[5]||!wasApplying){origin.fill(0);origin[2]=sim.data->qpos[2];blendStart=r[3];auto*gm=meta.solver().model();for(int j=1;j<gm->njnt;j++){int source=mj_name2id(sim.model,mjOBJ_JOINT,mj_id2name(gm,mjOBJ_JOINT,j));origin[gm->jnt_qposadr[j]-1]=sim.data->qpos[sim.model->jnt_qposadr[source]];}}
             auto result=meta.Solve(f);
-            if(manifest.catchUp){auto& solver=meta.solver();result=ApplyCameraCatchUp(result,solver.HasCameraTarget()?solver.CameraTarget():solver.CameraPose(),sim.model,sim.data,egoCamera,true);}
+            if(manifest.catchUp){auto& solver=meta.solver();result=ApplyCameraCatchUp(result,solver.HasCameraTarget()?solver.CameraTarget():solver.CameraPose(),sim.model,sim.data,egoCamera,true,manifest.catchUpV2?solver.data()->qpos+3:nullptr);}
             double u=std::clamp((r[3]-blendStart)/.5,0.,1.);
             for(int i=0;i<35;i++){result[i]=origin[i]+u*(result[i]-origin[i]);maxError=std::max(maxError,std::abs(result[i]-c[3+i]));}
             wasApplying=true;count++;

@@ -1,0 +1,44 @@
+[
+  {
+    "file": "initial-experiment.md",
+    "workspace_source": "outputs/quest-finetune-20261008/EXPERIMENT.md",
+    "sha256": "2169380f690681742dc11bcc87b1b229a8f117d20e46fd1183c24cab2f976161"
+  },
+  {
+    "file": "night-v3.json",
+    "workspace_source": "outputs/quest-finetune-20261008/night-v3/run-summary.json",
+    "sha256": "dabb93783680b7f936b20f4374fbb7ae71f7585ca46280e9d85b27836be2663f"
+  },
+  {
+    "file": "eval50-results.json",
+    "workspace_source": "outputs/quest-finetune-20261009/eval50-training/status-latest/summary.json",
+    "sha256": "e9a753412cd1d7b88a2a7bbcf75f890749813dceb8ed2493897a69a7fa1572a3"
+  },
+  {
+    "file": "111586-config.json",
+    "workspace_source": "outputs/quest-finetune-20261009/eval50-training/status-111586/config.json",
+    "sha256": "9746735dd9409b6cecfc3b34f727bd97fd185943b2bab0c68f83ce2abdf5d647"
+  },
+  {
+    "file": "111586-split-audit.json",
+    "workspace_source": "outputs/quest-finetune-20261009/eval50-training/status-111586/initialization-audit.json",
+    "sha256": "5c7273e8476d30bbeb492605749f613237ed3aaa12182fc26bf825a9d8fd1e9c"
+  },
+  {
+    "file": "catch-up-rollouts.json",
+    "workspace_source": "outputs/catch-up-wrists-20261010/experiment-results.json",
+    "sha256": "2572e4cbc700ef054aa991fa0ce4730e3430435741cf2565daa387e115f12023"
+  },
+  {
+    "file": "catch-up-second-recording.json",
+    "workspace_source": "outputs/catch-up-wrists-20261010/second-results.json",
+    "sha256": "312b0ad9579f9785d854a0873196f5b7a270de27dbefc0b02fb2e15c0b80490b"
+  },
+  {
+    "file": "author-method.md",
+    "git_source": "5eb11ff9ed8ee20a5e604f9e282029a20da6f570:prototypes/quest_g1/training/AUTHOR_MIXTURE.md",
+    "source_sha256": "1a90a19790f8107eb8a3f0ac76c97a12f4e1ac89d80a9d4f60045d307af7ba5c",
+    "sha256": "bbddcbea911b39dd9d1e8d50be28cce95560c8b6549a75a9a38c1ed105db1194",
+    "transformation": "One blank line added before heading for Markdown lint; technical content unchanged."
+  }
+]

@@ -74,6 +74,7 @@ unset until participants agree to a bounded task.
 | [Common Ground](Common-Ground.md) | What do our terms, transforms, clocks and representations mean? |
 | [Data And Evaluation](Data-and-Evaluation.md) | What makes a trajectory auditable and a comparison fair? |
 | [Policy Learning](Policy-Learning.md) | How would a state-based Diffusion Policy plug into the simulator loop? |
+| [Quest Tracker Research](Quest-Tracker-Research.md) | What was tried in low-level tracker finetuning, how were data and losses handled, and what reached Quest? |
 | [Contributing](Contributing.md) | How do I turn an investigation into a reviewed contribution? |
 
 For a first session, read Home -> Common Ground -> TWIST2 Baseline. Then read the

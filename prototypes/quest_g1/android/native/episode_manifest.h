@@ -125,7 +125,7 @@ class JsonFields {
                 Space();
                 size_t start = pos;
                 Value();
-                if (collect && (key == "scene" || key == "nq" || key == "nv" || key == "nu" || key == "policy_file" || key == "policy_sha256" || key == "catch_up" || key == "first_person")) {
+                if (collect && (key == "scene" || key == "nq" || key == "nv" || key == "nu" || key == "policy_file" || key == "policy_sha256" || key == "catch_up" || key == "first_person" || key == "catch_up_v2" || key == "neutral_wrists" || key == "travel_gain_percent")) {
                     if (!out.emplace(key, text.substr(start, pos - start)).second)
                         throw std::runtime_error("Duplicate episode manifest field: " + key);
                 }
@@ -225,6 +225,8 @@ inline int Dimension(const std::string &value) {
 struct Manifest {
     std::string scene = "lab", raw, policyFile, policySha256;
     bool catchUp=false,firstPerson=false;
+    bool catchUpV2=false,neutralWrists=false;
+    int travelGainPercent=100;
     std::string PolicyPath(const std::string& assets,const std::string& folder) const {
         if(policyFile.empty())return assets+"/policy.onnx"; // legacy baseline episodes
         std::string path=std::filesystem::exists(folder+"/policy.onnx")?folder+"/policy.onnx":assets+"/"+policyFile;
@@ -263,6 +265,9 @@ inline Manifest LoadManifest(const std::string &folder) {
         return fields.at(key)=="true";
     };
     out.catchUp=readBool("catch_up");out.firstPerson=readBool("first_person");
+    out.catchUpV2=readBool("catch_up_v2");out.neutralWrists=readBool("neutral_wrists");
+    if(fields.count("travel_gain_percent"))out.travelGainPercent=detail::Dimension(fields.at("travel_gain_percent"));
+    if(out.travelGainPercent<50||out.travelGainPercent>120)throw std::runtime_error("Invalid travel gain");
     if(fields.count("policy_file")!=fields.count("policy_sha256"))throw std::runtime_error("Incomplete episode policy identity");
     if(fields.count("policy_file")){
         out.policyFile=readString("policy_file");out.policySha256=readString("policy_sha256");

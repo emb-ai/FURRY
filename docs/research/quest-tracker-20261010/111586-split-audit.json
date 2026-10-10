@@ -1,0 +1,11 @@
+{
+  "ancestor_manifest_sha256": "e887731e2cb3c8c50c9de77634ef2cdf0640cc2cd2e8f98ad57f2d3850732b55",
+  "ancestor_train_preserved": 1090,
+  "validation_clips": 12,
+  "ancestor_train_in_validation": 0,
+  "quest_validation_stages": [
+    2,
+    9,
+    14
+  ]
+}
