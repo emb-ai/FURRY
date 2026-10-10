@@ -15,6 +15,7 @@ deployment is outside this project's scope.
 
 - [Knowledge base and reading order](docs/Home.md)
 - [Getting started](docs/Getting-Started.md)
+- [Team setup and Quest updates over Wi-Fi](docs/Quest-WiFi-Deploy.md)
 - [Compressed literature review](docs/Literature-Review.md)
 - [TWIST2 baseline audit](docs/TWIST2-Baseline.md)
 - [Quest training dataset: source, curated clips and mirrors](datasets/quest-virtual-legs-v2/2026-10-08/README.md)

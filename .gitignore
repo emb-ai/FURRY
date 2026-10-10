@@ -226,4 +226,5 @@ node_modules/
 /checkpoints/
 /third_party/
 /wiki-preview/
+/prototypes/quest_g1/outputs/quest-wifi/
 .DS_Store
