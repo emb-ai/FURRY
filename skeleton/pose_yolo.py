@@ -152,6 +152,13 @@ def main():
     parser.add_argument("--marker-id", type=int, default=0)
     parser.add_argument("--marker-hand", choices=["right", "left"], default="right")
     parser.add_argument("--session", help="JSON связки камера→STAGE: загрузить, если файл есть, и писать сюда по клавише c")
+    parser.add_argument("--denoiser", help="ONNX лег-денойзера (denoiser_ov.LegDenoiser): "
+                        "скорректировать суставы 11..16 перед отправкой на шлем")
+    parser.add_argument("--denoiser-mode", choices=["direct", "obs", "prev"], default="obs",
+                        help="direct — прямая регрессия; obs — DDIM от оценки кадра; prev — от прошлого семпла")
+    parser.add_argument("--denoiser-steps", type=int, default=5, help="шаги DDIM (obs/prev)")
+    parser.add_argument("--denoiser-scale", type=float, default=0.125,
+                        help="нормировка модели, м (медиана таз-бедро оператора при обучении)")
     args = parser.parse_args()
     size, filt = args.size, args.filters
     server = None
@@ -161,6 +168,13 @@ def main():
         session.load(args.session)
         print(f"Связка камера→STAGE загружена из {args.session}", flush=True)
     model, device = load_model(size)
+    deno = None
+    if args.denoiser:
+        from denoiser_ov import LegDenoiser
+        deno = LegDenoiser(args.denoiser, mode=args.denoiser_mode,
+                           steps=args.denoiser_steps, scale=args.denoiser_scale)
+        print(f"лег-денойзер: {args.denoiser} ({deno.backend}, режим {args.denoiser_mode}, "
+              f"{args.denoiser_steps} шагов, scale {args.denoiser_scale})", flush=True)
 
     cfg = rs.config()
     cfg.enable_stream(rs.stream.color, 1280, 720, rs.format.bgr8, 30)
@@ -313,6 +327,21 @@ def main():
             for i, p in raw.items():
                 filters.setdefault(i, OneEuro())(p, t_now)
             smoothed = {i: f.x_prev.copy() for i, f in filters.items() if i in raw}
+
+            # Лег-денойзер (denoiser_ov): root-relative коррекция суставов 11..16.
+            # До to_stage_relative — коррекция коммутативна с жёстким
+            # преобразованием кадра, поэтому обе ветки wire (camera и
+            # pelvis-relative) и лог direction=camera получают одни и те же ноги.
+            if deno is not None:
+                t_d = time.perf_counter()
+                corr = deno.correct(pts2d, confidence, smoothed)
+                if corr is not None:
+                    legs, leg_conf, leg_src = corr
+                    for i, p in legs.items():
+                        smoothed[i] = p
+                        confidence[i] = leg_conf[i]
+                        sources[i] = leg_src
+                stage_t["denoiser"] = stage_t.get("denoiser", 0.0) + (time.perf_counter() - t_d) * 1000
 
             sequence += 1
             if server:

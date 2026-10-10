@@ -228,3 +228,6 @@ node_modules/
 /wiki-preview/
 /prototypes/quest_g1/outputs/quest-wifi/
 .DS_Store
+
+# leg denoiser weights stay local (see memory: no model binaries in git)
+skeleton/models/
