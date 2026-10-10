@@ -1,0 +1,259 @@
+{
+  "verified_files": [
+    {
+      "file": "files/g1/recordings/episode-1791619472758775/body.csv",
+      "sha256": "1d6655568b8664303c855c2086754c45ff36c7b2de9bd055787b4c2ccacf672f",
+      "bytes": 612776
+    },
+    {
+      "file": "files/g1/recordings/episode-1791619472758775/camera.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "file": "files/g1/recordings/episode-1791619472758775/complete.json",
+      "sha256": "4e1c3d171ab635cb6d707dadec4399c5307efef589595c1a10c9880c1c3e8818",
+      "bytes": 76
+    },
+    {
+      "file": "files/g1/recordings/episode-1791619472758775/episode_summary.json",
+      "sha256": "8965364c9bcf279a1cb6deb752455ddbf775576a72999dea3371f8c9fc4e741d",
+      "bytes": 129
+    },
+    {
+      "file": "files/g1/recordings/episode-1791619472758775/events.csv",
+      "sha256": "3f21cceb643932b32b357c65a6ff4c03ee3cada802f4c383a741b429c981ee2c",
+      "bytes": 237
+    },
+    {
+      "file": "files/g1/recordings/episode-1791619472758775/frames.csv",
+      "sha256": "e0f752abf8b4a11fd2aa7bd9abc55efd12d6de87cf012a96ce3aec04936bcdaa",
+      "bytes": 716851
+    },
+    {
+      "file": "files/g1/recordings/episode-1791619472758775/input.csv",
+      "sha256": "34baa1d33ac3f5555f1394ed46999d68d4e197b5e13349a2b74d1f14889172a9",
+      "bytes": 73650
+    },
+    {
+      "file": "files/g1/recordings/episode-1791619472758775/manifest.json",
+      "sha256": "4453ec1561227f5dcccba90cca49ba366b96d5a52823e126d1d97ba83629a960",
+      "bytes": 12177
+    },
+    {
+      "file": "files/g1/recordings/episode-1791619472758775/mimic.csv",
+      "sha256": "86c33f7d36f1da06c8be4fdec41788b5c848b582c9a8d376d18d14ba73cc3ed2",
+      "bytes": 160529
+    },
+    {
+      "file": "files/g1/recordings/episode-1791619472758775/policy.onnx",
+      "sha256": "57d6ac4b2461ac8884afeac86d32bcc9a7b4b72f376e15b898af7ac3d8a5241d",
+      "bytes": 3183335
+    },
+    {
+      "file": "files/g1/recordings/episode-1791619472758775/session_config.json",
+      "sha256": "95786aed4aa59d77d33efbc9806fc747e3a89f34730f97a52904ec79f9bf47f0",
+      "bytes": 211
+    },
+    {
+      "file": "files/g1/recordings/episode-1791621867365094/body.csv",
+      "sha256": "806b08a5353667ea2ab114a07eae26eb1223a8660095421ef230379d19d1a583",
+      "bytes": 730906
+    },
+    {
+      "file": "files/g1/recordings/episode-1791621867365094/camera.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "file": "files/g1/recordings/episode-1791621867365094/complete.json",
+      "sha256": "07a89e1e41504d03942c488d24630c0c3a41f2fd1adaafc683f03b6215b66d75",
+      "bytes": 76
+    },
+    {
+      "file": "files/g1/recordings/episode-1791621867365094/episode_summary.json",
+      "sha256": "428878bcd897c1e353b9ec5ed731f3ff4e8710aac362c10f2422aab69bf9eec4",
+      "bytes": 127
+    },
+    {
+      "file": "files/g1/recordings/episode-1791621867365094/events.csv",
+      "sha256": "3dfaba24849741625adbed4e870dc39f645a9ae73d407de9d76fd317b7f63d80",
+      "bytes": 249
+    },
+    {
+      "file": "files/g1/recordings/episode-1791621867365094/frames.csv",
+      "sha256": "a79de646267bea09c846eeb5a686110326635b0f68d93633b96208e90b2d8e9c",
+      "bytes": 869936
+    },
+    {
+      "file": "files/g1/recordings/episode-1791621867365094/input.csv",
+      "sha256": "35881815f34440afe1c93bcda6e6a9248174de56dc1eaf359fd343a1622bcedc",
+      "bytes": 88549
+    },
+    {
+      "file": "files/g1/recordings/episode-1791621867365094/manifest.json",
+      "sha256": "85228ec288fd906e1d4cb0756ac7c2d6008591a8e6388c0ab174211c4cadfdfc",
+      "bytes": 12256
+    },
+    {
+      "file": "files/g1/recordings/episode-1791621867365094/mimic.csv",
+      "sha256": "3459b5a7443dac37daa62b55e3088446b8a357de454ee927473c50814421c02c",
+      "bytes": 194616
+    },
+    {
+      "file": "files/g1/recordings/episode-1791621867365094/policy.onnx",
+      "sha256": "57d6ac4b2461ac8884afeac86d32bcc9a7b4b72f376e15b898af7ac3d8a5241d",
+      "bytes": 3183335
+    },
+    {
+      "file": "files/g1/recordings/episode-1791621867365094/session_config.json",
+      "sha256": "95786aed4aa59d77d33efbc9806fc747e3a89f34730f97a52904ec79f9bf47f0",
+      "bytes": 211
+    },
+    {
+      "file": "files/g1/recordings/episode-1791621888465718/body.csv",
+      "sha256": "76f1b29f9c2e2d4661c82b7a6dc464c98e99fc62ef5c182aa6f44b6ed3f4fa46",
+      "bytes": 11470656
+    },
+    {
+      "file": "files/g1/recordings/episode-1791621888465718/camera.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "file": "files/g1/recordings/episode-1791621888465718/complete.json",
+      "sha256": "ef8f741c28559c519585ba514598bf9a4bef463da363ac37f9d1dda1705ffcbb",
+      "bytes": 78
+    },
+    {
+      "file": "files/g1/recordings/episode-1791621888465718/episode_summary.json",
+      "sha256": "2db273415ff5a7163d9e0680f53b0085a8775134056fa88639fa18a407d6da9d",
+      "bytes": 129
+    },
+    {
+      "file": "files/g1/recordings/episode-1791621888465718/events.csv",
+      "sha256": "16d482d26a789425057021e38e4cda06e21daf5e2fdcce3e0933156283d9954f",
+      "bytes": 249
+    },
+    {
+      "file": "files/g1/recordings/episode-1791621888465718/frames.csv",
+      "sha256": "04c4cc6e472357bcc63365c43a67c1960116886dfd04073b3f494e25f08848ba",
+      "bytes": 13620041
+    },
+    {
+      "file": "files/g1/recordings/episode-1791621888465718/input.csv",
+      "sha256": "9a2ec630632af1b91d4b62863a694ce7f11b2db172f56622368ba2182f4a9920",
+      "bytes": 1409731
+    },
+    {
+      "file": "files/g1/recordings/episode-1791621888465718/manifest.json",
+      "sha256": "85228ec288fd906e1d4cb0756ac7c2d6008591a8e6388c0ab174211c4cadfdfc",
+      "bytes": 12256
+    },
+    {
+      "file": "files/g1/recordings/episode-1791621888465718/mimic.csv",
+      "sha256": "c4525b13bb437413a623aca0dfcf42905ae106e048988d6aa40675999a8de5a4",
+      "bytes": 3027254
+    },
+    {
+      "file": "files/g1/recordings/episode-1791621888465718/policy.onnx",
+      "sha256": "57d6ac4b2461ac8884afeac86d32bcc9a7b4b72f376e15b898af7ac3d8a5241d",
+      "bytes": 3183335
+    },
+    {
+      "file": "files/g1/recordings/episode-1791621888465718/session_config.json",
+      "sha256": "95786aed4aa59d77d33efbc9806fc747e3a89f34730f97a52904ec79f9bf47f0",
+      "bytes": 211
+    }
+  ],
+  "episodes": [
+    {
+      "episode": "episode-1791619472758775",
+      "manifest_fields": {
+        "catch_up": true,
+        "first_person": false,
+        "policy_hz": 50,
+        "scene": "stand",
+        "policy_id": "quest-111586-500"
+      },
+      "frames": 213,
+      "summary": {
+        "schema_version": 1,
+        "recorded_seconds": 2.1140135960000066,
+        "accepted_seconds": 2.1199999999999988,
+        "pause_intervals_excluded": true
+      },
+      "time_columns": [
+        "receive_ns",
+        "sequence",
+        "step",
+        "sim_time",
+        "reset",
+        "calibrate",
+        "apply_reference",
+        "valid"
+      ]
+    },
+    {
+      "episode": "episode-1791621867365094",
+      "manifest_fields": {
+        "catch_up": true,
+        "first_person": false,
+        "policy_hz": 50,
+        "catch_up_v2": true,
+        "neutral_wrists": true,
+        "travel_gain_percent": 100,
+        "scene": "stand",
+        "policy_id": "quest-111586-500"
+      },
+      "frames": 254,
+      "summary": {
+        "schema_version": 1,
+        "recorded_seconds": 2.5248824390000664,
+        "accepted_seconds": 2.52999999999999,
+        "pause_intervals_excluded": true
+      },
+      "time_columns": [
+        "receive_ns",
+        "sequence",
+        "step",
+        "sim_time",
+        "reset",
+        "calibrate",
+        "apply_reference",
+        "valid"
+      ]
+    },
+    {
+      "episode": "episode-1791621888465718",
+      "manifest_fields": {
+        "catch_up": true,
+        "first_person": false,
+        "policy_hz": 50,
+        "catch_up_v2": true,
+        "neutral_wrists": true,
+        "travel_gain_percent": 100,
+        "scene": "stand",
+        "policy_id": "quest-111586-500"
+      },
+      "frames": 4010,
+      "summary": {
+        "schema_version": 1,
+        "recorded_seconds": 40.08351092000021,
+        "accepted_seconds": 40.09000000000059,
+        "pause_intervals_excluded": true
+      },
+      "time_columns": [
+        "receive_ns",
+        "sequence",
+        "step",
+        "sim_time",
+        "reset",
+        "calibrate",
+        "apply_reference",
+        "valid"
+      ]
+    }
+  ],
+  "status": "downloaded_and_hash_verified_not_behaviorally_analyzed"
+}
