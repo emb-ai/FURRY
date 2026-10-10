@@ -9,6 +9,9 @@ fuse_joints(): 2D-кейпоинты {COCO-индекс: (u, v)} + карта г
   * дистанция человека — крупное окно на тазе, без гейта
   * foreground-гейт: медиана окна 9x9 только из полосы ±band от таза
     (фон физически недоступен)
+  * колени/лодыжки: ближний перцентиль окна вместо медианы — пол за стопой
+    лежит в той же полосе ±band и тянул медиану назад (эпизод 10.10:
+    правая лодыжка на 10-13 см глубже колена)
   * пустой сустав -> line-median вдоль кости от родителя
   * deproject по интринсикам того потока, в чьих пикселях работаем:
     live подаёт depth, выровненный на color (пиксели color, color-интринсики);
@@ -28,13 +31,19 @@ import pyrealsense2 as rs
 PARENT = {7: 5, 9: 7, 8: 6, 10: 8, 13: 11, 15: 13, 14: 12, 16: 14,
           5: 6, 6: 5, 11: 12, 12: 11, 0: 5}
 
+# Колени и лодыжки: в окне на краю конечности рядом пол на +0.2..0.4 м,
+# поэтому берётся ближняя поверхность (перцентиль), а не медиана.
+DISTAL = {13, 14, 15, 16}
+DISTAL_Q = 25
+
 # BlazePose-33 -> канонический COCO-17
 BLAZE2COCO = {0: 0, 11: 5, 12: 6, 13: 7, 14: 8, 15: 9, 16: 10,
               23: 11, 24: 12, 25: 13, 26: 14, 27: 15, 28: 16}
 
 
-def window_median(depth_m, u, v, person_d=None, win=4, band=0.5):
-    """Медиана глубины в окне (2*win+1)^2, только из полосы человека."""
+def window_median(depth_m, u, v, person_d=None, win=4, band=0.5, q=50):
+    """Перцентиль q (по умолчанию медиана) глубины в окне (2*win+1)^2,
+    только из полосы человека."""
     h, w = depth_m.shape
     x, y = int(round(u)), int(round(v))
     x0, x1 = max(0, x - win), min(w, x + win + 1)
@@ -43,7 +52,7 @@ def window_median(depth_m, u, v, person_d=None, win=4, band=0.5):
     mask = (patch > 0) & (np.abs(patch - person_d) < band) if person_d else (patch > 0)
     if not mask.any():
         return None
-    return float(np.median(patch[mask]))
+    return float(np.percentile(patch[mask], q))
 
 
 def line_median(depth_m, u0, v0, u1, v1, person_d, n=9, band=0.5):
@@ -83,7 +92,8 @@ def fuse_joints(depth_m, pts2d, intr, band=0.5, sources=None):
     person_d = person_distance(depth_m, pts2d)
     raw = {}
     for i, (u, v) in pts2d.items():
-        d = window_median(depth_m, u, v, person_d, band=band)
+        d = window_median(depth_m, u, v, person_d, band=band,
+                          q=DISTAL_Q if i in DISTAL else 50)
         source = "window"
         if d is None and i in PARENT and PARENT[i] in pts2d:
             pu, pv = pts2d[PARENT[i]]

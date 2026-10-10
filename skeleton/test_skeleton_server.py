@@ -19,6 +19,12 @@ class TransportTest(unittest.TestCase):
         self.assertEqual(len(p["joints"]), 9)
         json.dumps(p, allow_nan=False)
 
+    def test_timing_fields(self):
+        p = packet({}, {}, {}, 1, 1, 30, "test",
+                   timing={"clock": "global_time", "frame_age_ms": 40, "dropped": 3})
+        self.assertEqual((p["clock"], p["frame_age_ms"], p["dropped"]), ("global_time", 40, 3))
+        self.assertNotIn("clock", packet({}, {}, {}, 1, 1, 30, "test"))
+
     def test_stage_frame_keeps_absolute_pelvis(self):
         p = packet({11: [0, -.1, 0], 12: [0, .1, 0]}, {11: .9, 12: .8}, {},
                    1, 1, 30, "test", "pelvis-relative", {"p": [1, 2, 3], "conf": .85})

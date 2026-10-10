@@ -13,7 +13,7 @@ JOINTS = {"lhip": 11, "lknee": 13, "lankle": 15, "rhip": 12,
 
 
 def packet(points, confidence, sources, timestamp, seq, fps, backend,
-           frame="camera", pelvis=None):
+           frame="camera", pelvis=None, timing=None):
     def joint(i):
         p = points.get(i)
         if p is None or not all(math.isfinite(float(x)) for x in p):
@@ -28,9 +28,14 @@ def packet(points, confidence, sources, timestamp, seq, fps, backend,
                       "conf": min(left["conf"], right["conf"])}
     else:
         pelvis = {"p": [float(x) for x in pelvis["p"]], "conf": float(pelvis.get("conf", 0))}
-    return {"t": timestamp, "seq": seq, "fps": fps, "backend": backend,
-            "frame": frame, "pelvis": pelvis,
-            "joints": {name: joint(i) for name, i in JOINTS.items()}}
+    value = {"t": timestamp, "seq": seq, "fps": fps, "backend": backend,
+             "frame": frame, "pelvis": pelvis,
+             "joints": {name: joint(i) for name, i in JOINTS.items()}}
+    # clock: источник t (global_time | system_time | host_after_wait),
+    # frame_age_ms: возраст кадра к выходу из wait, dropped: выброшено старых
+    if timing:
+        value.update(timing)
+    return value
 
 
 class SkeletonServer:

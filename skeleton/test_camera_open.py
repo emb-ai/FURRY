@@ -1,6 +1,6 @@
 import unittest
 from types import SimpleNamespace
-from camera_open import open_pipeline
+from camera_open import latest_frames, open_pipeline
 
 class OpenTest(unittest.TestCase):
     def test_failed_start_releases_stream(self):
@@ -20,5 +20,10 @@ class OpenTest(unittest.TestCase):
         p=SimpleNamespace(start=lambda _:profile)
         module=SimpleNamespace(pipeline=lambda:p,option=SimpleNamespace(global_time_enabled=1))
         self.assertEqual(open_pipeline(module,None),(p,profile))
+
+    def test_latest_frames_drops_queued_framesets(self):
+        queued=['f2','f3',None]
+        p=SimpleNamespace(wait_for_frames=lambda timeout_ms:'f1',poll_for_frames=lambda:queued.pop(0))
+        self.assertEqual(latest_frames(p),('f3',2))
 
 if __name__=='__main__':unittest.main()

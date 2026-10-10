@@ -18,6 +18,8 @@ One-Euro берёт фактический dt (CPU даёт 8-15 fps, не 30) �
 c — зафиксировать камеру по AprilTag и позе контроллера (нужен --ws).
 Запуск: .venv/Scripts/python pose_yolo.py [s|m|l] [full|min|off]
   второй аргумент — режим depth-фильтров (min по умолчанию, см. main()).
+  --backend torch|openvino|auto (auto: OV-экспорт, если есть) и --imgsz —
+  для A/B скорости на конкретной машине; infer и age видны в [тайминг].
 Превью — в полразмера панелей (экономия ~15 мс/кадр на imshow).
 """
 import argparse
@@ -30,6 +32,7 @@ import numpy as np
 import pyrealsense2 as rs
 from ultralytics import YOLO
 
+from camera_open import latest_frames
 from fusion import OneEuro, fuse_joints
 from marker_frame import MarkerSession, to_stage_relative
 
@@ -112,7 +115,7 @@ class View3D:
 
 
 # ---- main ---------------------------------------------------------------------
-def load_model(size):
+def load_model(size, backend="auto"):
     """Платформенный выбор бекенда (см. bench_onnx.py — тайминги):
       Windows/Linux: OpenVINO-экспорт (x2.2 к torch-cpu), фолбек .pt+cpu;
       macOS:         CoreML .mlpackage (GPU/ANE), фолбек .pt+mps.
@@ -127,7 +130,9 @@ def load_model(size):
               f"(для CoreML: yolo export model={pt} format=coreml)", flush=True)
         return YOLO(pt), "mps"
     ov = f"models/yolo11{size}-pose_openvino_model"
-    if os.path.isdir(ov):
+    if backend == "openvino" and not os.path.isdir(ov):
+        raise SystemExit(f"нет {ov}: yolo export model={pt} format=openvino")
+    if backend != "torch" and os.path.isdir(ov):
         print(f"YOLO11{size}-pose, бекенд OpenVINO: {ov}", flush=True)
         return YOLO(ov), None
     print(f"YOLO11{size}-pose, бекенд torch-cpu: {pt} "
@@ -139,6 +144,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("size", nargs="?", choices=["n", "s", "m", "l", "x"], default="s")
     parser.add_argument("filters", nargs="?", choices=["full", "min", "off"], default="min")
+    parser.add_argument("--backend", choices=["auto", "torch", "openvino"], default="auto")
+    parser.add_argument("--imgsz", type=int, default=640, help="вход YOLO, px (кратно 32)")
     parser.add_argument("--ws", action="store_true")
     parser.add_argument("--host", default="0.0.0.0")
     parser.add_argument("--port", type=int, default=8765)
@@ -160,7 +167,7 @@ def main():
     if args.session and os.path.isfile(args.session):
         session.load(args.session)
         print(f"Связка камера→STAGE загружена из {args.session}", flush=True)
-    model, device = load_model(size)
+    model, device = load_model(size, args.backend)
 
     cfg = rs.config()
     cfg.enable_stream(rs.stream.color, 1280, 720, rs.format.bgr8, 30)
@@ -213,6 +220,7 @@ def main():
     started = time.monotonic()
     sequence = 0
     stage_t = {}  # имя стадии -> суммарные мс за секундное окно (раз в сек в консоль)
+    age_sum = dropped_sum = 0.0  # возраст кадра на выходе из wait и выброшенные старые кадры
 
     def tic(name, t):
         now = time.perf_counter()
@@ -243,7 +251,7 @@ def main():
                 print(f"USB: {profile.get_device().get_info(rs.camera_info.usb_type_descriptor)}", flush=True)
             t = time.perf_counter()
             try:
-                fs = pipeline.wait_for_frames(timeout_ms=5000)
+                fs, dropped = latest_frames(pipeline, timeout_ms=5000)
             except RuntimeError as e:
                 print(f"[!] Камера отвалилась: {e}", flush=True)
                 try:
@@ -252,10 +260,18 @@ def main():
                     pass
                 pipeline = None
                 continue
-            frame_timestamp = time.time_ns() // 1_000_000
+            host_ms = time.time_ns() // 1_000_000
+            frame_timestamp, clock = host_ms, "host_after_wait"
             color_clock = fs.get_color_frame()
-            if color_clock and color_clock.get_frame_timestamp_domain() in (rs.timestamp_domain.global_time, rs.timestamp_domain.system_time):
-                frame_timestamp = int(color_clock.get_timestamp())
+            if color_clock:
+                domain = color_clock.get_frame_timestamp_domain()
+                if domain in (rs.timestamp_domain.global_time, rs.timestamp_domain.system_time):
+                    frame_timestamp = int(color_clock.get_timestamp())
+                    clock = str(domain).split(".")[-1]
+            # host_after_wait: возраст кадра неизвестен (0), t позже реального снимка
+            timing = {"clock": clock, "frame_age_ms": host_ms - frame_timestamp, "dropped": dropped}
+            age_sum += timing["frame_age_ms"]
+            dropped_sum += dropped
             t = tic("wait", t)
             fs = align.process(fs)
             t = tic("align", t)
@@ -280,7 +296,7 @@ def main():
                 session.observe(color, marker_K, marker_dist)
             t = tic("to_numpy", t)
 
-            res = model.predict(color, imgsz=640, conf=0.3, classes=0,
+            res = model.predict(color, imgsz=args.imgsz, conf=0.3, classes=0,
                                 **({"device": device} if device else {}), verbose=False)[0]
             t = tic("infer", t)
             raw, pts2d, sources, confidence = {}, {}, {}, {}
@@ -319,7 +335,7 @@ def main():
                 wire, wire_frame, pelvis = smoothed, "camera", None
                 if session.locked:
                     server.record("camera", packet(smoothed, confidence, sources, frame_timestamp,
-                                                   sequence, fps, backend))
+                                                   sequence, fps, backend, timing=timing))
                     converted = to_stage_relative(smoothed, session.R, session.t)
                     wire_frame = "pelvis-relative"
                     if converted:
@@ -328,7 +344,7 @@ def main():
                     else:
                         wire, pelvis = {}, {"p": [0, 0, 0], "conf": 0}
                 server.publish(packet(wire, confidence, sources, frame_timestamp,
-                                      sequence, fps, backend, wire_frame, pelvis))
+                                      sequence, fps, backend, wire_frame, pelvis, timing))
             frames += 1
             dt = time.monotonic() - t0
             if dt > 1:
@@ -336,8 +352,10 @@ def main():
                 fps, t0, frames = n / dt, time.monotonic(), 0
                 br = " ".join(f"{k}:{v / max(1, n):.0f}ms"
                               for k, v in sorted(stage_t.items(), key=lambda kv: -kv[1]))
-                print(f"    [тайминг] {br}", flush=True)
+                print(f"    [тайминг] {br} | age:{age_sum / max(1, n):.0f}ms ({clock}) "
+                      f"drop:{dropped_sum / max(1, n):.1f}", flush=True)
                 stage_t.clear()
+                age_sum = dropped_sum = 0.0
             if args.headless:
                 continue
             if session.corners is not None:
