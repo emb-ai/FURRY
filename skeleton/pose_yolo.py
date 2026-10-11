@@ -154,6 +154,8 @@ def main():
     parser.add_argument("--session", help="JSON связки камера→STAGE: загрузить, если файл есть, и писать сюда по клавише c")
     parser.add_argument("--denoiser", help="ONNX лег-денойзера (denoiser_ov.LegDenoiser): "
                         "скорректировать суставы 11..16 перед отправкой на шлем")
+    parser.add_argument("--denoiser-v1", help="ONNX лег-денойзера v1 (denoiser_v1_ov.LegDenoiserV1): "
+                        "окно фьюжн-скелета 9 кадров + честный conf из NLL-головы")
     parser.add_argument("--denoiser-mode", choices=["direct", "obs", "prev"], default="obs",
                         help="direct — прямая регрессия; obs — DDIM от оценки кадра; prev — от прошлого семпла")
     parser.add_argument("--denoiser-steps", type=int, default=5, help="шаги DDIM (obs/prev)")
@@ -175,6 +177,14 @@ def main():
                            steps=args.denoiser_steps, scale=args.denoiser_scale)
         print(f"лег-денойзер: {args.denoiser} ({deno.backend}, режим {args.denoiser_mode}, "
               f"{args.denoiser_steps} шагов, scale {args.denoiser_scale})", flush=True)
+    deno_v1 = None
+    if args.denoiser_v1:
+        from denoiser_v1_ov import LegDenoiserV1
+        deno_v1 = LegDenoiserV1(args.denoiser_v1, mode=args.denoiser_mode,
+                                steps=args.denoiser_steps)
+        print(f"лег-денойзер v1: {args.denoiser_v1} ({deno_v1.backend}, режим "
+              f"{args.denoiser_mode}, {args.denoiser_steps} шагов, conf из NLL)",
+              flush=True)
 
     cfg = rs.config()
     cfg.enable_stream(rs.stream.color, 1280, 720, rs.format.bgr8, 30)
@@ -342,6 +352,16 @@ def main():
                         confidence[i] = leg_conf[i]
                         sources[i] = leg_src
                 stage_t["denoiser"] = stage_t.get("denoiser", 0.0) + (time.perf_counter() - t_d) * 1000
+            if deno_v1 is not None:
+                t_d = time.perf_counter()
+                corr = deno_v1.correct(raw, sources, pts2d, confidence, smoothed)
+                if corr is not None:
+                    legs, leg_conf, leg_src = corr
+                    for i, p in legs.items():
+                        smoothed[i] = p
+                        confidence[i] = leg_conf[i]
+                        sources[i] = leg_src
+                stage_t["denoiser_v1"] = stage_t.get("denoiser_v1", 0.0) + (time.perf_counter() - t_d) * 1000
 
             sequence += 1
             if server:
