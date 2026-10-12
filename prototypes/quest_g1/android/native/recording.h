@@ -1,5 +1,7 @@
 #pragma once
 #include "retarget.h"
+#include "episode_manifest.h"
+#include "body_motor_model.h"
 #include <chrono>
 #include <filesystem>
 #include <fstream>
@@ -36,6 +38,12 @@ public:
             manifest<<raw.substr(0,open+1)<<"\n\"catch_up\":"<<(catchUp?"true":"false")
                 <<",\"first_person\":"<<(firstPerson?"true":"false")<<(raw[next]=='}'?"":",")<<raw.substr(open+1);
             manifest.close();
+            const auto identity=episodereplay::LoadManifest(directory.string());
+            if(identity.policyBackend==questpolicy::GrootDecoupled){
+                const auto profilePath=std::filesystem::path(root)/bodymotors::File;
+                bodymotors::ValidateApplied(model,bodymotors::Load(profilePath.string()));
+                std::filesystem::copy_file(profilePath,directory/bodymotors::File);
+            }
             if(!policyFile.empty())std::filesystem::copy_file(std::filesystem::path(root)/policyFile,directory/"policy.onnx");
             if(!secondaryPolicyFile.empty())std::filesystem::copy_file(std::filesystem::path(root)/secondaryPolicyFile,directory/"policy-secondary.onnx");
             for(auto* f:{&input,&frames,&events,&body,&mimic})f->exceptions(std::ios::badbit|std::ios::failbit);

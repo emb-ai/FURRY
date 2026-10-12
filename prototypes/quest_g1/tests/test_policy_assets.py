@@ -42,6 +42,10 @@ class PolicyAssetsTests(unittest.TestCase):
             self.assertEqual(homie['legacy_policy_hz'], 50)
             metadata = json.loads((root / 'recording_metadata-stand-policy-homie-v2.json').read_text())
             self.assertEqual(metadata['policy_backend'], 'groot_decoupled_v1')
+            profile = json.loads((Path(__file__).resolve().parents[1] / 'policies/homie-v2/provenance.json').read_text())['body_motor_profile']
+            self.assertEqual(metadata['body_motor_profile'], profile['id'])
+            self.assertEqual(metadata['body_motor_profile_sha256'], profile['sha256'])
+            self.assertEqual(hashlib.sha256((root/profile['file']).read_bytes()).hexdigest(), profile['sha256'])
             for prefix in ('', 'secondary_'):
                 filename, digest = homie[prefix+'file'], homie[prefix+'sha256']
                 self.assertEqual(hashlib.sha256((root / filename).read_bytes()).hexdigest(), digest)
@@ -54,6 +58,7 @@ class PolicyAssetsTests(unittest.TestCase):
             export_policies(root, UPSTREAM, config)
             self.assertFalse((root/homie['file']).exists())
             self.assertFalse((root/homie['secondary_file']).exists())
+            self.assertFalse((root/profile['file']).exists())
 
     def test_decoupled_backend_requires_correct_pair_and_hashes(self):
         models = Path(__file__).resolve().parents[1]/'policies/homie-v2'

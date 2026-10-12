@@ -27,7 +27,7 @@ Simulation::Simulation(const std::string& assets, int physicsWorkers, const std:
 
 Simulation::Simulation(const std::string& assets,int physicsWorkers,const std::string& sceneName,
         const questpolicy::RuntimePolicy& policy,int policyHzOverride)
-    : scene_name(sceneName), policy_hz_override(policyHzOverride) {
+    : scene_name(sceneName), assets_directory(assets), policy_hz_override(policyHzOverride) {
     if(policyHzOverride!=0 && policyHzOverride!=50 && policyHzOverride!=100)
         throw std::runtime_error("Unsupported explicit policy frequency");
     if(physicsWorkers<0 || physicsWorkers>4)throw std::runtime_error("Invalid MuJoCo worker count");
@@ -53,6 +53,7 @@ Simulation::Simulation(const std::string& assets,int physicsWorkers,const std::s
         int a=mj_name2id(model,mjOBJ_ACTUATOR,names[i].c_str());
         if(j<0 || a<0) throw std::runtime_error("Missing joint: "+names[i]);
         qadr[i]=model->jnt_qposadr[j]; vadr[i]=model->jnt_dofadr[j]; aids[i]=a;
+        original_body_motors[i]=bodymotors::Capture(model,names[i]);
     }
     for(int i=0;i<model->nu;i++) {
         auto name=mj_id2name(model,mjOBJ_ACTUATOR,i);
@@ -61,6 +62,10 @@ Simulation::Simulation(const std::string& assets,int physicsWorkers,const std::s
     reference_data=mj_makeData(model);
     torso_body=mj_name2id(model,mjOBJ_BODY,"torso_link");
     if(!reference_data||torso_body<0)throw std::runtime_error("Missing decoupled torso kinematics");
+    if(backend==questpolicy::GrootDecoupled){
+        bodymotors::Apply(model,decoupled_body_motors);
+        mj_setConst(model,data);
+    }
     Reset();
 }
 Simulation::~Simulation(){ mj_deleteData(reference_data); mj_deleteData(data); mj_deleteModel(model); }
@@ -104,6 +109,11 @@ void Simulation::SelectPolicy(const questpolicy::RuntimePolicy& policy) {
     auto candidate=load(policy.path,nextInput,nextOutput);
     std::unique_ptr<Ort::Session> secondaryCandidate;
     if(decoupled)secondaryCandidate=load(policy.secondaryPath,nextSecondaryInput,nextSecondaryOutput);
+    bodymotors::Profile nextMotors;
+    if(decoupled){
+        nextMotors=bodymotors::Load(policy.motorProfilePath.empty()?assets_directory+"/"+bodymotors::File:policy.motorProfilePath);
+        if(model)bodymotors::ValidateMapping(model,nextMotors);
+    }
     int nextHz=50;
     if(!decoupled){
         // Historical metadata-free TWIST2 episodes used 100 Hz; live overrides 50.
@@ -117,7 +127,12 @@ void Simulation::SelectPolicy(const questpolicy::RuntimePolicy& policy) {
     input_name=std::move(nextInput);output_name=std::move(nextOutput);
     secondary_input_name=std::move(nextSecondaryInput);secondary_output_name=std::move(nextSecondaryOutput);
     backend=policy.backend;policy_hz=nextHz;
-    if(model&&data)Reset();
+    if(decoupled)decoupled_body_motors=std::move(nextMotors);
+    if(model&&data){
+        bodymotors::Apply(model,decoupled?decoupled_body_motors:original_body_motors);
+        // Recompute model constants affected by motor inertia before restarting.
+        mj_setConst(model,data);Reset();
+    }
 }
 void Simulation::Reset() {
     mj_resetData(model,data);

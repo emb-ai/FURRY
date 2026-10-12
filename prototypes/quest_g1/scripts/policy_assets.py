@@ -94,13 +94,22 @@ def export_policies(assets, upstream, config=None):
             item.update(policy_id=entry['id'], policy_title=entry['title'], policy_note=entry['note'],
                         policy_file=entry['file'], policy_sha256=entry['sha256'], policy_hz=entry['policy_hz'],
                         legacy_policy_hz=entry['legacy_policy_hz'], policy_backend=entry['backend'])
-            for key in ('policy_secondary_file', 'policy_secondary_sha256'):
+            for key in ('policy_secondary_file', 'policy_secondary_sha256', 'body_motor_profile', 'body_motor_profile_sha256'):
                 item.pop(key, None)
+            item['sha256'].pop('body_motor_profile.txt', None)
             item['sha256'].pop('policy.onnx', None)
             item['sha256'][entry['file']] = entry['sha256']
             if 'secondary_file' in entry:
                 item.update(policy_secondary_file=entry['secondary_file'], policy_secondary_sha256=entry['secondary_sha256'])
                 item['sha256'][entry['secondary_file']] = entry['secondary_sha256']
+                profile_root = Path(__file__).resolve().parents[1] / 'policies/homie-v2'
+                profile = json.loads((profile_root / 'provenance.json').read_text())['body_motor_profile']
+                profile_path = profile_root / profile['file']
+                if hashlib.sha256(profile_path.read_bytes()).hexdigest() != profile['sha256']:
+                    raise ValueError('Body motor profile SHA256 mismatch')
+                shutil.copy2(profile_path, assets / profile['file'])
+                item.update(body_motor_profile=profile['id'], body_motor_profile_sha256=profile['sha256'])
+                item['sha256'][profile['file']] = profile['sha256']
             (assets / f'recording_metadata-{scene}-policy-{entry["id"]}.json').write_text(
                 json.dumps(item, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
         # Default metadata also explicitly identifies the baseline.
@@ -110,6 +119,8 @@ def export_policies(assets, upstream, config=None):
     for old in assets.glob('policy-*.onnx'):
         if old.name not in keep:
             old.unlink()
+    if not any(row['backend'] == 'groot_decoupled_v1' for row in catalog):
+        (assets / 'body_motor_profile.txt').unlink(missing_ok=True)
     lines = []
     for row in catalog:
         values = [row[key] for key in ('id', 'file', 'sha256', 'title', 'note')]

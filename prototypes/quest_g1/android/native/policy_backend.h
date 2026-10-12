@@ -12,9 +12,11 @@ inline bool KnownBackend(const std::string& backend) {
 struct RuntimePolicy {
     std::string backend = Twist2;
     std::string path, secondaryPath;
+    std::string motorProfilePath{};
     void Validate() const {
         if(!KnownBackend(backend) || path.empty() ||
-           ((backend == GrootDecoupled) != !secondaryPath.empty()))
+           ((backend == GrootDecoupled) != !secondaryPath.empty()) ||
+           (backend==Twist2 && !motorProfilePath.empty()))
             throw std::runtime_error("Invalid policy backend/files");
     }
 };

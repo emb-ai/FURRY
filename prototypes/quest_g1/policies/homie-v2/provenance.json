@@ -12,7 +12,10 @@
     "decoupled_wbc/control/main/teleop/configs/g1_29dof_gear_wbc.yaml",
     "decoupled_wbc/control/main/teleop/configs/configs.py:79",
     "decoupled_wbc/control/robot_model/supplemental_info/g1/g1_supplemental_info.py:45",
-    "decoupled_wbc/control/robot_model/robot_model.py:175"
+    "decoupled_wbc/control/robot_model/robot_model.py:175",
+    "decoupled_wbc/control/robot_model/model_data/g1/scene_43dof.xml",
+    "decoupled_wbc/control/robot_model/model_data/g1/g1_29dof_with_hand.xml",
+    "decoupled_wbc/control/envs/g1/sim/base_sim.py"
   ],
   "source_license": "Apache-2.0",
   "model_license": "NVIDIA Open Model License",
@@ -137,11 +140,31 @@
     "No GMR reference leg joints enter lower-body controller",
     "Goal applied to current observation; upstream Python wrapper updates goal after set_observation",
     "Safe policy switching resets both six-frame history and navigation",
-    "Recorded episodes preserve both checkpoint files and hashes"
+    "Recorded episodes preserve both checkpoint files and hashes",
+    "HOMIE uses the pinned teleop XML body motor dynamics and force limits; TWIST2 restores its own exact original model parameters"
   ],
   "validation_status": {
-    "cpu_probe": "6x15s, no falls, current QuestG1 model",
+    "cpu_probe": "Historical pre-profile probe; superseded by motor-profile native checks and Meta/stationary reruns",
     "quest_installed": false,
     "quest_live_acceptance": false
+  },
+  "body_motor_profile": {
+    "id": "homie_teleop_b042411f_body_motors_v1",
+    "file": "body_motor_profile.txt",
+    "sha256": "131fa5aae01c557238d24e2af0a2682f14e45286784b2605b35c4284526703ca",
+    "source_xml_sha256": "647161a5a2c69f8a7dfd6a531c53c3eb1e0971ab79de7d04bb01f26adcda69f0",
+    "source": "deployed teleop scene_43dof.xml from g1_29dof_gear_wbc.yaml, not the separate sim2mujoco g1_gear_wbc.xml",
+    "columns": [
+      "joint_name",
+      "armature",
+      "damping",
+      "frictionloss",
+      "q_min",
+      "q_max",
+      "torque_min",
+      "torque_max"
+    ],
+    "scope": "all 29 body DOFs; current articulated fingers, body inertias, collision geometry and 1000 Hz physics remain Quest adaptations",
+    "torque_semantics": "author actuator ctrlrange and joint actuatorfrcrange are equal for every body motor; both restored with native TWIST2 parameters on backend switch"
   }
 }

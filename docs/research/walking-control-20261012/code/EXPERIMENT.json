@@ -1,0 +1,182 @@
+{
+  "source_revision": "b06178f19a22f2138cbd31f60c6d494bc263f67d",
+  "actor_inputs": 1432,
+  "critic_extra_features_both_conditions": {
+    "existing_window": 9,
+    "reference_phase": 6
+  },
+  "conditions": [
+    "matched-control",
+    "actual-floor-contact-point-slip plus reference-phase early-floor/clearance penalties"
+  ],
+  "training_seeds": [
+    11,
+    22
+  ],
+  "actor_update_budget": 1000,
+  "save_every": 250,
+  "num_envs": 4096,
+  "control_hz": 50,
+  "common_initial_checkpoint_sha256": "5bbfbddf34b19d8be8c7b37ecfbe61cdef83f03c759f22305fb64d0ee0e06a7f",
+  "common_dataset_manifest_sha256": "f6cde2c4f205831ac38c832ab84c1b83d5b3fb5ed6e8ce427cdf7fdeac1803b4",
+  "common_overrides": [
+    "pretrained actor and frozen normalization; restored shared exploration std",
+    "new critic and optimizer; existing critic readiness500..1000",
+    "nonlooping references",
+    "sphere sole URDF",
+    "one-second displacement/turn rewards",
+    "six identical critic phase features in both conditions"
+  ],
+  "source_optimizer": {
+    "clip_param": 0.2,
+    "dagger_coef": 0.2,
+    "dagger_coef_anneal_steps": 60000,
+    "dagger_coef_min": 0.1,
+    "dagger_update_freq": 20,
+    "desired_kl": 0.008,
+    "entropy_coef": 0.005,
+    "future_consistency_loss": 0.1,
+    "future_weight_decay": 0.95,
+    "gamma": 0.99,
+    "grad_penalty_coef": 0.0,
+    "grad_penalty_coef_schedule": [
+      0.0,
+      0.0,
+      700,
+      1000
+    ],
+    "lam": 0.95,
+    "learning_rate": 0.0002,
+    "max_grad_norm": 1.0,
+    "normalizer_update_iterations": 3000,
+    "num_learning_epochs": 5,
+    "num_mini_batches": 4,
+    "priv_reg_coef_schedual": [
+      0,
+      0.1,
+      2000,
+      3000
+    ],
+    "priv_reg_coef_schedual_resume": [
+      0,
+      0.1,
+      0,
+      1
+    ],
+    "schedule": "adaptive",
+    "std_schedule": [
+      1.0,
+      0.4,
+      4000,
+      1500
+    ],
+    "use_clipped_value_loss": true,
+    "value_loss_coef": 1.0
+  },
+  "optimizer_config_matches_pinned_source": true,
+  "no_new_whole_run_early_stop": true,
+  "desired_phase_is_reference_only": true,
+  "slip_retained_on_unknown_and_swing_actual_floor_contacts": true,
+  "coverage": {
+    "public": {
+      "clips": 1024,
+      "stance": 76130,
+      "swing": 42311,
+      "unknown": 291159,
+      "total": 409600,
+      "known_fraction": 0.28916259765625,
+      "swing_fraction": 0.10329833984375
+    },
+    "quest": {
+      "clips": 66,
+      "stance": 4098,
+      "swing": 112,
+      "unknown": 22190,
+      "total": 26400,
+      "known_fraction": 0.15946969696969698,
+      "swing_fraction": 0.004242424242424243
+    }
+  },
+  "quest_original_clips_with_swing_in_fixed_preflight": 4,
+  "limitations": [
+    "Actual contact-point slip penalty applies to all achieved floor contacts, including UNKNOWN and SWING reference labels.",
+    "Phase penalties have public-reference swing coverage of10.33%, but Quest only0.424% in four sampled one-second windows per clip.",
+    "Quest signal includes four original clips and their mirrors, not eight independent demonstrations.",
+    "This tests the combined contact reward revision and potential transfer from public references, not a well-covered direct Quest swing curriculum.",
+    "Conservative phase thresholds were not relaxed to manufacture coverage.",
+    "The critic receives the same phase features in both conditions; actor contract is unchanged.",
+    "Desired phase never uses achieved force/contact; falling foot cannot relabel itself STANCE.",
+    "Single robot + flat floor enforced; net body force gated by sole floor proximity is a floor-contact proxy, not exact pair-resolved force.",
+    "Material sphere-centre velocity is a finite difference at50Hz plus angular bottom-radius velocity, not an exact1000Hz contact solver velocity.",
+    "Matched experiment combines actual contact-point slip and phase penalties; it cannot separately attribute a benefit to either term.",
+    "Repeatedly inspected12-clip Quest holdout is validation, not an independent test.",
+    "This source package is research code. It does not change, install or promote a Quest policy.",
+    "Low label coverage is a property of this conservative classifier and sampled windows. It is not a count of visible Meta steps or proof that Generative Legs do not alternate stepping."
+  ],
+  "required_external_layout": {
+    "ROOT/TWIST2": "Pinned upstream checkout, including source20k ONNX",
+    "ROOT/dataset": "Verified twist2-quest-mixture-v2 manifest and train.yaml; training1090clips",
+    "ROOT/assets/g1_main_spheres.urdf": "Verified sphere sole URDF, with required meshes resolvable",
+    "ROOT/runtime-assets": "Independent MuJoCo scene.xml/assets, passed via --eval-assets",
+    "ROOT/clamp-mirrored": "NPZ evaluation dataset, passed via --eval-dataset",
+    "ancestor_checkpoint": "Explicit --init-checkpoint and --init-manifest; not distributed in this package"
+  },
+  "dependencies": {
+    "training": "Linux, Isaac Gym, CUDA, compatible PyTorch; Isaac Gym must import before torch; upstream legged_gym/rsl_rl/pose on PYTHONPATH",
+    "evaluation": "Python with numpy/scipy/mujoco/onnxruntime/torch/onnx/matplotlib",
+    "cpu_tests": "torch, numpy, mujoco; external sphere URDF; optional reference recordings are not included"
+  },
+  "commands": {
+    "cpu_tests": [
+      "python",
+      "test_phase_contact.py",
+      "--urdf",
+      "<ROOT>/assets/g1_main_spheres.urdf",
+      "--oracle",
+      "contact_phase_reference.py"
+    ],
+    "smoke": [
+      "python",
+      "phase_finetune.py",
+      "--root",
+      "<ROOT>",
+      "--output",
+      "<OUTPUT>/smoke",
+      "--headless",
+      "--num_envs",
+      "4096",
+      "--sim_device",
+      "cuda:0",
+      "--rl_device",
+      "cuda:0",
+      "--device",
+      "cuda:0",
+      "--num_threads",
+      "1",
+      "--smoke",
+      "--phase-contact",
+      "--phase-coverage",
+      "--fast-critic",
+      "--nonlooping",
+      "--window-reward",
+      "--sole-urdf",
+      "<ROOT>/assets/g1_main_spheres.urdf",
+      "--init-checkpoint",
+      "<CHECKPOINT>",
+      "--init-manifest",
+      "<ANCESTOR_MANIFEST>"
+    ],
+    "matrix": "Run phase_pipeline.py independently for conditions with/without --phase-contact and seeds11/22; set CUDA_VISIBLE_DEVICES explicitly. Use --iterations 1000 --save-every 250, shared root/assets/ancestor/evaluation arguments, and --phase-coverage-report from reviewed smoke."
+  },
+  "verification": {
+    "tests": 5,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "success": true,
+    "torch": "2.5.1",
+    "numpy": "1.26.4"
+  },
+  "gpu_smoke": "Completed with4096envs,2critic+1actor; not a gait improvement result",
+  "deployment": false
+}

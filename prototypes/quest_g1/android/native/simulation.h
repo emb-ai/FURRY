@@ -7,6 +7,7 @@
 #include <vector>
 #include "policy_backend.h"
 #include "groot_decoupled.h"
+#include "body_motor_model.h"
 
 // CPU controller port from TWIST2 (MIT, Copyright 2025 Yanjie Ze).
 // Shared by the Android app and the native desktop integration check.
@@ -35,6 +36,8 @@ public:
     const std::array<float,35>& WholeBodyReference()const{return whole_reference;}
     void ClearArmReference(){has_reference=false;}
 private:
+    std::string assets_directory;
+    bodymotors::Profile original_body_motors{},decoupled_body_motors{};
     void StepDecoupled();
     grootdecoupled::Command MakeDecoupledCommand();
     std::string backend=questpolicy::Twist2;

@@ -7,6 +7,19 @@ static void Check(bool ok,const char* message){if(!ok)throw std::runtime_error(m
 static void Equal(const Simulation& a,const Simulation& b){
     Check(a.Backend()==b.Backend()&&a.PolicyHz()==b.PolicyHz()&&a.steps==b.steps,"Backend/reset differs");
     for(int i=0;i<a.model->nq;i++)Check(std::abs(a.data->qpos[i]-b.data->qpos[i])<1e-10,"State/history differs");
+    for(int i=0;i<a.model->nv;i++){
+        Check(std::abs(a.data->qvel[i]-b.data->qvel[i])<1e-10,"Velocity differs");
+        Check(a.model->dof_armature[i]==b.model->dof_armature[i]&&a.model->dof_damping[i]==b.model->dof_damping[i]&&
+              a.model->dof_frictionloss[i]==b.model->dof_frictionloss[i],"Motor dynamics leaked across backends");
+    }
+    for(int i=0;i<a.model->njnt;i++){
+        Check(a.model->jnt_actfrclimited[i]==b.model->jnt_actfrclimited[i]&&a.model->jnt_limited[i]==b.model->jnt_limited[i],"Joint limit flags differ");
+        for(int k=0;k<2;k++)Check(a.model->jnt_actfrcrange[2*i+k]==b.model->jnt_actfrcrange[2*i+k]&&a.model->jnt_range[2*i+k]==b.model->jnt_range[2*i+k],"Joint limits differ");
+    }
+    for(int i=0;i<a.model->nu;i++){
+        Check(a.model->actuator_ctrllimited[i]==b.model->actuator_ctrllimited[i]&&a.model->actuator_forcelimited[i]==b.model->actuator_forcelimited[i],"Actuator flags differ");
+        for(int k=0;k<2;k++)Check(a.model->actuator_ctrlrange[2*i+k]==b.model->actuator_ctrlrange[2*i+k]&&a.model->actuator_forcerange[2*i+k]==b.model->actuator_forcerange[2*i+k],"Actuator limits differ");
+    }
 }
 int main(int argc,char**argv){if(argc!=2)return 2;try{
     using namespace grootdecoupled;
@@ -31,10 +44,15 @@ int main(int argc,char**argv){if(argc!=2)return 2;try{
     bool found=false;for(const auto& e:questpolicy::Load(assets))if(e.backend==questpolicy::GrootDecoupled){policy=questpolicy::VerifiedPolicy(assets,e);found=true;}
     Check(found,"Missing official decoupled policies");
     Simulation a(assets,0,"stand",policy,50),b(assets,0,"stand",policy,50);
+    const auto motors=bodymotors::Load(assets+"/"+bodymotors::File);
+    bodymotors::ValidateApplied(a.model,motors);
     Check(a.PolicyHz()==50&&a.Backend()==questpolicy::GrootDecoupled,"Wrong backend");
     bool rejected=false;try{Simulation bad(assets,0,"stand",policy,100);}catch(...){rejected=true;}Check(rejected,"Unsupported decoupled cadence accepted");
     for(int i=0;i<100;i++){a.Step(false);b.Step(false);}Equal(a,b);
-    auto bad=policy;bad.secondaryPath=assets+"/policy.onnx";
+    auto bad=policy;bad.motorProfilePath=assets+"/policy.onnx";
+    rejected=false;try{a.SelectPolicy(bad);}catch(...){rejected=true;}Check(rejected,"Wrong motor profile accepted");
+    for(int i=0;i<100;i++){a.Step(false);b.Step(false);}Equal(a,b);
+    bad=policy;bad.secondaryPath=assets+"/policy.onnx";
     rejected=false;try{a.SelectPolicy(bad);}catch(...){rejected=true;}Check(rejected,"Wrong secondary action shape accepted");
     for(int i=0;i<100;i++){a.Step(false);b.Step(false);}Equal(a,b);
     a.Reset();b.Reset();
@@ -49,14 +67,22 @@ int main(int argc,char**argv){if(argc!=2)return 2;try{
     Check(!Walking(a.DecoupledCommand()),"Pause retained navigation");
     for(const auto& scenario:{std::array<float,3>{0,0,0},std::array<float,3>{.3f,0,0},std::array<float,3>{0,0,.5f},std::array<float,3>{0,.2f,0}}){
         a.Reset();first[0]=scenario[0];first[1]=scenario[1];first[5]=scenario[2];
+        double maxWristSpeed=0;
         for(int i=0;i<15000;i++){
             const float wave=.5f*(1-std::cos(float(a.data->time)*1.57f));first[21]=first[28]=-.5f*wave;
             a.SetWholeBodyReference(first);a.Step(false);
+            if(i>=1000)for(const auto& motor:motors)if(motor.name.find("wrist_")!=std::string::npos){
+                const int j=mj_name2id(a.model,mjOBJ_JOINT,motor.name.c_str());
+                maxWristSpeed=std::max(maxWristSpeed,std::abs(a.data->qvel[a.model->jnt_dofadr[j]]));
+            }
         }
         Check(a.data->qpos[2]>.5,"Decoupled rollout fell");
-        std::cout<<"Decoupled15s command "<<scenario[0]<<','<<scenario[1]<<','<<scenario[2]<<" height="<<a.data->qpos[2]<<'\n';
+        Check(maxWristSpeed<5,"High-frequency wrist chatter under fixed wrist targets");
+        std::cout<<"Decoupled15s command "<<scenario[0]<<','<<scenario[1]<<','<<scenario[2]<<" height="<<a.data->qpos[2]<<" wrist_speed_max="<<maxWristSpeed<<'\n';
     }
     a.SelectPolicy(assets+"/policy.onnx");Simulation twist(assets,0,"stand","",50);Equal(a,twist);
+    for(int i=0;i<3000;i++){a.Step(false);twist.Step(false);}Equal(a,twist);
     a.SelectPolicy(policy);Simulation fresh(assets,0,"stand",policy,50);Equal(a,fresh);
+    for(int i=0;i<3000;i++){a.Step(false);fresh.Step(false);}Equal(a,fresh);
     std::cout<<"Decoupled contract, ignored reference legs, pause, atomic load, switching and rollouts passed\n";
 }catch(const std::exception&e){std::cerr<<e.what()<<'\n';return 1;}}
