@@ -33,5 +33,15 @@
     "note": "Продолжение 1000 · 09.10 / RTX",
     "path": "../../policies/quest-111586/checkpoint_000500-50hz.onnx",
     "sha256": "57d6ac4b2461ac8884afeac86d32bcc9a7b4b72f376e15b898af7ac3d8a5241d"
+  },
+  {
+    "id": "homie-v2",
+    "title": "HOMIE v2: автономная ходьба",
+    "note": "Эксперимент · руки оператора, шаги робота",
+    "backend": "groot_decoupled_v1",
+    "path": "../../policies/homie-v2/GR00T-WholeBodyControl-Balance.onnx",
+    "sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+    "secondary_path": "../../policies/homie-v2/GR00T-WholeBodyControl-Walk.onnx",
+    "secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407"
   }
 ]

@@ -142,7 +142,7 @@ inline std::vector<Widget> BuildLayout(const State& s) {
     add({-.352f, .291f, .144f, .055f}, "Сессия", Action::PageSession, true, s.page == Page::Session, Kind::Tab);
     add({-.183f, .291f, .102f, .055f}, "Вид", Action::PageView, true, s.page == Page::View, Kind::Tab);
     add({-.056f, .291f, .166f, .055f}, "Отладка", Action::PageDebug, true, s.page == Page::Debug, Kind::Tab);
-    add({.135f, .291f, .217f, .055f}, "Политика", Action::PagePolicy, true, s.page == Page::Policy, Kind::Tab);
+    add({.135f, .291f, .217f, .055f}, "Управление", Action::PagePolicy, true, s.page == Page::Policy, Kind::Tab);
     line(.289f);
 
     const bool human = HumanCapture(s);

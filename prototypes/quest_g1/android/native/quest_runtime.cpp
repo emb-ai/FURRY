@@ -364,16 +364,16 @@ void ApplyMenuAction(questmenu::Action action,bool fresh,uint64_t sequence,int p
         if(index<0||index>=int(policyCatalog.size())||index==selectedPolicy.load())return;
         userPaused=true;menuOpen=true;restartAfterCalibration=false;
         try{
-            sim->SelectPolicy(questpolicy::VerifiedPath(assetsPath,policyCatalog[index]));
+            sim->SelectPolicy(questpolicy::VerifiedPolicy(assetsPath,policyCatalog[index]));
             selectedPolicy=index;settingsDirty=true;
             calibrationSnapshot.reset();retarget->calibrated=false;retarget->Pause();calibrationReady=false;
             trackingEnabled=false;wasApplying=false;faulted=false;lastReference={};grip[0]=0;grip[1]=0;
             calibrate=false;toggleRecording=false;cameraFusion.Reset();capture.Invalidate();trackingStatus=0;pauseReason=0;
             refreshGeometry=true;refreshEgoAnchor=true;
             {std::lock_guard<std::mutex> statsGuard(statsMutex);stats={};stats.physicsWorkers=sim->physics_workers;}
-            Notice("Политика выбрана. Калибруйте кнопкой A.");
+            Notice("Режим выбран. Калибруйте кнопкой A.");
             __android_log_print(ANDROID_LOG_INFO,"G1Quest","Selected policy %s sha256=%s hz=%d",policyCatalog[index].id.c_str(),policyCatalog[index].sha256.c_str(),sim->PolicyHz());
-        }catch(const std::exception& e){Notice("Ошибка загрузки. Сохранена прежняя политика.");__android_log_print(ANDROID_LOG_ERROR,"G1Quest","Policy selection: %s",e.what());}
+        }catch(const std::exception& e){Notice("Ошибка загрузки. Сохранён прежний режим.");__android_log_print(ANDROID_LOG_ERROR,"G1Quest","Policy selection: %s",e.what());}
         return;
     }
     if(action==A::ModeSimulation||action==A::ModeTrajectories||action==A::CaptureRobot||action==A::CaptureHuman||action==A::PlanTrain||action==A::PlanTest){ChangeConfiguration(action);return;}
@@ -424,7 +424,7 @@ void ReloadScene(){
     if(recorder.active){Notice("Сначала сохраните запись.");return;}
     try{
         std::string name=questmenu::SceneName(questmenu::Scene(selected));
-        auto nextSim=std::make_unique<Simulation>(assetsPath,2,name,questpolicy::VerifiedPath(assetsPath,policyCatalog.at(selectedPolicy.load())),50);
+        auto nextSim=std::make_unique<Simulation>(assetsPath,2,name,questpolicy::VerifiedPolicy(assetsPath,policyCatalog.at(selectedPolicy.load())),50);
         auto nextVisuals=LoadVisualMeshes(name,nextSim->model);
         int nextCamera=mj_name2id(nextSim->model,mjOBJ_CAMERA,"ego");
         if(nextCamera<0)throw std::runtime_error("Missing ego camera");
@@ -454,12 +454,12 @@ void G1Initialize(android_app* app){
     std::ifstream cameraConfig(assets+"/camera_stream_url.txt");std::string cameraUrl;std::getline(cameraConfig,cameraUrl);
     cameraStream=std::make_unique<CameraStream>(cameraUrl);
     try{
-        sim=std::make_unique<Simulation>(assets,2,questmenu::SceneName(questmenu::Scene(sessionScene.load())),questpolicy::VerifiedPath(assets,policyCatalog.at(selectedPolicy.load())),50);
+        sim=std::make_unique<Simulation>(assets,2,questmenu::SceneName(questmenu::Scene(sessionScene.load())),questpolicy::VerifiedPolicy(assets,policyCatalog.at(selectedPolicy.load())),50);
     }catch(const std::exception& e){
         if(selectedPolicy==0)throw;
         __android_log_print(ANDROID_LOG_WARN,"G1Quest","Saved policy failed: %s; restoring baseline",e.what());
-        selectedPolicy=0;settingsDirty=true;Notice("Политика недоступна. Загружена авторская 20k.");
-        sim=std::make_unique<Simulation>(assets,2,questmenu::SceneName(questmenu::Scene(sessionScene.load())),questpolicy::VerifiedPath(assets,policyCatalog.at(0)),50);
+        selectedPolicy=0;settingsDirty=true;Notice("Режим недоступен. Загружена TWIST2 20k.");
+        sim=std::make_unique<Simulation>(assets,2,questmenu::SceneName(questmenu::Scene(sessionScene.load())),questpolicy::VerifiedPolicy(assets,policyCatalog.at(0)),50);
     }
     __android_log_print(ANDROID_LOG_INFO,"G1Quest","Loaded policy %s sha256=%s hz=%d",policyCatalog.at(selectedPolicy.load()).id.c_str(),policyCatalog.at(selectedPolicy.load()).sha256.c_str(),sim->PolicyHz());
     retarget=std::make_unique<MetaRetargeter>(assets);
@@ -569,7 +569,7 @@ void G1Initialize(android_app* app){
                             if(capture.mode){
                                 firstPerson=false;retarget->EnableCameraTracking(false);capture.Start(ClockSeconds());capture.Calibrate();
                             }
-                            recorder.Start(assetsPath,sim->model,questpolicy::Metadata(sim->scene_name,policyCatalog.at(selectedPolicy.load())),policyCatalog.at(selectedPolicy.load()).file,catchUpEnabled.load(),firstPerson.load());recordingStarted=ClockSeconds();acceptedRecordingSeconds=0;
+                            recorder.Start(assetsPath,sim->model,questpolicy::Metadata(sim->scene_name,policyCatalog.at(selectedPolicy.load())),policyCatalog.at(selectedPolicy.load()).file,catchUpEnabled.load(),firstPerson.load(),policyCatalog.at(selectedPolicy.load()).secondaryFile);recordingStarted=ClockSeconds();acceptedRecordingSeconds=0;
                             std::ofstream config;config.exceptions(std::ios::badbit|std::ios::failbit);config.open(recorder.path()+"/session_config.json");
                             config<<"{\"schema_version\":1,\"mode\":\"trajectories\",\"scene\":\""<<sim->scene_name
                                 <<"\",\"capture\":\""<<(capture.mode?"human_skeleton_only":"human_and_robot")

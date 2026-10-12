@@ -47,7 +47,7 @@ def main():
         cases += [('stand', catalog[0], False, 'observer', hz, wrist)
                   for hz in (50, 100) for wrist in (False, True)]
         cases += [('stand', row, False, 'observer', 0, False)
-                  for row in (catalog[0], catalog[-1])]
+                  for row in (catalog[0], [row for row in catalog if row.get("backend", "twist2") == "twist2"][-1])]
         for scene, policy, catch_up, view, override_hz, wrist_v2 in cases:
             case = scene if policy is None else scene+"-"+policy["id"]
             if catch_up:
@@ -60,6 +60,8 @@ def main():
             if policy:
                 metadata = f'recording_metadata-{scene}-policy-{policy["id"]}.json'
                 shutil.copy2(ROOT/'android/assets'/policy['file'], episode_root/policy['file'])
+                if policy.get('secondary_file'):
+                    shutil.copy2(ROOT/'android/assets'/policy['secondary_file'], episode_root/policy['secondary_file'])
             fixture = json.loads((ROOT/'android/assets'/metadata).read_text())
             if override_hz is not None:
                 if override_hz:
@@ -81,6 +83,11 @@ def main():
                     raise AssertionError('Recording has the wrong policy identity')
                 if not (Path(episode)/'policy.onnx').is_file():
                     raise AssertionError('Recording did not preserve selected weights')
+                if policy.get('secondary_file'):
+                    if manifest['policy_backend'] != policy['backend'] or manifest['policy_secondary_sha256'] != policy['secondary_sha256']:
+                        raise AssertionError('Wrong decoupled backend identity')
+                    if not (Path(episode)/'policy-secondary.onnx').is_file():
+                        raise AssertionError('Missing archived walking policy')
             # lab metadata has no scene field: this also checks legacy fallback.
             subprocess.run([str(folder/'replay_gmr'), str(ROOT/'android/assets'), episode], env=env, check=True)
             for mode in ('saved', 'retarget'):

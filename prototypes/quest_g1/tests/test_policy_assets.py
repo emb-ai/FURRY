@@ -20,13 +20,13 @@ class PolicyAssetsTests(unittest.TestCase):
             catalog = export_policies(root, UPSTREAM)
             self.assertEqual([row['id'] for row in catalog],
                              ['twist2-20k', 'twist2-25k', 'quest-111260-500', 'quest-111260-1000',
-                              'quest-111586-200', 'quest-111586-300', 'quest-111586-500'])
+                              'quest-111586-200', 'quest-111586-300', 'quest-111586-500', 'homie-v2'])
             artifacts = {}
             for run in ('quest-111260', 'quest-111586'):
                 provenance = json.loads((Path(__file__).resolve().parents[1] /
                                          f'policies/{run}/provenance.json').read_text())
                 artifacts.update({item['id']: item for item in provenance['artifacts']})
-            for row in catalog[2:]:
+            for row in catalog[2:7]:
                 artifact = artifacts[row['id']]
                 self.assertEqual(row['sha256'], artifact['sha256'])
                 self.assertEqual(hashlib.sha256((root / row['file']).read_bytes()).hexdigest(), artifact['sha256'])
@@ -36,6 +36,43 @@ class PolicyAssetsTests(unittest.TestCase):
                 metadata = json.loads((root / f'recording_metadata-stand-policy-{row["id"]}.json').read_text())
                 self.assertEqual(metadata['policy_hz'], 50)
                 self.assertEqual(metadata['legacy_policy_hz'], expected_hz)
+            homie = catalog[-1]
+            self.assertEqual(homie['backend'], 'groot_decoupled_v1')
+            self.assertEqual(homie['policy_hz'], 50)
+            self.assertEqual(homie['legacy_policy_hz'], 50)
+            metadata = json.loads((root / 'recording_metadata-stand-policy-homie-v2.json').read_text())
+            self.assertEqual(metadata['policy_backend'], 'groot_decoupled_v1')
+            for prefix in ('', 'secondary_'):
+                filename, digest = homie[prefix+'file'], homie[prefix+'sha256']
+                self.assertEqual(hashlib.sha256((root / filename).read_bytes()).hexdigest(), digest)
+                self.assertEqual(metadata['policy_'+prefix+'file'], filename)
+                self.assertEqual(metadata['policy_'+prefix+'sha256'], digest)
+                self.assertEqual(metadata['sha256'][filename], digest)
+            # Removing this mode also removes both models from the APK assets.
+            config = root/'empty.json'
+            config.write_text('[]')
+            export_policies(root, UPSTREAM, config)
+            self.assertFalse((root/homie['file']).exists())
+            self.assertFalse((root/homie['secondary_file']).exists())
+
+    def test_decoupled_backend_requires_correct_pair_and_hashes(self):
+        models = Path(__file__).resolve().parents[1]/'policies/homie-v2'
+        balance = models/'GR00T-WholeBodyControl-Balance.onnx'
+        walk = models/'GR00T-WholeBodyControl-Walk.onnx'
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);config=root/'config.json'
+            row=dict(id='pair', title='Pair', note='Experimental', backend='groot_decoupled_v1', path=str(balance))
+            config.write_text(json.dumps([row]))
+            with self.assertRaisesRegex(ValueError, 'secondary model'):
+                export_policies(root, UPSTREAM, config)
+            row.update(secondary_path=str(walk),secondary_sha256='0'*64)
+            config.write_text(json.dumps([row]))
+            with self.assertRaisesRegex(ValueError, 'hash mismatch'):
+                export_policies(root, UPSTREAM, config)
+            row.pop('secondary_path');row.pop('secondary_sha256');row['backend']='twist2'
+            config.write_text(json.dumps([row]))
+            with self.assertRaisesRegex(ValueError, 'Incompatible Quest policy'):
+                export_policies(root, UPSTREAM, config)
 
     def test_unfetched_lfs_pointer_explains_how_to_download(self):
         with tempfile.TemporaryDirectory() as directory:

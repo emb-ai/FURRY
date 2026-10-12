@@ -13,15 +13,16 @@ int main(int argc,char** argv){
     bool catchUp=argc>=6&&std::string(argv[5])=="on",firstPerson=argc>=7&&std::string(argv[6])=="first";
     bool switchView=argc>=7&&std::string(argv[6])=="switch";
     try{
-        std::string name=argv[3],policyPath,metadata=name=="lab"?"recording_metadata.json":"recording_metadata-"+name+".json",policyFile;
+        std::string name=argv[3],metadata=name=="lab"?"recording_metadata.json":"recording_metadata-"+name+".json",policyFile,secondaryFile;
+        questpolicy::RuntimePolicy policy{questpolicy::Twist2,std::string(argv[1])+"/policy.onnx",""};
         if(argc>=5){
             auto catalog=questpolicy::Load(argv[1]);bool found=false;
-            for(const auto& entry:catalog)if(entry.id==argv[4]){policyPath=questpolicy::VerifiedPath(argv[1],entry);metadata=questpolicy::Metadata(name,entry);policyFile=entry.file;found=true;}
+            for(const auto& entry:catalog)if(entry.id==argv[4]){policy=questpolicy::VerifiedPolicy(argv[1],entry);secondaryFile=entry.secondaryFile;metadata=questpolicy::Metadata(name,entry);policyFile=entry.file;found=true;}
             if(!found)throw std::runtime_error("Unknown test policy");
         }
         std::filesystem::copy_file(std::filesystem::path(argv[2])/metadata,std::filesystem::path(argv[2])/"manifest.json");
         const auto fixture=episodereplay::LoadManifest(argv[2]);
-        Simulation sim(argv[1],2,name,policyPath,fixture.policyHz);MetaRetargeter meta(argv[1]);meta.EnableNeutralWrists(true);meta.EnableWristFrameV2(fixture.wristFrameV2);auto& solver=meta.solver();
+        Simulation sim(argv[1],2,name,policy,fixture.policyHz);MetaRetargeter meta(argv[1]);meta.EnableNeutralWrists(true);meta.EnableWristFrameV2(fixture.wristFrameV2);auto& solver=meta.solver();
         meta.EnableCameraTracking(firstPerson);int egoCamera=mj_name2id(sim.model,mjOBJ_CAMERA,"ego");
         auto* m=solver.model();std::unique_ptr<mjData,decltype(&mj_deleteData)> data(mj_makeData(m),mj_deleteData);auto* d=data.get();
         TrackingFrame input;input.valid=input.body.valid=input.body.supported=true;input.location_flags={15,15,15};input.hand_active={true,true};input.body.confidence=1;input.head.position={0,1.65,0};
@@ -43,7 +44,7 @@ int main(int argc,char** argv){
         mj_kinematics(m,d);mj_comPos(m,d);fill(true);
         for(int j=1;j<m->njnt;j++){int actual=mj_name2id(sim.model,mjOBJ_JOINT,mj_id2name(m,mjOBJ_JOINT,j));d->qpos[m->jnt_qposadr[j]]=sim.data->qpos[sim.model->jnt_qposadr[actual]];}
         mj_kinematics(m,d);mj_comPos(m,d);fill(false);
-        EpisodeRecorder recorder;recorder.Start(argv[2],sim.model,metadata,policyFile,catchUp,firstPerson);
+        EpisodeRecorder recorder;recorder.Start(argv[2],sim.model,metadata,policyFile,catchUp,firstPerson,secondaryFile);
         uint64_t sequence=0;
         auto sample=[&]{input.sequence=++sequence;input.xr_time_ns=input.body.time_ns=1000000000LL+sequence*10000000LL;recorder.Input(input,0,0,EpisodeRecorder::Now());};
         std::array<float,35> origin{};double blendStart=0;
