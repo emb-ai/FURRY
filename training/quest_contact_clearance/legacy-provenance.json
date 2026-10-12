@@ -1,0 +1,69 @@
+{
+  "ancestor": "20261010 own adapter snapshot; pinned upstream TWIST2 remains an external dependency",
+  "files": {
+    "motion_coordinates.py": {
+      "ancestor_sha256": "4c51bd44dea9b01cd2933acc24fd2b1d4762469fa0d7dc2a4b2b27e29dc1a43f",
+      "modified": false
+    },
+    "export_policy.py": {
+      "ancestor_sha256": "2e0f57a341b21f12592fad04c5c767cf0a5d660c5df880407513a1532e97bab6",
+      "modified": false
+    },
+    "gait_evaluation.py": {
+      "ancestor_sha256": "81e041d17cc2ffda94cfd60417709d2b2495429f5733b9eabdc2f6b56b0cfa0f",
+      "modified": false
+    },
+    "env.py": {
+      "ancestor_sha256": "40633728f5faa284c0b46ce8e89114d73d442bb390cfd0f56482613d2e15d12f",
+      "modified": false
+    },
+    "resume_state.py": {
+      "ancestor_sha256": "7b3639480f0ca058426362aaab42921610912c8a06dba52adc1837b236fc2994",
+      "modified": false
+    },
+    "reference_faults.py": {
+      "ancestor_sha256": "cb804ae2b5dbf30b1832688e7f36a053707c0832e0046de51e02fa4cc242ce23",
+      "modified": true
+    },
+    "policy.py": {
+      "ancestor_sha256": "9d96d27f9bcf84837ca7ae34b0d94f98f7b6d3ae3a9dd9ee0a4c6c6c97da7bb6",
+      "modified": false
+    },
+    "training_performance.py": {
+      "ancestor_sha256": "2ac5254b6e6ed5165f6dbe307551eee3fbe56de19c0ed4311633983e0cf7e90a",
+      "modified": false
+    },
+    "sole_geometry.py": {
+      "ancestor_sha256": "506e2db82c333a4fd2752293b5602e2aebd01758920e89730838884eb9f4133e",
+      "modified": false
+    },
+    "build_sole_urdf.py": {
+      "ancestor_sha256": "9bf792cee3652322ddfc5b9259bd5947b0860c886bba7ee998de1bf4c987e579",
+      "modified": false
+    },
+    "select_author_motions.py": {
+      "ancestor_sha256": "53c88b6802096f02482716a8e12bc662852ad287f0c533506e96b4a767f26da7",
+      "modified": false
+    },
+    "window_reward.py": {
+      "ancestor_sha256": "e983c881996bad068fe252e39363382ee5bb4be282f721940eba70d6d1f52774",
+      "modified": false
+    },
+    "rewards.py": {
+      "ancestor_sha256": "93200ba631c3cad525c9da071d0e1bce4abf3041f64bf8a3b8de77b964a00f73",
+      "modified": false
+    },
+    "evaluate.py": {
+      "ancestor_sha256": "7a3ef16f81b93dd1be5119abc811595a1b71f86f8f98ff93133127bd012cc35f",
+      "modified": true
+    },
+    "checkpoint_lineage.py": {
+      "ancestor_sha256": "ad406980d3a2eae597c64c4a2c7b16d27655407aeeec341d524feae9bbe6addf",
+      "modified": false
+    },
+    "author_dataset.py": {
+      "ancestor_sha256": "f87435da2ae21f5b7400715ac9659b9150865462e1bb0c674b056b99b2a42c53",
+      "modified": false
+    }
+  }
+}

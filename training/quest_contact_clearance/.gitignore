@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.pt
+*.onnx
+*.npz
+*.log
+queue-state.json
+queue.lock
+evaluation.lock
+evaluations/
