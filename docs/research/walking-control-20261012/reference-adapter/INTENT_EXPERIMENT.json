@@ -1,0 +1,50 @@
+{
+  "revision": "intent-v1-r10",
+  "comparison": {
+    "actual": "previous actual-velocity-weighted penalty",
+    "intent": "uncorrected reference swing / commanded held-operator phase penalty"
+  },
+  "coefficient_both": -5,
+  "height_target_m": 0.065,
+  "denominator_m2": 0.05,
+  "extra_features_both": 6,
+  "adapter_observations": 1473,
+  "initialization": "R7 checkpoint300, zero-pad six new actor/critic input columns; reset Adam for both arms, same seed31",
+  "initialization_not_bit_exact_simulator_resume": true,
+  "updates": 1000,
+  "eval_every": 500,
+  "num_envs": 4096,
+  "hz": 50,
+  "dataset_unchanged": true,
+  "runtime_deployment": false,
+  "source": "https://arxiv.org/abs/2502.03206",
+  "source_relationship": "Uses the principle of observable desired swing/contact phase. Reference-speed transfer detection, held-operator clock, one-sided whole-sole deficit, fixed pretrained TWIST2 and learned reference adapter are our adaptations, not a reproduction.",
+  "tests": {
+    "cpu": 10,
+    "recorded_low_transfer_50hz_samples": 15,
+    "recorded_left_mean_intent": 0.9822025,
+    "counterfactual_frozen_ground_cost": 0.1018441,
+    "counterfactual_raised65mm_cost": 0,
+    "author_actor_and_critic_initialization_max_abs_error": 0.0,
+    "pipeline_initialize_then_resume": true
+  },
+  "limitations": [
+    "Reference noise can request both feet; source weighting is not a measured contact/support classifier.",
+    "Reference world velocity is finite-differenced at nominal50Hz; source resets are masked.",
+    "Held-operator gait frequency/duty/height/deadbands are experimental fixed hyperparameters.",
+    "A fixed clock does not prove feasible foot placement or good gait.",
+    "Candidate and control share additional intent inputs and optimizer reset; old continuation results are historical only.",
+    "Existing validation session has been inspected repeatedly. No independent acceptance yet."
+  ],
+  "sources_sha256": {
+    "dispatch.py": "489a5ac8bedfeb4c55101f96ba62491c4aec20a0d91b12350c96de258db627c4",
+    "adapter_core.py": "962b532ae548b46e02914cd7ff08bc2471e1ed713743788bc925c781910b80fb",
+    "test_adapter.py": "6c43a0b702ee369999c2e572f848569ddcaef6d45dd1e288e2dea9b6edc3eec4",
+    "train_adapter.py": "0b43539f6b348f6115a9fe905ded0dc919be8e7b2bd66ca9cf9dfdc27dee6d82",
+    "continuation.py": "e96dcead55d4229fb5dc28fa93026d285b9505befae5352cede2e70b590a90c8",
+    "adapter_env.py": "6e3156b3f49bee0a5dd6192dd4ec0ca7a443e991eddbf7c76a39609aee61e223",
+    "run_pilot.py": "d82399ab7131af9dc9e04306b73dc3824ee826811af52a7bee897e6fdb4e39d4",
+    "swing_intent.py": "5545acdb4a65c7e3dcc4b791b8d2271183e64c4a012b3dacd6adee7653bf9b09"
+  },
+  "execution_status": "Not uploaded or launched: SSH banner exchange timed out"
+}

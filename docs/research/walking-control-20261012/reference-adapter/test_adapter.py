@@ -9,9 +9,54 @@ from adapter_core import *
 from adapter_env import AdapterEnv
 from continuation import set_clearance_multiplier,restore_optimizer
 from clearance_reward import ClearanceConfig,velocity_clearance_cost
+from swing_intent import SwingIntent,intent_cost,scheduled_swing,initialize_with_extra_inputs
 
 
 class Contracts(unittest.TestCase):
+    def test_expected_transfer_still_penalizes_a_frozen_low_foot(self):
+        intent=SwingIntent(1,'cpu');points=torch.zeros(1,2,3)
+        held=torch.tensor([False]);xy=torch.zeros(1,2);yaw=torch.zeros(1)
+        intent.update(points,held,xy,yaw)
+        self.assertEqual(float(intent.cost(torch.zeros(1,2))),0.)
+        points[:,0,0]=.01;intent.update(points,held,xy,yaw)
+        frozen_height=torch.zeros(1,2,requires_grad=True)
+        cost=intent.cost(frozen_height)
+        self.assertGreater(float(cost),.05);cost.sum().backward()
+        self.assertLess(float(frozen_height.grad[0,0]),0.)
+        self.assertEqual(float(frozen_height.grad[0,1]),0.)
+        self.assertEqual(float(intent.cost(torch.full((1,2),.07))),0.)
+
+    def test_standing_and_reset_do_not_request_a_swing(self):
+        intent=SwingIntent(2,'cpu');points=torch.zeros(2,2,3)
+        for _ in range(100):intent.update(points,torch.tensor([False,True]),torch.zeros(2,2),torch.zeros(2))
+        self.assertEqual(float(intent.weight.sum()),0.)
+        intent.reset(torch.arange(2));points+=100
+        intent.update(points,torch.tensor([False,True]),torch.zeros(2,2),torch.zeros(2))
+        self.assertEqual(float(intent.weight.sum()),0.)
+
+    def test_commanded_turn_cycles_without_actual_motion_or_contact(self):
+        intent=SwingIntent(1,'cpu');points=torch.zeros(1,2,3);seen=torch.zeros(2)
+        for _ in range(100):
+            intent.update(points,torch.tensor([True]),torch.zeros(1,2),torch.ones(1)*.5)
+            seen+=intent.weight[0]
+            self.assertLessEqual(float(intent.weight.sum()),1.)
+            self.assertTrue(torch.equal(intent.features()[:,:2],intent.weight))
+            if float(intent.target.max())>.03:self.assertGreater(float(intent.cost(torch.zeros(1,2))),0.)
+        self.assertTrue((seen>10).all())
+        for _ in range(55):intent.update(points,torch.tensor([True]),torch.zeros(1,2),torch.zeros(1))
+        self.assertEqual(float(intent.weight.sum()),0.)
+
+    def test_added_phase_inputs_preserve_initial_actor_mapping(self):
+        class Model(torch.nn.Module):
+            def __init__(self,n):
+                super().__init__();self.actor=torch.nn.Module()
+                self.actor.actor_backbone=torch.nn.Sequential(torch.nn.Linear(n,16),torch.nn.ELU(),torch.nn.Linear(16,12))
+                self.critic=torch.nn.Sequential(torch.nn.Linear(n,16),torch.nn.ELU(),torch.nn.Linear(16,1))
+        torch.manual_seed(5);old=Model(1467);new=Model(1473)
+        initialize_with_extra_inputs(new,old.state_dict());x=torch.randn(8,1467);extra=torch.randn(8,6)
+        self.assertTrue(torch.allclose(old.actor.actor_backbone(x),new.actor.actor_backbone(torch.cat((x,extra),1)),atol=1e-6))
+        self.assertEqual(float(new.actor.actor_backbone[0].weight[:,-6:].abs().sum()),0.)
+
     def test_clearance_multiplier_preserves_geometry_and_one_dt(self):
         state=SimpleNamespace(config=ClearanceConfig())
         env=SimpleNamespace(dt=.02,reward_scales={'low_moving_foot':-.02})

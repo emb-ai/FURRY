@@ -14,6 +14,8 @@ def main():
     p.add_argument('--eval-every',type=int,default=500)
     p.add_argument('--timeout-seconds',type=int,default=10800)
     p.add_argument('--gpu',type=int,help='Require this idle GPU; occupancy checks still apply')
+    p.add_argument('--initialize');p.add_argument('--intent-features',action='store_true')
+    p.add_argument('--clearance-formula',choices=['actual','intent'],default='actual')
     a=p.parse_args();root=a.root.resolve();src=Path(__file__).resolve().parent
     if Path(a.label).name!=a.label:raise ValueError('Label must be a single path component')
     log=src/(a.label+'.log');receipt=src/(a.label+'.launch.json');end=src/(a.label+'.exit.json')
@@ -42,6 +44,9 @@ def main():
           '--rl_device','cuda:0','--device','cuda:0','--num_threads','1','--seed','31','--iterations',str(a.iterations)]
     argv+=['--clearance-multiplier',str(a.clearance_multiplier)]
     if a.resume:argv+=['--resume',a.resume]
+    if a.initialize:argv+=['--initialize',a.initialize]
+    if a.intent_features:argv+=['--intent-features']
+    argv+=['--clearance-formula',a.clearance_formula]
     if a.pipeline:argv+=['--eval-every',str(a.eval_every)]
     if a.smoke:argv+=['--smoke']
     if a.identity:argv+=['--identity']

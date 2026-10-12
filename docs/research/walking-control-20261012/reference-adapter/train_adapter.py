@@ -22,6 +22,9 @@ def main():
     p.add_argument('--smoke',action='store_true')
     p.add_argument('--evaluate',type=Path)
     p.add_argument('--resume',type=Path)
+    p.add_argument('--initialize',type=Path)
+    p.add_argument('--intent-features',action='store_true')
+    p.add_argument('--clearance-formula',choices=['actual','intent'],default='actual')
     p.add_argument('--clearance-multiplier',type=float,default=1.)
     p.add_argument('--identity',action='store_true')
     p.add_argument('--eval-steps',type=int,default=600)
@@ -40,7 +43,9 @@ def main():
     from reference_faults import install_nonlooping
     from adapter_env import AdapterEnv
     from continuation import set_clearance_multiplier,restore_optimizer
+    from swing_intent import initialize_with_extra_inputs
     if a.resume and (a.evaluate or a.identity):raise ValueError('Resume is training only')
+    if a.initialize and (a.resume or a.evaluate or a.identity):raise ValueError('Initialization is training only')
     torch.set_num_threads(1)
     torch.backends.cuda.matmul.allow_tf32=False;torch.backends.cudnn.allow_tf32=False
     args=get_args();torch.manual_seed(args.seed)
@@ -73,7 +78,8 @@ def main():
     checks.update(set_clearance_multiplier(env,clearance,a.clearance_multiplier))
     tracker=load(root/'comparison-baseline.pt',root/'TWIST2/rsl_rl/rsl_rl/modules/actor_critic_future.py',env.device)
     frozen={k:v.clone() for k,v in tracker.state_dict().items()}
-    wrapper=AdapterEnv(env,tracker,root/'assets/g1_main_spheres.urdf',root/'runtime-assets/scene.xml',args.seed+1700)
+    wrapper=AdapterEnv(env,tracker,root/'assets/g1_main_spheres.urdf',root/'runtime-assets/scene.xml',args.seed+1700,
+                       intent_features=a.intent_features,intent_reward=a.clearance_formula=='intent')
     wrapper.clearance=clearance
     # Independent physical FK and reference-routing checks before any update.
     fk,_=wrapper.fk(env.root_states[:,:3],env.root_states[:,3:7],env.dof_pos)
@@ -91,6 +97,15 @@ def main():
     checks.update(key_body_and_camera_fk_max_abs_m=fk_error,corrected_reference_actor_reward_identical=True,
                   physical_state_unchanged_by_reference=True,independent_goal_unchanged=True,upper_body_reference_unchanged=True)
     obs=wrapper.observation();dim=obs.shape[1]
+    if wrapper.intent is not None:
+        if not torch.equal(obs[:,-6:],wrapper.intent.features()):raise ValueError('Intent observation mismatch')
+        saved_weight=wrapper.intent.weight.clone();saved_target=wrapper.intent.target.clone()
+        wrapper.intent.weight.fill_(.5);wrapper.intent.target.fill_(.065)
+        registered=env.reward_functions[env.reward_names.index('low_moving_foot')]()
+        expected=wrapper.intent.cost(wrapper.actual_height()) if a.clearance_formula=='intent' else clearance.terms[1]
+        if not torch.equal(registered,expected):raise ValueError('Clearance reward routing mismatch')
+        wrapper.intent.weight.copy_(saved_weight);wrapper.intent.target.copy_(saved_target)
+        checks.update(intent_observation_routing=True,intent_reward_routing=True,clearance_formula=a.clearance_formula)
     ac=ActorCritic(num_prop=dim,num_critic_obs=dim,num_priv_latent=0,num_hist=0,num_actions=12,
         actor_hidden_dims=[256,128],critic_hidden_dims=[256,128],activation='elu',init_noise_std=.3,
         fix_action_std=False,priv_encoder_dims=[],tanh_encoder_output=False).to(env.device)
@@ -98,11 +113,12 @@ def main():
     with torch.no_grad():
         ac.actor.actor_backbone[-1].weight.zero_();ac.actor.actor_backbone[-1].bias.zero_()
     loaded=None
-    if a.evaluate or a.resume:
-        loaded=torch.load(a.evaluate or a.resume,map_location=env.device,weights_only=True)
+    if a.evaluate or a.resume or a.initialize:
+        loaded=torch.load(a.evaluate or a.resume or a.initialize,map_location=env.device,weights_only=True)
         if loaded['frozen_tracker_sha256']!=hashlib.sha256((root/'comparison-baseline.pt').read_bytes()).hexdigest():
             raise ValueError('Checkpoint frozen tracker mismatch')
-        ac.load_state_dict(loaded['adapter'])
+        if a.initialize:initialize_with_extra_inputs(ac,loaded['adapter'])
+        else:ac.load_state_dict(loaded['adapter'])
     algorithm=dict(num_learning_epochs=5,num_mini_batches=4,clip_param=.2,gamma=.99,lam=.95,
         value_loss_coef=1.,entropy_coef=.001,learning_rate=2e-4,max_grad_norm=1.,
         use_clipped_value_loss=True,schedule='adaptive',desired_kl=.008)
@@ -117,6 +133,15 @@ def main():
         adapter_observations=dim,adapter_actions=12,amplitude_rad=.5,lowpass_alpha=.2,
         modes={'recorded':.5,'held_position':.25,'held_turn':.25},hz=50,
         clearance_multiplier=a.clearance_multiplier,clearance_reward_scale=env.reward_scales['low_moving_foot'],
+        clearance_formula=a.clearance_formula,intent_features=a.intent_features,
+        swing_intent=dict(recorded='tanh(2 * uncorrected reference sole centroid world XY speed)',
+            held='command-triggered alternating clock; completes current cycle when command stops',
+            frequency_hz=1.,stance_fraction=.6,height_m=.065,height_profile='quintic rise and fall',
+            xy_command_threshold_m_s=.05,yaw_command_threshold_rad_s=.1,
+            actual_speed_or_contact_cancels_requirement=False) if a.intent_features else None,
+        initialization=dict(checkpoint=str(a.initialize) if a.initialize else None,
+            sha256=hashlib.sha256(a.initialize.read_bytes()).hexdigest() if a.initialize else None,
+            optimizer_reset=bool(a.initialize),new_input_columns_zero=True),
         continuation=dict(checkpoint=str(a.resume) if a.resume else None,start_iteration=start_iteration,
             checkpoint_sha256=hashlib.sha256(a.resume.read_bytes()).hexdigest() if a.resume else None,
             optimizer_restored=bool(a.resume),adaptive_learning_rate=alg.learning_rate,
@@ -130,8 +155,13 @@ def main():
     # Source config contains numpy.float64 values. Store plain JSON primitives
     # so our own checkpoints remain loadable with weights_only=True.
     config=json.loads(json.dumps(config))
-    if a.resume:
-        for key in ('clips','frozen_tracker_sha256','scene_sha256','urdf_sha256','adapter_observations','adapter_actions','hz'):
+    if a.resume or a.initialize:
+        keys=['clips','frozen_tracker_sha256','scene_sha256','urdf_sha256','adapter_actions','hz']
+        if a.resume:keys+=['adapter_observations','clearance_formula','intent_features']
+        for key in keys:
+            if key in ('clearance_formula','intent_features') and key not in loaded['config']:
+                if a.clearance_formula!='actual' or a.intent_features:raise ValueError('Legacy resume needs initialize for new inputs/reward')
+                continue
             if loaded['config'][key]!=config[key]:raise ValueError('Resume contract mismatch: '+key)
     (out/'config.json').write_text(json.dumps(config,indent=2));(out/'gpu-contract-checks.json').write_text(json.dumps(checks,indent=2))
     def assert_frozen():
@@ -169,7 +199,7 @@ def main():
         wrapper.goal_yaw[:]=(torch.pi/6)*sign*(wrapper.mode==2)
         env.gym.refresh_actor_root_state_tensor(env.sim);env.gym.refresh_dof_state_tensor(env.sim)
         env.gym.refresh_rigid_body_state_tensor(env.sim)
-        wrapper.original_update();wrapper.capture_raw();wrapper.apply_reference();obs=wrapper.observation()
+        wrapper.original_update();wrapper.capture_raw();wrapper.apply_reference();wrapper.update_intent();obs=wrapper.observation()
         initial=dict(motion_ids=env._motion_ids.tolist(),mode=wrapper.mode.tolist(),
             root=env.root_states.tolist(),q=env.dof_pos.tolist(),goal=wrapper.goal_pos.tolist(),
             goal_quat=wrapper.goal_quat.tolist(),obs=obs.tolist())
@@ -185,7 +215,9 @@ def main():
                 m=wrapper.last_metrics
                 for mode in range(3):
                     mask=(m['mode']==mode)&alive;counts[mode]+=mask.sum();fail[mode]+=m['failure'][mask].sum()
-                    for key in ('distance_m','yaw_error_rad','progress_m_s','delta_rms_rad','low_moving_cost','contact_slip_cost'):
+                    keys=['distance_m','yaw_error_rad','progress_m_s','delta_rms_rad','low_moving_cost','contact_slip_cost']
+                    if wrapper.intent is not None:keys+=['intent_low_cost','intent_weight','intent_height_sum_m']
+                    for key in keys:
                         sums.setdefault(key,torch.zeros(3,device=env.device))[mode]+=m[key][mask].sum()
                 final_distance[alive]=m['distance_m'][alive];final_yaw[alive]=m['yaw_error_rad'][alive]
                 durations[alive]+=env.dt;per_env_fail|=alive&m['failure'];alive&=~done.bool()
@@ -202,18 +234,20 @@ def main():
     save(start_iteration);iterations=2 if a.smoke else a.iterations
     initial_actor=ac.actor.actor_backbone[-1].weight.detach().clone()
     for iteration in range(start_iteration+1,start_iteration+iterations+1):
-        rates=[];failures=0
+        rates=[];failures=0;intent_costs=[]
         with torch.no_grad():
             for _ in range(steps):
                 action=alg.act(obs,obs,{})
                 obs,reward,done,info=wrapper.step(action)
                 alg.process_env_step(reward,done,info)
                 rates.append(reward.mean());failures+=int(wrapper.last_metrics['failure'].sum())
+                if wrapper.intent is not None:intent_costs.append(wrapper.last_metrics['intent_low_cost'].mean())
             alg.compute_returns(obs)
         loss=alg.update();assert_frozen()
         if not all(torch.isfinite(p).all() for p in ac.parameters()):raise FloatingPointError('Invalid adapter weights')
         emit(dict(iteration=iteration,reward_rate=float(torch.stack(rates).mean()/env.dt),
             failures=failures,value_loss=loss[0],surrogate_loss=loss[1],lr=alg.learning_rate,
+            intent_cost=float(torch.stack(intent_costs).mean()) if intent_costs else None,
             delta_rms_rad=float(wrapper.delta.square().mean().sqrt()),
             distance_m=float(wrapper.last_metrics['distance_m'].mean()),clearance=clearance.metrics()))
         if iteration%a.save_every==0 or iteration==start_iteration+iterations:save(iteration)

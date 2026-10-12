@@ -10,7 +10,7 @@ from sole_kinematics import SoleKinematics
 
 
 class AdapterEnv:
-    def __init__(self,env,tracker,urdf,scene,seed=31):
+    def __init__(self,env,tracker,urdf,scene,seed=31,intent_features=False,intent_reward=False):
         self.e=env;self.tracker=tracker.eval();self.device=env.device
         for p in tracker.parameters():p.requires_grad_(False)
         self.num_envs=n=env.num_envs;self.dt=env.dt
@@ -28,6 +28,9 @@ class AdapterEnv:
         self.key_names=list(env.cfg.motion.key_bodies)
         self.fk=BodyKinematics(urdf,names,self.key_names+[self.camera_body],self.device)
         self.sole=SoleKinematics(urdf,names,self.device)
+        from swing_intent import SwingIntent
+        self.intent=SwingIntent(n,self.device,self.dt) if intent_features else None
+        if intent_reward and self.intent is None:raise ValueError('Intent reward requires observable intent')
         self.rng=torch.Generator(device=self.device).manual_seed(seed)
         zeros=lambda *shape:torch.zeros(*shape,device=self.device)
         self.history=zeros(n,10,127);self.last_action=zeros(n,29)
@@ -67,8 +70,15 @@ class AdapterEnv:
             if hasattr(self,'clearance'):
                 self.last_metrics['low_moving_cost']=self.clearance.terms[1].clone()
                 self.last_metrics['contact_slip_cost']=self.clearance.terms[0].clone()
+            if self.intent is not None:
+                height=self.actual_height()
+                self.last_metrics['intent_low_cost']=self.intent.cost(height).clone()
+                self.last_metrics['intent_weight']=self.intent.weight.sum(-1).clone()
+                self.last_metrics['intent_height_sum_m']=(height*self.intent.weight).sum(-1).clone()
         env._get_motion_times=times;env._update_ref_motion=update
         env.reset_idx=reset;env.compute_reward=reward
+        if intent_reward:
+            env.reward_functions[env.reward_names.index('low_moving_foot')]=lambda:self.intent.cost(self.actual_height())
         # Velocity imitation must target the very same catch-up command sent to
         # the frozen tracker, not the uncorrected operator velocity (often zero).
         def linear_reward():
@@ -91,8 +101,10 @@ class AdapterEnv:
         env.check_termination=termination
         self.reset_buffers(torch.arange(n,device=self.device))
         update()
+        self.update_intent()
 
     def reset_buffers(self,ids):
+        if self.intent is not None:self.intent.reset(ids)
         self.history[ids]=0;self.last_action[ids]=0;self.delta[ids]=0
         self.previous_delta[ids]=0;self.delta_velocity[ids]=0
         # 50% real trajectories, 25% held pose + position, 25% held pose + turn.
@@ -158,7 +170,18 @@ class AdapterEnv:
         v=qrot(inverse(e.root_states[:,3:7]),e.root_states[:,7:10])
         extras=torch.cat((error,torch.sin(dyaw)[:,None],torch.cos(dyaw)[:,None],
             h,force,v,self.delta/.5,(self.raw['dof_vel'][:,:12]/5).clamp(-2,2)),-1)
-        return torch.cat((((obs-self.tracker.mean)/self.tracker.divisor).clamp(-10,10),extras),-1)
+        result=torch.cat((((obs-self.tracker.mean)/self.tracker.divisor).clamp(-10,10),extras),-1)
+        return torch.cat((result,self.intent.features()),-1) if self.intent is not None else result
+
+    def actual_height(self):
+        rb=self.e.rigid_body_states[:,self.e.feet_indices]
+        return (self.sole.world_soles(rb[:,:,:3],rb[:,:,3:7])[...,2]-self.sole.radii).min(-1).values
+
+    def update_intent(self):
+        if self.intent is None:return
+        r=self.raw;points,_=self.sole.reference(r['root_pos'],r['root_rot'],r['dof_pos'])
+        xy,yaw,_,_=self.navigation()
+        self.intent.update(points.mean(-2),self.mode>0,xy,yaw)
 
     @torch.no_grad()
     def step(self,action):
@@ -184,6 +207,7 @@ class AdapterEnv:
         # New episode reference is sampled in reset_idx; keep next observation
         # and this next step's reward source synchronized after a reset.
         self.original_update();self.capture_raw();self.apply_reference()
+        self.update_intent()
         next_obs=self.observation()
         if not torch.isfinite(next_obs).all() or not torch.isfinite(reward).all():
             raise FloatingPointError('Nonfinite adapter transition')

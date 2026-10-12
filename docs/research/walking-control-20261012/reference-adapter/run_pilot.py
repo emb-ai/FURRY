@@ -7,6 +7,7 @@ def main():
     p=argparse.ArgumentParser();p.add_argument('--root',required=True);p.add_argument('--base-source',required=True)
     p.add_argument('--output',type=Path,required=True);p.add_argument('--iterations',type=int,default=300)
     p.add_argument('--resume',type=Path);p.add_argument('--eval-every',type=int,default=500)
+    p.add_argument('--initialize',type=Path)
     a,rest=p.parse_known_args();out=a.output;out.mkdir(parents=True,exist_ok=False)
     if a.iterations<=0 or a.eval_every<=0:raise ValueError('Iteration counts must be positive')
     script=str(Path(__file__).with_name('train_adapter.py'))
@@ -19,7 +20,8 @@ def main():
         with (out/(label+'.log')).open('w') as log:
             code=subprocess.call(argv,stdout=log,stderr=subprocess.STDOUT)
         if code:state('failed',stage=label,returncode=code);raise RuntimeError(label+' failed')
-    resume_flags=['--resume',str(a.resume)] if a.resume else []
+    if a.resume and a.initialize:raise ValueError('Choose resume or initialize')
+    resume_flags=['--resume',str(a.resume)] if a.resume else (['--initialize',str(a.initialize)] if a.initialize else [])
     run('smoke',['--smoke']+resume_flags)
     smoke_result=json.loads((out/'smoke/result.json').read_text())
     smoke_checkpoint=out/'smoke'/('adapter_%06d.pt'%smoke_result['final_iteration'])
@@ -31,15 +33,17 @@ def main():
     if pre_a['initial_state_sha256']!=pre_b['initial_state_sha256']:
         state('failed',stage='preflight',reason='Initial state mismatch');raise RuntimeError('Unpaired preflight')
     run('identity',['--identity'],eval_cli)
-    if a.resume:
-        run('starting_candidate',['--evaluate',str(a.resume)],eval_cli)
+    if a.resume or a.initialize:
+        starting=a.resume or out/'smoke/adapter_000000.pt'
+        run('starting_candidate',['--evaluate',str(starting)],eval_cli)
         (out/'starting-comparison.json').write_text(json.dumps(
-            compare(out,'starting_candidate',a.resume,smoke_result['start_iteration']),indent=2))
+            compare(out,'starting_candidate',starting,smoke_result['start_iteration']),indent=2))
     remaining=a.iterations;current=a.resume;comparisons=[]
     while remaining>0:
         count=min(remaining,a.eval_every)
         stage='training' if current is None else 'training_block_%02d'%(len(comparisons)+1)
-        run(stage,['--iterations',str(count)]+(['--resume',str(current)] if current else []))
+        init_flags=['--initialize',str(a.initialize)] if a.initialize and current is None else []
+        run(stage,['--iterations',str(count)]+(['--resume',str(current)] if current else init_flags))
         result=json.loads((out/stage/'result.json').read_text())
         current=out/stage/('adapter_%06d.pt'%result['final_iteration'])
         label='candidate_%06d'%result['final_iteration']
@@ -67,7 +71,9 @@ def compare(out,label,checkpoint,iteration):
             row[key]=dict(identity_mean=float(before.mean()),candidate_mean=float(after.mean()),mean_delta=float((after-before).mean()))
         b=np.array(baseline['per_env_failure'])[select];c=np.array(candidate['per_env_failure'])[select]
         row['failures']=dict(identity=int(b.sum()),candidate=int(c.sum()),new_failed_trials=int((c&~b).sum()))
-        for key in ['low_moving_cost','contact_slip_cost']:
+        keys=['low_moving_cost','contact_slip_cost']
+        if 'intent_low_cost' in baseline['mean']:keys+=['intent_low_cost','intent_weight','intent_height_sum_m']
+        for key in keys:
             row[key]=dict(identity=baseline['mean'][key][m],candidate=candidate['mean'][key][m])
         summary[name]=row
     result=dict(completed=True,iterations=iteration,paired_initial_state=True,results=summary,
