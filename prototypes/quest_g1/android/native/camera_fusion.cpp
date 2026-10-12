@@ -16,7 +16,7 @@ void Swing(TrackedPose& pose,V before,V after){
  if(mju_normalize4(q)<1e-6)return;mju_mulQuat(result,q,pose.quaternion.data());std::copy_n(result,4,pose.quaternion.begin());
 }
 }
-void CameraFusion::Reset(){history.clear();fitFrom.clear();fitTo.clear();headFrom.clear();headTo.clear();aligned=false;lastSequence=~0ull;lastPacketMs=lastApplyMs=0;correction={};weights={};activeWeights={};lastGoodMs={};stats={};}
+void CameraFusion::Reset(){history.clear();fitFrom.clear();fitTo.clear();headFrom.clear();headTo.clear();aligned=false;lastSequence=~0ull;lastPacketMs=lastApplyMs=0;correction={};weights={};activeWeights={};lastGoodMs={};holdValid={};stats={};}
 void CameraFusion::Observe(const TrackingFrame&f,double ms){
  if(!f.body.valid)return;
  // Body timestamp is returned by the runtime, unlike the predicted HMD time.
@@ -100,8 +100,10 @@ TrackingFrame CameraFusion::Apply(const TrackingFrame&raw,const CameraSkeleton*c
        V rel=stage?c->joints[2*k+side].p:Rotate(rotation,Sub(c->joints[2*k+side].p,c->pelvis.p));
        V target=Add(pelvis,rel);delta[k]=Sub(target,it->frame.body.joints[2+2*k+side].position);
        if(Norm(delta[k])>.45)plausible=false;
+       if(k>0)holdTargets[side][k-1]=target;   // абсолютные STAGE-цели (knee, ankle)
       }
       if(!plausible){weights[side]=0;continue;}
+      holdValid[side]=true;
       double packetDt=lastPacketMs?std::clamp((c->sourceMs-lastPacketMs)/1000.,.001,.15):.08;
       double alpha=1-std::exp(-packetDt/.06);
       for(int k=0;k<3;k++)for(int a=0;a<3;a++)correction[2*k+side][a]+=alpha*(delta[k][a]-correction[2*k+side][a]);
@@ -119,10 +121,15 @@ TrackingFrame CameraFusion::Apply(const TrackingFrame&raw,const CameraSkeleton*c
   double freshness=c && legAge<500?std::clamp((500-legAge)/350.,0.,1.):0;
   activeWeights[side]+=(1-std::exp(-dt/.1))*(weights[side]*freshness-activeWeights[side]);
   if(legAge>=500)activeWeights[side]=0;
-  double w=activeWeights[side];if(w<.001)continue;
+  double w=activeWeights[side];
+  bool hold=legHold&&holdValid[side];         // camera-only: ноги не откатываются к Meta
+  if(w<.001&&!hold)continue;
+  if(hold)w=1;
   if(legAge>150)stats.state=3;
   int h=2+side,k=4+side,a=6+side;V hip=raw.body.joints[h].position,knee=raw.body.joints[k].position,ankle=raw.body.joints[a].position;
-  V desiredKnee=Add(knee,Mul(correction[2+side],w)),desiredAnkle=Add(ankle,Mul(correction[4+side],w));
+  V desiredKnee,desiredAnkle;
+  if(hold){desiredKnee=holdTargets[side][0];desiredAnkle=holdTargets[side][1];}
+  else{desiredKnee=Add(knee,Mul(correction[2+side],w));desiredAnkle=Add(ankle,Mul(correction[4+side],w));}
   double upper=Norm(Sub(knee,hip)),lower=Norm(Sub(ankle,knee));V direction=Unit(Sub(desiredAnkle,hip));double distance=std::clamp(Norm(Sub(desiredAnkle,hip)),std::abs(upper-lower)+.005,upper+lower-.005);
   double along=(upper*upper-lower*lower+distance*distance)/(2*distance),height=std::sqrt(std::max(0.,upper*upper-along*along));
   V bend=Sub(desiredKnee,hip);bend=Sub(bend,Mul(direction,mju_dot3(bend.data(),direction.data())));

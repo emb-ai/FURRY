@@ -22,10 +22,15 @@ class CameraFusion {
  std::array<double,3> translation{};
  std::array<std::array<double,3>,6> correction{};
  std::array<double,2> weights{},activeWeights{},lastGoodMs{};
+ // leg-hold ("camera-only") mode: never fall back to Meta legs once the
+ // camera has driven a leg; stale camera freezes the last absolute targets.
+ bool legHold=false;std::array<bool,2> holdValid{};
+ std::array<std::array<std::array<double,3>,2>,2> holdTargets{};
  bool aligned=false;uint64_t lastSequence=~0ull;double lastPacketMs=0,lastApplyMs=0;
  void Fit(const CameraSkeleton&,const TrackingFrame&);
 public:
  CameraFusionStats stats;
+ void SetLegHold(bool on){legHold=on;}
  void Reset();
  void Observe(const TrackingFrame&,double epochMs);
  TrackingFrame Apply(const TrackingFrame&,const CameraSkeleton*,double epochMs);

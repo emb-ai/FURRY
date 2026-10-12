@@ -453,6 +453,12 @@ void G1Initialize(android_app* app){
     LoadPreferences();
     std::ifstream cameraConfig(assets+"/camera_stream_url.txt");std::string cameraUrl;std::getline(cameraConfig,cameraUrl);
     cameraStream=std::make_unique<CameraStream>(cameraUrl);
+    // leg_source.txt: "meta" (по умолчанию, ноги Meta + коррекция камеры с откатом)
+    // или "camera" (camera-only: после первого камерного пакета ноги никогда не
+    // откатываются к Meta — при потере камеры стопы остаются на последних целях).
+    std::ifstream legSource(assets+"/leg_source.txt");std::string legMode;std::getline(legSource,legMode);
+    cameraFusion.SetLegHold(legMode.find("camera")!=std::string::npos);
+    __android_log_print(ANDROID_LOG_INFO,"G1Quest","Leg source: %s",legMode.find("camera")!=std::string::npos?"camera-only (hold)":"meta+camera blend");
     try{
         sim=std::make_unique<Simulation>(assets,2,questmenu::SceneName(questmenu::Scene(sessionScene.load())),questpolicy::VerifiedPath(assets,policyCatalog.at(selectedPolicy.load())));
     }catch(const std::exception& e){
