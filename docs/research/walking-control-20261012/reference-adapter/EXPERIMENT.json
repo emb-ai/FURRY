@@ -1,0 +1,42 @@
+{
+  "experiment": "Learn lower-body reference corrections with immutable TWIST2",
+  "revision": "r7",
+  "seed": 31,
+  "pilot_updates": 300,
+  "num_envs": 4096,
+  "hz": 50,
+  "frozen_tracker": "comparison-baseline.pt / quest1112601000",
+  "training_data": "66 existing Quest train clips (33 originals + mirrors); no author motions in this focused adapter pilot",
+  "validation": "12 existing Quest validation clips x3 modes x2 goal signs =72 first-episode trials; exact initial-state digest checked",
+  "architecture": "1467 input features ->256 ELU ->128 ELU ->12 latent corrections; tanh *.5rad; EMA alpha .2; hard URDF joint limits. Goals, upper body and TWIST2 weights immutable. Source body rewards use FK of corrected q.",
+  "new_objectives": "Corrected-reference imitation + source physics regularization + velocity-weighted actual sole clearance + camera-goal progress/remaining distance + correction regularity. Explicit experiment, not author-training reproduction.",
+  "runtime": "Not integrated or deployed; adapter includes state features available inside the Quest simulator. C++ integration and MuJoCo/ONNX parity still required before headset use.",
+  "pipeline": [
+    "4096env smoke",
+    "72env paired preflight",
+    "300 optimizer updates",
+    "72env identity validation",
+    "72env adapter validation",
+    "comparison.json-equivalent result.json; no automatic deployment"
+  ],
+  "sources_sha256": {
+    "dispatch.py": "cfbb3a47274e43d7a9af1659ba3337d64ac74f3abaec801d371981a09d898a25",
+    "adapter_core.py": "962b532ae548b46e02914cd7ff08bc2471e1ed713743788bc925c781910b80fb",
+    "test_adapter.py": "aabf3a6be408f1863357a0bf98efb1686eee7780a6b6c7448a1d98e96d58a26b",
+    "train_adapter.py": "d2cb6846e3168ac47d36e12c42ef42a3c7f41cfdc9b1a9605088dcca62c9aa38",
+    "adapter_env.py": "d20a84f459bf6d48d0e21a68f45792fc4759b085ed99331f5f9dd27b8752a225",
+    "run_pilot.py": "eb8208acad82d5b467d19af2be49a5697654d7663ed0a2875d7e163ec77b92e3"
+  },
+  "validation_tests": {
+    "cpu_contract_tests_passed": 4,
+    "independent_planar_camera_servo_cases": 500,
+    "gpu_256_env_smoke": "2 optimizer updates passed; tracker unchanged",
+    "gpu_4096_env_smoke": "r5 passed 2 optimizer updates, tracker unchanged; r7 repeats with safe checkpoint roundtrip"
+  },
+  "notes": [
+    "r1-r6 failures were pre-training integration checks; no performance-based early stopping.",
+    "Wrapper observations use exact simulated proprioception. Upstream observation noise affects unused upstream buffers, not adapter/tracker inputs.",
+    "Camera target is FK of recorded robot reference plus explicit held-operator perturbations; live HMD calibration is not part of this pilot.",
+    "No raw human recordings or learned weights committed in this source change."
+  ]
+}
