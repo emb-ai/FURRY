@@ -17,10 +17,10 @@ struct Motor {
     bool jointLimited=false,jointForceLimited=false,controlLimited=false,actuatorForceLimited=false;
 };
 using Profile=std::array<Motor,29>;
-inline Profile Load(const std::string& path) {
-    questpolicy::VerifySha256(path,Sha256);
+inline Profile Load(const std::string& path, const char* expectedId=Id, const char* expectedSha=Sha256) {
+    questpolicy::VerifySha256(path,expectedSha);
     std::ifstream input(path);std::string id;input>>id;
-    if(id!=Id)throw std::runtime_error("Unknown body motor profile");
+    if(id!=expectedId)throw std::runtime_error("Unknown body motor profile");
     Profile out;std::set<std::string> names;
     for(auto& motor:out){
         if(!(input>>motor.name>>motor.armature>>motor.damping>>motor.friction

@@ -1,0 +1,8 @@
+Licensed by NVIDIA Corporation under the NVIDIA Open Model License.
+Source contract: NVlabs/GR00T-WholeBodyControl b042411fae38ee4d1af9aac82a37a1f8d14d6dd0 (Apache-2.0).
+Model source: nvidia/GEAR-SONIC, revision 6733128a3d8a523b1418b06bca3cdf61c8b0987f.
+Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+FURRY modifications: C++ VR3 encoder/decoder and neural planner integration,
+robot-scaled GMR wrist/head targets, asynchronous 5 Hz planner on Quest,
+50 Hz control, seed 11, original SONIC body motor parameters in the FURRY scene.
+This adapter is not a timing-identical reproduction of the author's deployment.

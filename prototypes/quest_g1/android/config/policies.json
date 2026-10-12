@@ -43,5 +43,14 @@
     "sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
     "secondary_path": "../../policies/homie-v2/GR00T-WholeBodyControl-Walk.onnx",
     "secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407"
+  },
+  {
+    "id": "sonic-vr3",
+    "title": "SONIC: автономные ноги",
+    "note": "Эксперимент · три верхние цели",
+    "backend": "sonic_vr3_v1",
+    "path": "../../policies/sonic-vr3/model_encoder.onnx",
+    "secondary_path": "../../policies/sonic-vr3/model_decoder.onnx",
+    "planner_path": "../../policies/sonic-vr3/planner_sonic.onnx"
   }
 ]

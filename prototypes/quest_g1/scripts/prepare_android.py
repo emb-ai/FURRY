@@ -312,7 +312,7 @@ for file in ['gmr_model.xml','gmr_config.txt']:
     metadata['sha256'][file]=hashlib.sha256((assets/file).read_bytes()).hexdigest()
 for file in ['gmr.cpp','gmr.h','meta_retarget.cpp','meta_retarget.h','foot_floor.h','swing_clearance.h','body_tracking.h','quest_runtime.cpp','runtime_stats.h','stats_hud.h','recording_export.h','guided_capture.h','capture_hud.h','retarget.h','recording.h','full_body_io.h']:
     metadata['sha256']['android/native/'+file]=hashlib.sha256((ROOT/'android/native'/file).read_bytes()).hexdigest()
-for file in ['world_skeleton.h','world_skeleton_gl.h','operator_skeleton.h','operator_skeleton_draw.h','camera_fusion.cpp','camera_fusion.h','camera_stream.cpp','quest_menu.h','quest_menu_gl.h','policy_catalog.h','policy_backend.h','groot_decoupled.h','body_motor_profile.h','body_motor_model.h','recording.h','episode_manifest.h','simulation.h','file_sha256.h','camera_pose_servo.h']:
+for file in ['world_skeleton.h','world_skeleton_gl.h','operator_skeleton.h','operator_skeleton_draw.h','camera_fusion.cpp','camera_fusion.h','camera_stream.cpp','quest_menu.h','quest_menu_gl.h','policy_catalog.h','policy_backend.h','groot_decoupled.h','sonic.h','sonic_constants.h','body_motor_profile.h','body_motor_model.h','recording.h','episode_manifest.h','simulation.h','file_sha256.h','camera_pose_servo.h']:
     metadata['sha256']['android/native/'+file]=hashlib.sha256((ROOT/'android/native'/file).read_bytes()).hexdigest()
 metadata['ik_error_semantics']='unweighted GMR stage-2 SE3 residual norm; mixed metres/radians, not wrist distance'
 metadata.update(catch_up_v2=True,neutral_wrists=True,wrist_frame_v2=True,travel_gain_percent=100)

@@ -1,0 +1,15 @@
+{
+  "upstream": "NVlabs/GR00T-WholeBodyControl",
+  "commit": "b042411fae38ee4d1af9aac82a37a1f8d14d6dd0",
+  "sha256": {
+    "model_encoder.onnx": "013ab0287236aa2721e13f1e936d699db982302d0de0bfcdae76d5c3245362d3",
+    "model_decoder.onnx": "c7241a123eaa36b5d64bad19540efde93cac1ad443bd4572fd12ca99898118ed",
+    "planner_sonic.onnx": "39b553e197f62f077975ba38512bc04781a3fc37c2af7c6756e04629f760edea",
+    "observation_config.yaml": "466d05947c78af6c76388adfb86e3a2a77b2a1d921a64883ed3d085ebf58de1b",
+    "sonic_motor_profile.txt": "45f4e3dde56f723620178376a361d352656372da06ee394994d78bb209e06769"
+  },
+  "planner_seed": 11,
+  "adapter": "FURRY VR3 GMR FK / asynchronous 5Hz planner / 50Hz encoder-decoder",
+  "model_repository": "nvidia/GEAR-SONIC",
+  "model_revision": "6733128a3d8a523b1418b06bca3cdf61c8b0987f"
+}

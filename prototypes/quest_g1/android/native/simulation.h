@@ -8,6 +8,7 @@
 #include "policy_backend.h"
 #include "groot_decoupled.h"
 #include "body_motor_model.h"
+#include "sonic.h"
 
 // CPU controller port from TWIST2 (MIT, Copyright 2025 Yanjie Ze).
 // Shared by the Android app and the native desktop integration check.
@@ -27,6 +28,8 @@ public:
     mjData* data = nullptr;
     double inference_ms = 0;
     int steps = 0;
+    double PlannerMs() const {return sonic_controller?sonic_controller->plannerMs:0;}
+    double PlanAge() const {return sonic_controller?sonic_controller->planAge:0;}
     int PolicyHz() const { return policy_hz; }
     int physics_workers = 0;
     std::string scene_name;
@@ -39,6 +42,7 @@ private:
     std::string assets_directory;
     bodymotors::Profile original_body_motors{},decoupled_body_motors{};
     void StepDecoupled();
+    std::unique_ptr<sonic::Controller> sonic_controller;
     grootdecoupled::Command MakeDecoupledCommand();
     std::string backend=questpolicy::Twist2;
     mjData* reference_data=nullptr;

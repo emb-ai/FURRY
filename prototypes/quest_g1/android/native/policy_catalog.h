@@ -12,7 +12,7 @@
 namespace questpolicy {
 struct Entry {
     std::string id, file, sha256, title, note;
-    std::string backend=Twist2, secondaryFile{}, secondarySha256{};
+    std::string backend=Twist2, secondaryFile{}, secondarySha256{}, plannerFile{}, plannerSha256{};
 };
 inline bool Digest(const std::string& value){
     if(value.size()!=64)return false;
@@ -39,6 +39,12 @@ inline RuntimePolicy VerifiedPolicy(const std::string& assets,const Entry& entry
     if(!entry.secondaryFile.empty()){
         out.secondaryPath=assets+"/"+entry.secondaryFile;VerifySha256(out.secondaryPath,entry.secondarySha256);
     }
+    if(!entry.plannerFile.empty()){
+        out.plannerPath=assets+"/"+entry.plannerFile;VerifySha256(out.plannerPath,entry.plannerSha256);
+#ifdef __ANDROID__
+        out.asyncPlanner=true;
+#endif
+    }
     out.Validate();return out;
 }
 inline std::vector<Entry> Load(const std::string& assets) {
@@ -55,8 +61,13 @@ inline std::vector<Entry> Load(const std::string& assets) {
                 throw std::runtime_error("Invalid policy backend row");
             row>>std::ws;
         }
+        if(e.backend==Sonic){
+            if(!(row>>std::quoted(e.plannerFile)>>std::quoted(e.plannerSha256))||!ModelFile(e.plannerFile)||!Digest(e.plannerSha256)||!files.insert(e.plannerFile).second)
+                throw std::runtime_error("Invalid SONIC planner identity");
+            row>>std::ws;
+        }
         if(!KnownBackend(e.backend) ||
-           (e.backend==GrootDecoupled ? (!ModelFile(e.secondaryFile)||!Digest(e.secondarySha256)||!files.insert(e.secondaryFile).second)
+           (e.backend!=Twist2 ? (!ModelFile(e.secondaryFile)||!Digest(e.secondarySha256)||!files.insert(e.secondaryFile).second)
                                      : (!e.secondaryFile.empty()||!e.secondarySha256.empty())))
             throw std::runtime_error("Invalid policy backend identity");
         if(!row.eof()||!Token(e.id)||!ModelFile(e.file)||!Digest(e.sha256)||e.title.empty()||

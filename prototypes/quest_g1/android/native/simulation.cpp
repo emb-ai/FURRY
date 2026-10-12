@@ -62,18 +62,27 @@ Simulation::Simulation(const std::string& assets,int physicsWorkers,const std::s
     reference_data=mj_makeData(model);
     torso_body=mj_name2id(model,mjOBJ_BODY,"torso_link");
     if(!reference_data||torso_body<0)throw std::runtime_error("Missing decoupled torso kinematics");
-    if(backend==questpolicy::GrootDecoupled){
+    if(backend!=questpolicy::Twist2){
         bodymotors::Apply(model,decoupled_body_motors);
         mj_setConst(model,data);
     }
     Reset();
 }
-Simulation::~Simulation(){ mj_deleteData(reference_data); mj_deleteData(data); mj_deleteModel(model); }
+Simulation::~Simulation(){ sonic_controller.reset(); mj_deleteData(reference_data); mj_deleteData(data); mj_deleteModel(model); }
 void Simulation::SelectPolicy(const std::string& path) {
     SelectPolicy(questpolicy::RuntimePolicy{questpolicy::Twist2,path,""});
 }
 void Simulation::SelectPolicy(const questpolicy::RuntimePolicy& policy) {
     policy.Validate();
+    if(policy.backend==questpolicy::Sonic){
+        if(policy_hz_override!=0&&policy_hz_override!=50)throw std::runtime_error("SONIC requires 50 Hz");
+        auto motors=bodymotors::Load(policy.motorProfilePath.empty()?assets_directory+"/"+questpolicy::SonicMotorFile:policy.motorProfilePath,questpolicy::SonicMotorId,questpolicy::SonicMotorSha);
+        if(model)bodymotors::ValidateMapping(model,motors);
+        auto candidate=std::make_unique<sonic::Controller>(env,policy);
+        sonic_controller=std::move(candidate);session.reset();secondary_session.reset();
+        backend=policy.backend;policy_hz=50;decoupled_body_motors=std::move(motors);
+        if(model&&data){bodymotors::Apply(model,decoupled_body_motors);mj_setConst(model,data);Reset();}return;
+    }
     const bool decoupled=policy.backend==questpolicy::GrootDecoupled;
     if(decoupled && policy_hz_override!=0 && policy_hz_override!=50)
         throw std::runtime_error("GR00T decoupled requires 50 Hz");
@@ -123,6 +132,7 @@ void Simulation::SelectPolicy(const questpolicy::RuntimePolicy& policy) {
         nextHz=policy_hz_override?policy_hz_override:(rateText=="50"?50:100);
     }
     // Both sessions are validated before changing any active backend or state.
+    sonic_controller.reset();
     session=std::move(candidate);secondary_session=std::move(secondaryCandidate);
     input_name=std::move(nextInput);output_name=std::move(nextOutput);
     secondary_input_name=std::move(nextSecondaryInput);secondary_output_name=std::move(nextSecondaryOutput);
@@ -138,11 +148,12 @@ void Simulation::Reset() {
     mj_resetData(model,data);
     data->qpos[2]=.793; data->qpos[3]=1;
     const bool decoupled=backend==questpolicy::GrootDecoupled;
-    const auto& defaults=decoupled?grootdecoupled::Home:home;
+    const auto& defaults=backend==questpolicy::Sonic?sonic::home:(decoupled?grootdecoupled::Home:home);
     for(int i=0;i<29;i++){data->qpos[qadr[i]]=defaults[i]; target[i]=defaults[i];}
-    if(decoupled){data->qpos[qadr[18]]=data->qpos[qadr[25]]=1.2;}
+    if(backend!=questpolicy::Twist2){data->qpos[qadr[18]]=data->qpos[qadr[25]]=1.2;}
     data->qpos[qadr[16]]=.2; data->qpos[qadr[23]]=-.2;
-    if(decoupled)for(int i=0;i<29;i++)target[i]=data->qpos[qadr[i]];
+    if(backend!=questpolicy::Twist2)for(int i=0;i<29;i++)target[i]=data->qpos[qadr[i]];
+    if(sonic_controller)sonic_controller->Reset();
     history.fill(0); last_action.fill(0); steps=0; hand_grip.fill(0);
     decoupled_history.fill(0);decoupled_last_action.fill(0);decoupled_command={};
     for(int i=0;i<14;i++)decoupled_command.arms[i]=data->qpos[qadr[15+i]];
@@ -165,6 +176,14 @@ void Simulation::PauseWholeBodyReference(){
     if(has_whole_reference)whole_reference[0]=whole_reference[1]=whole_reference[5]=0;
 }
 void Simulation::Step(bool demo,double grip,double right_grip) {
+    if(steps%20==0 && sonic_controller){
+        auto command=whole_reference;
+        if(!has_whole_reference){command.fill(0);command[2]=.793f;for(int k=0;k<29;k++)command[6+k]=sonic::home[k];command[24]=command[31]=1.2f;
+            if(has_reference)std::copy(arm_reference.begin(),arm_reference.end(),command.begin()+21);}
+        auto start=std::chrono::steady_clock::now();
+        target=sonic_controller->Update(model,data,reference_data,qadr,vadr,command);
+        inference_ms=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-start).count();
+    }
     if(steps%(1000/policy_hz)==0 && backend==questpolicy::GrootDecoupled)StepDecoupled();
     if(steps%(1000/policy_hz)==0 && backend==questpolicy::Twist2) {
         std::array<float,1432> obs{};
@@ -208,7 +227,8 @@ void Simulation::Step(bool demo,double grip,double right_grip) {
         if(backend==questpolicy::GrootDecoupled){
             // Author motor PD; MuJoCo applies the model's actuator force limits.
             data->ctrl[aids[i]]=(target[i]-data->qpos[qadr[i]])*grootdecoupled::Kp[i]-data->qvel[vadr[i]]*grootdecoupled::Kd[i];
-        }else data->ctrl[aids[i]]=std::clamp((target[i]-data->qpos[qadr[i]])*kp[i]-data->qvel[vadr[i]]*kd[i],-kp[i],kp[i]);
+        }else if(sonic_controller)data->ctrl[aids[i]]=(target[i]-data->qpos[qadr[i]])*sonic::kp[i]-data->qvel[vadr[i]]*sonic::kd[i];
+        else data->ctrl[aids[i]]=std::clamp((target[i]-data->qpos[qadr[i]])*kp[i]-data->qvel[vadr[i]]*kd[i],-kp[i],kp[i]);
     }
     if(right_grip<0)right_grip=grip;
     hand_grip[0]+=std::clamp(grip-hand_grip[0],-.002,.002);

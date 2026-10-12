@@ -21,7 +21,7 @@ def checked_model(source, ident, backend, expected_digest, opts):
     if expected_digest and expected_digest != digest:
         raise ValueError(f'Policy hash mismatch: {ident}')
     session = ort.InferenceSession(str(source), sess_options=opts, providers=['CPUExecutionProvider'])
-    input_width, output_width = (1432, 29) if backend == 'twist2' else (516, 15)
+    input_width, output_width = {'twist2': (1432,29), 'groot_decoupled_v1': (516,15), 'sonic_encoder': (1762,64), 'sonic_decoder': (994,29)}[backend]
     rate = session.get_modelmeta().custom_metadata_map.get('g1_policy_hz', '100' if backend == 'twist2' else '50')
     if rate not in ('50', '100') or (backend != 'twist2' and rate != '50'):
         raise ValueError(f'Unsupported policy frequency: {ident}: {rate}')
@@ -50,7 +50,7 @@ def export_policies(assets, upstream, config=None):
         extra = json.loads(config.read_text(encoding='utf-8'))
         for row in extra:
             row = dict(row)
-            for key in ('path', 'secondary_path'):
+            for key in ('path', 'secondary_path', 'planner_path'):
                 if key in row:
                     path = Path(row[key])
                     row[key] = str(path if path.is_absolute() else config.parent / path)
@@ -70,10 +70,17 @@ def export_policies(assets, upstream, config=None):
             if not row.get(key) or len(row[key].encode()) > limit or any(ord(c) < 32 for c in row[key]):
                 raise ValueError(f'Invalid policy {key}')
         backend = row.get('backend', 'twist2')
-        if backend not in ('twist2', 'groot_decoupled_v1'):
+        if backend not in ('twist2', 'groot_decoupled_v1', 'sonic_vr3_v1'):
             raise ValueError(f'Unsupported policy backend: {backend}')
-        if (backend == 'groot_decoupled_v1') != bool(row.get('secondary_path')):
+        if (backend != 'twist2') != bool(row.get('secondary_path')):
             raise ValueError(f'Policy secondary model does not match backend: {ident}')
+        if (backend == 'sonic_vr3_v1') != bool(row.get('planner_path')):
+            raise ValueError('Planner does not match backend')
+        if backend == 'sonic_vr3_v1':
+            from scripts.sonic_assets import package
+            entry={key: row[key] for key in ('id','title','note')}
+            entry.update(backend=backend,policy_hz=50,legacy_policy_hz=50)
+            entry.update(package(row,assets,opts,checked_model));catalog.append(entry);continue
         source = Path(row['path'])
         digest, rate = checked_model(source, ident, backend, row.get('sha256'), opts)
         filename = ('policy.onnx' if i == 0 else f'policy-{ident}.onnx') if backend == 'twist2' else f'policy-{ident}-balance.onnx'
@@ -94,7 +101,7 @@ def export_policies(assets, upstream, config=None):
             item.update(policy_id=entry['id'], policy_title=entry['title'], policy_note=entry['note'],
                         policy_file=entry['file'], policy_sha256=entry['sha256'], policy_hz=entry['policy_hz'],
                         legacy_policy_hz=entry['legacy_policy_hz'], policy_backend=entry['backend'])
-            for key in ('policy_secondary_file', 'policy_secondary_sha256', 'body_motor_profile', 'body_motor_profile_sha256'):
+            for key in ('policy_secondary_file', 'policy_secondary_sha256', 'policy_planner_file', 'policy_planner_sha256', 'body_motor_profile', 'body_motor_profile_sha256'):
                 item.pop(key, None)
             item['sha256'].pop('body_motor_profile.txt', None)
             item['sha256'].pop('policy.onnx', None)
@@ -102,6 +109,7 @@ def export_policies(assets, upstream, config=None):
             if 'secondary_file' in entry:
                 item.update(policy_secondary_file=entry['secondary_file'], policy_secondary_sha256=entry['secondary_sha256'])
                 item['sha256'][entry['secondary_file']] = entry['secondary_sha256']
+            if entry['backend']=='groot_decoupled_v1':
                 profile_root = Path(__file__).resolve().parents[1] / 'policies/homie-v2'
                 profile = json.loads((profile_root / 'provenance.json').read_text())['body_motor_profile']
                 profile_path = profile_root / profile['file']
@@ -110,22 +118,35 @@ def export_policies(assets, upstream, config=None):
                 shutil.copy2(profile_path, assets / profile['file'])
                 item.update(body_motor_profile=profile['id'], body_motor_profile_sha256=profile['sha256'])
                 item['sha256'][profile['file']] = profile['sha256']
+            if entry['backend']=='sonic_vr3_v1':
+                proof=json.loads((Path(__file__).resolve().parents[1]/'policies/sonic-vr3/provenance.json').read_text())
+                item.update(policy_planner_file=entry['planner_file'],policy_planner_sha256=entry['planner_sha256'],
+                    sonic_planner_seed=11,sonic_planner_schedule='async_5hz',sonic_input='GMR FK wrists/head, autonomous planned legs',
+                    body_motor_profile='sonic_b042411f_deploy_motors',body_motor_profile_sha256=proof['sha256']['sonic_motor_profile.txt'])
+                item['sha256'][entry['planner_file']]=entry['planner_sha256']
+                item['sha256']['sonic_motor_profile.txt']=proof['sha256']['sonic_motor_profile.txt']
+                item.setdefault('limitations',[]).append('Asynchronous SONIC plans are not stored; frames support state replay, not exact dynamic restart')
             (assets / f'recording_metadata-{scene}-policy-{entry["id"]}.json').write_text(
                 json.dumps(item, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
         # Default metadata also explicitly identifies the baseline.
         base.write_text((assets / f'recording_metadata-{scene}-policy-twist2-20k.json').read_text(), encoding='utf-8')
     # Remove candidates left by a previous build; a fresh config is authoritative.
-    keep = {row[key] for row in catalog for key in ('file', 'secondary_file') if key in row}
+    keep = {row[key] for row in catalog for key in ('file', 'secondary_file', 'planner_file') if key in row}
     for old in assets.glob('policy-*.onnx'):
         if old.name not in keep:
             old.unlink()
     if not any(row['backend'] == 'groot_decoupled_v1' for row in catalog):
         (assets / 'body_motor_profile.txt').unlink(missing_ok=True)
+    if not any(row['backend']=='sonic_vr3_v1' for row in catalog):
+        for name in ['sonic_motor_profile.txt','sonic_observation_config.yaml','SONIC_SOURCE_LICENSE.txt','SONIC_MODEL_LICENSE.txt','SONIC_NOTICE.txt']:
+            (assets/name).unlink(missing_ok=True)
     lines = []
     for row in catalog:
         values = [row[key] for key in ('id', 'file', 'sha256', 'title', 'note')]
         if row['backend'] != 'twist2':
             values += [row['backend'], row['secondary_file'], row['secondary_sha256']]
+        if row['backend']=='sonic_vr3_v1':
+            values += [row['planner_file'],row['planner_sha256']]
         lines.append(' '.join(json.dumps(value, ensure_ascii=False) for value in values))
     text = '\n'.join(lines) + '\n'
     (assets / 'policy_catalog.txt').write_text(text, encoding='utf-8')

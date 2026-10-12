@@ -46,6 +46,13 @@ public:
                 bodymotors::ValidateApplied(model,bodymotors::Load(profilePath.string()));
                 std::filesystem::copy_file(profilePath,directory/bodymotors::File);
             }
+            if(identity.policyBackend==questpolicy::Sonic){
+                const auto profilePath=std::filesystem::path(root)/questpolicy::SonicMotorFile;
+                bodymotors::ValidateApplied(model,bodymotors::Load(profilePath.string(),questpolicy::SonicMotorId,questpolicy::SonicMotorSha));
+                std::filesystem::copy_file(profilePath,directory/questpolicy::SonicMotorFile);
+                std::filesystem::copy_file(std::filesystem::path(root)/identity.policyPlannerFile,directory/"policy-planner.onnx");
+                questpolicy::VerifySha256((directory/"policy-planner.onnx").string(),identity.policyPlannerSha256);
+            }
             if(!policyFile.empty())std::filesystem::copy_file(std::filesystem::path(root)/policyFile,directory/"policy.onnx");
             if(!secondaryPolicyFile.empty())std::filesystem::copy_file(std::filesystem::path(root)/secondaryPolicyFile,directory/"policy-secondary.onnx");
             for(auto* f:{&input,&frames,&events,&body,&mimic})f->exceptions(std::ios::badbit|std::ios::failbit);

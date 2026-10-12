@@ -126,7 +126,7 @@ class JsonFields {
                 Space();
                 size_t start = pos;
                 Value();
-                if (collect && (key == "scene" || key == "nq" || key == "nv" || key == "nu" || key == "policy_file" || key == "policy_sha256" || key == "policy_backend" || key == "policy_secondary_file" || key == "policy_secondary_sha256" || key == "body_motor_profile" || key == "body_motor_profile_sha256" || key == "catch_up" || key == "first_person" || key == "catch_up_v2" || key == "neutral_wrists" || key == "wrist_frame_v2" || key == "policy_hz" || key == "travel_gain_percent")) {
+                if (collect && (key == "scene" || key == "nq" || key == "nv" || key == "nu" || key == "policy_file" || key == "policy_sha256" || key == "policy_backend" || key == "policy_secondary_file" || key == "policy_secondary_sha256" || key == "policy_planner_file" || key == "policy_planner_sha256" || key == "body_motor_profile" || key == "body_motor_profile_sha256" || key == "catch_up" || key == "first_person" || key == "catch_up_v2" || key == "neutral_wrists" || key == "wrist_frame_v2" || key == "policy_hz" || key == "travel_gain_percent")) {
                     if (!out.emplace(key, text.substr(start, pos - start)).second)
                         throw std::runtime_error("Duplicate episode manifest field: " + key);
                 }
@@ -225,7 +225,7 @@ inline int Dimension(const std::string &value) {
 
 struct Manifest {
     std::string scene = "lab", raw, policyFile, policySha256;
-    std::string policyBackend=questpolicy::Twist2,policySecondaryFile,policySecondarySha256;
+    std::string policyBackend=questpolicy::Twist2,policySecondaryFile,policySecondarySha256,policyPlannerFile,policyPlannerSha256;
     std::string bodyMotorProfile,bodyMotorProfileSha256;
     bool catchUp=false,firstPerson=false;
     bool catchUpV2=false,neutralWrists=false,wristFrameV2=false;
@@ -247,6 +247,12 @@ struct Manifest {
             out.motorProfilePath=std::filesystem::exists(folder+"/"+bodymotors::File)?
                 folder+"/"+bodymotors::File:assets+"/"+bodymotors::File;
             bodymotors::Load(out.motorProfilePath);
+        }
+        if(policyBackend==questpolicy::Sonic){
+            out.plannerPath=std::filesystem::exists(folder+"/policy-planner.onnx")?folder+"/policy-planner.onnx":assets+"/"+policyPlannerFile;
+            questpolicy::VerifySha256(out.plannerPath,policyPlannerSha256);
+            out.motorProfilePath=std::filesystem::exists(folder+"/"+questpolicy::SonicMotorFile)?folder+"/"+questpolicy::SonicMotorFile:assets+"/"+questpolicy::SonicMotorFile;
+            bodymotors::Load(out.motorProfilePath,questpolicy::SonicMotorId,questpolicy::SonicMotorSha);
         }
         out.Validate();return out;
     }
@@ -306,15 +312,22 @@ inline Manifest LoadManifest(const std::string &folder) {
         if(!questpolicy::ModelFile(out.policySecondaryFile)||!questpolicy::Digest(out.policySecondarySha256))
             throw std::runtime_error("Invalid episode secondary policy identity");
     }
-    if(out.policyBackend==questpolicy::GrootDecoupled){
+    if(out.policyBackend!=questpolicy::Twist2){
         if(out.policyFile.empty()||out.policySecondaryFile.empty()||out.policyFile==out.policySecondaryFile||out.policyHz!=50)
             throw std::runtime_error("Incomplete decoupled backend contract");
     }else if(!out.policySecondaryFile.empty())throw std::runtime_error("Unexpected secondary policy for TWIST2");
+    if(out.policyBackend==questpolicy::Sonic){
+        if(!fields.count("policy_planner_file")||!fields.count("policy_planner_sha256"))throw std::runtime_error("Missing SONIC planner identity");
+        out.policyPlannerFile=readString("policy_planner_file");out.policyPlannerSha256=readString("policy_planner_sha256");
+        if(!questpolicy::ModelFile(out.policyPlannerFile)||!questpolicy::Digest(out.policyPlannerSha256)||out.policyPlannerFile==out.policyFile||out.policyPlannerFile==out.policySecondaryFile)throw std::runtime_error("Invalid SONIC planner identity");
+    }else if(fields.count("policy_planner_file")||fields.count("policy_planner_sha256"))throw std::runtime_error("Unexpected planner identity");
     if(fields.count("body_motor_profile"))out.bodyMotorProfile=readString("body_motor_profile");
     if(fields.count("body_motor_profile_sha256"))out.bodyMotorProfileSha256=readString("body_motor_profile_sha256");
     if(out.policyBackend==questpolicy::GrootDecoupled){
         if(out.bodyMotorProfile!=bodymotors::Id||out.bodyMotorProfileSha256!=bodymotors::Sha256)
             throw std::runtime_error("Missing or incompatible decoupled body motor profile");
+    }else if(out.policyBackend==questpolicy::Sonic){
+        if(out.bodyMotorProfile!=questpolicy::SonicMotorId||out.bodyMotorProfileSha256!=questpolicy::SonicMotorSha)throw std::runtime_error("Incompatible SONIC motors");
     }else if(!out.bodyMotorProfile.empty()||!out.bodyMotorProfileSha256.empty())
         throw std::runtime_error("Unexpected body motor profile for TWIST2");
     if (fields.count("nq"))

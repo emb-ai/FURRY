@@ -20,7 +20,7 @@ class PolicyAssetsTests(unittest.TestCase):
             catalog = export_policies(root, UPSTREAM)
             self.assertEqual([row['id'] for row in catalog],
                              ['twist2-20k', 'twist2-25k', 'quest-111260-500', 'quest-111260-1000',
-                              'quest-111586-200', 'quest-111586-300', 'quest-111586-500', 'homie-v2'])
+                              'quest-111586-200', 'quest-111586-300', 'quest-111586-500', 'homie-v2', 'sonic-vr3'])
             artifacts = {}
             for run in ('quest-111260', 'quest-111586'):
                 provenance = json.loads((Path(__file__).resolve().parents[1] /
@@ -36,7 +36,7 @@ class PolicyAssetsTests(unittest.TestCase):
                 metadata = json.loads((root / f'recording_metadata-stand-policy-{row["id"]}.json').read_text())
                 self.assertEqual(metadata['policy_hz'], 50)
                 self.assertEqual(metadata['legacy_policy_hz'], expected_hz)
-            homie = catalog[-1]
+            homie = catalog[-2]
             self.assertEqual(homie['backend'], 'groot_decoupled_v1')
             self.assertEqual(homie['policy_hz'], 50)
             self.assertEqual(homie['legacy_policy_hz'], 50)
@@ -52,6 +52,12 @@ class PolicyAssetsTests(unittest.TestCase):
                 self.assertEqual(metadata['policy_'+prefix+'file'], filename)
                 self.assertEqual(metadata['policy_'+prefix+'sha256'], digest)
                 self.assertEqual(metadata['sha256'][filename], digest)
+            sonic=catalog[-1]
+            self.assertEqual(sonic['backend'],'sonic_vr3_v1')
+            sm=json.loads((root/'recording_metadata-stand-policy-sonic-vr3.json').read_text())
+            self.assertEqual(sm['sonic_planner_seed'],11)
+            for prefix in ('','secondary_','planner_'):
+                self.assertEqual(sm['policy_'+prefix+'sha256'],sonic[prefix+'sha256'])
             # Removing this mode also removes both models from the APK assets.
             config = root/'empty.json'
             config.write_text('[]')

@@ -1,0 +1,14 @@
+{
+  "sonic_native_100_steps_max_qpos_error": 4.3143267541845276e-07,
+  "transactional_load": true,
+  "reset": true,
+  "mode_switches": true,
+  "recording": true,
+  "async_reset": true,
+  "virtual_leg_invariance": true,
+  "task_scenes": [
+    "stand",
+    "cup",
+    "push_t"
+  ]
+}
