@@ -1,0 +1,102 @@
+{
+  "schema": "research-results-files-v1",
+  "generated_date": "2026-10-12",
+  "files": {
+    "README.md": {
+      "bytes": 7237,
+      "sha256": "35eb5001d4e229b4ee39533c2f357d5281533c49e7eb4a7d4bd4fc584b471d7a"
+    },
+    "ancestor-check.json": {
+      "bytes": 355,
+      "sha256": "7981bc2b01ae86a64d60c297e2d1df0dec6251a506e76020fb46d606643b5f3b"
+    },
+    "code/launch_locomotion.py": {
+      "bytes": 3614,
+      "sha256": "c9aed4d5ae0b7fc692e9fb2f989c1b37f3ac22a24746f2eae8ecdba72bb969b7"
+    },
+    "code/locomotion_ablation.py": {
+      "bytes": 3558,
+      "sha256": "cc028cce48604980e1596103d4e84a4d71500953a8f2200a36d97fc94bc49a02"
+    },
+    "code/locomotion_eval.py": {
+      "bytes": 4624,
+      "sha256": "f291342a49fd3e97bd3b70ce43dcf3bd4c4759949741a0903d5fa746f0e4a661"
+    },
+    "code/locomotion_finetune.py": {
+      "bytes": 18750,
+      "sha256": "7f624e3c2e30d607bc14024abcc9dc89b777102c5a51339360d214f46aae4a87"
+    },
+    "code/locomotion_verdict.py": {
+      "bytes": 2294,
+      "sha256": "446e0ae535a37975f7a815366d08975368a9fca8f574647a784076a075abb777"
+    },
+    "code/run_locomotion_pipeline.py": {
+      "bytes": 9829,
+      "sha256": "b310f91f21ebefa0f1fbb7f14b97a78a6e979dbf18dbbf0db81fb2c143ade24d"
+    },
+    "code/status_locomotion.py": {
+      "bytes": 1169,
+      "sha256": "803768d0ce36f0a77b601a04dd91891b88e796b13411078febd19090a8973d7e"
+    },
+    "code/test_locomotion_source.py": {
+      "bytes": 3512,
+      "sha256": "7334a709081bf67deea22037cae3d19f4ffb21629c889c2f8f37923a52556435"
+    },
+    "experiment.md": {
+      "bytes": 9817,
+      "sha256": "679d482c557e9634a8b7176159a34a02b412f7b75ade12d17458e601fde4872e"
+    },
+    "gait-gate-test.json": {
+      "bytes": 177,
+      "sha256": "44db11a3bc903cb62948a607b51e4db16deb64c30296f091cecaabe2b325e68c"
+    },
+    "previous-5k/loss-curves.json": {
+      "bytes": 829,
+      "sha256": "49113aafcba09ab89f6af04b52f4207aef13797228390df326d167a9b623d3c3"
+    },
+    "previous-5k/loss-curves.png": {
+      "bytes": 565240,
+      "sha256": "c89c0d4c5ff0f70f050d4920405174bd6cbb0334528698a523c350d7e93e2fed"
+    },
+    "previous-5k/migration-audit-summary.json": {
+      "bytes": 3967,
+      "sha256": "013e001859b3b5e7ac91dbfe5dca9b63b494acf05d0c77914deef0977013de68"
+    },
+    "previous-5k/migration-audit.md": {
+      "bytes": 6481,
+      "sha256": "f6295e47083ba21b4670c0361b44c696e835e4e9d5d65795d4dc80fc631e1bd6"
+    },
+    "previous-5k/report.md": {
+      "bytes": 3953,
+      "sha256": "13414ebeda39c24abd1562b78539a5857851bf2c3eb9bb6402c6ef60902ab136"
+    },
+    "previous-5k/results-summary.json": {
+      "bytes": 23939,
+      "sha256": "b7d498075a7d4cdaa24b40b0671713050e762bd675782a263fce86a2d33eb783"
+    },
+    "previous-5k/source-ppo-fixed-batch-check.json": {
+      "bytes": 573,
+      "sha256": "202a57b285058a93726586cb04eb9bf07c1888e4f4329c44283ce5466b75e9b7"
+    },
+    "previous-5k/train-diagnostics.md": {
+      "bytes": 2059,
+      "sha256": "7eb2b6b5784b46cd1cd8173c5ee3e3c3e776d5afdf255896c8f561dda089de1b"
+    },
+    "provenance.json": {
+      "bytes": 3575,
+      "sha256": "91d12046fac350bff700837e7f7773a4c0659ad1ad130a8767a9170311465071"
+    },
+    "results-summary.json": {
+      "bytes": 140629,
+      "sha256": "8e748c7e467418c8c2eebb8b0d1995475388749af9303caea2762a7e64f21fd7"
+    },
+    "results.md": {
+      "bytes": 5207,
+      "sha256": "c7bf5e5a1b7e52d389e8800aeae814ea449a844c52ee8911d288b157d690fe0f"
+    },
+    "timing.json": {
+      "bytes": 3512,
+      "sha256": "443b05e46916692ad5c43c663f6dd9b36a7db5cc57b5ba163a44b62f649dcc33"
+    }
+  }
+}

@@ -1,0 +1,247 @@
+"""Small-data finetune using pinned TWIST2 simulator, reward and DaggerPPO.
+
+Explicit finetune changes: pretrained/frozen actor normalization, new critic
+normalization and requested critic-only warmup. PPO/std settings come from source.
+Optional window reward and sole URDF are explicit experiment overrides.
+No teacher, catch-up, whole-run KL stop, or custom simulator approximation.
+"""
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import sys
+import time
+
+
+def main():
+    p = argparse.ArgumentParser()
+    p.add_argument('--lower-body-coefficient', type=float, default=1.)
+    p.add_argument('--yaw-airtime', action='store_true')
+    p.add_argument('--fast-critic', action='store_true', help='Skip gradient-free actor work during critic warmup; actor PPO unchanged')
+    p.add_argument('--nonlooping', action='store_true', help='End RSI at remaining motion duration and pad future poses')
+    p.add_argument('--leg-faults', action='store_true', help='Actor-only 20--120 ms leg delay and 160--320 ms freezes; clean targets')
+    p.add_argument('--legacy-rollout-metrics', action='store_true', help='Reference scalar metrics implementation for performance/parity tests')
+    p.add_argument('--resume', action='store_true', help='Restore full actor/critic/std/Adam from init checkpoint; total iterations target')
+    p.add_argument('--init-checkpoint', type=Path, help='Initialize actor, frozen normalization and exploration std from this checkpoint')
+    p.add_argument('--init-manifest', type=Path, help='Exact training manifest recorded in the initialization checkpoint')
+    p.add_argument('--window-reward', action='store_true', help='One-second displacement/turn penalty; 9 extra critic features; no catch-up')
+    p.add_argument('--sole-urdf', type=Path, help='Derived URDF with main sole spheres and unchanged dynamics')
+    p.add_argument('--smoke', action='store_true', help='Only 2 critic updates + 1 actor update in disposable output; not critic readiness')
+    p.add_argument('--root', type=Path, required=True)
+    p.add_argument('--output', type=Path, required=True)
+    p.add_argument('--iterations', type=int, default=1000)
+    p.add_argument('--critic-warmup', type=int, default=500)
+    p.add_argument('--critic-max', type=int, default=1000)
+    p.add_argument('--save-every', type=int, default=100)
+    a, rest = p.parse_known_args()
+    if bool(a.init_checkpoint) != bool(a.init_manifest):
+        p.error("--init-checkpoint and --init-manifest must be provided together")
+    if a.resume and not a.init_checkpoint:p.error('--resume requires --init-checkpoint')
+    root = a.root.resolve(); out = a.output.resolve()
+    out.mkdir(parents=True, exist_ok=False)
+    sys.argv = [sys.argv[0]] + rest
+    os.chdir(root/'dataset')
+    import isaacgym
+    import torch
+    import numpy as np
+    from legged_gym.envs import G1MimicFuture
+    from legged_gym.gym_utils import task_registry, get_args, class_to_dict
+    from rsl_rl.modules import ActorCriticFuture
+    from rsl_rl.algorithms import DaggerPPO
+    from policy import recover, load
+    from training_performance import critic_only_update, RolloutMetrics
+    torch.set_num_threads(1)
+    torch.backends.cuda.matmul.allow_tf32 = False
+    torch.backends.cudnn.allow_tf32 = False
+    args = get_args()
+    cfg, tc = task_registry.get_cfgs('g1_stu_future')
+    cfg.motion.motion_file = str(root/'dataset/train.yaml')
+    cfg.motion.sample_ratio = 1.
+    if a.sole_urdf:
+        cfg.asset.file = str(a.sole_urdf.resolve())
+    from locomotion_ablation import install as install_locomotion, validate_contract
+    install_locomotion(G1MimicFuture, a.lower_body_coefficient, a.yaw_airtime)
+    env, cfg = task_registry.make_env('g1_stu_future', args=args, env_cfg=cfg)
+    locomotion_contract = validate_contract(env)
+    locomotion_counts = torch.zeros(3, dtype=torch.long, device=env.device)
+    from reference_faults import install_nonlooping, install_faults
+    seam_state = install_nonlooping(env) if a.nonlooping else None
+    fault_state = install_faults(env, seed=args.seed+700, fraction=.5) if a.leg_faults else None
+    window_state = None
+    if a.window_reward:
+        from window_reward import install
+        window_state = install(env)
+    critic_dim = env.num_privileged_obs + (window_state.feature_dim if window_state else 0)
+    def augment_priv(x):
+        return torch.cat((x, window_state.features), -1) if window_state else x
+    manifest = json.loads((root/'dataset/manifest.json').read_text())
+    if manifest.get('schema') != 'twist2-quest-mixture-v2':
+        raise ValueError('Dataset must have verified root-oriented PKL export')
+    rows = [c for c in manifest['clips'] if c['split']=='train']
+    expected = {str((root/'dataset'/c['file']).resolve()) for c in rows}
+    actual = {str(Path(f).resolve()) for f in env._motion_lib._motion_files}
+    if expected != actual: raise ValueError('Upstream loader skipped or added motions')
+    if any('validation' in x for x in actual): raise ValueError('Validation leakage')
+    lineage = None; initial = None
+    if a.init_checkpoint:
+        from checkpoint_lineage import audit
+        initial = torch.load(a.init_checkpoint, map_location='cpu', weights_only=True)
+        lineage = audit(initial, a.init_manifest, manifest)
+        released = load(a.init_checkpoint,root/'TWIST2/rsl_rl/rsl_rl/modules/actor_critic_future.py',env.device)
+    else:
+        released = recover(root/'TWIST2/assets/ckpts/twist2_1017_20k.onnx',root/'TWIST2/rsl_rl/rsl_rl/modules/actor_critic_future.py').to(env.device)
+    ac = ActorCriticFuture(num_observations=env.num_obs,num_critic_observations=critic_dim,num_motion_observations=cfg.env.n_mimic_obs,num_motion_steps=len(cfg.env.tar_motion_steps),num_priop_observations=cfg.env.n_proprio,num_history_steps=cfg.env.history_len,num_actions=env.num_actions,**class_to_dict(tc.policy)).to(env.device)
+    ac.actor.load_state_dict(released.actor.state_dict(),strict=True)
+    if initial is not None:
+        std = initial['actor_critic']['std'].to(env.device)
+        if std.shape != ac.std.shape or not torch.isfinite(std).all() or not (std>0).all():
+            raise ValueError('Invalid ancestor exploration std')
+        with torch.no_grad():ac.std.copy_(std)
+    ac.train()  # Same training mode as the upstream runner.
+    frozen_actor = {k:v.detach().clone() for k,v in ac.actor.state_dict().items()}
+    ac.std.requires_grad_(False)
+    for param in ac.actor.parameters(): param.requires_grad_(False)
+    algorithm = class_to_dict(tc.algorithm)
+    alg = DaggerPPO(env,ac,ac,teacher_loaded=False,device=env.device,**algorithm)
+    # Critic-only prefit: do not adapt its LR from a frozen actor's dropout KL.
+    alg.schedule='fixed'
+    steps = tc.runner.num_steps_per_env
+    alg.init_storage(env.num_envs,steps,[env.num_obs],[critic_dim],[env.num_actions])
+    obs = env.get_observations()
+    priv = augment_priv(env.get_privileged_observations())
+    # Freeze actor affine transform exactly. Fit a separate critic transform once.
+    def actor_obs(x): return (x-released.mean)/released.divisor
+    resume_report=None;start_actor=0;start_iteration=0
+    if a.resume:
+        from resume_state import restore
+        if algorithm != json.loads((a.init_checkpoint.parent/'config.json').read_text())['upstream_training']['algorithm']:
+            raise ValueError('Upstream PPO configuration changed on resume')
+        cm,cd,start_actor,start_iteration,resume_report=restore(initial,a.init_checkpoint,ac,alg,env,cfg,a)
+    else:
+        s = torch.zeros(critic_dim,device=env.device,dtype=torch.float64)
+        ss = torch.zeros_like(s); count = 0
+        with torch.no_grad():
+            for _ in range(128):
+                z = priv.double(); s += z.sum(0); ss += z.square().sum(0); count += len(z)
+                action = ac.act(actor_obs(obs))
+                obs,priv,_,_,_ = env.step(action)
+                priv = augment_priv(priv)
+        cm = (s/count).float(); cd = torch.sqrt(torch.clamp(ss/count-(s/count).square(),min=1e-4)).float()
+    def critic_obs(x): return (x-cm)/cd
+    def emit(record):
+        record['wall_seconds'] = time.time()-started
+        with (out/'metrics.jsonl').open('a') as f:f.write(json.dumps(record)+'\n')
+        print(json.dumps(record),flush=True)
+    def save(name,phase,iteration):
+        # Compatible with our independent 100Hz MuJoCo evaluator/exporter.
+        released.actor.load_state_dict(ac.actor.state_dict())
+        ck={'policy':released.state_dict(),'actor_critic':ac.state_dict(),'critic_mean':cm,'critic_divisor':cd,'optimizer':alg.optimizer.state_dict(),'phase':phase,'iteration':iteration,'source_revision':manifest['source_revision'],'dataset_manifest_sha256':hashlib.sha256((root/'dataset/manifest.json').read_bytes()).hexdigest(),'critic_restored':a.resume,'continuation_state':__import__('resume_state').capture(alg,env,cfg),'resume_report':resume_report,'initial_checkpoint_sha256':hashlib.sha256(a.init_checkpoint.read_bytes()).hexdigest() if a.init_checkpoint else None,'ancestor_dataset_audit':lineage}
+        tmp=out/(name+'.tmp');torch.save(ck,tmp);tmp.rename(out/name)
+    started=time.time()
+    save('baseline.pt','baseline',start_actor)
+    config={'source_revision':manifest['source_revision'],'source_actor_sha256':hashlib.sha256((root/'TWIST2/assets/ckpts/twist2_1017_20k.onnx').read_bytes()).hexdigest(),'dataset_manifest_sha256':hashlib.sha256((root/'dataset/manifest.json').read_bytes()).hexdigest(),'environment':class_to_dict(cfg),'upstream_training':class_to_dict(tc),'ppo_config_matches_upstream':algorithm==class_to_dict(tc.algorithm),'initial_std_mean':float(ac.std.mean()),'initial_std_from_upstream':not bool(a.init_checkpoint),'finetune_overrides':{k:str(v) if isinstance(v,Path) else v for k,v in vars(a).items()},'critic_gate':'On-policy pre-update TD-lambda prediction, 50-iteration windows; proxy only, not independent Monte Carlo certification. Validation never enters optimizer.','deployment':False}
+    config['locomotion_ablation']={'lower_body_coefficient':a.lower_body_coefficient,'yaw_airtime':a.yaw_airtime,'yaw_threshold_rad_s':.15,'linear_threshold_m_s':.05,'contract':locomotion_contract,'changed_reward_new_critic':not a.resume,'kick_t_intent_not_tested':True}
+    config['performance']={'batched_rollout_metrics':not a.legacy_rollout_metrics,'critic_value_only_update':a.fast_critic,'actor_ppo_unchanged':True,'critic_rng_stream_matches_upstream':not a.fast_critic}
+    config['initialization'] = {'checkpoint':str(a.init_checkpoint) if a.init_checkpoint else None, 'sha256':hashlib.sha256(a.init_checkpoint.read_bytes()).hexdigest() if a.init_checkpoint else None, 'actor_and_normalization_restored':bool(a.init_checkpoint), 'std_restored':bool(a.init_checkpoint), 'critic_restored':a.resume, 'optimizer_restored':a.resume, 'resume_report':resume_report, 'dataset_audit':lineage}
+    config['window_reward'] = {'enabled':a.window_reward, 'seconds':1., 'type':'dense Huber on progress since start of consecutive windows; separate initial heading frames', 'position_scale_m':.25, 'yaw_scale_rad':.5, 'position_weight':.25, 'yaw_weight':.25, 'critic_extra_features':critic_dim-env.num_privileged_obs, 'catch_up':False}
+    config['sole_urdf_sha256'] = hashlib.sha256(a.sole_urdf.read_bytes()).hexdigest() if a.sole_urdf else None
+    (out/'config.json').write_text(json.dumps(config,indent=2,default=str))
+    counts=torch.zeros(len(rows),device=env.device,dtype=torch.long)
+    quest_ids=torch.tensor([i for i,f in enumerate(env._motion_lib._motion_files) if str(f).startswith('./quest/') or str(f).startswith('quest/')],device=env.device)
+    quest_mask=torch.zeros(len(rows),device=env.device,dtype=torch.bool);quest_mask[quest_ids]=True
+    phase='actor' if a.resume else 'critic'; iteration=start_iteration; stable=0; window=[]; actor_updates=start_actor
+    if actor_updates>=a.iterations and not a.smoke:raise ValueError('Target must exceed restored actor updates')
+    if a.resume:emit({'phase':'resumed',**resume_report})
+    while True:
+        if (out/'STOP').exists():
+            emit({'phase':'stopped_by_file','actor_updates':actor_updates});save('stopped.pt',phase,iteration);return
+        iteration+=1
+        value_loss_previous=[]; resets=0; failures=0; reward_sum=0.; quest_frames=0; displacement_sum=0.; turn_sum=0.; distance_sum=0.
+        metrics=None if a.legacy_rollout_metrics else RolloutMetrics(env.device,quest_mask)
+        with torch.no_grad():
+            for _ in range(steps):
+                ids=env._motion_ids.clone(); counts.scatter_add_(0,ids,torch.ones_like(ids))
+                if metrics is None:quest_frames+=int(torch.isin(ids,quest_ids).sum())
+                else:metrics.record_motion_ids(ids)
+                actions=alg.act(actor_obs(obs),critic_obs(priv),{})
+                obs,priv,r,d,info=env.step(actions)
+                priv = augment_priv(priv)
+                linear = torch.linalg.vector_norm(env._ref_root_vel[:, :2],dim=-1)>.05
+                yaw = env._ref_root_ang_vel[:,2].abs()>.15
+                locomotion_counts += torch.stack(((linear|yaw).sum(),(yaw&~linear).sum(),torch.tensor(env.num_envs,device=env.device)))
+                if metrics is None and window_state is not None:
+                    displacement_sum += float(window_state.position_penalty.mean())
+                    turn_sum += float(window_state.yaw_penalty.mean())
+                    distance_sum += float(window_state.distance_error.mean())
+                alg.process_env_step(r,d,info)
+                if metrics is None:
+                    resets+=int(d.sum());failures+=int((d.bool() & ~info['time_outs'].bool()).sum());reward_sum+=float(r.mean())
+                else:metrics.record_step(r,d,info['time_outs'],window_state)
+            if metrics is not None:
+                quest_frames,resets,failures,reward_sum,displacement_sum,turn_sum,distance_sum=metrics.result()
+            alg.compute_returns(critic_obs(priv))
+            values=alg.storage.values.flatten(); targets=alg.storage.returns.flatten()
+            mse=float((values-targets).square().mean());var=float(targets.var(unbiased=False));ev=1-float((values-targets).var(unbiased=False))/max(var,1e-8)
+            nrmse=(mse/max(var,1e-8))**.5
+            old_means=alg.storage.mu.detach().clone(); saved_obs=alg.storage.observations.detach().clone()
+        # The unchanged upstream DaggerPPO adapts LR per minibatch using KL.
+        # Do not overwrite its persistent LR each rollout or turn KL into termination.
+        lr_before_update=alg.learning_rate
+        fast_critic_active=a.fast_critic and phase=='critic'
+        result=critic_only_update(alg) if fast_critic_active else alg.update()
+        lr=alg.learning_rate
+        with torch.no_grad():
+            current=ac.actor(saved_obs.reshape(-1,env.num_obs)).reshape_as(old_means)
+            update_kl=float(((current-old_means).square()/(2*ac.std.square())).sum(-1).mean())
+        if not np.isfinite([result[0],result[1],ev,nrmse,update_kl]).all():
+            raise FloatingPointError('Nonfinite optimization statistics')
+        record={'phase':phase,'iteration':iteration,'actor_updates':actor_updates,'lr':lr,'value_loss':result[0],'surrogate_loss':result[1],'pre_update_critic_ev':ev,'pre_update_critic_nrmse':nrmse,'post_update_kl_includes_dropout':update_kl,'lr_before_update':lr_before_update,'reward_rate':reward_sum/steps/env.dt,'resets':resets,'tracking_terminations':failures,'quest_frame_fraction':quest_frames/(steps*env.num_envs),'visited_motions':int((counts>0).sum()),'std_mean':float(ac.std.mean())}
+        record['locomotion_samples'] = dict(zip(('moving','yaw_only','total'), map(int,locomotion_counts)))
+        record['critic_only_update']=fast_critic_active
+        record['surrogate_evaluated']=not fast_critic_active
+        record['effective_action_delay_steps'] = float(env.delay) if hasattr(env, 'delay') else 0.
+        record['effective_noise_fraction'] = min(env.total_env_steps_counter/(cfg.noise.noise_increasing_steps*24),1.)
+        if seam_state is not None:
+            record['nonlooping'] = {k:int(v) for k,v in seam_state.items()}
+        if fault_state is not None:
+            record['leg_fault_samples'] = dict(zip(('locomotion','active','frozen','changed'),map(int,fault_state.total)))
+        if window_state is not None:
+            record.update(window_displacement_penalty_rate=displacement_sum/steps*env.reward_scales['window_displacement']/env.dt, window_turn_penalty_rate=turn_sum/steps*env.reward_scales['window_turn']/env.dt, window_distance_error_m=distance_sum/steps)
+        emit(record)
+        if phase=='critic':
+            if a.smoke and iteration==2:
+                save('smoke-critic.pt',phase,iteration)
+                for param in ac.actor.parameters():param.requires_grad_(True)
+                ac.std.requires_grad_(not ac.if_fix_std())
+                alg.schedule=tc.algorithm.schedule
+                alg.learning_rate=tc.algorithm.learning_rate
+                for group in alg.optimizer.param_groups:group['lr']=alg.learning_rate
+                phase='actor'
+            if any(not torch.equal(v,frozen_actor[k]) for k,v in ac.actor.state_dict().items()):
+                raise RuntimeError('Actor weights changed during critic warmup')
+            window.append((ev,nrmse)); window=window[-50:]
+            if iteration%50==0:
+                gate=(iteration>=a.critic_warmup and np.mean([x[0] for x in window])>=.7 and np.mean([x[1] for x in window])<=.65 and bool((counts>0).all()))
+                stable=stable+1 if gate else 0
+                save('critic-latest.pt',phase,iteration)
+                if stable>=2:
+                    save('critic-ready.pt',phase,iteration)
+                    phase='actor'
+                    for param in ac.actor.parameters():param.requires_grad_(True)
+                    ac.std.requires_grad_(not ac.if_fix_std())
+                    alg.schedule=tc.algorithm.schedule
+                    alg.learning_rate=tc.algorithm.learning_rate
+                    for group in alg.optimizer.param_groups:group['lr']=alg.learning_rate
+                    emit({'phase':'critic_ready','warmup_iterations':iteration})
+                elif iteration>=a.critic_max:
+                    emit({'phase':'critic_not_ready','actor_updates':0});return
+        else:
+            actor_updates+=1
+            if actor_updates%a.save_every==0:
+                save(f'checkpoint_{actor_updates:06d}.pt',phase,actor_updates)
+            if actor_updates>=(start_actor+1 if a.smoke else a.iterations):
+                save('final.pt','complete',actor_updates);emit({'phase':'complete','actor_updates':actor_updates});return
+
+
+if __name__=='__main__':main()

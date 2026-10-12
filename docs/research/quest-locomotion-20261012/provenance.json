@@ -1,0 +1,92 @@
+{
+  "schema": "public-experiment-provenance-v1",
+  "source_twist2_commit": "b06178f19a22f2138cbd31f60c6d494bc263f67d",
+  "common_initial_checkpoint": "111260/1000",
+  "common_initial_checkpoint_sha256": "5bbfbddf34b19d8be8c7b37ecfbe61cdef83f03c759f22305fb64d0ee0e06a7f",
+  "runs": [
+    {
+      "run_id": "locomotion-v1-control-s11",
+      "source_ppo_match": true,
+      "common_actor_std_normalization": true,
+      "new_critic_and_optimizer": true,
+      "initial_std_mean": 0.5477688312530518,
+      "lower_body_coefficient": 1.0,
+      "yaw_airtime": false
+    },
+    {
+      "run_id": "locomotion-v1-control-s22",
+      "source_ppo_match": true,
+      "common_actor_std_normalization": true,
+      "new_critic_and_optimizer": true,
+      "initial_std_mean": 0.5477688312530518,
+      "lower_body_coefficient": 1.0,
+      "yaw_airtime": false
+    },
+    {
+      "run_id": "locomotion-v1-relax-s11",
+      "source_ppo_match": true,
+      "common_actor_std_normalization": true,
+      "new_critic_and_optimizer": true,
+      "initial_std_mean": 0.5477688312530518,
+      "lower_body_coefficient": 0.25,
+      "yaw_airtime": false
+    },
+    {
+      "run_id": "locomotion-v1-relax-s22",
+      "source_ppo_match": true,
+      "common_actor_std_normalization": true,
+      "new_critic_and_optimizer": true,
+      "initial_std_mean": 0.5477688312530518,
+      "lower_body_coefficient": 0.25,
+      "yaw_airtime": false
+    },
+    {
+      "run_id": "locomotion-v1-yaw-s11",
+      "source_ppo_match": true,
+      "common_actor_std_normalization": true,
+      "new_critic_and_optimizer": true,
+      "initial_std_mean": 0.5477688312530518,
+      "lower_body_coefficient": 1.0,
+      "yaw_airtime": true
+    },
+    {
+      "run_id": "locomotion-v1-yaw-s22",
+      "source_ppo_match": true,
+      "common_actor_std_normalization": true,
+      "new_critic_and_optimizer": true,
+      "initial_std_mean": 0.5477688312530518,
+      "lower_body_coefficient": 1.0,
+      "yaw_airtime": true
+    },
+    {
+      "run_id": "locomotion-v1-relax-yaw-s11",
+      "source_ppo_match": true,
+      "common_actor_std_normalization": true,
+      "new_critic_and_optimizer": true,
+      "initial_std_mean": 0.5477688312530518,
+      "lower_body_coefficient": 0.25,
+      "yaw_airtime": true
+    },
+    {
+      "run_id": "locomotion-v1-relax-yaw-s22",
+      "source_ppo_match": true,
+      "common_actor_std_normalization": true,
+      "new_critic_and_optimizer": true,
+      "initial_std_mean": 0.5477688312530518,
+      "lower_body_coefficient": 0.25,
+      "yaw_airtime": true
+    }
+  ],
+  "archived_code_sha256": {
+    "launch_locomotion.py": "c9aed4d5ae0b7fc692e9fb2f989c1b37f3ac22a24746f2eae8ecdba72bb969b7",
+    "locomotion_ablation.py": "cc028cce48604980e1596103d4e84a4d71500953a8f2200a36d97fc94bc49a02",
+    "locomotion_eval.py": "f291342a49fd3e97bd3b70ce43dcf3bd4c4759949741a0903d5fa746f0e4a661",
+    "locomotion_finetune.py": "7f624e3c2e30d607bc14024abcc9dc89b777102c5a51339360d214f46aae4a87",
+    "locomotion_verdict.py": "446e0ae535a37975f7a815366d08975368a9fca8f574647a784076a075abb777",
+    "run_locomotion_pipeline.py": "b310f91f21ebefa0f1fbb7f14b97a78a6e979dbf18dbbf0db81fb2c143ade24d",
+    "status_locomotion.py": "803768d0ce36f0a77b601a04dd91891b88e796b13411078febd19090a8973d7e",
+    "test_locomotion_source.py": "7334a709081bf67deea22037cae3d19f4ffb21629c889c2f8f37923a52556435"
+  },
+  "data_audit": "ancestor-check.json",
+  "scope": "Measurements, aggregate checks, experiment parameters and code; no chat dump, user-supplied report, credentials or server-session commands."
+}

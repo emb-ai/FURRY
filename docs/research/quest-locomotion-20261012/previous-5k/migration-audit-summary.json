@@ -1,0 +1,109 @@
+{
+  "1": {
+    "final_actor_updates": 1200,
+    "final_std_mean": 0.4765016734600067,
+    "last_50_training_means": {
+      "std_mean": 0.47754144310951235,
+      "reward_rate": 7.129105982447287,
+      "window_distance_error_m": 0.09679885923241573
+    },
+    "primary_validation": {
+      "accepted": false,
+      "reasons": [
+        "key_rmse_m_regression"
+      ],
+      "new_falls": [],
+      "matched_prefix_means": {
+        "baseline": {
+          "joint_rmse": 0.09897855543865626,
+          "key_rmse_m": 0.020343177299538436,
+          "slip_m_s": 0.09483957591961778,
+          "slide_rate": 0.07560827852975632,
+          "stumble": 0.0,
+          "root_xy_error_m": 3.593995680714476,
+          "tilt_deg": 4.110079763716871,
+          "reward_rate": 7.439903145858436,
+          "window_displacement_error_m": 0.09332235632874246,
+          "window_displacement_huber": 0.13950227104959445,
+          "window_turn_huber": 0.08412193937431099
+        },
+        "candidate": {
+          "joint_rmse": 0.0981447206049883,
+          "key_rmse_m": 0.021626413031719003,
+          "slip_m_s": 0.09126889833955328,
+          "slide_rate": 0.07350542696771303,
+          "stumble": 0.0,
+          "root_xy_error_m": 2.1864534129071536,
+          "tilt_deg": 3.2087749040816056,
+          "reward_rate": 7.755655336428785,
+          "window_displacement_error_m": 0.08179934217655489,
+          "window_displacement_huber": 0.10718752047836806,
+          "window_turn_huber": 0.043888221536587085
+        }
+      },
+      "paired_samples": 34124
+    },
+    "gait_trips_on_matched_prefixes": 80,
+    "gait_seconds_on_matched_prefixes": 324.43999999999994,
+    "condition": "control",
+    "train_seed": "1 on one GPU; 1..4 on four GPUs",
+    "global_envs": 4096
+  },
+  "4": {
+    "final_actor_updates": 1200,
+    "final_std_mean": 0.49045464396476746,
+    "last_50_training_means": {
+      "std_mean": 0.4900833010673523,
+      "reward_rate": 7.060897376910691,
+      "window_distance_error_m": 0.09775093986497568
+    },
+    "primary_validation": {
+      "accepted": false,
+      "reasons": [
+        "key_rmse_m_regression",
+        "sliding_regression"
+      ],
+      "new_falls": [],
+      "matched_prefix_means": {
+        "baseline": {
+          "joint_rmse": 0.09897855543865626,
+          "key_rmse_m": 0.020343177299538436,
+          "slip_m_s": 0.09483957591961778,
+          "slide_rate": 0.07560827852975632,
+          "stumble": 0.0,
+          "root_xy_error_m": 3.593995680714476,
+          "tilt_deg": 4.110079763716871,
+          "reward_rate": 7.439903145858436,
+          "window_displacement_error_m": 0.09332235632874246,
+          "window_displacement_huber": 0.13950227104959445,
+          "window_turn_huber": 0.08412193937431099
+        },
+        "candidate": {
+          "joint_rmse": 0.09872235893810291,
+          "key_rmse_m": 0.022062918846089196,
+          "slip_m_s": 0.10887381779602924,
+          "slide_rate": 0.09192657705563448,
+          "stumble": 0.0,
+          "root_xy_error_m": 2.8966152151746556,
+          "tilt_deg": 4.28442406360519,
+          "reward_rate": 7.422351343184126,
+          "window_displacement_error_m": 0.09483673290414393,
+          "window_displacement_huber": 0.1615793001459702,
+          "window_turn_huber": 0.048431359606179385
+        }
+      },
+      "paired_samples": 34124
+    },
+    "gait_trips_on_matched_prefixes": 102,
+    "gait_seconds_on_matched_prefixes": 324.43999999999994,
+    "condition": "control",
+    "train_seed": "1 on one GPU; 1..4 on four GPUs",
+    "global_envs": 4096
+  },
+  "limits": [
+    "Single paired continuation, 200 actor updates; does not establish all long-run outcomes or isolate RNG versus physical batch effects",
+    "No actor/Adam/std/LR reset; simulator history and RNG reset for both",
+    "Dropout and physics excluded only in fixed-batch PPO test, not in actual learning runs",
+    "No baseline-gait acceptance or headset deployment inferred"
+  ]
+}
