@@ -159,6 +159,8 @@ def main():
     parser.add_argument("--denoiser-mode", choices=["direct", "obs", "prev"], default="obs",
                         help="direct — прямая регрессия; obs — DDIM от оценки кадра; prev — от прошлого семпла")
     parser.add_argument("--denoiser-steps", type=int, default=5, help="шаги DDIM (obs/prev)")
+    parser.add_argument("--denoiser-conf", choices=["honest", "fixed"], default="honest",
+                        help="v1: honest — conf из NLL-сигмы; fixed — всегда 0.95 (A/B: почти только камера)")
     parser.add_argument("--denoiser-scale", type=float, default=0.125,
                         help="нормировка модели, м (медиана таз-бедро оператора при обучении)")
     args = parser.parse_args()
@@ -181,9 +183,9 @@ def main():
     if args.denoiser_v1:
         from denoiser_v1_ov import LegDenoiserV1
         deno_v1 = LegDenoiserV1(args.denoiser_v1, mode=args.denoiser_mode,
-                                steps=args.denoiser_steps)
+                                steps=args.denoiser_steps, conf_mode=args.denoiser_conf)
         print(f"лег-денойзер v1: {args.denoiser_v1} ({deno_v1.backend}, режим "
-              f"{args.denoiser_mode}, {args.denoiser_steps} шагов, conf из NLL)",
+              f"{args.denoiser_mode}, {args.denoiser_steps} шагов, conf={args.denoiser_conf})",
               flush=True)
 
     cfg = rs.config()

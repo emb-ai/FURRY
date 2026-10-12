@@ -34,9 +34,11 @@ class LegDenoiserV1:
 
     def __init__(self, onnx_path: str, mode: str = "obs", steps: int = 5,
                  t0_frac: float = 0.3, scale: float = SCALE, T: int = 400,
-                 seed: int | None = None):
+                 conf_mode: str = "honest", seed: int | None = None):
         assert mode in ("direct", "obs")
+        assert conf_mode in ("honest", "fixed")
         self.mode, self.steps, self.scale = mode, max(1, steps), scale
+        self.conf_mode = conf_mode
         self.abar = cosine_schedule(T)
         self.t0 = int(t0_frac * T)
         self._rng = np.random.default_rng(seed)
@@ -131,7 +133,10 @@ class LegDenoiserV1:
                 x = (np.sqrt(ab_n) * x0
                      + np.sqrt(max(1 - ab_n, 1e-6)) * e).astype(np.float32)
         sigma = np.exp(log_s[0].reshape(6, 3)).mean(1)     # (6,) норм. единицы
-        conf = np.exp(-CONF_K * sigma).clip(0.05, 0.95)
+        if self.conf_mode == "fixed":
+            conf = np.full(6, 0.95)      # A/B-тест: камера всегда почти на 100%
+        else:
+            conf = np.exp(-CONF_K * sigma).clip(0.05, 0.95)
         return x0[0], conf
 
     # ---- интеграция в кадр pose_yolo ---------------------------------------
