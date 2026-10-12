@@ -18,8 +18,11 @@ One-Euro берёт фактический dt (CPU даёт 8-15 fps, не 30) �
 c — зафиксировать камеру по AprilTag и позе контроллера (нужен --ws).
 Запуск: .venv/Scripts/python pose_yolo.py [s|m|l] [full|min|off]
   второй аргумент — режим depth-фильтров (min по умолчанию, см. main()).
-  --backend torch|openvino|auto (auto: OV-экспорт, если есть) и --imgsz —
-  для A/B скорости на конкретной машине; infer и age видны в [тайминг].
+  --backend torch|cpu|openvino|auto (по умолчанию torch: CUDA FP32, если
+  есть драйвер NVIDIA, иначе CPU; на i5-10300H OpenVINO оказался медленнее
+  torch-cpu, 5.3 против 6.2 Гц; auto — CUDA, затем OV-экспорт) и
+  --imgsz — для A/B скорости на конкретной машине; infer и age видны в [тайминг].
+  --euro-mincutoff/--euro-beta — One-Euro (лаг в покое 1/(2π·mincutoff)).
 Превью — в полразмера панелей (экономия ~15 мс/кадр на imshow).
 """
 import argparse
@@ -117,7 +120,10 @@ class View3D:
 # ---- main ---------------------------------------------------------------------
 def load_model(size, backend="auto"):
     """Платформенный выбор бекенда (см. bench_onnx.py — тайминги):
-      Windows/Linux: OpenVINO-экспорт (x2.2 к torch-cpu), фолбек .pt+cpu;
+      Windows/Linux: torch-cuda FP32, если есть NVIDIA, иначе .pt+cpu;
+                     OpenVINO — только явно/auto. GTX 1650 (12.10): s/640
+                     12 мс против 77 на CPU; FP16 там в 3.4× медленнее —
+                     без тензорных ядер half не включать;
       macOS:         CoreML .mlpackage (GPU/ANE), фолбек .pt+mps.
     Возвращает (модель, device|None): OV/CoreML игнорируют device."""
     pt = f"models/yolo11{size}-pose.pt"
@@ -129,14 +135,20 @@ def load_model(size, backend="auto"):
         print(f"YOLO11{size}-pose, бекенд torch-mps: {pt} "
               f"(для CoreML: yolo export model={pt} format=coreml)", flush=True)
         return YOLO(pt), "mps"
+    if backend in ("auto", "torch"):
+        import torch
+        if torch.cuda.is_available():
+            print(f"YOLO11{size}-pose, бекенд torch-cuda: {pt} "
+                  f"на {torch.cuda.get_device_name(0)}", flush=True)
+            return YOLO(pt), "cuda"
     ov = f"models/yolo11{size}-pose_openvino_model"
     if backend == "openvino" and not os.path.isdir(ov):
         raise SystemExit(f"нет {ov}: yolo export model={pt} format=openvino")
-    if backend != "torch" and os.path.isdir(ov):
+    if backend in ("auto", "openvino") and os.path.isdir(ov):
         print(f"YOLO11{size}-pose, бекенд OpenVINO: {ov}", flush=True)
         return YOLO(ov), None
     print(f"YOLO11{size}-pose, бекенд torch-cpu: {pt} "
-          f"(экспортируй OpenVINO для x2.2: yolo export format=openvino)", flush=True)
+          f"(для GPU: драйвер NVIDIA и torch+cuXXX в .venv)", flush=True)
     return YOLO(pt), "cpu"
 
 
@@ -144,8 +156,11 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("size", nargs="?", choices=["n", "s", "m", "l", "x"], default="s")
     parser.add_argument("filters", nargs="?", choices=["full", "min", "off"], default="min")
-    parser.add_argument("--backend", choices=["auto", "torch", "openvino"], default="auto")
+    parser.add_argument("--backend", choices=["auto", "torch", "cpu", "openvino"], default="torch",
+                        help="torch: CUDA, если доступна, иначе CPU; cpu: принудительно CPU")
     parser.add_argument("--imgsz", type=int, default=640, help="вход YOLO, px (кратно 32)")
+    parser.add_argument("--euro-mincutoff", type=float, default=3.0, help="One-Euro, Гц (лаг в покое 1/(2π·f))")
+    parser.add_argument("--euro-beta", type=float, default=1.5, help="One-Euro, Гц на м/с скорости")
     parser.add_argument("--ws", action="store_true")
     parser.add_argument("--host", default="0.0.0.0")
     parser.add_argument("--port", type=int, default=8765)
@@ -327,7 +342,7 @@ def main():
             # One-Euro на сустав: фактический dt, состояние переживает дропаут
             t_now = time.monotonic()
             for i, p in raw.items():
-                filters.setdefault(i, OneEuro())(p, t_now)
+                filters.setdefault(i, OneEuro(args.euro_mincutoff, args.euro_beta))(p, t_now)
             smoothed = {i: f.x_prev.copy() for i, f in filters.items() if i in raw}
 
             sequence += 1

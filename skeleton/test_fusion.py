@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 import pyrealsense2 as rs
 
-from fusion import fuse_joints, window_median
+from fusion import OneEuro, fuse_joints, window_median
 
 
 def intrinsics():
@@ -40,6 +40,17 @@ class DistalDepthTest(unittest.TestCase):
         depth[355:358, 615:625] = 2.40  # тонкий объект перед бедром
         out = fuse_joints(depth, {11: (620.0, 360.0), 12: (680.0, 360.0)}, intrinsics())
         self.assertAlmostEqual(float(out[11][2]), 2.70, places=2)
+
+
+class OneEuroLagTest(unittest.TestCase):
+    def test_slow_walk_lag_under_60_ms(self):
+        """Шаг 0.3 м/с на 6 Гц: дефолтный фильтр отстаёт меньше 60 мс (было 133)."""
+        f, dt, v = OneEuro(), 1 / 6, 0.3
+        for k in range(60):
+            out = f(np.array([v * k * dt, 0.0, 0.0]), k * dt)
+        lag_s = (v * 59 * dt - out[0]) / v
+        self.assertLess(lag_s, 0.060)
+        self.assertGreater(lag_s, 0.0)
 
 
 if __name__ == "__main__":

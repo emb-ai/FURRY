@@ -114,9 +114,13 @@ class OneEuro:
     Частота берётся из фактического dt между вызовами, а не из номинала
     стрима: YOLO на CPU даёт 8-15 fps, и захардкоженные 30 Гц ломают
     cutoff'ы. dt > 0.5 c (провал/рестарт) — фильтр перезапускается.
+
+    Лаг в покое = tau = 1/(2π·mincutoff). Было 1.2 Гц → 133 мс: ровно
+    «скрытый лаг» эпизодов 10.10 (−130/−140 мс к HMD). beta — Гц на м/с:
+    0.06 почти не поднимал cutoff при ходьбе, фильтр всегда сидел на минимуме.
     """
 
-    def __init__(self, mincutoff=1.2, beta=0.06, dcutoff=1.0):
+    def __init__(self, mincutoff=3.0, beta=1.5, dcutoff=1.0):
         self.mc, self.beta, self.dc = mincutoff, beta, dcutoff
         self.x_prev = None
         self.t_prev = None
