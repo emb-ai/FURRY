@@ -32,6 +32,7 @@ int main(){
  Require(delayed.Aligned(),"Timestamp-matched delayed stream cannot calibrate");
  Require(delayed.stats.legs==2,"240 ms stream cannot contribute camera corrections");
  Require(delayed.stats.state==3,"Delayed corrections must retain the STALE indication");
+ Require(delayed.stats.weight>.95,"240 ms delay must delay the legs, not shrink the correction");
  auto delayedOverlay=delayed.MapForDisplay(&packets[packets.size()-4],frames.back(),packets.back().sourceMs);
  Require(delayedOverlay.valid[4],"Calibrated delayed stream is not visible");
  Require(fusion.Aligned(),"Rigid fit did not converge");Require(fusion.stats.fitMm<.001,"Rigid fit wrong / reflected");

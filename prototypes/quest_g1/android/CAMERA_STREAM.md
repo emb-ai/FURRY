@@ -66,8 +66,12 @@ orientations receive swing rotations matching the new bone directions. Ankle
 orientation/twist remain Meta-estimated: the current camera has no toe/heel
 landmarks, so camera-derived foot pitch and yaw are not claimed.
 
-At more than 150 ms the HUD shows STALE and the correction weight decays;
-at 500 ms the result is exactly the original Meta skeleton. Invalid new frames
+At more than 150 ms the HUD shows STALE. The correction keeps full weight
+until 400 ms and fades linearly to zero at 500 ms, where the result is exactly
+the original Meta skeleton. Age delays the legs but does not shrink them: the
+correction is relative to the time-matched Meta pose. The former 150→500 ms
+ramp left a 5 Hz CPU camera (250–440 ms old) at ~0.44 weight, so the robot
+moved only about half way towards the camera legs. Invalid new frames
 expire old corrections. A fixed packet is never applied forever.
 
 HUD shows CAM OFF/ALIGN/FUSE/STALE, age, fit error and contributing leg count.
