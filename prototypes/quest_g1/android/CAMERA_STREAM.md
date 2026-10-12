@@ -93,7 +93,9 @@ expire old corrections. A fixed packet is never applied forever.
 
 The always-visible status panel has a leg-source row: green `Ноги: камера
 (обе/одна)` (with the delay when stale), otherwise red `Ноги: Meta. …` with the
-reason — no link, clock sync, `Калибровка N%: <hint>` (stand in view / face the
+reason — no link, clock sync (both read live from the stream), `Камера
+подключена, симуляция на паузе` (registration and fusion run only in the robot
+loop, so it is grey, not red), `Калибровка N%: <hint>` (stand in view / face the
 camera / walk facing the camera / one person in view), no fresh data, or the
 camera does not see the legs. Hidden when no camera URL is configured or in
 human capture. Debug stats show CAM OFF/ALIGN/FUSE/STALE, progress, age, fit

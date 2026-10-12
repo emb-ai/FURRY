@@ -69,10 +69,14 @@ bool HumanCapture(){return sessionMode.load()==1&&sessionCapture.load()==1;}
 // Always-visible leg source. Every recording before 2026-10-12 silently used
 // Meta's generated legs because registration never locked; say so on screen.
 // level: 0 hidden, 1 muted, 2 warning, 3 good. menu: short form for the menu.
-std::string CameraLegStatus(const RuntimeStats& s,int& level,std::string& menu){
+// Link state comes from the stream itself: RuntimeStats is published only by
+// the robot loop, so before the first run or while paused it is stale/default.
+std::string CameraLegStatus(const RuntimeStats& s,bool connected,bool synced,bool paused,int& level,std::string& menu){
     char text[160];
-    if(!s.cameraConnected){level=2;menu="Нет связи";return "Ноги: Meta. Камера: нет связи";}
-    if(!s.cameraClockSynced){level=2;menu="Синхронизация часов";return "Ноги: Meta. Камера: синхронизация часов";}
+    if(!connected){level=2;menu="Нет связи";return "Ноги: Meta. Камера: нет связи";}
+    if(!synced){level=2;menu="Синхронизация часов";return "Ноги: Meta. Камера: синхронизация часов";}
+    // Registration and fusion run in the robot loop only.
+    if(paused || s.published<=0){level=1;menu="Подключена";return "Ноги: Meta. Камера подключена, симуляция на паузе";}
     if(s.cameraState==1){
         const char* hints[]={"","встаньте в кадр","повернитесь к камере","походите лицом к камере","один человек в кадре"};
         int percent=int(std::lround(100*std::clamp(s.cameraFitProgress,0.,1.)));
@@ -917,7 +921,8 @@ void G1PrepareFrame(){
     menuState.debugTargets=debugTargets;menuState.debugContacts=debugContacts;menuState.exportStatus=frameExportStatus;
     menuState.cameraLevel=0;menuState.cameraStatus.clear();menuState.cameraInfo="Не подключена";
     // Fusion runs only in the robot loop; human capture never uses camera legs.
-    if(cameraConfigured && !HumanCapture())menuState.cameraStatus=CameraLegStatus(frameStats,menuState.cameraLevel,menuState.cameraInfo);
+    if(cameraConfigured && cameraStream && !HumanCapture())
+        menuState.cameraStatus=CameraLegStatus(frameStats,cameraStream->connected,cameraStream->clockSynced,menuState.paused,menuState.cameraLevel,menuState.cameraInfo);
     if(recordingStarted>0){char info[128];std::snprintf(info,sizeof(info),"Записано %.0f с   Принято %.0f с",recordedSeconds.load(),acceptedRecordingSeconds.load());menuState.recordingInfo=info;}
     static bool lastOpen=false;
     if(menuState.open&&!lastOpen){anchorMenu=true;menuTrigger={};}
