@@ -98,7 +98,17 @@ reason — no link, clock sync (both read live from the stream), `Камера
 loop, so it is grey, not red), `Калибровка N%: <hint>` (stand in view / face the
 camera / walk facing the camera / one person in view), no fresh data, or the
 camera does not see the legs. Hidden when no camera URL is configured or in
-human capture. Debug stats show CAM OFF/ALIGN/FUSE/STALE, progress, age, fit
+human capture.
+
+Menu → Вид → `Ноги: Meta | Камера` chooses the leg source (saved with the menu
+settings, default Камера). Meta drives the legs with Meta's generated estimate
+only; registration and the camera correction keep running, so the legs fade
+over ~100 ms either way and switching back needs no recalibration. The switch
+does not reset the robot and works during recording (`leg_source_meta` /
+`leg_source_camera` events; `session_config.json` stores the source at start).
+With Meta chosen the status row is grey `Ноги: Meta (выбрано). Камера: …`
+(Готова when the camera currently sees usable legs). Telemetry appends
+`camera_ready_legs,camera_legs_enabled`. Debug stats show CAM OFF/ALIGN/FUSE/STALE, progress, age, fit
 error and contributing leg count.
 CSV appends connection/state/age/fit/leg-count/weight/fit-progress/fit-hint metrics. Y recordings
 include `camera.jsonl` with raw camera packets, receive epoch and associated

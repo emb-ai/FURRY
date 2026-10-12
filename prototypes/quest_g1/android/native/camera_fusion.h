@@ -14,7 +14,8 @@ struct CameraOverlay {
 };
 // Registration progress for the HUD. hint: 0 ok, 1 no person/shoulders,
 // 2 operator side-on, 3 needs more walking, 4 inconsistent (other person?).
-struct CameraFusionStats {int state=0,legs=0,fitPackets=0,fitHint=1;double ageMs=-1,fitMm=-1,weight=0,fitProgress=0,fitSplitDeg=-1,fitSpreadCm=0,fitInliers=0;};
+// ready: legs the camera could drive now, also while legsEnabled is off.
+struct CameraFusionStats {int state=0,legs=0,ready=0,fitPackets=0,fitHint=1;double ageMs=-1,fitMm=-1,weight=0,fitProgress=0,fitSplitDeg=-1,fitSpreadCm=0,fitInliers=0;};
 class CameraFusion {
  struct Sample{double ms;TrackingFrame frame;};
  std::deque<Sample> history;
@@ -29,6 +30,9 @@ class CameraFusion {
  void Fit(const CameraSkeleton&,const TrackingFrame&);
 public:
  CameraFusionStats stats;
+ // Off: legs fade back to Meta's estimate over ~100 ms; registration keeps
+ // running, so switching back to the camera needs no recalibration.
+ bool legsEnabled=true;
  void Reset();
  void Observe(const TrackingFrame&,double epochMs);
  TrackingFrame Apply(const TrackingFrame&,const CameraSkeleton*,double epochMs);

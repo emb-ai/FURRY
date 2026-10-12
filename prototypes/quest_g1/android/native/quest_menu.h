@@ -21,7 +21,7 @@ enum class Action {
     SceneEmpty, SceneCup, ScenePushT, ViewObserver, ViewFirstPerson, Passthrough,
     DebugEnabled, DebugStats, DebugMeta, DebugCamera, DebugTargets, DebugContacts,
     PageSession, PageView, PageDebug, PagePolicy, CatchUp, PolicyPrevious, PolicyNext,
-    PolicySelect0, PolicySelect1, PolicySelect2, PolicySelect3
+    PolicySelect0, PolicySelect1, PolicySelect2, PolicySelect3, LegsMeta, LegsCamera
 };
 enum class Kind { Text, MutedText, Divider, Tab, Button, Primary, Radio, Checkbox };
 
@@ -42,6 +42,8 @@ struct State {
     std::vector<questpolicy::Entry> policies;
     int policyIndex = 0, policyPage = 0;
     bool catchUp = true;
+    // Leg source: Meta's generated legs or the external camera skeleton.
+    bool cameraConfigured = false, cameraLegs = true;
 };
 
 inline constexpr int PoliciesPerPage = 4;
@@ -193,11 +195,14 @@ inline std::vector<Widget> BuildLayout(const State& s) {
         add({-.192f, .047f, .544f, .054f}, "Поставить перед собой", Action::Place,
             !human && !s.recording, false, Kind::Button);
         line(.032f);
-        label(-.039f, "Meta");
-        text(-.039f, s.trackingValid ? "Трекинг есть" : "Нет свежего трекинга");
+        label(-.039f, "Ноги");
+        segments(-.039f, "Meta", "Камера", Action::LegsMeta, Action::LegsCamera,
+                 !s.cameraLegs, s.cameraConfigured && !human);
         line(-.051f);
-        label(-.121f, "RGB-D");
-        text(-.121f, s.cameraInfo.empty() ? "Не подключена" : s.cameraInfo);
+        label(-.121f, "Meta");
+        text(-.121f, s.trackingValid ? "Трекинг есть" : "Нет свежего трекинга");
+        label(-.190f, "RGB-D");
+        text(-.190f, s.cameraInfo.empty() ? "Не подключена" : s.cameraInfo);
     } else if(s.page == Page::Policy) {
         const int count=int(s.policies.size());
         const int pages=std::max(1,(count+PoliciesPerPage-1)/PoliciesPerPage);

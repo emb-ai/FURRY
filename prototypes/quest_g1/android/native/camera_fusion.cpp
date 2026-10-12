@@ -136,7 +136,7 @@ void CameraFusion::Fit(const CameraSkeleton& c,const TrackingFrame& f){
  stats.fitProgress=std::min(stats.fitProgress,.95);
 }
 TrackingFrame CameraFusion::Apply(const TrackingFrame&raw,const CameraSkeleton*c,double now){
- TrackingFrame out=raw;stats.legs=0;stats.weight=0;stats.state=c?1:0;stats.ageMs=c?std::max(now-c->sourceMs,now-c->receivedMs):-1;
+ TrackingFrame out=raw;stats.legs=0;stats.ready=0;stats.weight=0;stats.state=c?1:0;stats.ageMs=c?std::max(now-c->sourceMs,now-c->receivedMs):-1;
  double dt=lastApplyMs?std::clamp((now-lastApplyMs)/1000.,0.,.05):.01;lastApplyMs=now;
  bool fresh=c && stats.ageMs>=0 && stats.ageMs<150 && now-c->sourceMs>=-100;
  // Delayed measurements still correct the matched historical Meta pose.
@@ -190,7 +190,8 @@ TrackingFrame CameraFusion::Apply(const TrackingFrame&raw,const CameraSkeleton*c
   // the legs but must not shrink them. A 150->500 ms ramp left a 5 Hz camera
   // (250-440 ms old) at ~0.44 weight. Fade only just before the hard expiry.
   double freshness=c && legAge<500?std::clamp((500-legAge)/100.,0.,1.):0;
-  activeWeights[side]+=(1-std::exp(-dt/.1))*(weights[side]*freshness-activeWeights[side]);
+  if(weights[side]*freshness>.001)stats.ready++;
+  activeWeights[side]+=(1-std::exp(-dt/.1))*((legsEnabled?weights[side]*freshness:0)-activeWeights[side]);
   if(legAge>=500)activeWeights[side]=0;
   double w=activeWeights[side];if(w<.001)continue;
   if(legAge>150)stats.state=3;

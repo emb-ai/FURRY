@@ -48,6 +48,18 @@ int main(){
  double oldLength[2],newLength[2];for(int k=0;k<2;k++){
   double a[3],b[3];mju_sub3(a,raw.body.joints[2+2*k].position.data(),raw.body.joints[4+2*k].position.data());mju_sub3(b,moved.body.joints[2+2*k].position.data(),moved.body.joints[4+2*k].position.data());oldLength[k]=mju_norm3(a);newLength[k]=mju_norm3(b);Require(std::abs(oldLength[k]-newLength[k])<1e-8,"Bone length changed");
  }
+ {
+  // The headset leg-source switch fades to Meta's legs and back without
+  // dropping the registration.
+  CameraFusion manual=fusion;auto packet=c;auto body=raw;manual.legsEnabled=false;TrackingFrame out;
+  auto step=[&](int n){double ms=t+20*n;packet.sourceMs=packet.receivedMs=ms;packet.sequence++;body.body.time_ns=body.xr_time_ns=int64_t(ms*1e6);manual.Observe(body,ms);out=manual.Apply(body,&packet,ms);};
+  step(1);Require(manual.stats.legs==2 && manual.stats.weight<.9,"Leg-source switch snaps instead of fading");
+  for(int n=2;n<=40;n++)step(n);
+  Require(manual.Aligned() && manual.stats.legs==0 && manual.stats.ready==2,"Meta leg source still applies camera legs or loses readiness");
+  for(int j=0;j<14;j++)Require(out.body.joints[j].position==body.body.joints[j].position,"Meta leg source moved the body");
+  manual.legsEnabled=true;for(int n=41;n<=60;n++)step(n);
+  Require(manual.stats.legs==2 && manual.stats.weight>.95,"Camera leg source did not resume without recalibration");
+ }
  auto stale=fusion.Apply(raw,&c,t+200);Require(fusion.stats.state==3,"Missing STALE flag");
  auto fallback=fusion.Apply(raw,&c,t+501);for(int j=0;j<14;j++)Require(fallback.body.joints[j].position==raw.body.joints[j].position,"Expired camera affects body");
  c.sequence++;c.sourceMs=c.receivedMs=t+600;c.pelvis.confidence=0;fusion.Apply(raw,&c,t+600);Require(fusion.stats.legs==0,"Invalid heartbeat repeats corrections");
@@ -109,5 +121,5 @@ int main(){
   }
   Require(crowd.stats.legs==0,"A person 1 m from the operator drives the legs");
  }
- puts("Camera rigid fit, delayed correction, bone projection, stale, expiry, invalid heartbeat, degeneracy, second person and knee lift checks passed");
+ puts("Camera rigid fit, delayed correction, bone projection, stale, expiry, invalid heartbeat, degeneracy, second person, knee lift and leg-source switch checks passed");
 }

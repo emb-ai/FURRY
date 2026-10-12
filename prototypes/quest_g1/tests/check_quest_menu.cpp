@@ -96,6 +96,17 @@ int main() {
           CentreHit(layout, Action::ViewFirstPerson) == Action::None &&
           CentreHit(layout, Action::Place) == Action::None, "Human capture scene controls are active");
     Check(Find(layout, Action::Passthrough).selected, "Human capture must show the real room");
+    state.cameraConfigured = true;
+    Check(CentreHit(BuildLayout(state), Action::LegsMeta) == Action::None, "Human capture switches the leg source");
+    state.capture = Capture::Robot;
+    layout = BuildLayout(state);
+    Check(Find(layout, Action::LegsCamera).selected && CentreHit(layout, Action::LegsMeta) == Action::LegsMeta &&
+          CentreHit(layout, Action::LegsCamera) == Action::LegsCamera, "Leg source switch unavailable");
+    state.cameraLegs = false;
+    Check(Find(BuildLayout(state), Action::LegsMeta).selected, "Meta leg source not highlighted");
+    state.cameraConfigured = false;
+    Check(CentreHit(BuildLayout(state), Action::LegsCamera) == Action::None, "Camera legs selectable without a camera");
+    state.cameraConfigured = true; state.capture = Capture::Human;
 
     state.page = Page::Debug;
     layout = BuildLayout(state);
