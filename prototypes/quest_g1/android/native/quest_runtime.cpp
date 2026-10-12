@@ -66,10 +66,34 @@ std::vector<questmenu::Pointer> framePointers;
 std::string menuNotice;
 bool SessionPaused(){return menuOpen.load()||userPaused.load();}
 bool HumanCapture(){return sessionMode.load()==1&&sessionCapture.load()==1;}
+// Always-visible leg source. Every recording before 2026-10-12 silently used
+// Meta's generated legs because registration never locked; say so on screen.
+// level: 0 hidden, 1 muted, 2 warning, 3 good. menu: short form for the menu.
+std::string CameraLegStatus(const RuntimeStats& s,int& level,std::string& menu){
+    char text[160];
+    if(!s.cameraConnected){level=2;menu="Нет связи";return "Ноги: Meta. Камера: нет связи";}
+    if(!s.cameraClockSynced){level=2;menu="Синхронизация часов";return "Ноги: Meta. Камера: синхронизация часов";}
+    if(s.cameraState==1){
+        const char* hints[]={"","встаньте в кадр","повернитесь к камере","походите лицом к камере","один человек в кадре"};
+        int percent=int(std::lround(100*std::clamp(s.cameraFitProgress,0.,1.)));
+        std::snprintf(text,sizeof(text),"Калибровка %d%%",percent);menu=text;
+        std::snprintf(text,sizeof(text),"Ноги: Meta. Калибровка %d%%: %s",percent,hints[std::clamp(s.cameraFitHint,0,4)]);
+        level=2;return text;
+    }
+    if(s.cameraLegs>0){
+        const char* side=s.cameraLegs>1?"обе":"одна";
+        if(s.cameraState==3)std::snprintf(text,sizeof(text),"Ноги: камера (%s), задержка %.0f мс",side,s.cameraAgeMs);
+        else std::snprintf(text,sizeof(text),"Ноги: камера (%s)",side);
+        level=3;menu="Ноги с камеры";return text;
+    }
+    level=2;
+    if(s.cameraState==0){menu="Нет данных";return "Ноги: Meta. Камера: нет свежих данных";}
+    menu="Ноги не видны";return "Ноги: Meta. Камера не видит ноги";
+}
 void Notice(const std::string& value){std::lock_guard<std::mutex> guard(inputMutex);menuNotice=value;}
 void QueueMenuAction(questmenu::Action action,int policyIndex=-1){std::lock_guard<std::mutex> guard(inputMutex);pendingMenuActions.push_back({action,policyIndex});}
 std::atomic<bool> spaceInvalidated{false};
-std::unique_ptr<CameraStream> cameraStream;
+std::unique_ptr<CameraStream> cameraStream;bool cameraConfigured=false;
 CameraFusion cameraFusion;
 std::atomic<uint64_t> droppedInputs{0};
 RuntimeStats stats;
@@ -452,7 +476,7 @@ void G1Initialize(android_app* app){
     policyCatalog=questpolicy::Load(assets);menuState.policies=policyCatalog;
     LoadPreferences();
     std::ifstream cameraConfig(assets+"/camera_stream_url.txt");std::string cameraUrl;std::getline(cameraConfig,cameraUrl);
-    cameraStream=std::make_unique<CameraStream>(cameraUrl);
+    cameraStream=std::make_unique<CameraStream>(cameraUrl);cameraConfigured=!cameraUrl.empty();
     try{
         sim=std::make_unique<Simulation>(assets,2,questmenu::SceneName(questmenu::Scene(sessionScene.load())),questpolicy::VerifiedPath(assets,policyCatalog.at(selectedPolicy.load())),50);
     }catch(const std::exception& e){
@@ -490,7 +514,7 @@ void G1Initialize(android_app* app){
     if(egoCamera<0)throw std::runtime_error("Missing ego camera");
     publishedGeometry.reserve(2048);PublishGeometry();
     telemetry.open(assets+"/runtime_stats.csv",std::ios::trunc);
-    telemetry<<"wall_s,sim_s,cycle_ms,physics_ms,gmr_ms,inference_ms,rtf,contacts,overlap_points,pairs,max_depth_mm,solver_iterations,constraints,body_gap_ms,input_age_ms,body_confidence,body_version,state,reason,target_x,target_y,actual_x,actual_y,cmd_vx,cmd_vy,actual_vx,actual_vy,root_error,height,tilt,gmr_residual,gmr_iterations,overruns,dropped_inputs,left_foot_contacts,right_foot_contacts,leg_error_deg,physics_workers,camera_error_m,camera_error_deg,visual_scale,camera_connected,camera_state,camera_age_ms,camera_fit_mm,camera_legs,camera_weight,camera_clock_synced,camera_clock_offset_ms,camera_clock_rtt_ms,ik_position_cm,ik_orientation_deg\n";
+    telemetry<<"wall_s,sim_s,cycle_ms,physics_ms,gmr_ms,inference_ms,rtf,contacts,overlap_points,pairs,max_depth_mm,solver_iterations,constraints,body_gap_ms,input_age_ms,body_confidence,body_version,state,reason,target_x,target_y,actual_x,actual_y,cmd_vx,cmd_vy,actual_vx,actual_vy,root_error,height,tilt,gmr_residual,gmr_iterations,overruns,dropped_inputs,left_foot_contacts,right_foot_contacts,leg_error_deg,physics_workers,camera_error_m,camera_error_deg,visual_scale,camera_connected,camera_state,camera_age_ms,camera_fit_mm,camera_legs,camera_weight,camera_clock_synced,camera_clock_offset_ms,camera_clock_rtt_ms,ik_position_cm,ik_orientation_deg,camera_fit_progress,camera_fit_hint\n";
     try{exporter=std::make_unique<RecordingExport>(app->activity->vm,app->activity->clazz);exporter->Latest(assets+"/recordings");}
     catch(const std::exception& e){__android_log_print(ANDROID_LOG_ERROR,"G1Quest","Recording export unavailable: %s",e.what());}
     running=true;
@@ -761,6 +785,7 @@ void G1Initialize(android_app* app){
                 sample.cameraOverlay=cameraFusion.MapForDisplay(haveDisplayCamera?&displayCamera:nullptr,input,CameraEpochMs());
                 sample.cameraState=cameraFusion.stats.state;sample.cameraLegs=cameraFusion.stats.legs;
                 sample.cameraAgeMs=cameraFusion.stats.ageMs;sample.cameraFitMm=cameraFusion.stats.fitMm;
+                sample.cameraFitProgress=cameraFusion.stats.fitProgress;sample.cameraFitHint=cameraFusion.stats.fitHint;
                 sample.cameraWeight=cameraFusion.stats.weight;sample.cameraConnected=cameraStream->connected;
                 sample.cameraClockSynced=cameraStream->clockSynced;sample.cameraClockOffsetMs=cameraStream->clockOffsetMs;sample.cameraClockRttMs=cameraStream->clockRttMs;
                 sample.visualScale=retarget->calibrated?retarget->VisualScale():1;
@@ -779,7 +804,7 @@ void G1Initialize(android_app* app){
                     const auto& x=sample;
                     telemetry<<x.published<<','<<x.simTime<<','<<x.cycleMs<<','<<x.physicsMs<<','<<x.gmrMs<<','<<x.inferenceMs<<','<<x.realTimeFactor<<','<<x.contacts<<','<<x.overlaps<<','<<x.pairs<<','<<x.depthMm<<','<<x.solverIterations<<','<<x.constraints<<','<<x.bodyGapMs<<','<<x.inputAgeMs<<','<<x.confidence<<','<<x.bodyVersion<<','<<x.status<<','<<x.reason;
                     for(const auto& values:{x.targetXY,x.actualXY,x.commandXY,x.velocityXY})for(double v:values)telemetry<<','<<v;
-                    telemetry<<','<<x.positionError<<','<<x.height<<','<<x.tilt<<','<<x.residual<<','<<x.gmrIterations<<','<<x.overruns<<','<<x.droppedInputs<<','<<x.footContacts[0]<<','<<x.footContacts[1]<<','<<x.legErrorDegrees<<','<<x.physicsWorkers<<','<<x.cameraPositionError<<','<<x.cameraOrientationError<<','<<x.visualScale<<','<<x.cameraConnected<<','<<x.cameraState<<','<<x.cameraAgeMs<<','<<x.cameraFitMm<<','<<x.cameraLegs<<','<<x.cameraWeight<<','<<x.cameraClockSynced<<','<<x.cameraClockOffsetMs<<','<<x.cameraClockRttMs<<','<<x.ikPositionCm<<','<<x.ikOrientationDeg<<'\n';lastTelemetry=x.published;
+                    telemetry<<','<<x.positionError<<','<<x.height<<','<<x.tilt<<','<<x.residual<<','<<x.gmrIterations<<','<<x.overruns<<','<<x.droppedInputs<<','<<x.footContacts[0]<<','<<x.footContacts[1]<<','<<x.legErrorDegrees<<','<<x.physicsWorkers<<','<<x.cameraPositionError<<','<<x.cameraOrientationError<<','<<x.visualScale<<','<<x.cameraConnected<<','<<x.cameraState<<','<<x.cameraAgeMs<<','<<x.cameraFitMm<<','<<x.cameraLegs<<','<<x.cameraWeight<<','<<x.cameraClockSynced<<','<<x.cameraClockOffsetMs<<','<<x.cameraClockRttMs<<','<<x.ikPositionCm<<','<<x.ikOrientationDeg<<','<<x.cameraFitProgress<<','<<x.cameraFitHint<<'\n';lastTelemetry=x.published;
                     if(sim->steps%1000==0)telemetry.flush();
                 }
                 if(sim->steps%5000==0)__android_log_print(ANDROID_LOG_INFO,"G1Quest","sim=%.2fs height=%.3f inference=%.3fms",sim->data->time,sim->data->qpos[2],sim->inference_ms);
@@ -890,7 +915,9 @@ void G1PrepareFrame(){
     menuState.trackingValid=frameTracking.body.valid&&(frameTracking.location_flags[0]&3)==3&&frameAgeMs<200&&std::abs(frameTracking.xr_time_ns-frameTracking.body.time_ns)<200000000LL;
     menuState.debugEnabled=debugEnabled;menuState.debugStats=debugStats;menuState.debugMeta=debugMeta;menuState.debugCamera=debugCamera;
     menuState.debugTargets=debugTargets;menuState.debugContacts=debugContacts;menuState.exportStatus=frameExportStatus;
-    menuState.cameraInfo=!cameraStream||!cameraStream->connected?"Не подключена":!cameraStream->clockSynced?"Синхронизация часов":"Подключена";
+    menuState.cameraLevel=0;menuState.cameraStatus.clear();menuState.cameraInfo="Не подключена";
+    // Fusion runs only in the robot loop; human capture never uses camera legs.
+    if(cameraConfigured && !HumanCapture())menuState.cameraStatus=CameraLegStatus(frameStats,menuState.cameraLevel,menuState.cameraInfo);
     if(recordingStarted>0){char info[128];std::snprintf(info,sizeof(info),"Записано %.0f с   Принято %.0f с",recordedSeconds.load(),acceptedRecordingSeconds.load());menuState.recordingInfo=info;}
     static bool lastOpen=false;
     if(menuState.open&&!lastOpen){anchorMenu=true;menuTrigger={};}

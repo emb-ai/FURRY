@@ -13,26 +13,38 @@ is required by the Quest client.
 ## Alignment
 
 Alignment runs whenever Quest body tracking is valid, even while robot control
-is paused or awaiting calibration. A resets alignment. Stand facing the camera,
-look forward and make a short
-translation/crouch movement while remaining fully visible. Shoulders across time
-provide a metric rigid transform (Horn/Kabsch equivalent, scale fixed to one).
+is paused or awaiting calibration. A resets alignment. Face the camera and walk
+a little (forward/back and sideways, ~0.5 m) while remaining fully visible.
+Shoulders across time provide a metric rigid transform (Horn, scale fixed to
+one). The HUD shows progress and what is missing.
 
 The PC can lock that transform first (`skeleton/marker_frame.py`): a printed
 AprilTag 36h11 of known size, posed from the color image, and the same marker posed by a
 controller touch in STAGE. It then sends `frame=pelvis-relative` joints already
 in STAGE axes. Shoulder fitting does not run for that frame.
 Static shoulders alone are collinear: the client waits for sufficient motion
-instead of inventing a pitch angle. At least 40 shoulder observations, transverse
-spread above 2 cm and shoulder fit RMS below 40 mm are required. Calibration
-locks once accepted; A or a STAGE recenter resets it.
+instead of inventing a pitch angle. Until 2026-10-12 the fit required shoulder
+RMS below 40 mm and never locked in any recorded episode: YOLO shoulder
+keypoints with D435 depth sit 6–9 cm RMS from Meta's shoulder joints (surface
+vs joint, 30 vs 37 cm width, edge depth), so every earlier "camera leg" was
+Meta's generated legs. Registration now:
+
+- buffers up to 300 packets with both shoulders measured and the shoulder line
+  within ~35° of facing the camera (side-on depth hits the arm or the edge);
+- runs RANSAC over whole packets (inlier: every landmark within 15 cm), so a
+  second person walking through view cannot dominate the fit;
+- accepts when ≥40 inlier packets, ≥50 % inliers, inlier RMS < 90 mm, second
+  spread axis ≥ 6 cm, and the rotations of the older and newer halves of the
+  consensus agree within 5°;
+- keeps refining every 10th packet after locking, with the same acceptance.
+
+Replayed on the three recorded episodes it locks after 17, 47 and 23 s; the
+halves then agree within 1–3°. A or a STAGE recenter resets it.
 
 The current server has no wrist landmarks. Optional `lwrist` / `rwrist` anchors
 are supported if added later, matched to Meta wrists rather than controller
-origins. If the nose is visible, centred nose/HMD trajectories contribute to
-rotation estimation while head orientation stays within 0.15 rad of its initial
-orientation. Centre subtraction removes the nose/HMD positional offset; nose is
-never treated as the HMD origin. Headset occlusion can disable this extra anchor.
+origins. The nose is not used for registration (the earlier nose/HMD term was
+dropped with the 40 mm gate).
 
 Camera packets use `frame=camera`, absolute camera coordinates. Calibrated
 `frame=pelvis-relative` packets must already use Quest STAGE axes. Unknown frames,
@@ -53,11 +65,16 @@ Without it the HUD shows SYNC; clock-skewed packets cannot enter fusion.
 
 Upper body and pelvis remain Meta-controlled. Only trustworthy depth `window`
 measurements (confidence at least 0.55) of an entire hip/knee/ankle chain are used;
-`line` and `missing` points do not become measured ground truth. Large correction
-vectors above 45 cm are rejected.
+`line` and `missing` points do not become measured ground truth. A registered
+camera pelvis more than 35 cm from Meta's pelvis is another person (or a broken
+registration) and contributes nothing. There is no correction-size limit: the
+former 45 cm limit rejected exactly the high knee lifts the camera is for.
 
-The camera corrects pelvis-relative knee and ankle positions in the historical
-Meta sample. A 60 ms exponential filter smooths the **correction**, preserving
+The camera supplies thigh and shin **directions**; knee and ankle targets are
+laid out from Meta's hip with Meta's bone lengths in the historical Meta sample.
+Camera positions put knees 5–7 cm and ankles 10–14 cm high (hip-midpoint pelvis,
+short 2D shins), which would bend standing legs. A residual remains: the right
+ankle sits ~7 cm behind on these recordings (occlusion). A 60 ms exponential filter smooths the **correction**, preserving
 current high-frequency Meta motion rather than delaying the whole skeleton.
 Confidence weights fade over 100 ms; each leg expires against its last good
 measurement, even when empty heartbeat packets continue. A two-bone projection
@@ -74,8 +91,14 @@ ramp left a 5 Hz CPU camera (250–440 ms old) at ~0.44 weight, so the robot
 moved only about half way towards the camera legs. Invalid new frames
 expire old corrections. A fixed packet is never applied forever.
 
-HUD shows CAM OFF/ALIGN/FUSE/STALE, age, fit error and contributing leg count.
-CSV appends connection/state/age/fit/leg-count/weight metrics. Y recordings
+The always-visible status panel has a leg-source row: green `Ноги: камера
+(обе/одна)` (with the delay when stale), otherwise red `Ноги: Meta. …` with the
+reason — no link, clock sync, `Калибровка N%: <hint>` (stand in view / face the
+camera / walk facing the camera / one person in view), no fresh data, or the
+camera does not see the legs. Hidden when no camera URL is configured or in
+human capture. Debug stats show CAM OFF/ALIGN/FUSE/STALE, progress, age, fit
+error and contributing leg count.
+CSV appends connection/state/age/fit/leg-count/weight/fit-progress/fit-hint metrics. Y recordings
 include `camera.jsonl` with raw camera packets, receive epoch and associated
 input sequence, alongside unmodified Meta body/input streams and applied mimic
 commands. View switches are recorded as events. Participant recordings remain
@@ -105,7 +128,8 @@ when camera goals conflict with foot support, body tracking or policy capability
 
 - 37 Python model/recording/geometry tests pass.
 - Native synthetic tests cover metric rigid fit, degenerate static alignment,
-  fixed bone lengths, invalid heartbeat expiry and the 150/500 ms transitions.
+  fixed bone lengths, invalid heartbeat expiry, the 150/500 ms transitions, a
+  second person in view, a distant person after locking and a high knee lift.
 - Pose-servo tests cover correction direction, zero command at goal, yaw sign
   and velocity limits.
 - Native stereo/world checks keep a prop fixed in STAGE across HMD movement.

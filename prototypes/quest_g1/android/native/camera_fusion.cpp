@@ -15,40 +15,11 @@ void Swing(TrackedPose& pose,V before,V after){
  q[0]=1+mju_dot3(before.data(),after.data());std::copy_n(cross,3,q+1);
  if(mju_normalize4(q)<1e-6)return;mju_mulQuat(result,q,pose.quaternion.data());std::copy_n(result,4,pose.quaternion.begin());
 }
-}
-void CameraFusion::Reset(){history.clear();fitFrom.clear();fitTo.clear();headFrom.clear();headTo.clear();aligned=false;lastSequence=~0ull;lastPacketMs=lastApplyMs=0;correction={};weights={};activeWeights={};lastGoodMs={};stats={};}
-void CameraFusion::Observe(const TrackingFrame&f,double ms){
- if(!f.body.valid)return;
- // Body timestamp is returned by the runtime, unlike the predicted HMD time.
- ms+=(f.body.time_ns-f.xr_time_ns)*1e-6;
- if(!history.empty() && ms<=history.back().ms)return;
- history.push_back({ms,f});while(history.size()>300 || (!history.empty() && ms-history.front().ms>3000))history.pop_front();
-}
-void CameraFusion::Fit(const CameraSkeleton& c,const TrackingFrame& f){
- if(c.frame!="camera" || !Good(c.joints[7]) || !Good(c.joints[8]))return;
- // Use homologous shoulder landmarks, not nose == HMD origin. Across a short
- // translation phase the paired shoulders supply a non-collinear rigid fit.
- for(int side=0;side<2;side++){fitFrom.push_back(c.joints[7+side].p);fitTo.push_back(f.body.joints[8+side].position);}
- // Optional camera wrists match Meta wrist landmarks, never Touch origins.
- for(int side=0;side<2;side++)if(Good(c.joints[9+side])){fitFrom.push_back(c.joints[9+side].p);fitTo.push_back(f.body.joints[12+side].position);}
- // Nose and HMD have a fixed offset only while head orientation is held.
- // Centre trajectories separately: their translation offset cannot bias R.
- if(Good(c.joints[6]) && (f.location_flags[0]&3)==3){
-  if(headFrom.empty())fitHeadRotation=f.head.quaternion;
-  double inv[4],rel[4],angle[3];mju_negQuat(inv,fitHeadRotation.data());mju_mulQuat(rel,inv,f.head.quaternion.data());mju_quat2Vel(angle,rel,1);
-  if(mju_norm3(angle)<.15){headFrom.push_back(c.joints[6].p);headTo.push_back(f.head.position);if(headFrom.size()>80){headFrom.erase(headFrom.begin());headTo.erase(headTo.begin());}}
- }
- if(fitFrom.size()>160){fitFrom.erase(fitFrom.begin(),fitFrom.begin()+2);fitTo.erase(fitTo.begin(),fitTo.begin()+2);}
- if(fitFrom.size()<40)return;
- V a{},b{};for(size_t i=0;i<fitFrom.size();i++){a=Add(a,fitFrom[i]);b=Add(b,fitTo[i]);}a=Mul(a,1./fitFrom.size());b=Mul(b,1./fitTo.size());
- double S[9]={},cov[9]={};for(size_t i=0;i<fitFrom.size();i++){V x=Sub(fitFrom[i],a),y=Sub(fitTo[i],b);for(int r=0;r<3;r++)for(int k=0;k<3;k++){S[3*r+k]+=x[r]*y[k];cov[3*r+k]+=x[r]*x[k];}}
- if(headFrom.size()>=10){
-  V ca{},cb{};for(size_t i=0;i<headFrom.size();i++){ca=Add(ca,headFrom[i]);cb=Add(cb,headTo[i]);}ca=Mul(ca,1./headFrom.size());cb=Mul(cb,1./headTo.size());
-  for(size_t i=0;i<headFrom.size();i++){V x=Sub(headFrom[i],ca),y=Sub(headTo[i],cb);for(int r=0;r<3;r++)for(int k=0;k<3;k++){S[3*r+k]+=x[r]*y[k];cov[3*r+k]+=x[r]*x[k];}}
- }
- // Require motion off the shoulder line. A static pair cannot determine pitch.
- double eig[3],ev[9],eq[4];mju_eig3(eig,ev,eq,cov);std::sort(eig,eig+3);
- if(eig[1]/fitFrom.size()<.0004)return;
+// Horn's closed-form rigid fit (scale fixed to one) of paired points.
+bool Horn(const std::vector<V>&from,const std::vector<V>&to,std::array<double,9>&R,V&t){
+ if(from.size()<3)return false;
+ V a{},b{};for(size_t i=0;i<from.size();i++){a=Add(a,from[i]);b=Add(b,to[i]);}a=Mul(a,1./from.size());b=Mul(b,1./to.size());
+ double S[9]={};for(size_t i=0;i<from.size();i++){V x=Sub(from[i],a),y=Sub(to[i],b);for(int r=0;r<3;r++)for(int k=0;k<3;k++)S[3*r+k]+=x[r]*y[k];}
  double N[16]={S[0]+S[4]+S[8],S[5]-S[7],S[6]-S[2],S[1]-S[3],
  S[5]-S[7],S[0]-S[4]-S[8],S[1]+S[3],S[2]+S[6],
  S[6]-S[2],S[1]+S[3],-S[0]+S[4]-S[8],S[5]+S[7],
@@ -65,10 +36,104 @@ void CameraFusion::Fit(const CameraSkeleton& c,const TrackingFrame& f){
   for(int r=0;r<4;r++){double x=Q[4*r+p],y=Q[4*r+q];Q[4*r+p]=cs*x-sn*y;Q[4*r+q]=sn*x+cs*y;}
  }
  int best=0;for(int i=1;i<4;i++)if(N[5*i]>N[5*best])best=i;double quat[4];for(int i=0;i<4;i++)quat[i]=Q[4*i+best];
- std::array<double,9> R;mju_quat2Mat(R.data(),quat);V t=Sub(b,Rotate(R,a));double squared=0;
- for(size_t i=0;i<fitFrom.size();i++){V e=Sub(Add(Rotate(R,fitFrom[i]),t),fitTo[i]);squared+=mju_dot3(e.data(),e.data());}
- stats.fitMm=1000*std::sqrt(squared/fitFrom.size());if(stats.fitMm>40)return;
- rotation=R;translation=t;aligned=true;
+ if(mju_normalize4(quat)<1e-9)return false;
+ mju_quat2Mat(R.data(),quat);t=Sub(b,Rotate(R,a));return true;
+}
+double AngleDeg(const std::array<double,9>&a,const std::array<double,9>&b){
+ double trace=0;for(int i=0;i<9;i++)trace+=a[i]*b[i];
+ return std::acos(std::clamp((trace-1)/2,-1.,1.))*180/M_PI;
+}
+}
+void CameraFusion::Reset(){history.clear();fitBuffer.clear();fitRandom=1;fitCountdown=0;aligned=false;lastSequence=~0ull;lastPacketMs=lastApplyMs=0;correction={};weights={};activeWeights={};lastGoodMs={};stats={};}
+void CameraFusion::Observe(const TrackingFrame&f,double ms){
+ if(!f.body.valid)return;
+ // Body timestamp is returned by the runtime, unlike the predicted HMD time.
+ ms+=(f.body.time_ns-f.xr_time_ns)*1e-6;
+ if(!history.empty() && ms<=history.back().ms)return;
+ history.push_back({ms,f});while(history.size()>300 || (!history.empty() && ms-history.front().ms>3000))history.pop_front();
+}
+void CameraFusion::Fit(const CameraSkeleton& c,const TrackingFrame& f){
+ if(c.frame!="camera")return;
+ if(!Good(c.joints[7]) || !Good(c.joints[8])){if(!aligned)stats.fitHint=1;return;}
+ // Side-on shoulders put the depth sample on the near arm or the silhouette
+ // edge (2026-10-12 episode: residual doubles beyond ~35 deg). Camera axes:
+ // x right, z forward, so a frontal shoulder line is mostly along x.
+ V across=Sub(c.joints[7].p,c.joints[8].p);
+ if(std::abs(across[2])>.7*std::abs(across[0])){if(!aligned)stats.fitHint=2;return;}
+ // Use homologous shoulder landmarks, not nose == HMD origin. Across a short
+ // translation phase the paired shoulders supply a non-collinear rigid fit.
+ FitPacket packet;
+ for(int side=0;side<2;side++){packet.from[packet.n]=c.joints[7+side].p;packet.to[packet.n++]=f.body.joints[8+side].position;}
+ // Optional camera wrists match Meta wrist landmarks, never Touch origins.
+ for(int side=0;side<2;side++)if(Good(c.joints[9+side])){packet.from[packet.n]=c.joints[9+side].p;packet.to[packet.n++]=f.body.joints[12+side].position;}
+ fitBuffer.push_back(packet);if(fitBuffer.size()>300)fitBuffer.pop_front();
+ stats.fitPackets=int(fitBuffer.size());
+ // After locking, keep refining from the growing buffer at a lower rate.
+ if(aligned && --fitCountdown>0)return;
+ fitCountdown=10;
+ constexpr size_t minPackets=40;constexpr double inlierM=.15,maxRmsM=.09,maxSplitDeg=5,minSpreadM=.06,minInliers=.5;
+ if(fitBuffer.size()<minPackets){if(!aligned){stats.fitProgress=.5*fitBuffer.size()/minPackets;stats.fitHint=3;}return;}
+ std::vector<V> from,to;std::vector<int> owner;
+ for(size_t i=0;i<fitBuffer.size();i++)for(int k=0;k<fitBuffer[i].n;k++){from.push_back(fitBuffer[i].from[k]);to.push_back(fitBuffer[i].to[k]);owner.push_back(int(i));}
+ std::array<double,9> R;V t;
+ // Packets whose every landmark lies within inlierM of the fit. A second
+ // person in view moves the camera skeleton without moving Meta and fails.
+ auto inliers=[&](const std::array<double,9>&R,const V&t){
+  std::vector<char> keep(fitBuffer.size(),1);
+  for(size_t i=0;i<from.size();i++)if(Norm(Sub(Add(Rotate(R,from[i]),t),to[i]))>inlierM)keep[owner[i]]=0;
+  return keep;
+ };
+ auto subset=[&](const std::vector<char>&keep,size_t first,size_t last,std::vector<V>&a,std::vector<V>&b){
+  a.clear();b.clear();for(size_t i=0;i<from.size();i++)if(keep[owner[i]] && size_t(owner[i])>=first && size_t(owner[i])<last){a.push_back(from[i]);b.push_back(to[i]);}
+ };
+ // RANSAC over whole packets. Trimming the worst points cannot recover when
+ // the wrong person fills most of the buffer; a consensus set can.
+ // Hypotheses are scored on every third packet (~1 ms per packet otherwise,
+ // inside the physics tick); the winner gets the full inlier set.
+ auto score=[&](const std::array<double,9>&R,const V&t){
+  size_t count=0;
+  for(size_t i=0;i<fitBuffer.size();i+=3){bool in=true;for(int k=0;k<fitBuffer[i].n && in;k++)in=Norm(Sub(Add(Rotate(R,fitBuffer[i].from[k]),t),fitBuffer[i].to[k]))<=inlierM;count+=in;}
+  return count;
+ };
+ std::array<double,9> bestR;V bestT;size_t bestScore=0;
+ auto random=[&]{fitRandom^=fitRandom<<13;fitRandom^=fitRandom>>17;fitRandom^=fitRandom<<5;return fitRandom;};
+ for(int iter=0;iter<64;iter++){
+  size_t pick[3];for(auto&p:pick)p=random()%fitBuffer.size();
+  if(pick[0]==pick[1] || pick[1]==pick[2] || pick[0]==pick[2])continue;
+  std::vector<V> a,b;for(auto p:pick)for(int k=0;k<fitBuffer[p].n;k++){a.push_back(fitBuffer[p].from[k]);b.push_back(fitBuffer[p].to[k]);}
+  if(!Horn(a,b,R,t))continue;
+  size_t count=score(R,t);
+  if(count>bestScore){bestScore=count;bestR=R;bestT=t;}
+ }
+ std::vector<char> best;size_t bestCount=0;
+ if(bestScore){best=inliers(bestR,bestT);bestCount=std::count(best.begin(),best.end(),1);}
+ if(bestCount<3){if(!aligned){stats.fitProgress=.5;stats.fitHint=4;}return;}
+ std::vector<V> a,b;
+ for(int iter=0;iter<3;iter++){
+  subset(best,0,fitBuffer.size(),a,b);if(!Horn(a,b,R,t))return;
+  auto keep=inliers(R,t);if(std::count(keep.begin(),keep.end(),1)<3)break;best=keep;
+ }
+ subset(best,0,fitBuffer.size(),a,b);if(!Horn(a,b,R,t))return;
+ size_t count=std::count(best.begin(),best.end(),1);double fraction=double(count)/fitBuffer.size();
+ double squared=0;V mean{};for(size_t i=0;i<a.size();i++){V e=Sub(Add(Rotate(R,a[i]),t),b[i]);squared+=mju_dot3(e.data(),e.data());mean=Add(mean,a[i]);}
+ double rms=std::sqrt(squared/a.size());mean=Mul(mean,1./a.size());
+ // Require motion off the shoulder line. A static pair cannot determine pitch.
+ double cov[9]={};for(auto&p:a){V x=Sub(p,mean);for(int r=0;r<3;r++)for(int k=0;k<3;k++)cov[3*r+k]+=x[r]*x[k]/a.size();}
+ double eig[3],ev[9],eq[4];mju_eig3(eig,ev,eq,cov);std::sort(eig,eig+3);double spread=std::sqrt(std::max(0.,eig[1]));
+ // Depth noise on shoulder keypoints is ~6-9 cm RMS, so point RMS alone
+ // cannot certify the rotation. Two halves of the consensus must agree.
+ std::vector<size_t> order;for(size_t i=0;i<best.size();i++)if(best[i])order.push_back(i);
+ double split=180;std::array<double,9> R1,R2;V t1,t2;std::vector<V> a1,b1,a2,b2;
+ size_t middle=order[order.size()/2];subset(best,0,middle,a1,b1);subset(best,middle,fitBuffer.size(),a2,b2);
+ if(Horn(a1,b1,R1,t1) && Horn(a2,b2,R2,t2))split=AngleDeg(R1,R2);
+ stats.fitMm=1000*rms;stats.fitSplitDeg=split;stats.fitSpreadCm=100*spread;stats.fitInliers=fraction;
+ bool ok=count>=minPackets && fraction>=minInliers && rms<maxRmsM && split<maxSplitDeg && spread>=minSpreadM;
+ if(ok){rotation=R;translation=t;aligned=true;stats.fitHint=0;stats.fitProgress=1;return;}
+ if(aligned)return;
+ stats.fitProgress=std::min({1.,double(count)/minPackets,spread/minSpreadM,fraction/minInliers});
+ stats.fitHint=spread<minSpreadM || count<minPackets?3:4;
+ // Geometry is sufficient but the halves still disagree: not done yet.
+ stats.fitProgress=std::min(stats.fitProgress,.95);
 }
 TrackingFrame CameraFusion::Apply(const TrackingFrame&raw,const CameraSkeleton*c,double now){
  TrackingFrame out=raw;stats.legs=0;stats.weight=0;stats.state=c?1:0;stats.ageMs=c?std::max(now-c->sourceMs,now-c->receivedMs):-1;
@@ -85,7 +150,7 @@ TrackingFrame CameraFusion::Apply(const TrackingFrame&raw,const CameraSkeleton*c
   bool registrationFresh=c && stats.ageMs>=0 && stats.ageMs<1000 && now-c->sourceMs>=-100;
   if(!history.empty() && registrationFresh){auto it=std::min_element(history.begin(),history.end(),[&](const Sample&a,const Sample&b){return std::abs(a.ms-c->sourceMs)<std::abs(b.ms-c->sourceMs);});
    if(std::abs(it->ms-c->sourceMs)<60){
-    if(!aligned)Fit(*c,it->frame);
+    Fit(*c,it->frame);
     bool usable=aligned && c->frame=="camera";
     // pelvis-relative packets already use STAGE axes and need no camera R.
     bool stage=c->frame=="pelvis-relative";
@@ -94,14 +159,19 @@ TrackingFrame CameraFusion::Apply(const TrackingFrame&raw,const CameraSkeleton*c
       bool good=Good(c->joints[side]) && Good(c->joints[2+side]) && Good(c->joints[4+side]);
       if(!good){weights[side]=0;continue;}
       double conf=1;for(int k=0;k<3;k++)conf=std::min(conf,c->joints[2*k+side].confidence);
-      V pelvis=it->frame.body.joints[0].position;
-      bool plausible=true;std::array<V,3> delta;
-      for(int k=0;k<3;k++){
-       V rel=stage?c->joints[2*k+side].p:Rotate(rotation,Sub(c->joints[2*k+side].p,c->pelvis.p));
-       V target=Add(pelvis,rel);delta[k]=Sub(target,it->frame.body.joints[2+2*k+side].position);
-       if(Norm(delta[k])>.45)plausible=false;
-      }
-      if(!plausible){weights[side]=0;continue;}
+      const auto& meta=it->frame.body.joints;
+      // A registered camera pelvis far from Meta's is another person (or a
+      // broken registration), not a leg pose. STAGE packets carry no position.
+      if(!stage && Norm(Sub(Add(Rotate(rotation,c->pelvis.p),translation),meta[0].position))>.35){weights[side]=0;continue;}
+      // Transfer thigh and shin directions only, from Meta's hip with Meta's
+      // bone lengths. Camera positions put knees 5-7 cm and ankles 10-14 cm
+      // high (hip-midpoint pelvis, short 2D shins): that would bend standing
+      // legs. Large lifts are valid, so there is no correction-size limit.
+      auto direction=[&](int from,int to){V d=Sub(c->joints[to].p,c->joints[from].p);return Unit(stage?d:Rotate(rotation,d));};
+      V thigh=direction(side,2+side),shin=direction(2+side,4+side);
+      V knee=Add(meta[2+side].position,Mul(thigh,Norm(Sub(meta[4+side].position,meta[2+side].position))));
+      V ankle=Add(knee,Mul(shin,Norm(Sub(meta[6+side].position,meta[4+side].position))));
+      std::array<V,3> delta{V{},Sub(knee,meta[4+side].position),Sub(ankle,meta[6+side].position)};
       double packetDt=lastPacketMs?std::clamp((c->sourceMs-lastPacketMs)/1000.,.001,.15):.08;
       double alpha=1-std::exp(-packetDt/.06);
       for(int k=0;k<3;k++)for(int a=0;a<3;a++)correction[2*k+side][a]+=alpha*(delta[k][a]-correction[2*k+side][a]);

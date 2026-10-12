@@ -12,12 +12,15 @@ struct CameraOverlay {
  std::array<std::array<double,3>,14> points{}; // camera joints, then pelvis
  std::array<bool,14> valid{};bool aligned=false;double ageMs=-1;
 };
-struct CameraFusionStats {int state=0,legs=0;double ageMs=-1,fitMm=-1,weight=0;};
+// Registration progress for the HUD. hint: 0 ok, 1 no person/shoulders,
+// 2 operator side-on, 3 needs more walking, 4 inconsistent (other person?).
+struct CameraFusionStats {int state=0,legs=0,fitPackets=0,fitHint=1;double ageMs=-1,fitMm=-1,weight=0,fitProgress=0,fitSplitDeg=-1,fitSpreadCm=0,fitInliers=0;};
 class CameraFusion {
  struct Sample{double ms;TrackingFrame frame;};
  std::deque<Sample> history;
- std::vector<std::array<double,3>> fitFrom,fitTo,headFrom,headTo;
- std::array<double,4> fitHeadRotation{1,0,0,0};
+ // One registration packet: homologous camera/STAGE landmark pairs.
+ struct FitPacket{std::array<std::array<double,3>,4> from{},to{};int n=0;};
+ std::deque<FitPacket> fitBuffer;uint32_t fitRandom=1;int fitCountdown=0;
  std::array<double,9> rotation{1,0,0,0,1,0,0,0,1};
  std::array<double,3> translation{};
  std::array<std::array<double,3>,6> correction{};

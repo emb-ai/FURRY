@@ -18,6 +18,7 @@ inline constexpr Color Text {.92f, .93f, .89f, 1.f};
 inline constexpr Color Muted {.68f, .71f, .64f, 1.f};
 inline constexpr Color Border {.31f, .33f, .28f, 1.f};
 inline constexpr Color Warning {.96f, .63f, .60f, 1.f};
+inline constexpr Color Good {.62f, .90f, .64f, 1.f};
 
 // Menu drawing is embedded in the simulator's render pass. Preserve the state
 // changed by both resource initialization and rendering, including unit zero.
@@ -318,7 +319,12 @@ inline int DrawMinimalStatus(const float* headVP, const std::string& assetsPath,
     else if (!state.trackingValid) status = "Нет свежего трекинга";
     const bool warning = state.faulted || recordingStatus == 2 || trackingStatus == 4 || !state.trackingValid;
     const float bottom = -.47f;
-    draw.RoundRect({-.37f, bottom, .74f, .125f}, .004f, glmenu::Background);
+    // Extra bottom row: where the robot legs come from (camera or Meta).
+    const float extra = state.cameraLevel ? .036f : 0.f;
+    draw.RoundRect({-.37f, bottom - extra, .74f, .125f + extra}, .004f, glmenu::Background);
+    if (state.cameraLevel)
+        draw.Label({-.35f, bottom - extra + .004f, .70f, .034f}, state.cameraStatus,
+                   state.cameraLevel == 3 ? glmenu::Good : state.cameraLevel == 2 ? glmenu::Warning : glmenu::Muted, .027f);
     std::string title = state.mode == Mode::Trajectories ? "Сбор траекторий" : "Симуляция";
     if (state.recording) title = state.paused ? "REC - пауза" : "REC";
     draw.Label({-.35f, bottom + .070f, .22f, .036f}, title, state.recording ? glmenu::Warning : glmenu::Text, .029f);

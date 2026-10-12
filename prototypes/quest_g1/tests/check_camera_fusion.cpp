@@ -76,5 +76,38 @@ int main(){
    for(int j=0;j<14;j++)Require(result.body.joints[j].position==body.body.joints[j].position,"Expired STAGE packet changes body");
   }
  }
- puts("Camera rigid fit, delayed correction, bone projection, stale, expiry, invalid heartbeat and degeneracy checks passed");
+ // A high knee lift is a valid pose, not an outlier: no correction-size gate.
+ {
+  CameraFusion stage;auto body=frames.back();CameraSkeleton packet=packets.back();
+  packet.frame="pelvis-relative";packet.sequence=1;packet.sourceMs=packet.receivedMs=200000;
+  body.xr_time_ns=body.body.time_ns=int64_t(packet.sourceMs*1e6);stage.Observe(body,packet.sourceMs);
+  packet.pelvis.p=body.body.joints[0].position;
+  for(int side=0;side<2;side++)for(int k=0;k<3;k++)for(int a=0;a<3;a++)
+   packet.joints[2*k+side].p[a]=body.body.joints[2+2*k+side].position[a]-packet.pelvis.p[a];
+  packet.joints[2].p=packet.joints[0].p;packet.joints[2].p[1]-=.05;packet.joints[2].p[2]+=.4;
+  packet.joints[4].p=packet.joints[2].p;packet.joints[4].p[1]-=.4;
+  auto lifted=stage.Apply(body,&packet,packet.sourceMs);
+  Require(stage.stats.legs==2 && lifted.body.joints[4].position[1]>body.body.joints[4].position[1]+.01,"High knee lift rejected as an outlier");
+ }
+ // A second person walking through view must not poison registration, and
+ // once registered, a person away from Meta's pelvis must not drive the legs.
+ {
+  CameraFusion crowd;double ms=300000;
+  for(size_t n=0;n<frames.size()+30;n++){
+   bool other=n<30;auto body=frames[other?n:n-30];auto packet=packets[other?n:n-30];
+   ms=300000+n*80.;body.xr_time_ns=body.body.time_ns=int64_t(ms*1e6);packet.sourceMs=packet.receivedMs=ms;packet.sequence=n+1;
+   if(other){for(auto&j:packet.joints)j.p[0]+=.5+.05*n;packet.pelvis.p[0]+=.5+.05*n;}
+   crowd.Observe(body,ms);crowd.Apply(body,&packet,ms);
+  }
+  Require(crowd.Aligned() && crowd.stats.fitMm<1,"Second person poisoned the shoulder registration");
+  // Leg weights fade over 100 ms rather than snapping off.
+  for(int n=0;n<10;n++){
+   auto body=frames.back();auto packet=packets.back();ms+=80;
+   body.xr_time_ns=body.body.time_ns=int64_t(ms*1e6);packet.sourceMs=packet.receivedMs=ms;packet.sequence=1000+n;
+   for(auto&j:packet.joints)j.p[0]+=1;packet.pelvis.p[0]+=1;
+   crowd.Observe(body,ms);crowd.Apply(body,&packet,ms);
+  }
+  Require(crowd.stats.legs==0,"A person 1 m from the operator drives the legs");
+ }
+ puts("Camera rigid fit, delayed correction, bone projection, stale, expiry, invalid heartbeat, degeneracy, second person and knee lift checks passed");
 }

@@ -36,7 +36,8 @@ struct State {
     bool firstPerson = false, passthrough = true;
     bool debugEnabled = false, debugStats = true, debugMeta = false;
     bool debugCamera = false, debugTargets = false, debugContacts = false;
-    std::string notice, recordingInfo, cameraInfo;
+    std::string notice, recordingInfo, cameraInfo, cameraStatus;
+    int cameraLevel = 0; // 0 hidden, 1 muted, 2 warning, 3 good
     int exportStatus = 0;
     std::vector<questpolicy::Entry> policies;
     int policyIndex = 0, policyPage = 0;
