@@ -24,9 +24,10 @@ class CameraFusion {
  std::deque<FitPacket> fitBuffer;uint32_t fitRandom=1;int fitCountdown=0;
  std::array<double,9> rotation{1,0,0,0,1,0,0,0,1};
  std::array<double,3> translation{};
- std::array<std::array<double,3>,6> correction{};
+ // Per-packet leg target, smoothed at frame rate by two 40 ms stages.
+ std::array<std::array<double,3>,6> target{},halfway{},correction{};
  std::array<double,2> weights{},activeWeights{},lastGoodMs{};
- bool aligned=false;uint64_t lastSequence=~0ull;double lastPacketMs=0,lastApplyMs=0;
+ bool aligned=false;uint64_t lastSequence=~0ull;double lastApplyMs=0;
  void Fit(const CameraSkeleton&,const TrackingFrame&);
 public:
  CameraFusionStats stats;

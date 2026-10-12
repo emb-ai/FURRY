@@ -44,7 +44,7 @@ double AngleDeg(const std::array<double,9>&a,const std::array<double,9>&b){
  return std::acos(std::clamp((trace-1)/2,-1.,1.))*180/M_PI;
 }
 }
-void CameraFusion::Reset(){history.clear();fitBuffer.clear();fitRandom=1;fitCountdown=0;aligned=false;lastSequence=~0ull;lastPacketMs=lastApplyMs=0;correction={};weights={};activeWeights={};lastGoodMs={};stats={};}
+void CameraFusion::Reset(){history.clear();fitBuffer.clear();fitRandom=1;fitCountdown=0;aligned=false;lastSequence=~0ull;lastApplyMs=0;target={};halfway={};correction={};weights={};activeWeights={};lastGoodMs={};stats={};}
 void CameraFusion::Observe(const TrackingFrame&f,double ms){
  if(!f.body.valid)return;
  // Body timestamp is returned by the runtime, unlike the predicted HMD time.
@@ -172,18 +172,23 @@ TrackingFrame CameraFusion::Apply(const TrackingFrame&raw,const CameraSkeleton*c
       V knee=Add(meta[2+side].position,Mul(thigh,Norm(Sub(meta[4+side].position,meta[2+side].position))));
       V ankle=Add(knee,Mul(shin,Norm(Sub(meta[6+side].position,meta[4+side].position))));
       std::array<V,3> delta{V{},Sub(knee,meta[4+side].position),Sub(ankle,meta[6+side].position)};
-      double packetDt=lastPacketMs?std::clamp((c->sourceMs-lastPacketMs)/1000.,.001,.15):.08;
-      double alpha=1-std::exp(-packetDt/.06);
-      for(int k=0;k<3;k++)for(int a=0;a<3;a++)correction[2*k+side][a]+=alpha*(delta[k][a]-correction[2*k+side][a]);
+      // A leg that is not being driven starts from this packet, not from an
+      // old correction swept in by the smoother.
+      bool idle=activeWeights[side]<.01;
+      for(int k=0;k<3;k++){target[2*k+side]=delta[k];if(idle)halfway[2*k+side]=correction[2*k+side]=delta[k];}
       weights[side]=conf;lastGoodMs[side]=c->sourceMs;
      }
     }
    }
   }
-  lastPacketMs=c->sourceMs;
  }
  
  stats.state=(!aligned && c && c->frame=="camera")?1:fresh?2:stats.ageMs<500 && c?3:0;
+ // Packets arrive at ~12 Hz with 4-5 cm of depth noise; holding each target
+ // fed the policy a 12 Hz staircase (fused knee/ankle 2nd difference 12x
+ // Meta's). Two 40 ms stages bring it to Meta's level for ~40 ms more lag.
+ double smooth=1-std::exp(-dt/.04);
+ for(int j=2;j<6;j++)for(int a=0;a<3;a++){halfway[j][a]+=smooth*(target[j][a]-halfway[j][a]);correction[j][a]+=smooth*(halfway[j][a]-correction[j][a]);}
  for(int side=0;side<2;side++){
   double legAge=lastGoodMs[side]?std::max(stats.ageMs,now-lastGoodMs[side]):500;
   // The correction is relative to the time-matched Meta pose, so age delays
@@ -191,18 +196,22 @@ TrackingFrame CameraFusion::Apply(const TrackingFrame&raw,const CameraSkeleton*c
   // (250-440 ms old) at ~0.44 weight. Fade only just before the hard expiry.
   double freshness=c && legAge<500?std::clamp((500-legAge)/100.,0.,1.):0;
   if(weights[side]*freshness>.001)stats.ready++;
-  activeWeights[side]+=(1-std::exp(-dt/.1))*((legsEnabled?weights[side]*freshness:0)-activeWeights[side]);
+  // Freshness scales the output directly: filtering it as well left ~0.6
+  // weight at the 500 ms expiry, which then snapped the knee by up to 19 cm.
+  activeWeights[side]+=(1-std::exp(-dt/.1))*((legsEnabled?weights[side]:0)-activeWeights[side]);
   if(legAge>=500)activeWeights[side]=0;
-  double w=activeWeights[side];if(w<.001)continue;
+  double w=activeWeights[side]*freshness;if(w<.001)continue;
   if(legAge>150)stats.state=3;
   int h=2+side,k=4+side,a=6+side;V hip=raw.body.joints[h].position,knee=raw.body.joints[k].position,ankle=raw.body.joints[a].position;
   V desiredKnee=Add(knee,Mul(correction[2+side],w)),desiredAnkle=Add(ankle,Mul(correction[4+side],w));
-  double upper=Norm(Sub(knee,hip)),lower=Norm(Sub(ankle,knee));V direction=Unit(Sub(desiredAnkle,hip));double distance=std::clamp(Norm(Sub(desiredAnkle,hip)),std::abs(upper-lower)+.005,upper+lower-.005);
-  double along=(upper*upper-lower*lower+distance*distance)/(2*distance),height=std::sqrt(std::max(0.,upper*upper-along*along));
-  V bend=Sub(desiredKnee,hip);bend=Sub(bend,Mul(direction,mju_dot3(bend.data(),direction.data())));
-  if(Norm(bend)<.005){bend=Sub(knee,hip);bend=Sub(bend,Mul(direction,mju_dot3(bend.data(),direction.data())));}
-  if(Norm(bend)<1e-5)continue;
-  V newKnee=Add(hip,Add(Mul(direction,along),Mul(Unit(bend),height))),newAnkle=Add(hip,Mul(direction,distance));
+  // Chain the bones (thigh toward the desired knee, shin toward the desired
+  // ankle) instead of solving the knee from the hip-ankle distance: near a
+  // straight leg that solve amplified noise ~3x and flipped the bend side.
+  double upper=Norm(Sub(knee,hip)),lower=Norm(Sub(ankle,knee));
+  V thigh=Sub(desiredKnee,hip);if(Norm(thigh)<1e-5)continue;
+  V newKnee=Add(hip,Mul(Unit(thigh),upper));
+  V shin=Sub(desiredAnkle,newKnee);if(Norm(shin)<1e-5)continue;
+  V newAnkle=Add(newKnee,Mul(Unit(shin),lower));
   Swing(out.body.joints[h],Sub(knee,hip),Sub(newKnee,hip));Swing(out.body.joints[k],Sub(ankle,knee),Sub(newAnkle,newKnee));
   out.body.joints[k].position=newKnee;out.body.joints[a].position=newAnkle;
   stats.legs++;stats.weight=std::max(stats.weight,w);

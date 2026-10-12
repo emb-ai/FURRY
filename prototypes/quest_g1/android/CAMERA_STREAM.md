@@ -74,18 +74,29 @@ The camera supplies thigh and shin **directions**; knee and ankle targets are
 laid out from Meta's hip with Meta's bone lengths in the historical Meta sample.
 Camera positions put knees 5–7 cm and ankles 10–14 cm high (hip-midpoint pelvis,
 short 2D shins), which would bend standing legs. A residual remains: the right
-ankle sits ~7 cm behind on these recordings (occlusion). A 60 ms exponential filter smooths the **correction**, preserving
-current high-frequency Meta motion rather than delaying the whole skeleton.
+ankle sits ~7 cm behind on these recordings (occlusion). The **correction** is
+smoothed at frame rate by two cascaded 40 ms stages, which preserves current
+high-frequency Meta motion rather than delaying the whole skeleton. The former
+per-packet 60 ms filter held each 12 Hz packet as a step: with 4–5 cm of depth
+noise (mostly along the camera axis), fused knee/ankle second differences were
+~12× Meta's and the robot jerked when it followed the legs (2026-10-12
+recordings). The cascade brings them to ~1.5× Meta's for ~40 ms more lag. A leg
+that was not driven starts from its first packet, not from a stale correction.
 Confidence weights fade over 100 ms; each leg expires against its last good
-measurement, even when empty heartbeat packets continue. A two-bone projection
-preserves Meta segment lengths and hip anchors. Hip/knee
+measurement, even when empty heartbeat packets continue. The bones are chained
+(thigh toward the desired knee, then shin toward the desired ankle), which
+preserves Meta segment lengths and hip anchors. The former knee solve from the
+hip–ankle distance amplified noise ~3× near a straight leg and flipped the bend
+side, so knees jumped up to 19 cm in one frame. Hip/knee
 orientations receive swing rotations matching the new bone directions. Ankle
 orientation/twist remain Meta-estimated: the current camera has no toe/heel
 landmarks, so camera-derived foot pitch and yaw are not claimed.
 
 At more than 150 ms the HUD shows STALE. The correction keeps full weight
 until 400 ms and fades linearly to zero at 500 ms, where the result is exactly
-the original Meta skeleton. Age delays the legs but does not shrink them: the
+the original Meta skeleton. The linear fade scales the output directly; it
+used to pass through the 100 ms weight filter as well, which left ~0.6 weight
+at 500 ms and then snapped. Age delays the legs but does not shrink them: the
 correction is relative to the time-matched Meta pose. The former 150→500 ms
 ramp left a 5 Hz CPU camera (250–440 ms old) at ~0.44 weight, so the robot
 moved only about half way towards the camera legs. Invalid new frames

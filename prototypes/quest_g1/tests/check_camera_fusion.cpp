@@ -98,8 +98,26 @@ int main(){
    packet.joints[2*k+side].p[a]=body.body.joints[2+2*k+side].position[a]-packet.pelvis.p[a];
   packet.joints[2].p=packet.joints[0].p;packet.joints[2].p[1]-=.05;packet.joints[2].p[2]+=.4;
   packet.joints[4].p=packet.joints[2].p;packet.joints[4].p[1]-=.4;
-  auto lifted=stage.Apply(body,&packet,packet.sourceMs);
-  Require(stage.stats.legs==2 && lifted.body.joints[4].position[1]>body.body.joints[4].position[1]+.01,"High knee lift rejected as an outlier");
+  // The leg weight ramps in over ~100 ms, so judge the lift after 300 ms.
+  TrackingFrame lifted;for(int n=0;n<=15;n++)lifted=stage.Apply(body,&packet,packet.sourceMs+20*n);
+  Require(stage.stats.legs==2 && lifted.body.joints[4].position[1]>body.body.joints[4].position[1]+.1,"High knee lift rejected as an outlier");
+ }
+ // 12 Hz packets with 5 cm of noise must reach the legs as a smooth signal,
+ // and the 500 ms expiry must fade them out rather than snap.
+ {
+  CameraFusion smooth;auto body=frames.back();CameraSkeleton packet=packets.back();
+  packet.frame="pelvis-relative";packet.pelvis.p=body.body.joints[0].position;
+  for(int side=0;side<2;side++)for(int k=0;k<3;k++)for(int a=0;a<3;a++)
+   packet.joints[2*k+side].p[a]=body.body.joints[2+2*k+side].position[a]-packet.pelvis.p[a];
+  auto base=packet;double ms=400000,worst=0;std::array<double,3> last{};bool have=false;
+  for(int n=0;n<=230;n++,ms+=10){
+   if(n%8==0 && n<160){packet=base;packet.sequence=1+n;packet.sourceMs=packet.receivedMs=ms;packet.joints[4].p[2]+=(n/8)%2?.05:-.05;}
+   body.xr_time_ns=body.body.time_ns=int64_t(ms*1e6);smooth.Observe(body,ms);
+   auto out=smooth.Apply(body,&packet,ms);auto ankle=out.body.joints[6].position;
+   if(have)worst=std::max(worst,std::sqrt(std::pow(ankle[0]-last[0],2)+std::pow(ankle[1]-last[1],2)+std::pow(ankle[2]-last[2],2)));
+   last=ankle;have=true;
+  }
+  Require(worst<.012,"Camera packets reach the legs as steps or the expiry snaps");
  }
  // A second person walking through view must not poison registration, and
  // once registered, a person away from Meta's pelvis must not drive the legs.
