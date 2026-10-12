@@ -17,7 +17,7 @@ One-Euro берёт фактический dt (CPU даёт 8-15 fps, не 30) �
 Управление: q/Esc — выход, крестик — выход, стрелки — вращение 3D,
 c — зафиксировать камеру по AprilTag и позе контроллера (нужен --ws).
 Запуск: .venv/Scripts/python pose_yolo.py [s|m|l] [full|min|off]
-  второй аргумент — режим depth-фильтров (min по умолчанию, см. main()).
+  второй аргумент — режим depth-фильтров (off по умолчанию, см. main()).
   --backend torch|cpu|openvino|auto (по умолчанию torch: CUDA FP32, если
   есть драйвер NVIDIA, иначе CPU; на i5-10300H OpenVINO оказался медленнее
   torch-cpu, 5.3 против 6.2 Гц; auto — CUDA, затем OV-экспорт) и
@@ -155,7 +155,7 @@ def load_model(size, backend="auto"):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("size", nargs="?", choices=["n", "s", "m", "l", "x"], default="s")
-    parser.add_argument("filters", nargs="?", choices=["full", "min", "off"], default="min")
+    parser.add_argument("filters", nargs="?", choices=["full", "min", "off"], default="off")
     parser.add_argument("--backend", choices=["auto", "torch", "cpu", "openvino"], default="torch",
                         help="torch: CUDA, если доступна, иначе CPU; cpu: принудительно CPU")
     parser.add_argument("--imgsz", type=int, default=640, help="вход YOLO, px (кратно 32)")
@@ -198,9 +198,12 @@ def main():
     holes = rs.hole_filling_filter()
     # Цепочка по режимам (тайминг на кадр, i5-12450H, 1280x720):
     #   full = spatial+temporal+holes ~45 мс — максимум качества (джиттер x0.5);
-    #   min  = только spatial          ~18 мс — баланс (по умолчанию);
-    #   off  = без фильтров            ~0 мс  — гейт-медиана фьюжна берёт на
-    #          себя большую часть работы (A/B в analyze: разница мала)
+    #   min  = только spatial          ~18 мс (i5-10300H: 22-41 мс, половина
+    #          кадра при 11 Гц);
+    #   off  = без фильтров            ~0 мс  — по умолчанию: гейт-медиана 9x9
+    #          фьюжна берёт на себя большую часть работы (A/B в analyze:
+    #          разница мала), а частота пакетов важнее — Quest сглаживает
+    #          ноги по времени, и больше пакетов дают меньше шума при том же лаге
     chain = [] if filt == "off" else [spatial]
     if filt == "full":
         chain += [temporal, holes]
@@ -307,7 +310,8 @@ def main():
             t = tic("filters", t)
             color = np.asanyarray(color_f.get_data())
             depth_m = np.asanyarray(depth_f.get_data()).astype(np.float32) * depth_scale
-            if marker_K is not None:
+            # AprilTag (~4+ мс на 720p) нужен только для фиксации клавишей c.
+            if marker_K is not None and not args.headless and not session.locked:
                 session.observe(color, marker_K, marker_dist)
             t = tic("to_numpy", t)
 
@@ -330,13 +334,14 @@ def main():
                 t = tic("fuse", t)
 
                 # отрисовка 2D
-                for i, j in CONNECTIONS:
-                    if i in pts2d and j in pts2d:
-                        cv2.line(color, tuple(map(int, pts2d[i])), tuple(map(int, pts2d[j])),
-                                 PART_COLOR[part_of(i, j)], 2, cv2.LINE_AA)
-                for i, (u, v) in pts2d.items():
-                    r, c = (6, (255, 255, 255)) if i in KEY_JOINTS else (3, PART_COLOR[IDX2PART[i]])
-                    cv2.circle(color, (int(u), int(v)), r, c, -1, cv2.LINE_AA)
+                if not args.headless:
+                    for i, j in CONNECTIONS:
+                        if i in pts2d and j in pts2d:
+                            cv2.line(color, tuple(map(int, pts2d[i])), tuple(map(int, pts2d[j])),
+                                     PART_COLOR[part_of(i, j)], 2, cv2.LINE_AA)
+                    for i, (u, v) in pts2d.items():
+                        r, c = (6, (255, 255, 255)) if i in KEY_JOINTS else (3, PART_COLOR[IDX2PART[i]])
+                        cv2.circle(color, (int(u), int(v)), r, c, -1, cv2.LINE_AA)
             t = tic("draw", t)
 
             # One-Euro на сустав: фактический dt, состояние переживает дропаут

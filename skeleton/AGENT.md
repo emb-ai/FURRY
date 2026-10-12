@@ -66,8 +66,8 @@ sudo .venv/bin/python realsense_test.py                # sudo из-за USB на
 ## 2. Поднять скелетон (live)
 
 ```powershell
-.venv\Scripts\python pose_yolo.py            # OpenVINO + spatial-фильтр (default: min)
-.venv\Scripts\python pose_yolo.py s off      # без depth-фильтров — максимум fps
+.venv\Scripts\python pose_yolo.py            # без depth-фильтров (default: off) — максимум fps
+.venv\Scripts\python pose_yolo.py s min      # spatial-фильтр (i5-10300H: 22–41 мс/кадр)
 .venv\Scripts\python pose_yolo.py s full     # максимум качества (temporal+holes)
 ```
 
@@ -76,7 +76,7 @@ sudo .venv/bin/python realsense_test.py                # sudo из-за USB на
 | Стадия | Норма | Если хуже |
 |---|---|---|
 | infer | 36–45 мс (OV) | увидел `torch-cpu` в первой строке → нет OV-папки |
-| filters | 0 (off) / ~18 (min) / ~45 (full) | машина фонит (Defender) |
+| filters | 0 (off) / ~18–41 (min) / ~45 (full) | машина фонит (Defender) |
 | show | ~7 мс | вернулись полноразмерные панели |
 | align | ~12 мс | следующий резерв оптимизации |
 | fps | 12–16 (off) / ~12 (min) | смотреть сумму стадий выше |
