@@ -1,0 +1,161 @@
+{
+  "captured_utc": "2026-10-12T11:39:21.305679+00:00",
+  "queue_updated_utc": "2026-10-12T11:39:19Z",
+  "phase": "matrix",
+  "queue_started_utc": "2026-10-12T11:31:23Z",
+  "max_active": 4,
+  "source_manifest_sha256": "a70f6e9031ebcaaecb29e01e152455dab8e3aa1b01f265530315ba52ced71999",
+  "queue_source_sha256": "094ceb8049f7b43c7ce39772b0227ddc837a32dd7033cd4ddc549955d6ebbec7",
+  "jobs": {
+    "smoke-clearance-v2": {
+      "status": "complete",
+      "gpu": 0
+    },
+    "walking-clearance-v2-control-s11": {
+      "status": "active",
+      "gpu": 0
+    },
+    "walking-clearance-v2-control-s22": {
+      "status": "active",
+      "gpu": 3
+    },
+    "walking-clearance-v2-clearance-s11": {
+      "status": "active",
+      "gpu": 2
+    },
+    "walking-clearance-v2-clearance-s22": {
+      "status": "active",
+      "gpu": 4
+    }
+  },
+  "smoke": {
+    "exit_code": 0,
+    "finished_utc": "2026-10-12T11:32:05Z",
+    "metrics": [
+      {
+        "phase": "critic",
+        "iteration": 1,
+        "actor_updates": 0,
+        "wall_seconds": 2.3590807914733887
+      },
+      {
+        "phase": "critic",
+        "iteration": 2,
+        "actor_updates": 0,
+        "wall_seconds": 4.557255506515503
+      },
+      {
+        "phase": "actor",
+        "iteration": 3,
+        "actor_updates": 0,
+        "wall_seconds": 7.081301212310791
+      },
+      {
+        "phase": "complete",
+        "actor_updates": 1,
+        "wall_seconds": 7.1601221561431885
+      }
+    ],
+    "geometry": {
+      "success": true,
+      "device": "cuda:0",
+      "num_envs": 4096,
+      "actor_inputs": 1432,
+      "initial_unsynchronized_FK_max_abs_m": 0.07615476846694946,
+      "sim_time_before_refresh": 0.004000000189989805,
+      "sim_time_after_refresh": 0.004000000189989805,
+      "refresh_advanced_simulation": false,
+      "actual_sphere_vs_root_joint_FK_max_abs_m": 8.487701416015625e-05,
+      "moving_floor_cost": 0.07823071628808975,
+      "other_foot_numerator": 0.0,
+      "stationary_cost": 0.0,
+      "high_foot_cost": 0.0,
+      "denominator": 0.05,
+      "height_target_m": 0.065,
+      "reward_scale": -0.020000000949949026,
+      "dt_applied_exactly_once": true
+    },
+    "ppo_config_matches_upstream": true,
+    "velocity_clearance": {
+      "config": {
+        "min_sole_clearance_m": 0.065,
+        "speed_gain_s_per_m": 2.0,
+        "exponential_denominator_m2": 0.05,
+        "reward_coefficient": -1.0
+      },
+      "formula": "1-exp(-sum(max(h_min-h_sole,0)^2*tanh(2*||v_sole_centroid_world_xy||))/.05)",
+      "training_reward": "reward_coefficient * dt * cost; coefficient=-1, dt=.02 exactly once",
+      "source_target_conversion": ".100m ankle link origin - .035m horizontal sphere sole offset = .065m",
+      "source_denominator": ".05 directly, not .05 squared",
+      "actor_inputs": 1432,
+      "critic_inputs_with_existing_window": 1743,
+      "phase_classifier_gating": false,
+      "reference_height_used": false,
+      "contact_gating": false,
+      "limitations": [
+        "Actual-speed weight permits frozen-foot escape; unchanged tracking and directed progress must reject it",
+        "Intentional glides and off-centre pivots can incur a cost; this is not a swing-intent classifier",
+        "Whole-sole minimum target is stricter for pitched feet than the source ankle-link height",
+        "One-sided bounded penalty changes constant reward and high-foot shaping from the source positive symmetric reward",
+        "No trained-policy benefit follows from these algebraic and recorded-state checks"
+      ],
+      "enabled": true,
+      "critic_features_added": 0,
+      "critic_inputs": 1743,
+      "source_slip_scale_dt_scaled": -0.0020000000949949026,
+      "clearance_scale_dt_scaled": -0.020000000949949026,
+      "actual_velocity": "20ms FD of world sole sphere centroid; position and velocity refer to the same rigid point",
+      "floor_proxy": "net foot Fz at sole within8mm in enforced single-robot flat-plane scene",
+      "mapping_and_dataset_changed": false
+    },
+    "source_checkpoint_sha256": "5bbfbddf34b19d8be8c7b37ecfbe61cdef83f03c759f22305fb64d0ee0e06a7f",
+    "dataset_manifest_sha256": "f6cde2c4f205831ac38c832ab84c1b83d5b3fb5ed6e8ce427cdf7fdeac1803b4",
+    "sole_urdf_sha256": "5ce11a1df5da7a40636c494e5a0d257d0b259018dd31cce599b5098df7ef1659"
+  },
+  "baseline": {
+    "finished_utc": "2026-10-12T11:03:07Z",
+    "exit_code": 0,
+    "total_trials": 24,
+    "falls": 0,
+    "survived_seconds": 348.44,
+    "report_sha256": "bf9054ecb680bac423ccb4f4864ef48a593f6542220b76980dc5b077c52efb4f",
+    "fingerprint_sha256": "0363c139d3e3282225954c921a8f356513203fa1abe985094314f2c8da2bbbac",
+    "reused_byte_exact": true
+  },
+  "last_training_metrics": {
+    "control-s11": {
+      "phase": "critic",
+      "iteration": 179,
+      "actor_updates": 0
+    },
+    "control-s22": {
+      "phase": "critic",
+      "iteration": 7,
+      "actor_updates": 0
+    },
+    "clearance-s11": {
+      "phase": "critic",
+      "iteration": 160,
+      "actor_updates": 0
+    },
+    "clearance-s22": {
+      "phase": "critic",
+      "iteration": 7,
+      "actor_updates": 0
+    }
+  },
+  "quality_improvement_established": false,
+  "deployment": false,
+  "manual_retry": {
+    "failed_job": "walking-clearance-v2-control-s22",
+    "failed_utc": "2026-10-12T11:32:54Z",
+    "failure": "PhysX sphere narrowphase illegal memory access during environment creation",
+    "config_and_metrics_present": false,
+    "actor_updates": 0,
+    "archived_with_sha256": true,
+    "experiment_parameters_changed": false,
+    "queue_resumed_utc": "2026-10-12T11:38:30Z",
+    "retry_gpu": 3,
+    "hardware_fault_established": false
+  }
+}

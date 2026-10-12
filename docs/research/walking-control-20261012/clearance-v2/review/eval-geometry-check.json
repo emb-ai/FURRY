@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "samples": 9,
+  "history": "First10ms then trailing20ms; constant velocity1m/s",
+  "velocity_max_abs_error_m_s": 1.5543122344752192e-15,
+  "main_integration_state_exactly_unchanged": true,
+  "whole_sole_clearance_matches_independent_support_function": true,
+  "main_FK_cache_stale_intentionally": true,
+  "evaluator_sha256": "97d8ce77bb044b3d270d233dc1ce60d02e159707c613d8545a0ad4b457c75892"
+}

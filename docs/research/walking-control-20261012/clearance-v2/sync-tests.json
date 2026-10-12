@@ -1,0 +1,6 @@
+{
+  "status": "PASS",
+  "tests_run": 3,
+  "candidate_sha256": "3970559ca7f23103e4c3342f5d835530e92a9a6618edad34a585fc788dc552c9",
+  "scope": "CPU fake buffer timing only; actual Isaac geometry probe recorded separately"
+}

@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "scope": "Independent CPU wrapper/math tests; Isaac GPU smoke still required",
+  "integration_cases": [
+    "control exact old reward",
+    "dt once at registration",
+    "actual contact cannot gate clearance",
+    "first sample suppressed",
+    "subset reset prevents FD teleport spike",
+    "no added phase observations"
+  ],
+  "independent_geometry_cases": 60,
+  "quaternion": "SciPy XYZW vs Torch",
+  "sphere_support": "min(world_centres_z-radius)",
+  "moving_floor_cost": 0.07823072476024147,
+  "expected_weighted_reward": -0.0015646144952048294,
+  "sources": {
+    "clearance_reward.py": "ba49f4d6e26f2b5bc5a859cfda17b4c3003ad6d5bc0ecade125553fc659a5d3e",
+    "sole_kinematics.py": "be1d73a419544d2345a1a7d7e52e8854dc6e16bad84cb7bb00614a345501ec09",
+    "clearance_finetune.py": "7e73ad5ee8878535701de8fe1105e1691608cdec0f4ea66bd0c3121d7fe99acc"
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "config": {
+    "min_sole_clearance_m": 0.065,
+    "speed_gain_s_per_m": 2.0,
+    "exponential_denominator_m2": 0.05,
+    "reward_coefficient": -1.0
+  },
+  "formula": "1-exp(-sum(max(h_min-h_sole,0)^2*tanh(2*||v_sole_centroid_world_xy||))/.05)",
+  "training_reward": "reward_coefficient * dt * cost; coefficient=-1, dt=.02 exactly once",
+  "source_target_conversion": ".100m ankle link origin - .035m horizontal sphere sole offset = .065m",
+  "source_denominator": ".05 directly, not .05 squared",
+  "actor_inputs": 1432,
+  "critic_inputs_with_existing_window": 1743,
+  "phase_classifier_gating": false,
+  "reference_height_used": false,
+  "contact_gating": false,
+  "limitations": [
+    "Actual-speed weight permits frozen-foot escape; unchanged tracking and directed progress must reject it",
+    "Intentional glides and off-centre pivots can incur a cost; this is not a swing-intent classifier",
+    "Whole-sole minimum target is stricter for pitched feet than the source ankle-link height",
+    "One-sided bounded penalty changes constant reward and high-foot shaping from the source positive symmetric reward",
+    "No trained-policy benefit follows from these algebraic and recorded-state checks"
+  ],
+  "status": "GPU_geometry_diagnostic_passed_optimizer_smoke_pending_training_not_run",
+  "original_v1_status": "withdrawn_incorrect_low_swing_objective_actor_updates_0",
+  "upstream_unitree": {
+    "repository": "https://github.com/unitreerobotics/unitree_rl_lab",
+    "commit": "4960b84732b0c2ec593dccbfe963fda1bcd7b1e3",
+    "files": [
+      {
+        "file": "rewards.py",
+        "path": "source/unitree_rl_lab/unitree_rl_lab/tasks/locomotion/mdp/rewards.py",
+        "bytes": 9583,
+        "sha256": "8a41249e85997414f759c56b990ebd8a9289f7d98c47e2fc70f54180e86d4ad3",
+        "url": "https://raw.githubusercontent.com/unitreerobotics/unitree_rl_lab/4960b84732b0c2ec593dccbfe963fda1bcd7b1e3/source/unitree_rl_lab/unitree_rl_lab/tasks/locomotion/mdp/rewards.py"
+      },
+      {
+        "file": "velocity_env_cfg.py",
+        "path": "source/unitree_rl_lab/unitree_rl_lab/tasks/locomotion/robots/g1/29dof/velocity_env_cfg.py",
+        "bytes": 13948,
+        "sha256": "22deed51bf779bb9730cdbb48df3b098ec64dab15984942153f0073d40840b8f",
+        "url": "https://raw.githubusercontent.com/unitreerobotics/unitree_rl_lab/4960b84732b0c2ec593dccbfe963fda1bcd7b1e3/source/unitree_rl_lab/unitree_rl_lab/tasks/locomotion/robots/g1/29dof/velocity_env_cfg.py"
+      }
+    ]
+  },
+  "source_twist2_commit": "b06178f19a22f2138cbd31f60c6d494bc263f67d",
+  "initial_checkpoint_sha256": "5bbfbddf34b19d8be8c7b37ecfbe61cdef83f03c759f22305fb64d0ee0e06a7f",
+  "initial_checkpoint_description": "111260/1000 comparison-baseline.pt; actor, frozen normalization and exploration std only; fresh critic and optimizer",
+  "dataset_manifest_sha256": "f6cde2c4f205831ac38c832ab84c1b83d5b3fb5ed6e8ce427cdf7fdeac1803b4",
+  "dataset_changed": false,
+  "retarget_mapping_changed": false,
+  "matrix": {
+    "conditions": [
+      "control",
+      "clearance"
+    ],
+    "seeds": [
+      11,
+      22
+    ],
+    "gpus": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "num_envs": 4096,
+    "actor_updates": 1000,
+    "save_every": 250,
+    "actor_inputs": 1432,
+    "critic_inputs": 1743,
+    "critic_warmup_min": 500,
+    "critic_warmup_max": 1000,
+    "critic_readiness": "Existing50iteration windows; need2passing gates so earliest550; no new readiness rule",
+    "shared": [
+      "nonlooping",
+      "existing9feature1swindowreward",
+      "exact_sphereURDF",
+      "sourcePPO_LR_KL_std_DR_imitation_termination"
+    ],
+    "treatment": [
+      "actual_contact_point_slip_at_source_scale",
+      "low_moving_foot_cost_at_minus1_per_second"
+    ],
+    "run_ids": [
+      "walking-clearance-v2-control-s11",
+      "walking-clearance-v2-control-s22",
+      "walking-clearance-v2-clearance-s11",
+      "walking-clearance-v2-clearance-s22"
+    ]
+  },
+  "primary_acceptance": {
+    "source": "clearance_evaluation.summarize_v2",
+    "minimum_improvement": 0.02,
+    "tracking_tolerance": 0.05,
+    "sliding_and_clearance_tolerance": 0.02,
+    "guards": [
+      "newfalls",
+      "fallcount",
+      "survival",
+      "rootXY",
+      "windowdisplacement",
+      "heading",
+      "lateral",
+      "uppertracking",
+      "directedrootprogress",
+      "directedfootXYprogress"
+    ],
+    "diagnostics_only": [
+      "legacytripcount",
+      "allbodyjointRMSE",
+      "allbodykeyRMSE",
+      "lowerjointRMSE"
+    ],
+    "reason": "Intended leg clearance may exceed low reference legZ. Source imitation reward unchanged. FootXY and upper-body tracking still guarded.",
+    "undefined_motion": "Explicitnull ratios and reject automatic acceptance for insufficient motion",
+    "no_automatic_deployment": true,
+    "no_PPO_early_stop": true
+  },
+  "baseline": "Fresh full24trial baseline completed under same byte-exact evaluator; reuse allowed only after original fingerprint verification",
+  "gpu_contract": "Actual foot rigid body poses vs root/joint FK on GPU, physical spheres, stationary/high/movingfeet independence and dt once before disposable2critic+1actor smoke",
+  "runtime_dependencies": [
+    "Pinned TWIST2 IsaacGym and source Python3.8 CUDA environment",
+    "Separate evaluator Python withTorch,Numpy,SciPy,MuJoCo,ONNXRuntime,matplotlib"
+  ],
+  "input_layout": "CLI --root directory contains dataset/,assets/g1_main_spheres.urdf,runtime-assets/,clamp-mirrored/,comparison-baseline.pt,locomotion-ancestor-manifest.json,TWIST2/,env/,eval-env/. Dataset/weights are not included.",
+  "run_commands": {
+    "smoke": "python dispatch_clearance.py smoke --root TRAIN_ROOT --smoke-gpu FREE_GPU",
+    "baseline": "python dispatch_clearance.py baseline --root TRAIN_ROOT",
+    "matrix_after_review": "python dispatch_clearance.py launch --root TRAIN_ROOT",
+    "status": "python dispatch_clearance.py status --root TRAIN_ROOT"
+  },
+  "source_package_scope": "Portable code only; no source recordings, dataset, weights, credentials, SSH aliases or personal paths",
+  "deployment": false,
+  "revision": "v2-r1-initial-contract-buffer-synchronization",
+  "revision_scope": "Only gpu_contract_checks refreshes root/DOF/rigid-body copy buffers before FK comparison. No simulate, unchanged2e-4m tolerance. Training reward, trainer, PPO, dataset and evaluator unchanged."
+}

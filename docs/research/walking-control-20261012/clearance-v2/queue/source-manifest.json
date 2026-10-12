@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "revision": "v2-queue-r1",
+  "parent_queue_sha256": "0f52cacf60be7f2c0334ed56827fed31ce174659b99276b27bbb4e55b55dc064",
+  "only_executable_change": "SOURCE_SHA points to frozen v2-source-r1 transfer manifest",
+  "files": [
+    {
+      "file": "run_queue.py",
+      "sha256": "094ceb8049f7b43c7ce39772b0227ddc837a32dd7033cd4ddc549955d6ebbec7",
+      "bytes": 24607
+    },
+    {
+      "file": "test_run_queue.py",
+      "sha256": "116ac2aeec1396c9087ea4268fb13604bc8d890af01941a763de0b341f645451",
+      "bytes": 14306
+    },
+    {
+      "file": "independent_queue_review.py",
+      "sha256": "76f2c3861f4050b54d069ecc47582e76b9b47971c42bd1bc1531ea3a1953f2d3",
+      "bytes": 10538
+    },
+    {
+      "file": "cpu-tests.json",
+      "sha256": "5312e10fe35f879e284af39fa5f4cb4e326e17a7b773c1ffaed0eccc32882a56",
+      "bytes": 224
+    },
+    {
+      "file": "independent-review-tests.json",
+      "sha256": "d346d669bfa905ba672e22071c673da875a36c6b9b36b41d5eba01f53b3ea639",
+      "bytes": 256
+    },
+    {
+      "file": "public-config-example.json",
+      "sha256": "e0e8d544843cccf9710923bda90e5e223695928799a183ff66b02a8372eefa7f",
+      "bytes": 2184
+    }
+  ]
+}

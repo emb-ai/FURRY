@@ -1,0 +1,62 @@
+{
+  "status": "PASS",
+  "cases": {
+    "clearance_improvement_with_progress_preserved": {
+      "accepted": true,
+      "reasons": []
+    },
+    "frozen_robot_cannot_win_by_low_cost_and_slip": {
+      "accepted": false,
+      "reasons": [
+        "directed_foot_progress_ratio_regression",
+        "directed_root_progress_ratio_regression"
+      ]
+    },
+    "root_moves_but_feet_do_not_follow_requested_xy": {
+      "accepted": false,
+      "reasons": [
+        "directed_foot_progress_ratio_regression"
+      ]
+    },
+    "new_fall_cannot_win": {
+      "accepted": false,
+      "reasons": [
+        "new_falls_on_baseline_successes"
+      ]
+    },
+    "equal_metrics_are_not_improvement": {
+      "accepted": false,
+      "reasons": []
+    },
+    "leg_reference_departure_alone_does_not_veto_lift": {
+      "accepted": true,
+      "reasons": []
+    },
+    "upper_body_regression_is_still_rejected": {
+      "accepted": false,
+      "reasons": [
+        "upper_joint_rmse_regression"
+      ]
+    },
+    "root_tracking_regression_is_still_rejected": {
+      "accepted": false,
+      "reasons": [
+        "root_xy_error_m_regression"
+      ]
+    },
+    "no_reference_motion_cannot_prove_progress": {
+      "accepted": false,
+      "reasons": [
+        "insufficient_reference_motion_for_progress_check"
+      ]
+    },
+    "wrong_direction_cannot_win": {
+      "accepted": false,
+      "reasons": [
+        "directed_foot_progress_ratio_regression"
+      ]
+    }
+  },
+  "source_sha256": "97d8ce77bb044b3d270d233dc1ce60d02e159707c613d8545a0ad4b457c75892",
+  "scope": "Synthetic verdict contracts only; no trained-policy improvement claim"
+}

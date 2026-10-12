@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "remote_actions_performed_by_this_agent": false,
+  "argv": [
+    "<PYTHON>",
+    "<QUEUE_SCRIPT>",
+    "run",
+    "--root",
+    "<TRAINING_ROOT>",
+    "--code",
+    "<FROZEN_V2_SOURCE>",
+    "--state",
+    "<QUEUE_STATE>",
+    "--gpus",
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "--poll",
+    "15"
+  ],
+  "max_active_jobs": 4,
+  "total_plans": 5,
+  "smoke_path": "<FROZEN_V2_SOURCE>/smoke-clearance-v2",
+  "stop_file": "<QUEUE_STATE>/STOP",
+  "stop_behavior": "Stop scheduling only; never terminate active jobs.",
+  "restart_behavior": "Same exact argv and sealed inputs. Adopt exact own processes; ambiguous launches fail closed. Retry only documented GPU-busy no-child attempts after proof and archival.",
+  "eligibility": {
+    "memory_mib_strictly_below": 100,
+    "utilization_percent": 0,
+    "compute_processes": 0
+  },
+  "gpu_reservation_limitation": "Idle queries do not atomically reserve a GPU against foreign processes. Check immediately before launch; do not terminate foreign work.",
+  "source_frozen": true,
+  "frozen_source_transfer_manifest_sha256": "a70f6e9031ebcaaecb29e01e152455dab8e3aa1b01f265530315ba52ced71999",
+  "requires_smoke": [
+    "exit0",
+    "complete phase",
+    "one actor update",
+    "GPU geometry contract",
+    "source PPO checks",
+    "critic dimension1743"
+  ],
+  "requires_baseline": [
+    "wrapper exit0",
+    "24 complete trial reports",
+    "fingerprint matches frozen initialization, evaluator, runtime and data"
+  ],
+  "matrix_success_requires": [
+    "actor_updates1000",
+    "complete phase",
+    "final.pt",
+    "four evaluated checkpoints250/500/750/1000"
+  ],
+  "no_automatic_retry_for_critic_not_ready": true,
+  "deployment": false,
+  "verification": {
+    "author_cpu_tests": 22,
+    "independent_cpu_tests": 10,
+    "python38_ast": true,
+    "GPU_executed": false
+  },
+  "example_only": true,
+  "placeholder_instructions": "Replace angle-bracket placeholders with external local paths. Python environment, Isaac Gym, datasets, weights and runtime assets are external inputs; see parent EXPERIMENT.json.",
+  "revision": "v2-r1-initial-contract-buffer-synchronization"
+}

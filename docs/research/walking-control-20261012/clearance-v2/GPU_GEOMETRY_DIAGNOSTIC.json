@@ -1,0 +1,80 @@
+{
+  "diagnostic": "synchronized_initial_tensor_geometry",
+  "num_envs": 4096,
+  "sim_time_before": 0.004000000189989805,
+  "sim_time_after": 0.004000000189989805,
+  "probe_simulate_calls": 0,
+  "optimizer_updates": 0,
+  "source_sha256": {
+    "clearance_reward.py": "ba49f4d6e26f2b5bc5a859cfda17b4c3003ad6d5bc0ecade125553fc659a5d3e",
+    "sole_kinematics.py": "be1d73a419544d2345a1a7d7e52e8854dc6e16bad84cb7bb00614a345501ec09",
+    "clearance_finetune.py": "7e73ad5ee8878535701de8fe1105e1691608cdec0f4ea66bd0c3121d7fe99acc"
+  },
+  "env0_frame_hypotheses_max_abs_m": {
+    "raw_link_poses": 4.544854164123535e-07,
+    "foot_pose_assumed_COM": 0.0269700288772583,
+    "root_pose_assumed_COM": 0.06836855411529541,
+    "both_poses_assumed_COM": 0.09533822536468506
+  },
+  "strict_original_gpu_check": {
+    "success": true,
+    "device": "cuda:0",
+    "num_envs": 4096,
+    "actor_inputs": 1432,
+    "actual_sphere_vs_root_joint_FK_max_abs_m": 8.487701416015625e-05,
+    "moving_floor_cost": 0.07823071628808975,
+    "other_foot_numerator": 0.0,
+    "stationary_cost": 0.0,
+    "high_foot_cost": 0.0,
+    "denominator": 0.05,
+    "height_target_m": 0.065,
+    "reward_scale": -0.020000000949949026,
+    "dt_applied_exactly_once": true
+  },
+  "status": "PASS_after_refresh",
+  "process_result": {
+    "phase": "complete",
+    "gpu": 1,
+    "returncode": 0,
+    "utc": "2026-10-12T11:27:42Z"
+  },
+  "refresh_stages": {
+    "before_refresh": {
+      "max_abs_m": 0.07615476846694946,
+      "median_env_max_m": 0.0020798295736312866,
+      "p95_env_max_m": 0.007257360499352217,
+      "root_vs_pelvis_rb_max_abs_m": 0.01695019006729126,
+      "root_delta_from_initial_max": 0.0,
+      "joint_delta_from_initial_max_rad": 0.0,
+      "rigid_delta_from_initial_max": 0.0
+    },
+    "after_root_refresh": {
+      "max_abs_m": 0.08495678007602692,
+      "median_env_max_m": 0.0007224678993225098,
+      "p95_env_max_m": 0.02313324064016342,
+      "root_vs_pelvis_rb_max_abs_m": 0.0,
+      "root_delta_from_initial_max": 42.08226013183594,
+      "joint_delta_from_initial_max_rad": 0.0,
+      "rigid_delta_from_initial_max": 0.0
+    },
+    "after_root_and_dof_refresh": {
+      "max_abs_m": 8.487701416015625e-05,
+      "median_env_max_m": 2.002716064453125e-05,
+      "p95_env_max_m": 5.138665437698364e-05,
+      "root_vs_pelvis_rb_max_abs_m": 0.0,
+      "root_delta_from_initial_max": 42.08226013183594,
+      "joint_delta_from_initial_max_rad": 0.2667403221130371,
+      "rigid_delta_from_initial_max": 0.0
+    },
+    "after_all_refresh": {
+      "max_abs_m": 8.487701416015625e-05,
+      "median_env_max_m": 2.002716064453125e-05,
+      "p95_env_max_m": 5.138665437698364e-05,
+      "root_vs_pelvis_rb_max_abs_m": 0.0,
+      "root_delta_from_initial_max": 42.08226013183594,
+      "joint_delta_from_initial_max_rad": 0.2667403221130371,
+      "rigid_delta_from_initial_max": 0.0
+    }
+  },
+  "scope": "4096-env initialization-only diagnostic of original frozen reward after synchronized refresh; no critic/actor optimizer steps; r1 optimizer smoke still pending"
+}
