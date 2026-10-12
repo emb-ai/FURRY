@@ -1,6 +1,6 @@
 {
   "experiment": "Learn lower-body reference corrections with immutable TWIST2",
-  "revision": "r8",
+  "revision": "r9",
   "seed": 31,
   "pilot_updates": 300,
   "num_envs": 4096,
@@ -19,7 +19,7 @@
     "complete at2300 cumulative updates; no deployment"
   ],
   "sources_sha256": {
-    "dispatch.py": "fe72eba8e7d16824f80829203fd370eadab022db046d2e1e9ecec93c5b077136",
+    "dispatch.py": "60e7d2f1216498b4c9f90e45909a5b20b41585ccf65bb5f1df1e25eca1480133",
     "adapter_core.py": "962b532ae548b46e02914cd7ff08bc2471e1ed713743788bc925c781910b80fb",
     "test_adapter.py": "2bb9adeecb1a86a29a2fa3d3bcba8749190294b82cf6cf282ab89923e08b2d28",
     "train_adapter.py": "ccc44319d234c799cf8d08b5ed4f7d2a7ed4b2f092392178b52dd785bbc25068",
@@ -41,7 +41,8 @@
     "R8 continuation restores adapter, critic, Adam moments and adaptive LR from checkpoint300. Simulator/history/RNG restart; not a bit-exact resume of simulator trajectory.",
     "Training is split into four500-update blocks, each restarting simulator with same seed for both treatments. Checkpoints preserve optimizer state across blocks.",
     "Clearance weight only changes from -1 to -5 in treatment; target65mm, unweighted evaluation metrics, imitation/navigation and contact-slip weights unchanged.",
-    "Both variants retain original Quest split. Same prior validation session is diagnostic, not independent acceptance."
+    "Both variants retain original Quest split. Same prior validation session is diagnostic, not independent acceptance.",
+    "R9 changes only dispatcher explicit idle-GPU selection. R8 clearance5 smoke on GPU1 failed with CUDA illegal memory access before full training; retry uses identical trainer/reward on GPU2. Hardware causality is unconfirmed. Control continues original R8."
   ],
   "continuation_additional_updates": 2000,
   "continuation_final_update": 2300,

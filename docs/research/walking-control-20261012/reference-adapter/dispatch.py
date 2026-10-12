@@ -13,6 +13,7 @@ def main():
     p.add_argument('--resume');p.add_argument('--clearance-multiplier',type=float,default=1.)
     p.add_argument('--eval-every',type=int,default=500)
     p.add_argument('--timeout-seconds',type=int,default=10800)
+    p.add_argument('--gpu',type=int,help='Require this idle GPU; occupancy checks still apply')
     a=p.parse_args();root=a.root.resolve();src=Path(__file__).resolve().parent
     if Path(a.label).name!=a.label:raise ValueError('Label must be a single path component')
     log=src/(a.label+'.log');receipt=src/(a.label+'.launch.json');end=src/(a.label+'.exit.json')
@@ -32,6 +33,7 @@ def main():
     occupied=subprocess.check_output(['nvidia-smi','--query-compute-apps=gpu_uuid,pid','--format=csv,noheader,nounits'],universal_newlines=True)
     free=[line.split(', ') for line in snapshot.splitlines() if line.strip()]
     free=[r for r in free if int(r[2])<100 and int(r[3])==0 and r[1] not in occupied]
+    if a.gpu is not None:free=[r for r in free if int(r[0])==a.gpu]
     if not free:raise RuntimeError('No free GPU; no run started')
     gpu,uuid=free[0][:2]
     argv=[str(root/'env/bin/python'),str(src/('run_pilot.py' if a.pipeline else 'train_adapter.py')),'--root',str(root),
