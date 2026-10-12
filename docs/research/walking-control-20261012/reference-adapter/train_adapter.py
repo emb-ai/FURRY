@@ -21,6 +21,8 @@ def main():
     p.add_argument('--save-every',type=int,default=100)
     p.add_argument('--smoke',action='store_true')
     p.add_argument('--evaluate',type=Path)
+    p.add_argument('--resume',type=Path)
+    p.add_argument('--clearance-multiplier',type=float,default=1.)
     p.add_argument('--identity',action='store_true')
     p.add_argument('--eval-steps',type=int,default=600)
     a,rest=p.parse_known_args();root=a.root.resolve();out=a.output.resolve()
@@ -37,6 +39,8 @@ def main():
     from clearance_reward import install,gpu_contract_checks
     from reference_faults import install_nonlooping
     from adapter_env import AdapterEnv
+    from continuation import set_clearance_multiplier,restore_optimizer
+    if a.resume and (a.evaluate or a.identity):raise ValueError('Resume is training only')
     torch.set_num_threads(1)
     torch.backends.cuda.matmul.allow_tf32=False;torch.backends.cudnn.allow_tf32=False
     args=get_args();torch.manual_seed(args.seed)
@@ -66,6 +70,7 @@ def main():
     install_nonlooping(env)
     clearance=install(env,root/'assets/g1_main_spheres.urdf',treatment=True)
     checks=gpu_contract_checks(env,clearance)
+    checks.update(set_clearance_multiplier(env,clearance,a.clearance_multiplier))
     tracker=load(root/'comparison-baseline.pt',root/'TWIST2/rsl_rl/rsl_rl/modules/actor_critic_future.py',env.device)
     frozen={k:v.clone() for k,v in tracker.state_dict().items()}
     wrapper=AdapterEnv(env,tracker,root/'assets/g1_main_spheres.urdf',root/'runtime-assets/scene.xml',args.seed+1700)
@@ -92,11 +97,17 @@ def main():
     # Exactly identity mean correction at initialization, not random foot angles.
     with torch.no_grad():
         ac.actor.actor_backbone[-1].weight.zero_();ac.actor.actor_backbone[-1].bias.zero_()
-    if a.evaluate:ac.load_state_dict(torch.load(a.evaluate,map_location=env.device,weights_only=True)['adapter'])
+    loaded=None
+    if a.evaluate or a.resume:
+        loaded=torch.load(a.evaluate or a.resume,map_location=env.device,weights_only=True)
+        if loaded['frozen_tracker_sha256']!=hashlib.sha256((root/'comparison-baseline.pt').read_bytes()).hexdigest():
+            raise ValueError('Checkpoint frozen tracker mismatch')
+        ac.load_state_dict(loaded['adapter'])
     algorithm=dict(num_learning_epochs=5,num_mini_batches=4,clip_param=.2,gamma=.99,lam=.95,
         value_loss_coef=1.,entropy_coef=.001,learning_rate=2e-4,max_grad_norm=1.,
         use_clipped_value_loss=True,schedule='adaptive',desired_kl=.008)
     alg=PPO(env,ac,device=env.device,**algorithm);steps=24
+    start_iteration=restore_optimizer(alg,loaded) if a.resume else 0
     alg.init_storage(env.num_envs,steps,[dim],[dim],[12])
     config=dict(schema='furry-reference-adapter-v1',split=split,clips=[r['file'] for r in rows],
         frozen_tracker_sha256=hashlib.sha256((root/'comparison-baseline.pt').read_bytes()).hexdigest(),
@@ -105,6 +116,11 @@ def main():
         source_revision=manifest['source_revision'],environment=class_to_dict(cfg),algorithm=algorithm,
         adapter_observations=dim,adapter_actions=12,amplitude_rad=.5,lowpass_alpha=.2,
         modes={'recorded':.5,'held_position':.25,'held_turn':.25},hz=50,
+        clearance_multiplier=a.clearance_multiplier,clearance_reward_scale=env.reward_scales['low_moving_foot'],
+        continuation=dict(checkpoint=str(a.resume) if a.resume else None,start_iteration=start_iteration,
+            checkpoint_sha256=hashlib.sha256(a.resume.read_bytes()).hexdigest() if a.resume else None,
+            optimizer_restored=bool(a.resume),adaptive_learning_rate=alg.learning_rate,
+            simulation_state_restored=False,additional_iterations=2 if a.smoke else a.iterations),
         notes=['Only Quest train for adapter pilot; original 33 + mirrored33, not66 independent demos.',
                'Raw Meta/GMR trajectories are precomputed; adapter operates causally on their robot references.',
                'Frozen tracker uses deployed history/normalization; adapter includes simulator state available in Quest simulation.',
@@ -114,6 +130,9 @@ def main():
     # Source config contains numpy.float64 values. Store plain JSON primitives
     # so our own checkpoints remain loadable with weights_only=True.
     config=json.loads(json.dumps(config))
+    if a.resume:
+        for key in ('clips','frozen_tracker_sha256','scene_sha256','urdf_sha256','adapter_observations','adapter_actions','hz'):
+            if loaded['config'][key]!=config[key]:raise ValueError('Resume contract mismatch: '+key)
     (out/'config.json').write_text(json.dumps(config,indent=2));(out/'gpu-contract-checks.json').write_text(json.dumps(checks,indent=2))
     def assert_frozen():
         if any(not torch.equal(v,tracker.state_dict()[k]) for k,v in frozen.items()):raise ValueError('Frozen tracker changed')
@@ -121,6 +140,7 @@ def main():
     def save(iteration):
         assert_frozen();tmp=out/'checkpoint.tmp'
         torch.save({'adapter':ac.state_dict(),'optimizer':alg.optimizer.state_dict(),'iteration':iteration,
+                    'adaptive_learning_rate':alg.learning_rate,
                     'config':config,'frozen_tracker_sha256':config['frozen_tracker_sha256']},tmp)
         restored=torch.load(tmp,map_location='cpu',weights_only=True)
         if set(restored['adapter'])!=set(ac.state_dict()):raise ValueError('Checkpoint roundtrip failed')
@@ -179,8 +199,9 @@ def main():
             initial_state_sha256=hashlib.sha256((out/'initial-state.json').read_bytes()).hexdigest(),
             limitation='First episode per paired clip/mode; clearance aggregate includes later reset episodes and is diagnostic only. Dataset is the existing already-inspected validation session, not fresh human data.')
         (out/'result.json').write_text(json.dumps(result,indent=2));emit(result);return
-    save(0);iterations=2 if a.smoke else a.iterations
-    for iteration in range(1,iterations+1):
+    save(start_iteration);iterations=2 if a.smoke else a.iterations
+    initial_actor=ac.actor.actor_backbone[-1].weight.detach().clone()
+    for iteration in range(start_iteration+1,start_iteration+iterations+1):
         rates=[];failures=0
         with torch.no_grad():
             for _ in range(steps):
@@ -195,10 +216,11 @@ def main():
             failures=failures,value_loss=loss[0],surrogate_loss=loss[1],lr=alg.learning_rate,
             delta_rms_rad=float(wrapper.delta.square().mean().sqrt()),
             distance_m=float(wrapper.last_metrics['distance_m'].mean()),clearance=clearance.metrics()))
-        if iteration%a.save_every==0 or iteration==iterations:save(iteration)
-    changed=bool(ac.actor.actor_backbone[-1].weight.abs().max()>0)
+        if iteration%a.save_every==0 or iteration==start_iteration+iterations:save(iteration)
+    changed=not torch.equal(initial_actor,ac.actor.actor_backbone[-1].weight)
     if not changed:raise ValueError('Adapter optimizer never changed the actor')
     result=dict(completed=True,iterations=iterations,smoke=a.smoke,adapter_actor_updated=changed,
+                start_iteration=start_iteration,final_iteration=start_iteration+iterations,
                 frozen_tracker_unchanged=True,headset_deployment=False)
     (out/'result.json').write_text(json.dumps(result,indent=2));emit(result)
 

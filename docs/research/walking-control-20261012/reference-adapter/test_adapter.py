@@ -7,9 +7,37 @@ import torch
 from types import SimpleNamespace
 from adapter_core import *
 from adapter_env import AdapterEnv
+from continuation import set_clearance_multiplier,restore_optimizer
+from clearance_reward import ClearanceConfig,velocity_clearance_cost
 
 
 class Contracts(unittest.TestCase):
+    def test_clearance_multiplier_preserves_geometry_and_one_dt(self):
+        state=SimpleNamespace(config=ClearanceConfig())
+        env=SimpleNamespace(dt=.02,reward_scales={'low_moving_foot':-.02})
+        height=torch.tensor([[0.,.1]]);speed=torch.tensor([[[1.,0.],[1.,0.]]])
+        before=velocity_clearance_cost(height,speed,state.config)[0]
+        set_clearance_multiplier(env,state,5.)
+        after=velocity_clearance_cost(height,speed,state.config)[0]
+        self.assertTrue(torch.equal(before,after))
+        self.assertAlmostEqual(env.reward_scales['low_moving_foot'],-.1)
+        self.assertTrue(torch.allclose(after*env.reward_scales['low_moving_foot'],5*before*(-.02)))
+        with self.assertRaises(ValueError):set_clearance_multiplier(env,state,5.)
+
+    def test_resume_restores_adam_moments_and_adaptive_lr(self):
+        import copy
+        p=torch.nn.Parameter(torch.tensor([.7]));opt=torch.optim.Adam([p],lr=.00007)
+        for _ in range(3):
+            opt.zero_grad();p.square().sum().backward();opt.step()
+        q=torch.nn.Parameter(p.detach().clone());other=torch.optim.Adam([q],lr=.0002)
+        alg=SimpleNamespace(optimizer=other,learning_rate=.0002)
+        checkpoint={'optimizer':copy.deepcopy(opt.state_dict()),'iteration':300}
+        self.assertEqual(restore_optimizer(alg,checkpoint),300)
+        self.assertEqual(alg.learning_rate,.00007)
+        for param,optimizer in [(p,opt),(q,other)]:
+            optimizer.zero_grad();param.square().sum().backward();optimizer.step()
+        self.assertTrue(torch.equal(p,q))
+
     def test_zero_identity_upper_unchanged_and_limits(self):
         raw=torch.randn(32,29)*.1;zero=torch.zeros(32,12)
         q,d=corrected_joints(raw,zero,zero,torch.full((29,),-1.),torch.ones(29))

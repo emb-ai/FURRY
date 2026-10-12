@@ -10,6 +10,9 @@ def main():
     p.add_argument('--smoke',action='store_true');p.add_argument('--identity',action='store_true')
     p.add_argument('--evaluate');p.add_argument('--iterations',type=int,default=300)
     p.add_argument('--pipeline',action='store_true')
+    p.add_argument('--resume');p.add_argument('--clearance-multiplier',type=float,default=1.)
+    p.add_argument('--eval-every',type=int,default=500)
+    p.add_argument('--timeout-seconds',type=int,default=10800)
     a=p.parse_args();root=a.root.resolve();src=Path(__file__).resolve().parent
     if Path(a.label).name!=a.label:raise ValueError('Label must be a single path component')
     log=src/(a.label+'.log');receipt=src/(a.label+'.launch.json');end=src/(a.label+'.exit.json')
@@ -35,10 +38,13 @@ def main():
           '--base-source',str(root/'walking-clearance-v2-r1-20261012/v2-source-r1'),
           '--output',str(src/a.label),'--headless','--num_envs',str(a.num_envs),'--sim_device','cuda:0',
           '--rl_device','cuda:0','--device','cuda:0','--num_threads','1','--seed','31','--iterations',str(a.iterations)]
+    argv+=['--clearance-multiplier',str(a.clearance_multiplier)]
+    if a.resume:argv+=['--resume',a.resume]
+    if a.pipeline:argv+=['--eval-every',str(a.eval_every)]
     if a.smoke:argv+=['--smoke']
     if a.identity:argv+=['--identity']
     if a.evaluate:argv+=['--evaluate',a.evaluate]
-    command='source '+shlex.quote(str(root/'remote_environment.sh'))+' && CUDA_VISIBLE_DEVICES='+gpu+' timeout 7200 '+shlex.join(argv)
+    command='source '+shlex.quote(str(root/'remote_environment.sh'))+' && CUDA_VISIBLE_DEVICES='+gpu+' timeout '+str(a.timeout_seconds)+' '+shlex.join(argv)
     spec=dict(gpu=int(gpu),gpu_uuid=uuid,command=command,argv=argv,started_utc=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()))
     with receipt.open('x') as f:json.dump(spec,f,indent=2)
     worker=subprocess.Popen([sys.executable,str(src/'dispatch.py'),'--worker','--root',str(root),'--label',a.label],stdin=subprocess.DEVNULL,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,start_new_session=True)
