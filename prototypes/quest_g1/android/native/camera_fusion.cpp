@@ -1,6 +1,9 @@
 #include "camera_fusion.h"
 #include <algorithm>
+#include <cerrno>
 #include <cmath>
+#include <cstdio>
+#include <fstream>
 namespace {
 using V=std::array<double,3>;
 V Sub(V a,V b){for(int i=0;i<3;i++)a[i]-=b[i];return a;}
@@ -43,8 +46,64 @@ double AngleDeg(const std::array<double,9>&a,const std::array<double,9>&b){
  double trace=0;for(int i=0;i<9;i++)trace+=a[i]*b[i];
  return std::acos(std::clamp((trace-1)/2,-1.,1.))*180/M_PI;
 }
+// (1-w)*a + w*b for nearby rigid transforms: normalized quaternion lerp. To
+// first order this averages the mapped operator points as well.
+void Mix(const std::array<double,9>&Ra,const V&ta,const std::array<double,9>&Rb,const V&tb,double w,std::array<double,9>&R,V&t){
+ double qa[4],qb[4],q[4];mju_mat2Quat(qa,Ra.data());mju_mat2Quat(qb,Rb.data());
+ double sign=mju_dot(qa,qb,4)<0?-1:1;for(int i=0;i<4;i++)q[i]=(1-w)*qa[i]+w*sign*qb[i];
+ mju_normalize4(q);mju_quat2Mat(R.data(),q);t=Add(Mul(ta,1-w),Mul(tb,w));
 }
-void CameraFusion::Reset(){history.clear();fitBuffer.clear();fitRandom=1;fitCountdown=0;aligned=false;lastSequence=~0ull;lastApplyMs=0;target={};halfway={};correction={};weights={};activeWeights={};lastGoodMs={};stats={};}
+constexpr int windowSize=300,maxWindows=9,checkSize=100;constexpr size_t minVerify=20;
+constexpr double inlierM=.15,minConsistent=.2,maxStoredDeg=12,maxStoredM=.25;
+}
+void CameraFusion::Reset(){history.clear();lastSequence=~0ull;lastApplyMs=0;target={};halfway={};correction={};weights={};activeWeights={};lastGoodMs={};stats.state=stats.legs=stats.ready=0;stats.ageMs=-1;stats.weight=0;}
+void CameraFusion::ForgetRegistration(){
+ fitBuffer.clear();fitRandom=1;fitCountdown=0;aligned=false;checks.clear();
+ rotation=storedRotation=windowRotation={1,0,0,0,1,0,0,0,1};translation=storedTranslation=windowTranslation={};
+ storedWindows=windowPackets=0;windowFit=false;moved=verified=false;registrationVersion++;
+ stats.fitPackets=0;stats.fitHint=1;stats.fitMm=-1;stats.fitProgress=0;stats.fitSplitDeg=-1;stats.fitSpreadCm=0;stats.fitInliers=0;
+}
+void CameraFusion::Blend(){
+ if(!windowFit){rotation=storedRotation;translation=storedTranslation;return;}
+ if(!storedWindows){rotation=windowRotation;translation=windowTranslation;return;}
+ // A partial window counts in proportion to its length.
+ double part=std::min(1.,double(windowPackets)/windowSize);
+ Mix(storedRotation,storedTranslation,windowRotation,windowTranslation,part/(std::min(storedWindows,maxWindows)+part),rotation,translation);
+}
+void CameraFusion::CommitWindow(){
+ // Disjoint windows have independent depth noise; capping the count keeps a
+ // slowly drifting camera mount (a few degrees) tracked within ~10 windows.
+ if(!storedWindows){storedRotation=windowRotation;storedTranslation=windowTranslation;}
+ else Mix(storedRotation,storedTranslation,windowRotation,windowTranslation,1./(std::min(storedWindows,maxWindows)+1),storedRotation,storedTranslation);
+ storedWindows++;windowFit=false;windowPackets=0;fitBuffer.clear();fitCountdown=0;registrationVersion++;Blend();
+}
+bool CameraFusion::LoadRegistration(const std::string& path){
+ std::ifstream in(path);std::string tag;int windows=0;std::array<double,9> R;V t;
+ if(!(in>>tag>>windows) || tag!="camera-registration-v1" || windows<1)return false;
+ for(auto&x:R)if(!(in>>x))return false;
+ for(auto&x:t)if(!(in>>x))return false;
+ // Reject anything that is not a proper rotation.
+ std::array<double,9> RRt;mju_mulMatMatT(RRt.data(),R.data(),R.data(),3,3,3);
+ for(int i=0;i<9;i++)if(!std::isfinite(RRt[i]) || std::abs(RRt[i]-(i%4==0))>1e-4)return false;
+ double det=R[0]*(R[4]*R[8]-R[5]*R[7])-R[1]*(R[3]*R[8]-R[5]*R[6])+R[2]*(R[3]*R[7]-R[4]*R[6]);
+ if(det<.99 ||!std::isfinite(t[0]+t[1]+t[2]))return false;
+ ForgetRegistration();registrationVersion--;
+ storedRotation=R;storedTranslation=t;storedWindows=windows;aligned=true;Blend();
+ // Awaiting confirmation from live packets (see verified).
+ stats.fitHint=3;stats.fitProgress=.9;return true;
+}
+bool CameraFusion::SaveRegistration(const std::string& path)const{
+ if(!storedWindows)return std::remove(path.c_str())==0 || errno==ENOENT;
+ std::string temporary=path+".tmp";
+ {std::ofstream out(temporary,std::ios::trunc);out.precision(17);
+  out<<"camera-registration-v1 "<<storedWindows<<'\n';
+  for(double x:storedRotation)out<<x<<' ';
+  out<<'\n';
+  for(double x:storedTranslation)out<<x<<' ';
+  out<<'\n';
+  if(!out)return false;}
+ return std::rename(temporary.c_str(),path.c_str())==0;
+}
 void CameraFusion::Observe(const TrackingFrame&f,double ms){
  if(!f.body.valid)return;
  // Body timestamp is returned by the runtime, unlike the predicted HMD time.
@@ -66,12 +125,22 @@ void CameraFusion::Fit(const CameraSkeleton& c,const TrackingFrame& f){
  for(int side=0;side<2;side++){packet.from[packet.n]=c.joints[7+side].p;packet.to[packet.n++]=f.body.joints[8+side].position;}
  // Optional camera wrists match Meta wrist landmarks, never Touch origins.
  for(int side=0;side<2;side++)if(Good(c.joints[9+side])){packet.from[packet.n]=c.joints[9+side].p;packet.to[packet.n++]=f.body.joints[12+side].position;}
- fitBuffer.push_back(packet);if(fitBuffer.size()>300)fitBuffer.pop_front();
- stats.fitPackets=int(fitBuffer.size());
+ // A moved camera (or a Guardian redone between launches) leaves the stored
+ // registration consistent with almost no packets. With the right one ~90%
+ // pass; 100 packets (~9 s) outlast a second person walking through view.
+ if(aligned){
+  bool in=true;for(int k=0;k<packet.n && in;k++)in=Norm(Sub(Add(Rotate(rotation,packet.from[k]),translation),packet.to[k]))<=inlierM;
+  checks.push_back(in);if(checks.size()>checkSize)checks.pop_front();
+  size_t consistent=std::count(checks.begin(),checks.end(),1);
+  if(!verified && checks.size()>=minVerify && consistent>=.6*checks.size()){verified=true;stats.fitHint=0;stats.fitProgress=1;}
+  if(checks.size()>=checkSize && consistent<minConsistent*checkSize){ForgetRegistration();moved=true;}
+ }
+ fitBuffer.push_back(packet);if(fitBuffer.size()>windowSize)fitBuffer.pop_front();
+ windowPackets++;stats.fitPackets=int(fitBuffer.size());
  // After locking, keep refining from the growing buffer at a lower rate.
  if(aligned && --fitCountdown>0)return;
  fitCountdown=10;
- constexpr size_t minPackets=40;constexpr double inlierM=.15,maxRmsM=.09,maxSplitDeg=5,minSpreadM=.06,minInliers=.5;
+ constexpr size_t minPackets=40;constexpr double maxRmsM=.09,maxSplitDeg=5,minSpreadM=.06,minInliers=.5;
  if(fitBuffer.size()<minPackets){if(!aligned){stats.fitProgress=.5*fitBuffer.size()/minPackets;stats.fitHint=3;}return;}
  std::vector<V> from,to;std::vector<int> owner;
  for(size_t i=0;i<fitBuffer.size();i++)for(int k=0;k<fitBuffer[i].n;k++){from.push_back(fitBuffer[i].from[k]);to.push_back(fitBuffer[i].to[k]);owner.push_back(int(i));}
@@ -128,7 +197,16 @@ void CameraFusion::Fit(const CameraSkeleton& c,const TrackingFrame& f){
  if(Horn(a1,b1,R1,t1) && Horn(a2,b2,R2,t2))split=AngleDeg(R1,R2);
  stats.fitMm=1000*rms;stats.fitSplitDeg=split;stats.fitSpreadCm=100*spread;stats.fitInliers=fraction;
  bool ok=count>=minPackets && fraction>=minInliers && rms<maxRmsM && split<maxSplitDeg && spread>=minSpreadM;
- if(ok){rotation=R;translation=t;aligned=true;stats.fitHint=0;stats.fitProgress=1;return;}
+ if(ok){
+  // Disjoint windows at one camera place agree within ~7 deg. A fit far
+  // from the stored average means the camera moved: never average the two.
+  if(storedWindows && (AngleDeg(R,storedRotation)>maxStoredDeg || Norm(Sub(Add(Rotate(R,mean),t),Add(Rotate(storedRotation,mean),storedTranslation)))>maxStoredM)){
+   storedRotation={1,0,0,0,1,0,0,0,1};storedTranslation={};storedWindows=0;registrationVersion++;
+  }
+  windowRotation=R;windowTranslation=t;windowFit=true;
+  if(windowPackets>=windowSize)CommitWindow();else Blend();
+  aligned=verified=true;moved=false;stats.fitHint=0;stats.fitProgress=1;return;
+ }
  if(aligned)return;
  stats.fitProgress=std::min({1.,double(count)/minPackets,spread/minSpreadM,fraction/minInliers});
  stats.fitHint=spread<minSpreadM || count<minPackets?3:4;
@@ -150,8 +228,8 @@ TrackingFrame CameraFusion::Apply(const TrackingFrame&raw,const CameraSkeleton*c
   bool registrationFresh=c && stats.ageMs>=0 && stats.ageMs<1000 && now-c->sourceMs>=-100;
   if(!history.empty() && registrationFresh){auto it=std::min_element(history.begin(),history.end(),[&](const Sample&a,const Sample&b){return std::abs(a.ms-c->sourceMs)<std::abs(b.ms-c->sourceMs);});
    if(std::abs(it->ms-c->sourceMs)<60){
-    Fit(*c,it->frame);
-    bool usable=aligned && c->frame=="camera";
+    Fit(*c,it->frame);if(moved && !aligned && stats.fitHint>=3)stats.fitHint=5;
+    bool usable=aligned && verified && c->frame=="camera";
     // pelvis-relative packets already use STAGE axes and need no camera R.
     bool stage=c->frame=="pelvis-relative";
     if(usableAge && (usable || stage) && Good(c->pelvis)){
@@ -183,7 +261,7 @@ TrackingFrame CameraFusion::Apply(const TrackingFrame&raw,const CameraSkeleton*c
   }
  }
  
- stats.state=(!aligned && c && c->frame=="camera")?1:fresh?2:stats.ageMs<500 && c?3:0;
+ stats.state=(!(aligned && verified) && c && c->frame=="camera")?1:fresh?2:stats.ageMs<500 && c?3:0;
  // Packets arrive at ~12 Hz with 4-5 cm of depth noise; holding each target
  // fed the policy a 12 Hz staircase (fused knee/ankle 2nd difference 12x
  // Meta's). Two 40 ms stages bring it to Meta's level for ~40 ms more lag.

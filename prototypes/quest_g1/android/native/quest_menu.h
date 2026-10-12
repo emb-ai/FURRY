@@ -21,7 +21,8 @@ enum class Action {
     SceneEmpty, SceneCup, ScenePushT, ViewObserver, ViewFirstPerson, Passthrough,
     DebugEnabled, DebugStats, DebugMeta, DebugCamera, DebugTargets, DebugContacts,
     PageSession, PageView, PageDebug, PagePolicy, CatchUp, PolicyPrevious, PolicyNext,
-    PolicySelect0, PolicySelect1, PolicySelect2, PolicySelect3, LegsMeta, LegsCamera
+    PolicySelect0, PolicySelect1, PolicySelect2, PolicySelect3, LegsMeta, LegsCamera,
+    CameraRecalibrate
 };
 enum class Kind { Text, MutedText, Divider, Tab, Button, Primary, Radio, Checkbox };
 
@@ -202,7 +203,10 @@ inline std::vector<Widget> BuildLayout(const State& s) {
         label(-.121f, "Meta");
         text(-.121f, s.trackingValid ? "Трекинг есть" : "Нет свежего трекинга");
         label(-.190f, "RGB-D");
-        text(-.190f, s.cameraInfo.empty() ? "Не подключена" : s.cameraInfo);
+        add({-.192f, -.190f, .300f, .054f}, s.cameraInfo.empty() ? "Не подключена" : s.cameraInfo);
+        // Registration is kept across launches; redo it after moving the camera.
+        add({.118f, -.190f, .234f, .054f}, "Калибровать", Action::CameraRecalibrate,
+            s.cameraConfigured && !human, false, Kind::Button);
     } else if(s.page == Page::Policy) {
         const int count=int(s.policies.size());
         const int pages=std::max(1,(count+PoliciesPerPage-1)/PoliciesPerPage);

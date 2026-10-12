@@ -91,10 +91,10 @@ std::string CameraLegStatus(const RuntimeStats& s,bool connected,bool synced,boo
     // Registration and fusion run in the robot loop only.
     if(paused || s.published<=0){level=1;menu="Подключена";return "Ноги: Meta. Камера подключена, симуляция на паузе";}
     if(s.cameraState==1){
-        const char* hints[]={"","встаньте в кадр","повернитесь к камере","походите лицом к камере","один человек в кадре"};
+        const char* hints[]={"","встаньте в кадр","повернитесь к камере","походите лицом к камере","один человек в кадре","камера сдвинута, походите лицом к ней"};
         int percent=int(std::lround(100*std::clamp(s.cameraFitProgress,0.,1.)));
         std::snprintf(text,sizeof(text),"Калибровка %d%%",percent);menu=text;
-        std::snprintf(text,sizeof(text),"Ноги: Meta. Калибровка %d%%: %s",percent,hints[std::clamp(s.cameraFitHint,0,4)]);
+        std::snprintf(text,sizeof(text),"Ноги: Meta. Калибровка %d%%: %s",percent,hints[std::clamp(s.cameraFitHint,0,5)]);
         level=2;return text;
     }
     if(s.cameraLegs>0){
@@ -112,6 +112,8 @@ void QueueMenuAction(questmenu::Action action,int policyIndex=-1){std::lock_guar
 std::atomic<bool> spaceInvalidated{false};
 std::unique_ptr<CameraStream> cameraStream;bool cameraConfigured=false;
 CameraFusion cameraFusion;
+// Camera->STAGE registration survives launches while the camera stays put.
+uint64_t savedCameraRegistration=0;
 std::atomic<uint64_t> droppedInputs{0};
 RuntimeStats stats;
 GuidedCapture capture,publishedCapture,frameCapture;
@@ -151,6 +153,7 @@ std::thread worker;
 std::atomic<bool> running{false}, active{false}, reset{false};
 std::atomic<float> grip[2]{{0},{0}};
 std::string assetsPath;
+std::string CameraRegistrationPath(){return assetsPath+"/camera_registration.txt";}
 mjvScene scene{},workerScene{};
 std::mutex geometryMutex;
 std::vector<mjvGeom> publishedGeometry;
@@ -397,6 +400,14 @@ void ApplyMenuAction(questmenu::Action action,bool fresh,uint64_t sequence,int p
         catchUpEnabled=!catchUpEnabled.load();settingsDirty=true;restartAfterCalibration=false;
         reset=true;userPaused=true;menuOpen=true;return;
     }
+    if(action==A::CameraRecalibrate){
+        // The camera was moved: drop the stored registration and register anew.
+        if(HumanCapture()||!cameraConfigured)return;
+        cameraFusion.Reset();cameraFusion.ForgetRegistration();
+        Record([&]{recorder.Event("camera_recalibrate",sequence);});
+        Notice("Калибровка камеры сброшена. Походите лицом к камере.");
+        return;
+    }
     if(action==A::LegsMeta||action==A::LegsCamera){
         // No reset: the switch fades over ~100 ms and the camera registration
         // stays valid, so it can be flipped while comparing the two sources.
@@ -505,6 +516,9 @@ void G1Initialize(android_app* app){
     LoadPreferences();
     std::ifstream cameraConfig(assets+"/camera_stream_url.txt");std::string cameraUrl;std::getline(cameraConfig,cameraUrl);
     cameraStream=std::make_unique<CameraStream>(cameraUrl);cameraConfigured=!cameraUrl.empty();
+    if(cameraFusion.LoadRegistration(CameraRegistrationPath()))
+        __android_log_print(ANDROID_LOG_INFO,"G1Quest","Camera registration restored (%d windows)",cameraFusion.StoredWindows());
+    savedCameraRegistration=cameraFusion.RegistrationVersion();
     try{
         sim=std::make_unique<Simulation>(assets,2,questmenu::SceneName(questmenu::Scene(sessionScene.load())),questpolicy::VerifiedPath(assets,policyCatalog.at(selectedPolicy.load())),50);
     }catch(const std::exception& e){
@@ -568,6 +582,8 @@ void G1Initialize(android_app* app){
                 if(spaceInvalidated.exchange(false)){
                     restartAfterCalibration=false;
                     trackingEnabled=false;retarget->calibrated=false;calibrate=false;cameraFusion.Reset();
+                    // A new STAGE origin invalidates where the camera sits in it.
+                    cameraFusion.ForgetRegistration();
                     wasApplying=false;retarget->Pause();sim->PauseWholeBodyReference();pauseReason=1;
                     Record([&]{recorder.Event("reference_space_change",input.sequence);});
                     capture.Invalidate();
@@ -731,6 +747,10 @@ void G1Initialize(android_app* app){
                     cameraFusion.Observe(input,CameraEpochMs());CameraSkeleton optical;
                     bool haveOptical=cameraStream->Latest(optical);
                     fused=cameraFusion.Apply(input,haveOptical?&optical:nullptr,CameraEpochMs());
+                    if(cameraFusion.RegistrationVersion()!=savedCameraRegistration){
+                        savedCameraRegistration=cameraFusion.RegistrationVersion();
+                        if(!cameraFusion.SaveRegistration(CameraRegistrationPath()))__android_log_print(ANDROID_LOG_WARN,"G1Quest","Camera registration not saved");
+                    }
                 }
                 if(applyReference){
                     if(calibratedNow || !wasApplying){

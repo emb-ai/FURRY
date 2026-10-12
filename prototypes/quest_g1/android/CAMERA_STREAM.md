@@ -39,7 +39,32 @@ Meta's generated legs. Registration now:
 - keeps refining every 10th packet after locking, with the same acceptance.
 
 Replayed on the three recorded episodes it locks after 17, 47 and 23 s; the
-halves then agree within 1–3°. A or a STAGE recenter resets it.
+halves then agree within 1–3°.
+
+The registration describes where the camera stands in STAGE, so it is kept per
+camera place, not per operator or trajectory:
+
+- A calibration, robot reset and policy change keep it; only a STAGE change
+  (`XrEventDataReferenceSpaceChangePending` for STAGE) or the View-page button
+  `RGB-D → Калибровать` drops it. Live on 2026-10-12 every A press, reset and
+  policy change re-registered it: ~10 re-locks in 7 minutes, 4–16 s of Meta
+  legs each.
+- One ~25 s window still errs 4–9° (2026-10-12 recordings vs the pooled
+  offline fit). Completed disjoint 300-packet windows are averaged (count
+  capped at 9) and blended with the current window by its length.
+- The average is saved to `files/g1/camera_registration.txt` and restored at
+  launch. A restored registration drives no legs until ≥60 % of its first 20
+  packets match it (~2 s): a registration from another camera place
+  otherwise put the pelvis inside the 35 cm gate in replay.
+- If fewer than 20 % of the last 100 packets (~9 s) match, or a fresh window
+  fit differs from the saved one by >12° or >25 cm, the camera has moved: the
+  saved registration is dropped and the HUD asks to walk facing the camera.
+
+Replay over the five recorded episodes: chaining the saved file (ep1→ep2,
+ep3→ep41→ep42) gives camera legs 1.5–4 s after the first camera packet and
+median/max error 1.5–2.4° / 3.0° vs 3.3–5.8° / 6.9° per session from scratch;
+a file from a different camera place never drove the legs and was replaced in
+the episode's normal lock time; no false "camera moved" on any episode.
 
 The current server has no wrist landmarks. Optional `lwrist` / `rwrist` anchors
 are supported if added later, matched to Meta wrists rather than controller
@@ -152,7 +177,9 @@ when camera goals conflict with foot support, body tracking or policy capability
 - 37 Python model/recording/geometry tests pass.
 - Native synthetic tests cover metric rigid fit, degenerate static alignment,
   fixed bone lengths, invalid heartbeat expiry, the 150/500 ms transitions, a
-  second person in view, a distant person after locking and a high knee lift.
+  second person in view, a distant person after locking, a high knee lift,
+  and registration persistence (survives reset, window commit, save/restore,
+  confirmation before legs, moved-camera detection, rejected bad file).
 - Pose-servo tests cover correction direction, zero command at goal, yaw sign
   and velocity limits.
 - Native stereo/world checks keep a prop fixed in STAGE across HMD movement.

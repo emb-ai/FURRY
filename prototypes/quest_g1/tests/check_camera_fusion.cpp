@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
+#include <fstream>
 #include <stdexcept>
 void Require(bool v,const char*s){if(!v)throw std::runtime_error(s);}
 int main(){
@@ -63,7 +64,7 @@ int main(){
  auto stale=fusion.Apply(raw,&c,t+200);Require(fusion.stats.state==3,"Missing STALE flag");
  auto fallback=fusion.Apply(raw,&c,t+501);for(int j=0;j<14;j++)Require(fallback.body.joints[j].position==raw.body.joints[j].position,"Expired camera affects body");
  c.sequence++;c.sourceMs=c.receivedMs=t+600;c.pelvis.confidence=0;fusion.Apply(raw,&c,t+600);Require(fusion.stats.legs==0,"Invalid heartbeat repeats corrections");
- fusion.Reset();for(int n=0;n<50;n++){c.sourceMs=c.receivedMs=t+n*80;c.sequence++;c.pelvis.confidence=1;raw.body.time_ns=raw.xr_time_ns=int64_t(c.sourceMs*1e6);fusion.Observe(raw,c.sourceMs);fusion.Apply(raw,&c,c.sourceMs);}
+ fusion.Reset();fusion.ForgetRegistration();for(int n=0;n<50;n++){c.sourceMs=c.receivedMs=t+n*80;c.sequence++;c.pelvis.confidence=1;raw.body.time_ns=raw.xr_time_ns=int64_t(c.sourceMs*1e6);fusion.Observe(raw,c.sourceMs);fusion.Apply(raw,&c,c.sourceMs);}
  Require(!fusion.Aligned(),"Static shoulders silently accepted ambiguous alignment");
  auto unaligned=fusion.MapForDisplay(&c,raw,c.sourceMs);Require(!unaligned.aligned,"Uncalibrated overlay pretends to be mapped");
  // Delayed STAGE packets move the legs; fresh receipt cannot revive old data.
@@ -139,5 +140,52 @@ int main(){
   }
   Require(crowd.stats.legs==0,"A person 1 m from the operator drives the legs");
  }
- puts("Camera rigid fit, delayed correction, bone projection, stale, expiry, invalid heartbeat, degeneracy, second person, knee lift and leg-source switch checks passed");
+ // Registration belongs to the camera's place in STAGE: it survives operator
+ // resets, is averaged over disjoint windows, persists in a file, and is
+ // dropped once packets stop matching it (camera moved).
+ {
+  auto walk=[&](CameraFusion& f,int count,double start,auto camera){
+   TrackingFrame body;body.valid=body.body.valid=true;body.location_flags[0]=3;body.body.confidence=1;
+   CameraSkeleton p;p.frame="camera";p.pelvis.measured=true;p.pelvis.confidence=1;
+   for(auto&j:p.joints){j.measured=true;j.confidence=1;}p.joints[9].confidence=p.joints[10].confidence=0;
+   for(int n=0;n<count;n++){
+    double ms=start+n*80.,x=.6*std::sin(n*.05),y=.1*std::cos(n*.13),z=.4*std::sin(n*.031);
+    body.xr_time_ns=body.body.time_ns=int64_t(ms*1e6);
+    body.body.joints[0].position={x,1+y,z};body.head.position={x,1.7+y,z};
+    for(int side=0;side<2;side++){
+     double s=side?-.15:.15;
+     body.body.joints[2+side].position={x+s,1+y,z};body.body.joints[4+side].position={x+s,.6+y,z+.08};body.body.joints[6+side].position={x+s,.2+y,z};body.body.joints[8+side].position={x+(side?-.2:.2),1.5+y,z};
+     for(int k=0;k<3;k++)p.joints[2*k+side].p=camera(body.body.joints[2+2*k+side].position);
+     p.joints[7+side].p=camera(body.body.joints[8+side].position);
+    }
+    p.pelvis.p=camera(body.body.joints[0].position);p.sourceMs=p.receivedMs=ms;p.sequence=uint64_t(start)+n;
+    f.Observe(body,ms);f.Apply(body,&p,ms);
+   }
+   return start+count*80.;
+  };
+  auto first=[](std::array<double,3> p){return std::array<double,3>{p[0]+1,2-p[1],3-p[2]};};
+  // The same room seen from a camera turned 20 degrees and moved 0.5 m.
+  auto moved=[](std::array<double,3> p){double c=std::cos(.35),s=std::sin(.35);return std::array<double,3>{c*p[0]+s*p[2]+.5,2-p[1],-s*p[0]+c*p[2]+3};};
+  CameraFusion f;double ms=walk(f,60,500000,first);
+  Require(f.Aligned() && f.StoredWindows()==0,"Registration did not lock within a partial window");
+  f.Reset();Require(f.Aligned(),"Operator reset dropped the camera registration");
+  uint64_t version=f.RegistrationVersion();ms=walk(f,320,ms,first);
+  Require(f.StoredWindows()==1 && f.RegistrationVersion()!=version,"Full window not committed for saving");
+  const std::string path="/tmp/check_camera_registration.txt";
+  Require(f.SaveRegistration(path),"Registration not saved");
+  CameraFusion restored;Require(restored.LoadRegistration(path) && restored.Aligned() && restored.StoredWindows()==1,"Saved registration not restored");
+  ms=walk(restored,5,ms,first);Require(restored.stats.legs==0 && restored.stats.state==1,"Unconfirmed restored registration drives the legs");
+  ms=walk(restored,25,ms,first);Require(restored.stats.legs==2,"Confirmed restored registration does not drive the legs");
+  // A registration saved for another camera place must never drive the legs.
+  {CameraFusion wrong;Require(wrong.LoadRegistration(path),"Saved registration not restored");
+   double at=ms;for(int n=0;n<200;n++){at=walk(wrong,1,at,moved);Require(wrong.stats.legs==0 || wrong.StoredWindows()==0,"Wrong restored registration drives the legs");}}
+  ms=walk(restored,250,ms,moved);
+  Require(restored.Aligned() && restored.StoredWindows()==0 && restored.RegistrationVersion()>0,"Moved camera not detected or not re-registered");
+  Require(restored.SaveRegistration(path),"Forgotten registration not cleared");
+  CameraFusion empty;Require(!empty.LoadRegistration(path) && !empty.Aligned(),"Forgotten registration came back after relaunch");
+  {std::ofstream bad(path);bad<<"camera-registration-v1 3\n1 0 0 0 1 0 0 0 2\n0 0 0\n";}
+  Require(!empty.LoadRegistration(path) && !empty.Aligned(),"Non-rotation registration accepted");
+  std::remove(path.c_str());
+ }
+ puts("Camera rigid fit, delayed correction, bone projection, stale, expiry, invalid heartbeat, degeneracy, second person, knee lift, leg-source switch and registration persistence checks passed");
 }
