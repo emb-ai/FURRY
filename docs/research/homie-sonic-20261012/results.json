@@ -1,0 +1,546 @@
+{
+  "validation": {
+    "twist2": {
+      "samples": 8706,
+      "root_xy_m": {
+        "mean": 0.7632362322936798,
+        "p95": 2.4357835125192184
+      },
+      "yaw_abs_deg": {
+        "mean": 14.822685004247798,
+        "p95": 55.7277691386589
+      },
+      "upper_world_mean_m": {
+        "mean": 0.765950004042592,
+        "p95": 2.4287181196879306
+      },
+      "upper_local_mean_m": {
+        "mean": 0.02581275251370703,
+        "p95": 0.04595879064576136
+      },
+      "wrist_world_mean_m": {
+        "mean": 0.7707206813629113,
+        "p95": 2.42484464997992
+      },
+      "wrist_local_mean_m": {
+        "mean": 0.0412890449153819,
+        "p95": 0.08774605984571293
+      },
+      "torso_world_m": {
+        "mean": 0.7644726122585035,
+        "p95": 2.4341584058020382
+      },
+      "torso_orientation_deg": {
+        "mean": 16.775650378629123,
+        "p95": 57.7830889143645
+      },
+      "wrist_orientation_deg": {
+        "mean": 26.038728254146452,
+        "p95": 72.7506010743106
+      },
+      "upper_joint_rmse_rad": {
+        "mean": 0.09331551326321628,
+        "p95": 0.1776978297153546
+      },
+      "contact_slip_m_s": {
+        "mean": 0.05066982244412825,
+        "p95": 0.19266950526438653
+      },
+      "slide_foot_fraction": {
+        "mean": 0.14782908339076498,
+        "p95": 0.5
+      },
+      "low_moving_foot_fraction": {
+        "mean": 0.2516080863772111,
+        "p95": 1.0
+      },
+      "braking_contact_events": 397,
+      "upward_contact_events": 3,
+      "reference_path_m": 91.79787053834103,
+      "actual_path_m": 75.35778570717127,
+      "directed_progress_ratio": 0.6437309660035476,
+      "clips": 12,
+      "falls": 0,
+      "failures": [],
+      "seconds": 174.1200000000556,
+      "inference_ms_median": 0.15780173998791724
+    },
+    "homie": {
+      "samples": 8706,
+      "root_xy_m": {
+        "mean": 0.4443934766759078,
+        "p95": 1.828129212414802
+      },
+      "yaw_abs_deg": {
+        "mean": 5.27984331250567,
+        "p95": 18.826683348177554
+      },
+      "upper_world_mean_m": {
+        "mean": 0.46210738633181203,
+        "p95": 1.8293926629317407
+      },
+      "upper_local_mean_m": {
+        "mean": 0.030893634546743758,
+        "p95": 0.06772130131391232
+      },
+      "wrist_world_mean_m": {
+        "mean": 0.47205435087383785,
+        "p95": 1.822631391268951
+      },
+      "wrist_local_mean_m": {
+        "mean": 0.05049693064923138,
+        "p95": 0.11170302924911482
+      },
+      "torso_world_m": {
+        "mean": 0.450531598252586,
+        "p95": 1.8292048112496258
+      },
+      "torso_orientation_deg": {
+        "mean": 7.694122041797663,
+        "p95": 21.325503075614233
+      },
+      "wrist_orientation_deg": {
+        "mean": 14.405142922349691,
+        "p95": 33.451695231583386
+      },
+      "upper_joint_rmse_rad": {
+        "mean": 0.06639258348749875,
+        "p95": 0.12115592275939978
+      },
+      "contact_slip_m_s": {
+        "mean": 0.048302391888562245,
+        "p95": 0.20188153478769152
+      },
+      "slide_foot_fraction": {
+        "mean": 0.13002526992878474,
+        "p95": 0.5
+      },
+      "low_moving_foot_fraction": {
+        "mean": 0.15598437858947853,
+        "p95": 0.5
+      },
+      "braking_contact_events": 542,
+      "upward_contact_events": 0,
+      "reference_path_m": 91.79787053834103,
+      "actual_path_m": 74.90188127826754,
+      "directed_progress_ratio": 0.7080688316600101,
+      "clips": 12,
+      "falls": 0,
+      "failures": [],
+      "seconds": 174.1200000000556,
+      "inference_ms_median": 0.10379150626249611
+    },
+    "sonic": {
+      "samples": 8706,
+      "root_xy_m": {
+        "mean": 0.37005571224595984,
+        "p95": 1.278781417695597
+      },
+      "yaw_abs_deg": {
+        "mean": 13.892836263273084,
+        "p95": 59.6732664489883
+      },
+      "upper_world_mean_m": {
+        "mean": 0.387415886981749,
+        "p95": 1.2976359707222387
+      },
+      "upper_local_mean_m": {
+        "mean": 0.027240666637280836,
+        "p95": 0.04375050796218895
+      },
+      "wrist_world_mean_m": {
+        "mean": 0.3968274926605209,
+        "p95": 1.2772548762276463
+      },
+      "wrist_local_mean_m": {
+        "mean": 0.03510186612383241,
+        "p95": 0.07339368269136408
+      },
+      "torso_world_m": {
+        "mean": 0.3721602708848035,
+        "p95": 1.28364554473464
+      },
+      "torso_orientation_deg": {
+        "mean": 17.00700175458409,
+        "p95": 60.78641639320701
+      },
+      "wrist_orientation_deg": {
+        "mean": 23.533966922954104,
+        "p95": 65.67578684880831
+      },
+      "upper_joint_rmse_rad": {
+        "mean": 0.24872309463320025,
+        "p95": 0.439674834458069
+      },
+      "contact_slip_m_s": {
+        "mean": 0.026755630799785407,
+        "p95": 0.08425447492161371
+      },
+      "slide_foot_fraction": {
+        "mean": 0.0945325063174822,
+        "p95": 0.5
+      },
+      "low_moving_foot_fraction": {
+        "mean": 0.16189983919136228,
+        "p95": 0.5
+      },
+      "braking_contact_events": 225,
+      "upward_contact_events": 0,
+      "reference_path_m": 91.79787053834103,
+      "actual_path_m": 95.38075501000475,
+      "directed_progress_ratio": 0.8768873747675614,
+      "clips": 12,
+      "falls": 0,
+      "failures": [],
+      "seconds": 174.1200000000556,
+      "inference_ms_median": 2.310270501766354
+    }
+  },
+  "live": {
+    "twist2": {
+      "samples": 2922,
+      "camera_xy_m": {
+        "mean": 0.37535908386123296,
+        "p95": 0.9324875458107059
+      },
+      "root_xy_m": {
+        "mean": 0.39171408754880865,
+        "p95": 1.0020517982098305
+      },
+      "yaw_abs_deg": {
+        "mean": 17.77608870896017,
+        "p95": 67.7980717434551
+      },
+      "upper_world_mean_m": {
+        "mean": 0.39389892685611144,
+        "p95": 0.9738194578534486
+      },
+      "upper_local_mean_m": {
+        "mean": 0.016070659512525138,
+        "p95": 0.02888603030886992
+      },
+      "wrist_world_mean_m": {
+        "mean": 0.396184763907992,
+        "p95": 0.9588115351287579
+      },
+      "wrist_local_mean_m": {
+        "mean": 0.023505775549733918,
+        "p95": 0.038635254910171786
+      },
+      "torso_world_m": {
+        "mean": 0.3922893745987853,
+        "p95": 1.003176313446777
+      },
+      "torso_orientation_deg": {
+        "mean": 18.847786943347486,
+        "p95": 66.28944722738915
+      },
+      "wrist_orientation_deg": {
+        "mean": 21.737071545601363,
+        "p95": 67.8268577640287
+      },
+      "upper_joint_rmse_rad": {
+        "mean": 0.06558756564441938,
+        "p95": 0.09132627897006165
+      },
+      "contact_slip_m_s": {
+        "mean": 0.04776932986238063,
+        "p95": 0.18793546738000777
+      },
+      "slide_foot_fraction": {
+        "mean": 0.17385352498288842,
+        "p95": 0.5
+      },
+      "low_moving_foot_fraction": {
+        "mean": 0.2828542094455852,
+        "p95": 1.0
+      },
+      "braking_contact_events": 139,
+      "upward_contact_events": 4,
+      "reference_path_m": 21.211157803114432,
+      "actual_path_m": 17.993439193154853,
+      "directed_progress_ratio": 0.6432927007850796,
+      "clips": 2,
+      "falls": 0,
+      "failures": [],
+      "seconds": 58.44000000002012,
+      "inference_ms_median": 0.18668750999495387
+    },
+    "homie": {
+      "samples": 2922,
+      "camera_xy_m": {
+        "mean": 0.13255272567659346,
+        "p95": 0.24301598139747072
+      },
+      "root_xy_m": {
+        "mean": 0.12173941880824543,
+        "p95": 0.23865610886643723
+      },
+      "yaw_abs_deg": {
+        "mean": 9.084623538929469,
+        "p95": 34.6377953930458
+      },
+      "upper_world_mean_m": {
+        "mean": 0.1379784737075817,
+        "p95": 0.2471202518542124
+      },
+      "upper_local_mean_m": {
+        "mean": 0.02242114054478568,
+        "p95": 0.037322245144741334
+      },
+      "wrist_world_mean_m": {
+        "mean": 0.14186245214103613,
+        "p95": 0.27923045372720534
+      },
+      "wrist_local_mean_m": {
+        "mean": 0.032195738110865964,
+        "p95": 0.05391823445640544
+      },
+      "torso_world_m": {
+        "mean": 0.13000004149317557,
+        "p95": 0.24182850161080352
+      },
+      "torso_orientation_deg": {
+        "mean": 10.266853088894925,
+        "p95": 33.6069053011839
+      },
+      "wrist_orientation_deg": {
+        "mean": 12.054188811785702,
+        "p95": 38.20649431632961
+      },
+      "upper_joint_rmse_rad": {
+        "mean": 0.03906566558235185,
+        "p95": 0.053253329897603216
+      },
+      "contact_slip_m_s": {
+        "mean": 0.03432822298212611,
+        "p95": 0.13249699651762753
+      },
+      "slide_foot_fraction": {
+        "mean": 0.08470225872689939,
+        "p95": 0.5
+      },
+      "low_moving_foot_fraction": {
+        "mean": 0.1293634496919918,
+        "p95": 0.5
+      },
+      "braking_contact_events": 186,
+      "upward_contact_events": 0,
+      "reference_path_m": 21.211157803114432,
+      "actual_path_m": 22.174105511850616,
+      "directed_progress_ratio": 0.8557005016102825,
+      "clips": 2,
+      "falls": 0,
+      "failures": [],
+      "seconds": 58.44000000002012,
+      "inference_ms_median": 0.12381200212985277
+    },
+    "sonic": {
+      "samples": 2922,
+      "camera_xy_m": {
+        "mean": 0.2107182738211244,
+        "p95": 0.5075226053878551
+      },
+      "root_xy_m": {
+        "mean": 0.19685384139861875,
+        "p95": 0.46227484065522534
+      },
+      "yaw_abs_deg": {
+        "mean": 19.438561441154885,
+        "p95": 77.54237520724364
+      },
+      "upper_world_mean_m": {
+        "mean": 0.21845081478463824,
+        "p95": 0.5084684952136789
+      },
+      "upper_local_mean_m": {
+        "mean": 0.02103995783341134,
+        "p95": 0.02868408826736575
+      },
+      "wrist_world_mean_m": {
+        "mean": 0.23583926635163396,
+        "p95": 0.5666713271848798
+      },
+      "wrist_local_mean_m": {
+        "mean": 0.023859662738853964,
+        "p95": 0.03990339693188914
+      },
+      "torso_world_m": {
+        "mean": 0.1990494965655585,
+        "p95": 0.46046669980606547
+      },
+      "torso_orientation_deg": {
+        "mean": 21.79786525301691,
+        "p95": 77.30102194925321
+      },
+      "wrist_orientation_deg": {
+        "mean": 23.54932209141052,
+        "p95": 76.94521236839313
+      },
+      "upper_joint_rmse_rad": {
+        "mean": 0.14015157285061336,
+        "p95": 0.1953824012743921
+      },
+      "contact_slip_m_s": {
+        "mean": 0.028109883597629132,
+        "p95": 0.0907790521256651
+      },
+      "slide_foot_fraction": {
+        "mean": 0.09291581108829569,
+        "p95": 0.5
+      },
+      "low_moving_foot_fraction": {
+        "mean": 0.17453798767967146,
+        "p95": 0.5
+      },
+      "braking_contact_events": 72,
+      "upward_contact_events": 0,
+      "reference_path_m": 21.211157803114432,
+      "actual_path_m": 26.9944022840292,
+      "directed_progress_ratio": 0.8440164741979443,
+      "clips": 2,
+      "falls": 0,
+      "failures": [],
+      "seconds": 58.44000000002012,
+      "inference_ms_median": 3.072229490499012
+    }
+  },
+  "limitations": [
+    "Diagnostic previously reused validation, not independent test.",
+    "Two live recordings are new counterfactual simulations, not headset screen captures.",
+    "No measurement of true human leg intent. Three-point targets come from common robot-scaled GMR FK.",
+    "HOMIE and SONIC retain respective author PD and motor dynamics; common scene, contact geometry, 50Hz control, 1000Hz physics.",
+    "Trip candidates are unlabelled 50Hz contact proxies. Ordinary braking touch-downs must not be interpreted as confirmed stumbles.",
+    "SONIC wrapper replans synchronously at 5Hz with world-frame commands; this is a desktop adapter, not a timing-identical reproduction of asynchronous author deployment.",
+    "No Quest installation or Android performance acceptance.",
+    "Primary SONIC table uses seed11; seed22 checks planner sampling sensitivity, not training variance."
+  ],
+  "sonic_planner_seed22": {
+    "validation": {
+      "samples": 8706,
+      "root_xy_m": {
+        "mean": 0.38094597865208357,
+        "p95": 1.2849314875557702
+      },
+      "yaw_abs_deg": {
+        "mean": 14.833212088066283,
+        "p95": 65.59002075492424
+      },
+      "upper_world_mean_m": {
+        "mean": 0.3967819639423595,
+        "p95": 1.2940058193130684
+      },
+      "upper_local_mean_m": {
+        "mean": 0.027075337342558438,
+        "p95": 0.04366899686303011
+      },
+      "wrist_world_mean_m": {
+        "mean": 0.406456972928946,
+        "p95": 1.2796226706832379
+      },
+      "wrist_local_mean_m": {
+        "mean": 0.03469979010257506,
+        "p95": 0.07294142401094071
+      },
+      "torso_world_m": {
+        "mean": 0.3825658599062655,
+        "p95": 1.2868407215430488
+      },
+      "torso_orientation_deg": {
+        "mean": 18.06384862957343,
+        "p95": 67.31928413133751
+      },
+      "wrist_orientation_deg": {
+        "mean": 24.266004363526115,
+        "p95": 72.47522509371909
+      },
+      "upper_joint_rmse_rad": {
+        "mean": 0.24863449212717542,
+        "p95": 0.44037869299591353
+      },
+      "contact_slip_m_s": {
+        "mean": 0.026239898971306415,
+        "p95": 0.08473531230183197
+      },
+      "slide_foot_fraction": {
+        "mean": 0.09217780840799449,
+        "p95": 0.5
+      },
+      "low_moving_foot_fraction": {
+        "mean": 0.15937284631288767,
+        "p95": 0.5
+      },
+      "braking_contact_events": 212,
+      "upward_contact_events": 0,
+      "reference_path_m": 91.79787053834103,
+      "actual_path_m": 95.70520291197893,
+      "directed_progress_ratio": 0.8872049007568048,
+      "falls": 0
+    },
+    "live": {
+      "samples": 2922,
+      "camera_xy_m": {
+        "mean": 0.19696137692583993,
+        "p95": 0.47442539506412285
+      },
+      "root_xy_m": {
+        "mean": 0.18047939427607268,
+        "p95": 0.4198523135212159
+      },
+      "yaw_abs_deg": {
+        "mean": 20.701580685388784,
+        "p95": 83.63086775758087
+      },
+      "upper_world_mean_m": {
+        "mean": 0.20435839938616812,
+        "p95": 0.4983060430718358
+      },
+      "upper_local_mean_m": {
+        "mean": 0.020915087441821436,
+        "p95": 0.02821183917850203
+      },
+      "wrist_world_mean_m": {
+        "mean": 0.22346721811696602,
+        "p95": 0.5805661298128457
+      },
+      "wrist_local_mean_m": {
+        "mean": 0.023408107247579066,
+        "p95": 0.03715779536321477
+      },
+      "torso_world_m": {
+        "mean": 0.18285865511892754,
+        "p95": 0.4165161872430067
+      },
+      "torso_orientation_deg": {
+        "mean": 22.829861628776392,
+        "p95": 83.45639193538072
+      },
+      "wrist_orientation_deg": {
+        "mean": 24.54348325742733,
+        "p95": 78.13473478565379
+      },
+      "upper_joint_rmse_rad": {
+        "mean": 0.14042907061422136,
+        "p95": 0.1895385265974651
+      },
+      "contact_slip_m_s": {
+        "mean": 0.024774753879320866,
+        "p95": 0.08093126499249716
+      },
+      "slide_foot_fraction": {
+        "mean": 0.08059548254620123,
+        "p95": 0.5
+      },
+      "low_moving_foot_fraction": {
+        "mean": 0.17094455852156057,
+        "p95": 0.5
+      },
+      "braking_contact_events": 77,
+      "upward_contact_events": 0,
+      "reference_path_m": 21.211157803114432,
+      "actual_path_m": 25.78881031182859,
+      "directed_progress_ratio": 0.8326666064211311,
+      "falls": 0
+    }
+  }
+}

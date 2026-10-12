@@ -1,0 +1,18 @@
+[
+  {
+    "source_name": "probes-episode-1791652593739690-trajectory-off.csv",
+    "source_sha256": "6f7253052ba753ea4ad75bcfcd800bfd62d4e60c300c88504bd9bcb87598aace",
+    "output_name": "episode-1791652593739690.npz",
+    "frames": 3352,
+    "all_applying": true,
+    "semantics": "native source-only GMR; saved physical qpos excluded; catch-up recomputed per rollout"
+  },
+  {
+    "source_name": "probes-episode-1791652646384286-trajectory-off.csv",
+    "source_sha256": "3249b3c0b6cb611fb8f19824a1cc18034a45d9ef1ec3c3bab552969e32b9c894",
+    "output_name": "episode-1791652646384286.npz",
+    "frames": 2496,
+    "all_applying": true,
+    "semantics": "native source-only GMR; saved physical qpos excluded; catch-up recomputed per rollout"
+  }
+]

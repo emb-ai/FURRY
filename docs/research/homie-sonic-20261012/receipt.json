@@ -1,0 +1,84 @@
+{
+  "base_furry_commit": "71d9ea2",
+  "upstream_source_commit": "b042411fae38ee4d1af9aac82a37a1f8d14d6dd0",
+  "huggingface_repo": "nvidia/GEAR-SONIC",
+  "huggingface_revision": "6733128a3d8a523b1418b06bca3cdf61c8b0987f",
+  "models": {
+    "model_encoder.onnx": "013ab0287236aa2721e13f1e936d699db982302d0de0bfcdae76d5c3245362d3",
+    "planner_sonic.onnx": "39b553e197f62f077975ba38512bc04781a3fc37c2af7c6756e04629f760edea",
+    "model_decoder.onnx": "c7241a123eaa36b5d64bad19540efde93cac1ad443bd4572fd12ca99898118ed"
+  },
+  "observation_config_sha256": "466d05947c78af6c76388adfb86e3a2a77b2a1d921a64883ed3d085ebf58de1b",
+  "assets": {
+    "scene-stand.xml": "06a70fa9bae1895e57037818d186a93beb781922b5d601e79af34ed94dc64a37",
+    "body_motor_profile.txt": "131fa5aae01c557238d24e2af0a2682f14e45286784b2605b35c4284526703ca",
+    "policy-homie-v2-balance.onnx": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+    "policy-homie-v2-walk.onnx": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+    "policy-quest-111586-500.onnx": "57d6ac4b2461ac8884afeac86d32bcc9a7b4b72f376e15b898af7ac3d8a5241d"
+  },
+  "inputs": {
+    "outputs/quest-finetune-20261008/night-v3/dataset/validation/stage09-run00-003000-part00.npz": "12c69199adc622eb7f429c928d83a8f897f81f8ef32ff163cee9f5e81e001287",
+    "outputs/quest-finetune-20261008/night-v3/dataset/validation/stage02-run00-000000-part00.npz": "7c844ad9f166c5a4375c0379b872403a43374bac521d0066bc12fd20906f5052",
+    "outputs/quest-finetune-20261008/night-v3/dataset/validation/stage09-run00-000000-part00.npz": "50ac35aa066b8556b0c3d653a868fb3c714c8a95bcb5aa0da139bf2e7ba71ef9",
+    "outputs/quest-finetune-20261008/night-v3/dataset/validation/stage02-run01-000000-part00.npz": "17f11fa6ae189b70fc2515942939646a80a8e9e2f9042664e1517998a870e050",
+    "outputs/quest-finetune-20261008/night-v3/dataset/validation/stage02-run02-000000-part00.npz": "bf0159cf09c64df3c2aa826f337bf1435cf137d42e5f382ef97bf7f535efad2d",
+    "outputs/quest-finetune-20261008/night-v3/dataset/validation/stage02-run02-003000-part00.npz": "cedd91ef3504b01f416a4d8d23335513596f182e497b35e22f4b8ba611106366",
+    "outputs/quest-finetune-20261008/night-v3/dataset/validation/stage14-run01-003000-part00.npz": "dc4ef4a3a45c6f61c5865aff0a0d447be93e1f4390bd915814563003384101c2",
+    "outputs/quest-finetune-20261008/night-v3/dataset/validation/stage14-run01-003000-part01.npz": "c8dc5d8e71d55ae33c7c9a82abefed397aa3d193eeca59df40050aa1426d2c2f",
+    "outputs/quest-finetune-20261008/night-v3/dataset/validation/stage14-run00-000000-part00.npz": "d52aae321a4d4f9c3fd8a7869fefa6c0afd6ec299ac1111546d00eff883e15c5",
+    "outputs/quest-finetune-20261008/night-v3/dataset/validation/stage14-run01-000000-part00.npz": "27e30d9f2ba969d230b4b5ffcde1d2d4e0ccc5c447ea5315c7064749c913b637",
+    "outputs/quest-finetune-20261008/night-v3/dataset/validation/stage14-run03-000000-part00.npz": "341bc36d60eb938e0f7005890948065568b0bb5d86912a5e74915ec28f6b6699",
+    "outputs/quest-finetune-20261008/night-v3/dataset/validation/stage14-run03-000000-part01.npz": "a44c7402fbda20024fd1a7a113d1193837ab7ade2f29368be5c1716d2f027c6c",
+    "outputs/homie-sonic-comparison-20261012/live-inputs/episode-1791652646384286.npz": "ab1b7a45210e18a62a6271f258955ff88ac82f51e3ba0aa05a465dabaafc49a8",
+    "outputs/homie-sonic-comparison-20261012/live-inputs/episode-1791652593739690.npz": "a3945abd365a32fc521865563dcc73348379e491bcccfcee23c73baf1aa5d13c"
+  },
+  "source": {
+    "prototypes/quest_g1/experiments/homie_sonic/contact_sheet.py": "8e2c6785ade59c5ab1da377641bb638448d57ec254c05ac265e77383943373cf",
+    "prototypes/quest_g1/experiments/homie_sonic/render.py": "baf597f67bf2c728d92ae4aac2e2537dadd0165f6d975133189f4927737ce732",
+    "prototypes/quest_g1/experiments/homie_sonic/prepare_live.py": "7346fea447a4e7868e2716393376cf4a79a77d80b887667c4655b8435ddfe73c",
+    "prototypes/quest_g1/experiments/homie_sonic/check_contracts.py": "2c9748a0e0c00520dfce7b9e3bd27278e344e5c2331bce745798f5f672171dd3",
+    "prototypes/quest_g1/experiments/homie_sonic/evaluate.py": "f6a30bdc1c7497cdc93900e0028d987d31e0fa29a79203fbf836f23d0889d0ac",
+    "prototypes/quest_g1/experiments/homie_sonic/report.py": "6daba2a4041dca7cfb3d05076dc4df0998636d3e7fbc796aa3ac915b1c9886d7",
+    "prototypes/quest_g1/experiments/homie_sonic/smoke.py": "1cce0c0490f6b3a8d5876bd89c5b0010902ec2194331e002b2f72c5a0e960a69",
+    "prototypes/quest_g1/experiments/homie_sonic/native_parity.cpp": "2b1a7bbb05a1436a2b21fd3ec560a8d663ff264a3de1493e2a1689f7c0baef4f",
+    "prototypes/quest_g1/g1_sim/autonomous_legs.py": "0a2dfa7d04b860d19ebad51c22aa5765406c98d4249fae1c7a5462496097e810",
+    "prototypes/quest_g1/experiments/homie_sonic/sonic_constants.json": "f372b65c7e7b5a88d0f718c1b71c95af7b30b7fc4fc22ee836fa90089fb1d40c",
+    "prototypes/quest_g1/experiments/homie_sonic/sonic_motor_profile.txt": "45f4e3dde56f723620178376a361d352656372da06ee394994d78bb209e06769"
+  },
+  "environment": {
+    "python": "3.12.12",
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "numpy": "2.2.6",
+    "mujoco": "3.3.7",
+    "onnxruntime": "1.23.2",
+    "scipy": "1.15.3",
+    "provider": "CPUExecutionProvider",
+    "ort_threads": 1
+  },
+  "physics_hz": 1000,
+  "policy_hz": 50,
+  "planner_hz": 5,
+  "planner_seeds": [
+    11,
+    22
+  ],
+  "primary_runs": 42,
+  "additional_planner_runs": 14,
+  "training_jobs_started": 0,
+  "headset_installation": false,
+  "headset_validation": false,
+  "contract_checks": {
+    "homie_native_100_control_steps_max_qpos_error": 1.5391453315805048e-05,
+    "sonic_encoder_width": 1762,
+    "sonic_decoder_width": 994,
+    "sonic_recorded_leg_invariance": true,
+    "perfect_tracking_metric_zero": true
+  },
+  "video": {
+    "file": "live-comparison.mp4",
+    "sha256": "583d354ec18a90999bd72934ca37f7c2d0a6536a910f267e8567b7d821896f0f",
+    "full_decode_exit": 0,
+    "preview_inspected": true
+  },
+  "all_56_run_timestamps_and_states_verified": true
+}

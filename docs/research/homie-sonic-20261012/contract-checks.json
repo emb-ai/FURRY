@@ -1,0 +1,7 @@
+{
+  "homie_native_100_control_steps_max_qpos_error": 1.5391453315805048e-05,
+  "sonic_encoder_width": 1762,
+  "sonic_decoder_width": 994,
+  "sonic_recorded_leg_invariance": true,
+  "perfect_tracking_metric_zero": true
+}
