@@ -126,14 +126,24 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& input){
     if(neutralWrists)for(int h=0;h<2;h++){
         double inverse[4],relative[4],delta[4],corrected[4];
         mju_negQuat(inverse,targets[10+h].quaternion.data());mju_mulQuat(relative,inverse,targets[12+h].quaternion.data());
-        mju_mulQuat(delta,wristNeutralInverse[h].data(),relative);mju_mulQuat(corrected,wristRest[h].data(),delta);
+        if(wristFrameV2){
+            // W(t) * inverse(F(0)^-1 * W(0)) * wristRest is a constant
+            // right-side frame conversion. The old inverse(R0) * R(t)
+            // conjugated rotations by the calibration pose, changing axes.
+            mju_mulQuat(delta,relative,wristNeutralInverse[h].data());
+            mju_mulQuat(corrected,delta,wristRest[h].data());
+        }else{
+            mju_mulQuat(delta,wristNeutralInverse[h].data(),relative);
+            mju_mulQuat(corrected,wristRest[h].data(),delta);
+        }
         mju_mulQuat(targets[12+h].quaternion.data(),targets[10+h].quaternion.data(),corrected);
-        // G1 wrists are consecutive X/Y/Z hinges with identity fixed rotations.
-        // Extract the relative articulation; do not let shoulder IK residuals
-        // masquerade as wrist bending in the final command.
-        double R[9];mju_quat2Mat(R,corrected);
-        wristAngles[h]={std::atan2(-R[5],R[8]),std::asin(std::clamp(R[2],-1.,1.)),std::atan2(-R[1],R[0])};
-        for(double& angle:wristAngles[h])if(std::abs(angle)<1e-7)angle=0;
+        if(!wristFrameV2){
+            // Legacy replay only: preserve the old post-IK Euler replacement.
+            // Live v2 keeps the complete GMR solution for both wrist chains.
+            double R[9];mju_quat2Mat(R,corrected);
+            wristAngles[h]={std::atan2(-R[5],R[8]),std::asin(std::clamp(R[2],-1.,1.)),std::atan2(-R[1],R[0])};
+            for(double& angle:wristAngles[h])if(std::abs(angle)<1e-7)angle=0;
+        }
     }
     // Estimated foot pitch can put a toe target under the floor that the
     // lower ankle defines. Keep the toe position at or above a flat foot;
@@ -165,7 +175,7 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& input){
         gmr.AlignTargetsToCameraXY(camera);gmr.SetCameraTarget(camera);
     }else gmr.ClearCameraTarget();
     gmr.Solve();error=gmr.error;
-    if(neutralWrists){
+    if(neutralWrists&&!wristFrameV2){
         for(int h=0;h<2;h++)for(int k=0;k<3;k++){
             const char* part[]={"wrist_roll_joint","wrist_pitch_joint","wrist_yaw_joint"};
             std::string name=std::string(h?"right_":"left_")+part[k];int j=mj_name2id(gmr.model(),mjOBJ_JOINT,name.c_str());

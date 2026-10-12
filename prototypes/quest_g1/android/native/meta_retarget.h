@@ -16,6 +16,7 @@ class MetaRetargeter {
     std::array<double,4> cameraRotationOffset{1,0,0,0};
     bool cameraTracking=false;
     bool neutralWrists=false;
+    bool wristFrameV2=false;
     double travelGain=1;
     std::array<std::array<double,4>,2> wristNeutralInverse{},wristRest{};
     bool twistGrounding=false,toeClamp=true;
@@ -36,6 +37,8 @@ public:
     // Set before calibration. Keep anatomical lengths and vertical scale intact.
     void SetTravelGain(double value){if(!std::isfinite(value)||value<.5||value>1.2)throw std::runtime_error("Invalid travel gain");travelGain=value;}
     void EnableNeutralWrists(bool value){neutralWrists=value;}
+    // Correct rigid-frame calibration; retain the legacy adapter for replay.
+    void EnableWristFrameV2(bool value){wristFrameV2=value;}
     // Offline ablation only; the device always clamps toe targets.
     void EnableToeClamp(bool value){toeClamp=value;}
     void EnableTwistGrounding(bool value){

@@ -10,7 +10,7 @@
 // Shared by the Android app and the native desktop integration check.
 class Simulation {
 public:
-    explicit Simulation(const std::string& assets, int physicsWorkers=2, const std::string& sceneName="lab", const std::string& policyPath="");
+    explicit Simulation(const std::string& assets, int physicsWorkers=2, const std::string& sceneName="lab", const std::string& policyPath="", int policyHzOverride=0);
     ~Simulation();
     void Reset();
     // Load and probe before committing; a failure preserves the active session.
@@ -30,6 +30,8 @@ public:
     void ClearArmReference(){has_reference=false;}
 private:
     int policy_hz = 100;
+    // 0 follows archived ONNX metadata; live Quest explicitly selects 50 Hz.
+    const int policy_hz_override;
     std::unique_ptr<mjThreadPool, decltype(&mju_threadPoolDestroy)> physicsPool{nullptr, mju_threadPoolDestroy};
     Ort::Env env{ORT_LOGGING_LEVEL_WARNING, "G1Quest"};
     Ort::SessionOptions options;

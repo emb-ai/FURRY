@@ -424,7 +424,7 @@ void ReloadScene(){
     if(recorder.active){Notice("Сначала сохраните запись.");return;}
     try{
         std::string name=questmenu::SceneName(questmenu::Scene(selected));
-        auto nextSim=std::make_unique<Simulation>(assetsPath,2,name,questpolicy::VerifiedPath(assetsPath,policyCatalog.at(selectedPolicy.load())));
+        auto nextSim=std::make_unique<Simulation>(assetsPath,2,name,questpolicy::VerifiedPath(assetsPath,policyCatalog.at(selectedPolicy.load())),50);
         auto nextVisuals=LoadVisualMeshes(name,nextSim->model);
         int nextCamera=mj_name2id(nextSim->model,mjOBJ_CAMERA,"ego");
         if(nextCamera<0)throw std::runtime_error("Missing ego camera");
@@ -454,16 +454,17 @@ void G1Initialize(android_app* app){
     std::ifstream cameraConfig(assets+"/camera_stream_url.txt");std::string cameraUrl;std::getline(cameraConfig,cameraUrl);
     cameraStream=std::make_unique<CameraStream>(cameraUrl);
     try{
-        sim=std::make_unique<Simulation>(assets,2,questmenu::SceneName(questmenu::Scene(sessionScene.load())),questpolicy::VerifiedPath(assets,policyCatalog.at(selectedPolicy.load())));
+        sim=std::make_unique<Simulation>(assets,2,questmenu::SceneName(questmenu::Scene(sessionScene.load())),questpolicy::VerifiedPath(assets,policyCatalog.at(selectedPolicy.load())),50);
     }catch(const std::exception& e){
         if(selectedPolicy==0)throw;
         __android_log_print(ANDROID_LOG_WARN,"G1Quest","Saved policy failed: %s; restoring baseline",e.what());
         selectedPolicy=0;settingsDirty=true;Notice("Политика недоступна. Загружена авторская 20k.");
-        sim=std::make_unique<Simulation>(assets,2,questmenu::SceneName(questmenu::Scene(sessionScene.load())),questpolicy::VerifiedPath(assets,policyCatalog.at(0)));
+        sim=std::make_unique<Simulation>(assets,2,questmenu::SceneName(questmenu::Scene(sessionScene.load())),questpolicy::VerifiedPath(assets,policyCatalog.at(0)),50);
     }
     __android_log_print(ANDROID_LOG_INFO,"G1Quest","Loaded policy %s sha256=%s hz=%d",policyCatalog.at(selectedPolicy.load()).id.c_str(),policyCatalog.at(selectedPolicy.load()).sha256.c_str(),sim->PolicyHz());
     retarget=std::make_unique<MetaRetargeter>(assets);
     retarget->EnableNeutralWrists(true);
+    retarget->EnableWristFrameV2(true);
 #ifdef G1_ENABLE_TWIST_GROUNDING
     retarget->EnableTwistGrounding(true);
 #endif

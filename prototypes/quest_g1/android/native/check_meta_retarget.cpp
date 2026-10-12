@@ -35,6 +35,38 @@ int main(int argc,char**argv){
         double angle=std::sqrt(command[25]*command[25]+command[26]*command[26]+command[27]*command[27]);
         if(angle<.18||angle>.22)throw std::runtime_error("Intentional wrist motion was suppressed");
         for(int k:{32,33,34})if(std::abs(command[k])>1e-5)throw std::runtime_error("Opposite wrist moved");
+        // A non-neutral calibration must not rotate the operator's axes.
+        auto calibration=input;
+        for(int h=0;h<2;h++){
+            double bias[4]={std::cos(.35),0,std::sin(.35),0},q[4];
+            mju_mulQuat(q,calibration.body.joints[12+h].quaternion.data(),bias);
+            std::copy_n(q,4,calibration.body.joints[12+h].quaternion.begin());
+        }
+        MetaRetargeter frame(argv[1]),legacyFrame(argv[1]);
+        frame.EnableNeutralWrists(true);frame.EnableWristFrameV2(true);legacyFrame.EnableNeutralWrists(true);
+        frame.Calibrate(sim.model,sim.data,calibration);legacyFrame.Calibrate(sim.model,sim.data,calibration);
+        calibration.body.time_ns=2000000000LL;frame.Solve(calibration);legacyFrame.Solve(calibration);
+        std::array<std::array<double,4>,2> initialTargets{};
+        for(int h=0;h<2;h++)initialTargets[h]=frame.solver().Targets()[12+h].quaternion;
+        auto rotationError=[](const double*a,const double*b){double inv[4],q[4],v[3];mju_negQuat(inv,a);mju_mulQuat(q,inv,b);mju_quat2Vel(v,q,1);return mju_norm3(v);};
+        double maxTargetError=0,maxFkError=0,legacyAxisError=0;
+        int n=0;
+        for(int h=0;h<2;h++)for(int axis=0;axis<3;axis++)for(double radians:{-.25,.25}){
+            auto motion=calibration;motion.body.time_ns+=10000000LL*(++n);
+            double world[4]={std::cos(radians/2),0,0,0};world[axis+1]=std::sin(radians/2);
+            double B[4],inv[4],q[4],source[4],changed[4],expected[4];mju_mat2Quat(B,frame.StageToRobotRotation());
+            mju_negQuat(inv,B);mju_mulQuat(q,inv,world);mju_mulQuat(source,q,B);
+            mju_mulQuat(changed,source,calibration.body.joints[12+h].quaternion.data());
+            std::copy_n(changed,4,motion.body.joints[12+h].quaternion.begin());
+            mju_mulQuat(expected,world,initialTargets[h].data());
+            frame.Solve(motion);legacyFrame.Solve(motion);
+            maxTargetError=std::max(maxTargetError,rotationError(expected,frame.solver().Targets()[12+h].quaternion.data()));
+            legacyAxisError=std::max(legacyAxisError,rotationError(expected,legacyFrame.solver().Targets()[12+h].quaternion.data()));
+            mju_mat2Quat(q,frame.solver().data()->xmat+9*frame.solver().tasks()[12+h].body);
+            maxFkError=std::max(maxFkError,rotationError(expected,q));
+        }
+        std::printf("wrist rigid-frame target error=%.9g FK error=%.9g legacy axis error=%.9g radians\n",maxTargetError,maxFkError,legacyAxisError);
+        if(maxTargetError>1e-9 || maxFkError>.05 || legacyAxisError<.1)throw std::runtime_error("Wrist frame regression");
         MetaRetargeter original(argv[1]),reduced(argv[1]);original.EnableCameraTracking(true);reduced.EnableCameraTracking(true);reduced.SetTravelGain(.9);
         original.Calibrate(sim.model,sim.data,input);reduced.Calibrate(sim.model,sim.data,input);sample=input;sample.body.time_ns=1000000000LL;sample.head.position[0]+=.1;
         original.Solve(sample);reduced.Solve(sample);

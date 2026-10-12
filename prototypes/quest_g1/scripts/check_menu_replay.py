@@ -41,17 +41,33 @@ def main():
         cases += [('cup', row, False, 'observer') for row in catalog[1:]]
         cases += [('cup', row, True, 'observer') for row in catalog]
         cases += [('cup', catalog[0], True, view) for view in ('first', 'switch')]
-        for scene, policy, catch_up, view in cases:
+        # Cadence and wrist-frame versions are episode semantics. Exercise both
+        # old100 Hz manifests and missing-field fallbacks against the new live50.
+        cases = [(*case, None, None) for case in cases]
+        cases += [('stand', catalog[0], False, 'observer', hz, wrist)
+                  for hz in (50, 100) for wrist in (False, True)]
+        cases += [('stand', row, False, 'observer', 0, False)
+                  for row in (catalog[0], catalog[-1])]
+        for scene, policy, catch_up, view, override_hz, wrist_v2 in cases:
             case = scene if policy is None else scene+"-"+policy["id"]
             if catch_up:
                 case += "-catch-up-"+view
+            if override_hz is not None:
+                case += f'-rate{override_hz}-wrist{int(wrist_v2)}'
             episode_root = folder/case
             episode_root.mkdir()
             metadata = 'recording_metadata.json' if scene == 'lab' else f'recording_metadata-{scene}.json'
             if policy:
                 metadata = f'recording_metadata-{scene}-policy-{policy["id"]}.json'
                 shutil.copy2(ROOT/'android/assets'/policy['file'], episode_root/policy['file'])
-            shutil.copy2(ROOT/'android/assets'/metadata, episode_root/metadata)
+            fixture = json.loads((ROOT/'android/assets'/metadata).read_text())
+            if override_hz is not None:
+                if override_hz:
+                    fixture['policy_hz'] = override_hz
+                else:
+                    fixture.pop('policy_hz', None)
+                fixture['wrist_frame_v2'] = wrist_v2
+            (episode_root/metadata).write_text(json.dumps(fixture))
             command = [str(folder/'check_replay_menu'), str(ROOT/'android/assets'), str(episode_root), scene]
             if policy:
                 command.append(policy['id'])

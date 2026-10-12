@@ -31,9 +31,11 @@ class PolicyAssetsTests(unittest.TestCase):
                 self.assertEqual(row['sha256'], artifact['sha256'])
                 self.assertEqual(hashlib.sha256((root / row['file']).read_bytes()).hexdigest(), artifact['sha256'])
                 expected_hz = 50 if row['id'].startswith('quest-111586-') else 100
-                self.assertEqual(row['policy_hz'], expected_hz)
+                self.assertEqual(row['policy_hz'], 50)
+                self.assertEqual(row['legacy_policy_hz'], expected_hz)
                 metadata = json.loads((root / f'recording_metadata-stand-policy-{row["id"]}.json').read_text())
-                self.assertEqual(metadata['policy_hz'], expected_hz)
+                self.assertEqual(metadata['policy_hz'], 50)
+                self.assertEqual(metadata['legacy_policy_hz'], expected_hz)
 
     def test_unfetched_lfs_pointer_explains_how_to_download(self):
         with tempfile.TemporaryDirectory() as directory:
