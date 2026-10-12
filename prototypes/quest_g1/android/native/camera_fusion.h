@@ -37,7 +37,7 @@ class CameraFusion {
  // wrong one (other camera place) can still put the pelvis within the gate.
  std::deque<char> checks;uint64_t registrationVersion=0;bool moved=false,verified=false;
  void Blend();void CommitWindow();
- // Per-packet leg target, smoothed at frame rate by two 40 ms stages.
+ // Per-packet leg target, smoothed at frame rate by two 60 ms stages.
  std::array<std::array<double,3>,6> target{},halfway{},correction{};
  std::array<double,2> weights{},activeWeights{},lastGoodMs{};
  bool aligned=false;uint64_t lastSequence=~0ull;double lastApplyMs=0;
@@ -49,8 +49,12 @@ public:
  bool legsEnabled=true;
  // Operator-side state only (A calibration, robot reset, policy change).
  void Reset();
- // Camera moved or the STAGE space changed: register from scratch.
+ // Camera moved: register from scratch.
  void ForgetRegistration();
+ // The STAGE space changed (doff, Guardian, recenter): keep the stored
+ // registration but drive no legs until live packets confirm it. A redone
+ // Guardian fails that check and falls back to ForgetRegistration.
+ void Reverify();
  // Stored registration: a text file of window count, R and t. Load applies
  // it at once; a moved camera is caught by the consistency check.
  bool LoadRegistration(const std::string& path);

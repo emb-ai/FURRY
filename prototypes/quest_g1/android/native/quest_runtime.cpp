@@ -582,8 +582,10 @@ void G1Initialize(android_app* app){
                 if(spaceInvalidated.exchange(false)){
                     restartAfterCalibration=false;
                     trackingEnabled=false;retarget->calibrated=false;calibrate=false;cameraFusion.Reset();
-                    // A new STAGE origin invalidates where the camera sits in it.
-                    cameraFusion.ForgetRegistration();
+                    // A new STAGE origin may move where the camera sits in it. Most
+                    // changes (doff, recenter) keep the Guardian origin, so verify the
+                    // stored registration instead of deleting it.
+                    cameraFusion.Reverify();
                     wasApplying=false;retarget->Pause();sim->PauseWholeBodyReference();pauseReason=1;
                     Record([&]{recorder.Event("reference_space_change",input.sequence);});
                     capture.Invalidate();

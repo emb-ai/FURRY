@@ -18,6 +18,36 @@ void Swing(TrackedPose& pose,V before,V after){
  q[0]=1+mju_dot3(before.data(),after.data());std::copy_n(cross,3,q+1);
  if(mju_normalize4(q)<1e-6)return;mju_mulQuat(result,q,pose.quaternion.data());std::copy_n(result,4,pose.quaternion.begin());
 }
+// Knee flexion (positive bends the shin back) and varus/valgus of a shin
+// direction about the hinge axis, the operator's left made normal to the thigh.
+struct KneeFrame{V axis,back;bool ok=false;};
+KneeFrame Knee(V thigh,V lateral){
+ KneeFrame k;V axis=Sub(lateral,Mul(thigh,mju_dot3(lateral.data(),thigh.data())));
+ if(Norm(axis)<.3*Norm(lateral) || Norm(lateral)<1e-3)return k;
+ k.axis=Unit(axis);double back[3];mju_cross(back,k.axis.data(),thigh.data());k.back={back[0],back[1],back[2]};k.ok=true;return k;
+}
+// The knee is a hinge. Camera bone directions bent it 10-20 deg backwards
+// (left knee, 10% of camera frames in the 2026-10-12 episode) and up to
+// 11 deg sideways; the robot knee then sat on its -5 deg stop. Flexion is
+// kept at least Meta's (0-3 deg), varus/valgus within maxVarusDeg. The
+// clamped leg is turned about the hip to keep the hip->ankle direction:
+// laying the shin along a noisy thigh doubled ankle acceleration.
+constexpr double minFlexDeg=3,maxVarusDeg=5;
+void Hinge(V& thigh,V& shin,V lateral,V metaThigh,V metaShin,double upper,double lower){
+ KneeFrame k=Knee(thigh,lateral),m=Knee(metaThigh,lateral);if(!k.ok)return;
+ double x=mju_dot3(shin.data(),thigh.data()),y=mju_dot3(shin.data(),k.back.data()),z=mju_dot3(shin.data(),k.axis.data());
+ double flex=std::atan2(y,x),varus=std::asin(std::clamp(z,-1.,1.)),floor=0;
+ if(m.ok)floor=std::clamp(std::atan2(mju_dot3(metaShin.data(),m.back.data()),mju_dot3(metaShin.data(),metaThigh.data())),0.,minFlexDeg*M_PI/180);
+ double limit=maxVarusDeg*M_PI/180;
+ if(flex>=floor && std::abs(varus)<=limit)return;
+ V reach=Add(Mul(thigh,upper),Mul(shin,lower));
+ flex=std::max(flex,floor);varus=std::clamp(varus,-limit,limit);
+ shin=Add(Mul(Add(Mul(thigh,std::cos(flex)),Mul(k.back,std::sin(flex))),std::cos(varus)),Mul(k.axis,std::sin(varus)));
+ V before=Unit(Add(Mul(thigh,upper),Mul(shin,lower))),after=Unit(reach);double cross[3],q[4];
+ mju_cross(cross,before.data(),after.data());q[0]=1+mju_dot3(before.data(),after.data());std::copy_n(cross,3,q+1);
+ if(mju_normalize4(q)<1e-6)return;
+ V t,s;mju_rotVecQuat(t.data(),thigh.data(),q);mju_rotVecQuat(s.data(),shin.data(),q);thigh=t;shin=s;
+}
 // Horn's closed-form rigid fit (scale fixed to one) of paired points.
 bool Horn(const std::vector<V>&from,const std::vector<V>&to,std::array<double,9>&R,V&t){
  if(from.size()<3)return false;
@@ -42,6 +72,35 @@ bool Horn(const std::vector<V>&from,const std::vector<V>&to,std::array<double,9>
  if(mju_normalize4(quat)<1e-9)return false;
  mju_quat2Mat(R.data(),quat);t=Sub(b,Rotate(R,a));return true;
 }
+// Horn weighs camera depth like x/y, but depth noise is ~2.5x larger on
+// body landmarks. Gauss-Newton steps on residuals in camera axes with depth
+// down-weighted. 3 cm beat Horn on all three 2026-10-12 recordings (median
+// error vs the offline fit 1.8->1.3, 2.4->1.8, 6.1->4.9 deg; max 3.9->3.0,
+// 5.6->3.4, 7.2->6.1). The offline 5.5 cm let a shoulders-only window with
+// little motion lock 18 deg off.
+bool Refine(const std::vector<V>&from,const std::vector<V>&to,std::array<double,9>&R,V&t){
+ constexpr double weight[3]={1/(.02*.02),1/(.02*.02),1/(.03*.03)};
+ if(from.size()<3)return false;
+ // Camera-frame model: from ~ G to + s, with G = R^T and s = -R^T t.
+ std::array<double,9> G;mju_transpose(G.data(),R.data(),3,3);V s=Mul(Rotate(G,t),-1);
+ for(int iter=0;iter<4;iter++){
+  double A[36]={},g[6]={};
+  for(size_t i=0;i<from.size();i++){
+   V q=Rotate(G,to[i]),r=Sub(from[i],Add(q,s));
+   // d(G to)/d(rotation) = -[q]x, d/ds = I; residual r = from - G to - s.
+   double J[3][6]={{0,-q[2],q[1],1,0,0},{q[2],0,-q[0],0,1,0},{-q[1],q[0],0,0,0,1}};
+   for(int a=0;a<3;a++)for(int m=0;m<6;m++){g[m]+=weight[a]*J[a][m]*r[a];for(int n=0;n<6;n++)A[6*m+n]+=weight[a]*J[a][m]*J[a][n];}
+  }
+  double step[6];if(mju_cholFactor(A,6,1e-9)<6)return false;mju_cholSolve(step,A,g,6);
+  double q[4],dq[4]={1,0,0,0},G4[4];mju_mat2Quat(q,G.data());
+  V rotation{-step[0],-step[1],-step[2]};double angle=Norm(rotation);
+  if(angle>1e-12){V axis=Mul(rotation,1/angle);mju_axisAngle2Quat(dq,axis.data(),angle);}
+  mju_mulQuat(G4,dq,q);mju_normalize4(G4);mju_quat2Mat(G.data(),G4);
+  for(int a=0;a<3;a++)s[a]+=step[3+a];
+  if(angle<1e-6)break;
+ }
+ mju_transpose(R.data(),G.data(),3,3);t=Mul(Rotate(R,s),-1);return true;
+}
 double AngleDeg(const std::array<double,9>&a,const std::array<double,9>&b){
  double trace=0;for(int i=0;i<9;i++)trace+=a[i]*b[i];
  return std::acos(std::clamp((trace-1)/2,-1.,1.))*180/M_PI;
@@ -62,6 +121,12 @@ void CameraFusion::ForgetRegistration(){
  rotation=storedRotation=windowRotation={1,0,0,0,1,0,0,0,1};translation=storedTranslation=windowTranslation={};
  storedWindows=windowPackets=0;windowFit=false;moved=verified=false;registrationVersion++;
  stats.fitPackets=0;stats.fitHint=1;stats.fitMm=-1;stats.fitProgress=0;stats.fitSplitDeg=-1;stats.fitSpreadCm=0;stats.fitInliers=0;
+}
+void CameraFusion::Reverify(){
+ // Window packets pair camera points with the old STAGE frame.
+ fitBuffer.clear();fitCountdown=0;checks.clear();windowFit=false;windowPackets=0;stats.fitPackets=0;
+ if(!storedWindows){ForgetRegistration();return;}
+ aligned=true;verified=moved=false;Blend();stats.fitHint=3;stats.fitProgress=.9;
 }
 void CameraFusion::Blend(){
  if(!windowFit){rotation=storedRotation;translation=storedTranslation;return;}
@@ -183,6 +248,7 @@ void CameraFusion::Fit(const CameraSkeleton& c,const TrackingFrame& f){
   auto keep=inliers(R,t);if(std::count(keep.begin(),keep.end(),1)<3)break;best=keep;
  }
  subset(best,0,fitBuffer.size(),a,b);if(!Horn(a,b,R,t))return;
+ Refine(a,b,R,t);
  size_t count=std::count(best.begin(),best.end(),1);double fraction=double(count)/fitBuffer.size();
  double squared=0;V mean{};for(size_t i=0;i<a.size();i++){V e=Sub(Add(Rotate(R,a[i]),t),b[i]);squared+=mju_dot3(e.data(),e.data());mean=Add(mean,a[i]);}
  double rms=std::sqrt(squared/a.size());mean=Mul(mean,1./a.size());
@@ -194,7 +260,7 @@ void CameraFusion::Fit(const CameraSkeleton& c,const TrackingFrame& f){
  std::vector<size_t> order;for(size_t i=0;i<best.size();i++)if(best[i])order.push_back(i);
  double split=180;std::array<double,9> R1,R2;V t1,t2;std::vector<V> a1,b1,a2,b2;
  size_t middle=order[order.size()/2];subset(best,0,middle,a1,b1);subset(best,middle,fitBuffer.size(),a2,b2);
- if(Horn(a1,b1,R1,t1) && Horn(a2,b2,R2,t2))split=AngleDeg(R1,R2);
+ if(Horn(a1,b1,R1,t1) && Horn(a2,b2,R2,t2) && Refine(a1,b1,R1,t1) && Refine(a2,b2,R2,t2))split=AngleDeg(R1,R2);
  stats.fitMm=1000*rms;stats.fitSplitDeg=split;stats.fitSpreadCm=100*spread;stats.fitInliers=fraction;
  bool ok=count>=minPackets && fraction>=minInliers && rms<maxRmsM && split<maxSplitDeg && spread>=minSpreadM;
  if(ok){
@@ -247,8 +313,13 @@ TrackingFrame CameraFusion::Apply(const TrackingFrame&raw,const CameraSkeleton*c
       // legs. Large lifts are valid, so there is no correction-size limit.
       auto direction=[&](int from,int to){V d=Sub(c->joints[to].p,c->joints[from].p);return Unit(stage?d:Rotate(rotation,d));};
       V thigh=direction(side,2+side),shin=direction(2+side,4+side);
-      V knee=Add(meta[2+side].position,Mul(thigh,Norm(Sub(meta[4+side].position,meta[2+side].position))));
-      V ankle=Add(knee,Mul(shin,Norm(Sub(meta[6+side].position,meta[4+side].position))));
+      // Operator's left, horizontal: the knee hinge axis up to thigh roll.
+      V lateral=Sub(meta[2].position,meta[3].position);lateral[1]=0;
+      V metaThigh=Sub(meta[4+side].position,meta[2+side].position),metaShin=Sub(meta[6+side].position,meta[4+side].position);
+      double upper=Norm(metaThigh),lower=Norm(metaShin);
+      Hinge(thigh,shin,lateral,Unit(metaThigh),Unit(metaShin),upper,lower);
+      V knee=Add(meta[2+side].position,Mul(thigh,upper));
+      V ankle=Add(knee,Mul(shin,lower));
       std::array<V,3> delta{V{},Sub(knee,meta[4+side].position),Sub(ankle,meta[6+side].position)};
       // A leg that is not being driven starts from this packet, not from an
       // old correction swept in by the smoother.
@@ -264,9 +335,13 @@ TrackingFrame CameraFusion::Apply(const TrackingFrame&raw,const CameraSkeleton*c
  stats.state=(!(aligned && verified) && c && c->frame=="camera")?1:fresh?2:stats.ageMs<500 && c?3:0;
  // Packets arrive at ~12 Hz with 4-5 cm of depth noise; holding each target
  // fed the policy a 12 Hz staircase (fused knee/ankle 2nd difference 12x
- // Meta's). Two 40 ms stages bring it to Meta's level for ~40 ms more lag.
- double smooth=1-std::exp(-dt/.04);
+ // Meta's). Two 40 ms stages still left the live reference 2-2.5x Meta's
+ // jerk; 60 ms stages cut fused knee jerk 25% and ankle acceleration 30%
+ // in replay (2026-10-12 episode) for ~15 ms more lag on the fused leg.
+ // Speed-adaptive stages did no better: depth jumps look like steps.
+ double smooth=1-std::exp(-dt/.06);
  for(int j=2;j<6;j++)for(int a=0;a<3;a++){halfway[j][a]+=smooth*(target[j][a]-halfway[j][a]);correction[j][a]+=smooth*(halfway[j][a]-correction[j][a]);}
+ V lateral=Sub(raw.body.joints[2].position,raw.body.joints[3].position);lateral[1]=0;
  for(int side=0;side<2;side++){
   double legAge=lastGoodMs[side]?std::max(stats.ageMs,now-lastGoodMs[side]):500;
   // The correction is relative to the time-matched Meta pose, so age delays
@@ -286,10 +361,11 @@ TrackingFrame CameraFusion::Apply(const TrackingFrame&raw,const CameraSkeleton*c
   // ankle) instead of solving the knee from the hip-ankle distance: near a
   // straight leg that solve amplified noise ~3x and flipped the bend side.
   double upper=Norm(Sub(knee,hip)),lower=Norm(Sub(ankle,knee));
-  V thigh=Sub(desiredKnee,hip);if(Norm(thigh)<1e-5)continue;
-  V newKnee=Add(hip,Mul(Unit(thigh),upper));
-  V shin=Sub(desiredAnkle,newKnee);if(Norm(shin)<1e-5)continue;
-  V newAnkle=Add(newKnee,Mul(Unit(shin),lower));
+  V thigh=Sub(desiredKnee,hip);if(Norm(thigh)<1e-5)continue;thigh=Unit(thigh);
+  V shin=Sub(desiredAnkle,Add(hip,Mul(thigh,upper)));if(Norm(shin)<1e-5)continue;shin=Unit(shin);
+  // Smoothing blends hinged targets against a moving Meta pose: hinge again.
+  Hinge(thigh,shin,lateral,Unit(Sub(knee,hip)),Unit(Sub(ankle,knee)),upper,lower);
+  V newKnee=Add(hip,Mul(thigh,upper)),newAnkle=Add(newKnee,Mul(shin,lower));
   Swing(out.body.joints[h],Sub(knee,hip),Sub(newKnee,hip));Swing(out.body.joints[k],Sub(ankle,knee),Sub(newAnkle,newKnee));
   out.body.joints[k].position=newKnee;out.body.joints[a].position=newAnkle;
   stats.legs++;stats.weight=std::max(stats.weight,w);

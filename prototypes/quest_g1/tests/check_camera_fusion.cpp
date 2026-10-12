@@ -103,6 +103,26 @@ int main(){
   TrackingFrame lifted;for(int n=0;n<=15;n++)lifted=stage.Apply(body,&packet,packet.sourceMs+20*n);
   Require(stage.stats.legs==2 && lifted.body.joints[4].position[1]>body.body.joints[4].position[1]+.1,"High knee lift rejected as an outlier");
  }
+ // The knee is a hinge: a camera shin tilted forward past the thigh must not
+ // hyperextend the leg, and the hip->ankle direction is kept.
+ {
+  CameraFusion stage;auto body=frames.back();CameraSkeleton packet=packets.back();
+  packet.frame="pelvis-relative";packet.sequence=1;packet.sourceMs=packet.receivedMs=200000;
+  body.xr_time_ns=body.body.time_ns=int64_t(packet.sourceMs*1e6);stage.Observe(body,packet.sourceMs);
+  packet.pelvis.p=body.body.joints[0].position;
+  for(int side=0;side<2;side++)for(int k=0;k<3;k++)for(int a=0;a<3;a++)
+   packet.joints[2*k+side].p[a]=body.body.joints[2+2*k+side].position[a]-packet.pelvis.p[a];
+  packet.joints[2].p=packet.joints[0].p;packet.joints[2].p[1]-=.4;
+  packet.joints[4].p=packet.joints[2].p;packet.joints[4].p[1]-=.4;packet.joints[4].p[2]+=.1;
+  TrackingFrame out;for(int n=0;n<=15;n++)out=stage.Apply(body,&packet,packet.sourceMs+20*n);
+  double thigh[3],shin[3],cross[3],lateral[3],reach[3],wanted[3];
+  mju_sub3(thigh,out.body.joints[4].position.data(),out.body.joints[2].position.data());mju_sub3(shin,out.body.joints[6].position.data(),out.body.joints[4].position.data());
+  mju_sub3(lateral,body.body.joints[2].position.data(),body.body.joints[3].position.data());mju_cross(cross,thigh,shin);
+  double flex=std::atan2(mju_dot3(cross,lateral)/mju_norm3(lateral),mju_dot3(thigh,shin))*180/M_PI;
+  Require(stage.stats.legs==2 && flex>2.9,"Camera shin hyperextends the knee");
+  mju_sub3(reach,out.body.joints[6].position.data(),out.body.joints[2].position.data());mju_sub3(wanted,packet.joints[4].p.data(),packet.joints[0].p.data());
+  Require(mju_dot3(reach,wanted)/mju_norm3(reach)/mju_norm3(wanted)>std::cos(2*M_PI/180),"Knee hinge moved the ankle off the hip-ankle line");
+ }
  // 12 Hz packets with 5 cm of noise must reach the legs as a smooth signal,
  // and the 500 ms expiry must fade them out rather than snap.
  {
@@ -176,6 +196,11 @@ int main(){
   CameraFusion restored;Require(restored.LoadRegistration(path) && restored.Aligned() && restored.StoredWindows()==1,"Saved registration not restored");
   ms=walk(restored,5,ms,first);Require(restored.stats.legs==0 && restored.stats.state==1,"Unconfirmed restored registration drives the legs");
   ms=walk(restored,25,ms,first);Require(restored.stats.legs==2,"Confirmed restored registration does not drive the legs");
+  // A STAGE change (doff, recenter) keeps the registration but re-confirms it.
+  {CameraFusion again=restored;again.Reset();again.Reverify();
+   Require(again.Aligned() && again.StoredWindows()==1,"STAGE change dropped the stored registration");
+   double at=walk(again,5,ms,first);Require(again.stats.legs==0,"Unconfirmed registration after a STAGE change drives the legs");
+   walk(again,25,at,first);Require(again.stats.legs==2,"Registration not re-confirmed after a STAGE change");}
   // A registration saved for another camera place must never drive the legs.
   {CameraFusion wrong;Require(wrong.LoadRegistration(path),"Saved registration not restored");
    double at=ms;for(int n=0;n<200;n++){at=walk(wrong,1,at,moved);Require(wrong.stats.legs==0 || wrong.StoredWindows()==0,"Wrong restored registration drives the legs");}}
@@ -187,5 +212,5 @@ int main(){
   Require(!empty.LoadRegistration(path) && !empty.Aligned(),"Non-rotation registration accepted");
   std::remove(path.c_str());
  }
- puts("Camera rigid fit, delayed correction, bone projection, stale, expiry, invalid heartbeat, degeneracy, second person, knee lift, leg-source switch and registration persistence checks passed");
+ puts("Camera rigid fit, delayed correction, bone projection, stale, expiry, invalid heartbeat, degeneracy, second person, knee lift, knee hinge, leg-source switch, registration persistence and STAGE re-verification checks passed");
 }
