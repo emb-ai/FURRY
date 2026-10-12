@@ -46,7 +46,7 @@ int main() {
         Check(legacy.scene == "lab", "Nested scene overrode legacy fallback");
         legacy.ValidateDimensions(50, 48, 43);
         Check(!legacy.catchUp&&!legacy.firstPerson,"Legacy episode acquired catch-up");
-        Check(!legacy.catchUpV2&&!legacy.neutralWrists&&legacy.travelGainPercent==100,
+        Check(!legacy.catchUpV2&&!legacy.neutralWrists&&!legacy.wristFrameV2&&legacy.policyHz==0&&legacy.travelGainPercent==100,
               "Legacy episode acquired new retarget settings");
         write("{\"catch_up_v2\":true,\"neutral_wrists\":true,\"travel_gain_percent\":90}");
         auto updated=load();
@@ -57,6 +57,11 @@ int main() {
                             "{\"travel_gain_percent\":90.5}","{\"neutral_wrists\":false,\"neutral_wrists\":true}"}){
             write(bad);Reject([&]{load();});
         }
+        for(int hz:{50,100}){
+            write("{\"policy_hz\":"+std::to_string(hz)+",\"wrist_frame_v2\":true}");
+            Check(load().policyHz==hz && load().wristFrameV2,"Episode rate/wrist version lost");
+        }
+        for(const auto* bad:{"{\"policy_hz\":0}","{\"policy_hz\":60}","{\"policy_hz\":50.5}","{\"policy_hz\":\"50\"}","{\"policy_hz\":50,\"policy_hz\":100}","{\"wrist_frame_v2\":1}"}){write(bad);Reject([&]{load();});}
         write("{\"catch_up\":true,\"first_person\":false}");
         Check(load().catchUp&&!load().firstPerson,"Episode control settings lost");
         for(const auto* bad:{"{\"catch_up\":1}","{\"first_person\":null}","{\"catch_up\":false,\"catch_up\":true}"}){write(bad);Reject([&]{load();});}

@@ -22,8 +22,10 @@ std::vector<std::string> JointNames() {
 }
 }
 
-Simulation::Simulation(const std::string& assets, int physicsWorkers, const std::string& sceneName, const std::string& policyPath)
-    : scene_name(sceneName) {
+Simulation::Simulation(const std::string& assets, int physicsWorkers, const std::string& sceneName, const std::string& policyPath, int policyHzOverride)
+    : scene_name(sceneName), policy_hz_override(policyHzOverride) {
+    if(policyHzOverride!=0 && policyHzOverride!=50 && policyHzOverride!=100)
+        throw std::runtime_error("Unsupported explicit policy frequency");
     if(physicsWorkers<0 || physicsWorkers>4)throw std::runtime_error("Invalid MuJoCo worker count");
     if(sceneName!="lab" && sceneName!="stand" && sceneName!="cup" && sceneName!="push_t")
         throw std::runtime_error("Unknown Quest scene: "+sceneName);
@@ -73,7 +75,7 @@ void Simulation::SelectPolicy(const std::string& path) {
     auto rate=candidate->GetModelMetadata().LookupCustomMetadataMapAllocated("g1_policy_hz",alloc);
     std::string rateText=rate?rate.get():"100";
     if(rateText!="50"&&rateText!="100")throw std::runtime_error("Unsupported policy frequency");
-    int nextHz=rateText=="50"?50:100;
+    int nextHz=policy_hz_override?policy_hz_override:(rateText=="50"?50:100);
     std::string nextInput=candidate->GetInputNameAllocated(0,alloc).get();
     std::string nextOutput=candidate->GetOutputNameAllocated(0,alloc).get();
     std::array<float,1432> zeros{};std::array<int64_t,2> shape{1,1432};

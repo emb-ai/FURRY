@@ -1,0 +1,16 @@
+{
+  "world": 4,
+  "real_source_PPO_and_restored_ActorCriticFuture": true,
+  "same_global_data_and_minibatches": true,
+  "dropout_disabled_for_exact_comparison": true,
+  "physics_excluded": true,
+  "source_updates": 20,
+  "parameter_max_error": 3.427267074584961e-07,
+  "std_max_error": 7.450580596923828e-09,
+  "Adam_max_error": 7.702037692070007e-07,
+  "loss_max_error": 1.7159618437290192e-06,
+  "learning_rate_matches": true,
+  "std_initial_mean": 0.48594510555267334,
+  "std_sharded_final_mean": 0.48591506481170654,
+  "std_full_batch_final_mean": 0.48591506481170654
+}

@@ -1,0 +1,101 @@
+{
+  "runs": [
+    {
+      "run": "locomotion-v1-control-s11",
+      "trainer_final_msk": "2026-10-11T00:38:22.619119+03:00",
+      "pipeline_final_msk": "2026-10-11T00:52:18.968069+03:00",
+      "wall_seconds": 3715.1884746551514,
+      "train_last50": {
+        "reward_rate": 6.974848217283754,
+        "value_loss": 0.018239802309311926,
+        "std_mean": 0.49264114499092104,
+        "pre_update_critic_ev": 0.9925398762737043
+      }
+    },
+    {
+      "run": "locomotion-v1-control-s22",
+      "trainer_final_msk": "2026-10-11T00:37:50.916471+03:00",
+      "pipeline_final_msk": "2026-10-11T00:51:51.421072+03:00",
+      "wall_seconds": 3683.600598335266,
+      "train_last50": {
+        "reward_rate": 7.0896177202737825,
+        "value_loss": 0.014940209951251747,
+        "std_mean": 0.48231595754623413,
+        "pre_update_critic_ev": 0.993534120733575
+      }
+    },
+    {
+      "run": "locomotion-v1-relax-s11",
+      "trainer_final_msk": "2026-10-11T00:37:20.973130+03:00",
+      "pipeline_final_msk": "2026-10-11T00:51:14.342073+03:00",
+      "wall_seconds": 3653.70458483696,
+      "train_last50": {
+        "reward_rate": 7.1174434203130374,
+        "value_loss": 0.0186501142848283,
+        "std_mean": 0.49873836457729337,
+        "pre_update_critic_ev": 0.9908029124036151
+      }
+    },
+    {
+      "run": "locomotion-v1-relax-s22",
+      "trainer_final_msk": "2026-10-11T00:40:46.519459+03:00",
+      "pipeline_final_msk": "2026-10-11T00:54:37.104065+03:00",
+      "wall_seconds": 3858.2788429260254,
+      "train_last50": {
+        "reward_rate": 7.145243372388731,
+        "value_loss": 0.018891606350429357,
+        "std_mean": 0.4981688493490219,
+        "pre_update_critic_ev": 0.9909911535441975
+      }
+    },
+    {
+      "run": "locomotion-v1-yaw-s11",
+      "trainer_final_msk": "2026-10-11T00:36:53.529137+03:00",
+      "pipeline_final_msk": "2026-10-11T00:50:55.360414+03:00",
+      "wall_seconds": 3627.168907403946,
+      "train_last50": {
+        "reward_rate": 6.980015486496698,
+        "value_loss": 0.016993184052407743,
+        "std_mean": 0.4926149171590805,
+        "pre_update_critic_ev": 0.9926235324496847
+      }
+    },
+    {
+      "run": "locomotion-v1-yaw-s22",
+      "trainer_final_msk": "2026-10-11T00:36:45.221473+03:00",
+      "pipeline_final_msk": "2026-10-11T00:50:47.858423+03:00",
+      "wall_seconds": 3618.4930217266083,
+      "train_last50": {
+        "reward_rate": 7.033500081510123,
+        "value_loss": 0.01794782717060298,
+        "std_mean": 0.48759254097938537,
+        "pre_update_critic_ev": 0.9925185822175138
+      }
+    },
+    {
+      "run": "locomotion-v1-relax-yaw-s11",
+      "trainer_final_msk": "2026-10-11T00:40:49.897462+03:00",
+      "pipeline_final_msk": "2026-10-11T00:54:42.693405+03:00",
+      "wall_seconds": 3863.5206825733185,
+      "train_last50": {
+        "reward_rate": 7.120716985479712,
+        "value_loss": 0.019656290609389546,
+        "std_mean": 0.50245126247406,
+        "pre_update_critic_ev": 0.9902501931307991
+      }
+    },
+    {
+      "run": "locomotion-v1-relax-yaw-s22",
+      "trainer_final_msk": "2026-10-11T00:40:26.417460+03:00",
+      "pipeline_final_msk": "2026-10-11T00:54:28.948408+03:00",
+      "wall_seconds": 3838.5797171592712,
+      "train_last50": {
+        "reward_rate": 7.132407649960877,
+        "value_loss": 0.018151114962063727,
+        "std_mean": 0.4999887704849243,
+        "pre_update_critic_ev": 0.9908019259065349
+      }
+    }
+  ],
+  "checked_utc": "2026-10-12T07:02:13Z"
+}

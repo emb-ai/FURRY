@@ -65,7 +65,7 @@ def export_policies(assets, upstream, config=None):
         filename = 'policy.onnx' if i == 0 else f'policy-{ident}.onnx'
         shutil.copy2(source, assets / filename)
         entry = {key: row[key] for key in ('id', 'title', 'note')}
-        entry.update(file=filename, sha256=digest, policy_hz=int(rate))
+        entry.update(file=filename, sha256=digest, policy_hz=50, legacy_policy_hz=int(rate))
         catalog.append(entry)
     for scene in ('lab', 'stand', 'cup', 'push_t'):
         base = assets / ('recording_metadata.json' if scene == 'lab' else f'recording_metadata-{scene}.json')
@@ -73,7 +73,8 @@ def export_policies(assets, upstream, config=None):
         for entry in catalog:
             item = deepcopy(metadata)
             item.update(policy_id=entry['id'], policy_title=entry['title'], policy_note=entry['note'],
-                        policy_file=entry['file'], policy_sha256=entry['sha256'], policy_hz=entry['policy_hz'])
+                        policy_file=entry['file'], policy_sha256=entry['sha256'], policy_hz=entry['policy_hz'],
+                        legacy_policy_hz=entry['legacy_policy_hz'])
             item['sha256'].pop('policy.onnx', None)
             item['sha256'][entry['file']] = entry['sha256']
             (assets / f'recording_metadata-{scene}-policy-{entry["id"]}.json').write_text(

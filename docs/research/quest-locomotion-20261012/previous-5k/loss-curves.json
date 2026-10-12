@@ -1,0 +1,28 @@
+{
+  "control": {
+    "critic_updates": 550,
+    "actor_updates": 5000,
+    "last_100_actor_means": {
+      "value_loss": 0.015000903316773473,
+      "surrogate_loss": -0.008750670932739579,
+      "reward_rate": 7.546933722160491,
+      "window_distance_error_m": 0.09006397192676861,
+      "lr": 2.665000000000001e-05,
+      "std_mean": 0.4107491335272789,
+      "pre_update_critic_ev": 0.99413719760049
+    }
+  },
+  "faults": {
+    "critic_updates": 550,
+    "actor_updates": 5000,
+    "last_100_actor_means": {
+      "value_loss": 0.016176857091952115,
+      "surrogate_loss": -0.00923837185573484,
+      "reward_rate": 7.474769440591421,
+      "window_distance_error_m": 0.08980881185891729,
+      "lr": 2.5787500000000007e-05,
+      "std_mean": 0.4265715533494949,
+      "pre_update_critic_ev": 0.9941133983846671
+    }
+  }
+}

@@ -1,6 +1,7 @@
 #include "meta_retarget.h"
 #include "simulation.h"
 #include "recording.h"
+#include "episode_manifest.h"
 #include "policy_catalog.h"
 #include "camera_pose_servo.h"
 #include <iostream>
@@ -18,7 +19,9 @@ int main(int argc,char** argv){
             for(const auto& entry:catalog)if(entry.id==argv[4]){policyPath=questpolicy::VerifiedPath(argv[1],entry);metadata=questpolicy::Metadata(name,entry);policyFile=entry.file;found=true;}
             if(!found)throw std::runtime_error("Unknown test policy");
         }
-        Simulation sim(argv[1],2,name,policyPath);MetaRetargeter meta(argv[1]);meta.EnableNeutralWrists(true);auto& solver=meta.solver();
+        std::filesystem::copy_file(std::filesystem::path(argv[2])/metadata,std::filesystem::path(argv[2])/"manifest.json");
+        const auto fixture=episodereplay::LoadManifest(argv[2]);
+        Simulation sim(argv[1],2,name,policyPath,fixture.policyHz);MetaRetargeter meta(argv[1]);meta.EnableNeutralWrists(true);meta.EnableWristFrameV2(fixture.wristFrameV2);auto& solver=meta.solver();
         meta.EnableCameraTracking(firstPerson);int egoCamera=mj_name2id(sim.model,mjOBJ_CAMERA,"ego");
         auto* m=solver.model();std::unique_ptr<mjData,decltype(&mj_deleteData)> data(mj_makeData(m),mj_deleteData);auto* d=data.get();
         TrackingFrame input;input.valid=input.body.valid=input.body.supported=true;input.location_flags={15,15,15};input.hand_active={true,true};input.body.confidence=1;input.head.position={0,1.65,0};
