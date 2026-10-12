@@ -9,6 +9,7 @@
 #include <vector>
 #include <filesystem>
 #include "policy_catalog.h"
+#include "body_motor_profile.h"
 
 namespace episodereplay {
 namespace detail {
@@ -125,7 +126,7 @@ class JsonFields {
                 Space();
                 size_t start = pos;
                 Value();
-                if (collect && (key == "scene" || key == "nq" || key == "nv" || key == "nu" || key == "policy_file" || key == "policy_sha256" || key == "catch_up" || key == "first_person" || key == "catch_up_v2" || key == "neutral_wrists" || key == "wrist_frame_v2" || key == "policy_hz" || key == "travel_gain_percent")) {
+                if (collect && (key == "scene" || key == "nq" || key == "nv" || key == "nu" || key == "policy_file" || key == "policy_sha256" || key == "policy_backend" || key == "policy_secondary_file" || key == "policy_secondary_sha256" || key == "body_motor_profile" || key == "body_motor_profile_sha256" || key == "catch_up" || key == "first_person" || key == "catch_up_v2" || key == "neutral_wrists" || key == "wrist_frame_v2" || key == "policy_hz" || key == "travel_gain_percent")) {
                     if (!out.emplace(key, text.substr(start, pos - start)).second)
                         throw std::runtime_error("Duplicate episode manifest field: " + key);
                 }
@@ -224,6 +225,8 @@ inline int Dimension(const std::string &value) {
 
 struct Manifest {
     std::string scene = "lab", raw, policyFile, policySha256;
+    std::string policyBackend=questpolicy::Twist2,policySecondaryFile,policySecondarySha256;
+    std::string bodyMotorProfile,bodyMotorProfileSha256;
     bool catchUp=false,firstPerson=false;
     bool catchUpV2=false,neutralWrists=false,wristFrameV2=false;
     int policyHz=0; // Missing field: retain archived ONNX metadata/default cadence.
@@ -232,6 +235,20 @@ struct Manifest {
         if(policyFile.empty())return assets+"/policy.onnx"; // legacy baseline episodes
         std::string path=std::filesystem::exists(folder+"/policy.onnx")?folder+"/policy.onnx":assets+"/"+policyFile;
         questpolicy::VerifySha256(path,policySha256);return path;
+    }
+    questpolicy::RuntimePolicy Policy(const std::string& assets,const std::string& folder) const {
+        questpolicy::RuntimePolicy out{policyBackend,PolicyPath(assets,folder),""};
+        if(!policySecondaryFile.empty()){
+            out.secondaryPath=std::filesystem::exists(folder+"/policy-secondary.onnx")?
+                folder+"/policy-secondary.onnx":assets+"/"+policySecondaryFile;
+            questpolicy::VerifySha256(out.secondaryPath,policySecondarySha256);
+        }
+        if(policyBackend==questpolicy::GrootDecoupled){
+            out.motorProfilePath=std::filesystem::exists(folder+"/"+bodymotors::File)?
+                folder+"/"+bodymotors::File:assets+"/"+bodymotors::File;
+            bodymotors::Load(out.motorProfilePath);
+        }
+        out.Validate();return out;
     }
     int nq = -1, nv = -1, nu = -1;
     std::string ModelPath(const std::string &assets) const {
@@ -279,6 +296,27 @@ inline Manifest LoadManifest(const std::string &folder) {
         if(!questpolicy::ModelFile(out.policyFile)||out.policySha256.size()!=64)throw std::runtime_error("Invalid episode policy identity");
         for(char c:out.policySha256)if(!((c>='0'&&c<='9')||(c>='a'&&c<='f')))throw std::runtime_error("Invalid episode policy SHA256");
     }
+    if(fields.count("policy_backend"))out.policyBackend=readString("policy_backend");
+    if(!questpolicy::KnownBackend(out.policyBackend))throw std::runtime_error("Unknown episode policy backend");
+    if(fields.count("policy_secondary_file")!=fields.count("policy_secondary_sha256"))
+        throw std::runtime_error("Incomplete episode secondary policy identity");
+    if(fields.count("policy_secondary_file")){
+        out.policySecondaryFile=readString("policy_secondary_file");
+        out.policySecondarySha256=readString("policy_secondary_sha256");
+        if(!questpolicy::ModelFile(out.policySecondaryFile)||!questpolicy::Digest(out.policySecondarySha256))
+            throw std::runtime_error("Invalid episode secondary policy identity");
+    }
+    if(out.policyBackend==questpolicy::GrootDecoupled){
+        if(out.policyFile.empty()||out.policySecondaryFile.empty()||out.policyFile==out.policySecondaryFile||out.policyHz!=50)
+            throw std::runtime_error("Incomplete decoupled backend contract");
+    }else if(!out.policySecondaryFile.empty())throw std::runtime_error("Unexpected secondary policy for TWIST2");
+    if(fields.count("body_motor_profile"))out.bodyMotorProfile=readString("body_motor_profile");
+    if(fields.count("body_motor_profile_sha256"))out.bodyMotorProfileSha256=readString("body_motor_profile_sha256");
+    if(out.policyBackend==questpolicy::GrootDecoupled){
+        if(out.bodyMotorProfile!=bodymotors::Id||out.bodyMotorProfileSha256!=bodymotors::Sha256)
+            throw std::runtime_error("Missing or incompatible decoupled body motor profile");
+    }else if(!out.bodyMotorProfile.empty()||!out.bodyMotorProfileSha256.empty())
+        throw std::runtime_error("Unexpected body motor profile for TWIST2");
     if (fields.count("nq"))
         out.nq = detail::Dimension(fields.at("nq"));
     if (fields.count("nv"))

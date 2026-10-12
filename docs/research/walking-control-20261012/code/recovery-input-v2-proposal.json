@@ -1,0 +1,26 @@
+{
+  "status": "design-only; excluded from current four GPU runs",
+  "reason": "critic-only recovery mask would require different leg imitation actions under indistinguishable actor observations",
+  "actor_v2_required_inputs": {
+    "intent": [
+      "whole_body_imitation",
+      "locomotion_recovery",
+      "intentional_foot_task"
+    ],
+    "intent_valid": true,
+    "leg_reference_authority_per_foot": "explicit [0,1] confidence, from source validity/user mode; never from achieved contact",
+    "desired_contact_per_foot": "probability plus separate known mask; causal reference only",
+    "target_root_error": "XY and yaw in actual pelvis frame, clipped limits recorded",
+    "task_contact_permission_per_foot": "explicit support-floor versus task-object intent, not inferred from floor forces"
+  },
+  "training_changes_after_observation_contract": [
+    "make policy actor observe every switch that changes desired leg imitation authority",
+    "balanced episodes with explicit voluntary kick intent and recovery intent",
+    "preserve upperbody imitation and joint limits",
+    "evaluate recovery-stop XY and yaw-only paired protocols plus task kick fidelity",
+    "do not synthesize fake fixed procedural gait as demonstration"
+  ],
+  "runtime_requirement": "same encoder version and field ordering in trainer, ONNX and Quest; reject incompatible actor metadata",
+  "actor1432_current": "unchanged; this v2 is not implemented or deployed",
+  "no_claim": "No recovery training launched, no corrected stepping behavior established"
+}

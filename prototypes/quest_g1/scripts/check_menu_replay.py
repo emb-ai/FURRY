@@ -4,6 +4,7 @@ Uses the already exported android/assets and the project's MuJoCo/ONNX Python
 runtime libraries. No exporter is run and no participant recordings are read.
 """
 import csv
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -47,7 +48,7 @@ def main():
         cases += [('stand', catalog[0], False, 'observer', hz, wrist)
                   for hz in (50, 100) for wrist in (False, True)]
         cases += [('stand', row, False, 'observer', 0, False)
-                  for row in (catalog[0], catalog[-1])]
+                  for row in (catalog[0], [row for row in catalog if row.get("backend", "twist2") == "twist2"][-1])]
         for scene, policy, catch_up, view, override_hz, wrist_v2 in cases:
             case = scene if policy is None else scene+"-"+policy["id"]
             if catch_up:
@@ -60,6 +61,9 @@ def main():
             if policy:
                 metadata = f'recording_metadata-{scene}-policy-{policy["id"]}.json'
                 shutil.copy2(ROOT/'android/assets'/policy['file'], episode_root/policy['file'])
+                if policy.get('secondary_file'):
+                    shutil.copy2(ROOT/'android/assets'/policy['secondary_file'], episode_root/policy['secondary_file'])
+                    shutil.copy2(ROOT/'android/assets/body_motor_profile.txt', episode_root/'body_motor_profile.txt')
             fixture = json.loads((ROOT/'android/assets'/metadata).read_text())
             if override_hz is not None:
                 if override_hz:
@@ -81,6 +85,14 @@ def main():
                     raise AssertionError('Recording has the wrong policy identity')
                 if not (Path(episode)/'policy.onnx').is_file():
                     raise AssertionError('Recording did not preserve selected weights')
+                if policy.get('secondary_file'):
+                    if manifest['policy_backend'] != policy['backend'] or manifest['policy_secondary_sha256'] != policy['secondary_sha256']:
+                        raise AssertionError('Wrong decoupled backend identity')
+                    if not (Path(episode)/'policy-secondary.onnx').is_file():
+                        raise AssertionError('Missing archived walking policy')
+                    profile_digest = hashlib.sha256((Path(episode)/'body_motor_profile.txt').read_bytes()).hexdigest()
+                    if profile_digest != manifest['body_motor_profile_sha256'] or manifest['body_motor_profile'] != fixture['body_motor_profile']:
+                        raise AssertionError('Missing or different archived body motor profile')
             # lab metadata has no scene field: this also checks legacy fallback.
             subprocess.run([str(folder/'replay_gmr'), str(ROOT/'android/assets'), episode], env=env, check=True)
             for mode in ('saved', 'retarget'):

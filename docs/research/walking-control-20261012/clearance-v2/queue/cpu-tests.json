@@ -1,0 +1,9 @@
+{
+  "tests": 22,
+  "success": true,
+  "failures": 0,
+  "errors": 0,
+  "no_remote_actions": true,
+  "no_GPU_or_training_processes": true,
+  "queue_sha256": "094ceb8049f7b43c7ce39772b0227ddc837a32dd7033cd4ddc549955d6ebbec7"
+}

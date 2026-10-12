@@ -1,0 +1,6 @@
+Licensed by NVIDIA Corporation under the NVIDIA Open Model License.
+
+Controller contract ported from NVlabs/GR00T-WholeBodyControl (Apache-2.0).
+Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+FURRY changes: native C++ inference on Quest, GMR upper-body commands, local
+record/replay, commands enter the current observation without wrapper delay.

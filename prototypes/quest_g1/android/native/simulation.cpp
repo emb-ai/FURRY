@@ -23,7 +23,11 @@ std::vector<std::string> JointNames() {
 }
 
 Simulation::Simulation(const std::string& assets, int physicsWorkers, const std::string& sceneName, const std::string& policyPath, int policyHzOverride)
-    : scene_name(sceneName), policy_hz_override(policyHzOverride) {
+    : Simulation(assets,physicsWorkers,sceneName,questpolicy::RuntimePolicy{questpolicy::Twist2,policyPath.empty()?assets+"/policy.onnx":policyPath,""},policyHzOverride) {}
+
+Simulation::Simulation(const std::string& assets,int physicsWorkers,const std::string& sceneName,
+        const questpolicy::RuntimePolicy& policy,int policyHzOverride)
+    : scene_name(sceneName), assets_directory(assets), policy_hz_override(policyHzOverride) {
     if(policyHzOverride!=0 && policyHzOverride!=50 && policyHzOverride!=100)
         throw std::runtime_error("Unsupported explicit policy frequency");
     if(physicsWorkers<0 || physicsWorkers>4)throw std::runtime_error("Invalid MuJoCo worker count");
@@ -31,7 +35,7 @@ Simulation::Simulation(const std::string& assets, int physicsWorkers, const std:
         throw std::runtime_error("Unknown Quest scene: "+sceneName);
     options.SetIntraOpNumThreads(1);
     options.SetInterOpNumThreads(1);
-    SelectPolicy(policyPath.empty()?assets+"/policy.onnx":policyPath);
+    SelectPolicy(policy);
     char error[2048] = {};
     const std::string sceneFile=sceneName=="lab"?"scene.xml":"scene-"+sceneName+".xml";
     model = mj_loadXML((assets+"/"+sceneFile).c_str(), nullptr, error, sizeof(error));
@@ -49,54 +53,99 @@ Simulation::Simulation(const std::string& assets, int physicsWorkers, const std:
         int a=mj_name2id(model,mjOBJ_ACTUATOR,names[i].c_str());
         if(j<0 || a<0) throw std::runtime_error("Missing joint: "+names[i]);
         qadr[i]=model->jnt_qposadr[j]; vadr[i]=model->jnt_dofadr[j]; aids[i]=a;
+        original_body_motors[i]=bodymotors::Capture(model,names[i]);
     }
     for(int i=0;i<model->nu;i++) {
         auto name=mj_id2name(model,mjOBJ_ACTUATOR,i);
         if(name && std::strstr(name,"hand_")) hands.push_back(i);
     }
+    reference_data=mj_makeData(model);
+    torso_body=mj_name2id(model,mjOBJ_BODY,"torso_link");
+    if(!reference_data||torso_body<0)throw std::runtime_error("Missing decoupled torso kinematics");
+    if(backend==questpolicy::GrootDecoupled){
+        bodymotors::Apply(model,decoupled_body_motors);
+        mj_setConst(model,data);
+    }
     Reset();
 }
-Simulation::~Simulation(){ mj_deleteData(data); mj_deleteModel(model); }
+Simulation::~Simulation(){ mj_deleteData(reference_data); mj_deleteData(data); mj_deleteModel(model); }
 void Simulation::SelectPolicy(const std::string& path) {
-    auto candidate=std::make_unique<Ort::Session>(env,path.c_str(),options);
-    if(candidate->GetInputCount()!=1||candidate->GetOutputCount()!=1)
-        throw std::runtime_error("Policy requires one input and one output");
-    auto validate=[&](bool input,int width){
-        auto type=input?candidate->GetInputTypeInfo(0):candidate->GetOutputTypeInfo(0);
-        if(type.GetONNXType()!=ONNX_TYPE_TENSOR)throw std::runtime_error("Policy requires tensors");
-        auto tensor=type.GetTensorTypeAndShapeInfo();auto shape=tensor.GetShape();
-        if(tensor.GetElementType()!=ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT||shape.size()!=2||
-           (shape[0]!=1&&shape[0]!=-1)||shape[1]!=width)
-            throw std::runtime_error("Incompatible Quest policy shape/type");
-    };
-    validate(true,1432);validate(false,29);
+    SelectPolicy(questpolicy::RuntimePolicy{questpolicy::Twist2,path,""});
+}
+void Simulation::SelectPolicy(const questpolicy::RuntimePolicy& policy) {
+    policy.Validate();
+    const bool decoupled=policy.backend==questpolicy::GrootDecoupled;
+    if(decoupled && policy_hz_override!=0 && policy_hz_override!=50)
+        throw std::runtime_error("GR00T decoupled requires 50 Hz");
+    const int inputWidth=decoupled?516:1432, outputWidth=decoupled?15:29;
     Ort::AllocatorWithDefaultOptions alloc;
-    // Cadence travels with the actor, including episode copies used by replay.
-    auto rate=candidate->GetModelMetadata().LookupCustomMetadataMapAllocated("g1_policy_hz",alloc);
-    std::string rateText=rate?rate.get():"100";
-    if(rateText!="50"&&rateText!="100")throw std::runtime_error("Unsupported policy frequency");
-    int nextHz=policy_hz_override?policy_hz_override:(rateText=="50"?50:100);
-    std::string nextInput=candidate->GetInputNameAllocated(0,alloc).get();
-    std::string nextOutput=candidate->GetOutputNameAllocated(0,alloc).get();
-    std::array<float,1432> zeros{};std::array<int64_t,2> shape{1,1432};
-    auto memory=Ort::MemoryInfo::CreateCpu(OrtArenaAllocator,OrtMemTypeDefault);
-    auto tensor=Ort::Value::CreateTensor<float>(memory,zeros.data(),zeros.size(),shape.data(),shape.size());
-    const char* inputs[]={nextInput.c_str()};const char* outputs[]={nextOutput.c_str()};
-    auto result=candidate->Run(Ort::RunOptions{nullptr},inputs,&tensor,1,outputs,1);
-    if(result[0].GetTensorTypeAndShapeInfo().GetShape()!=std::vector<int64_t>{1,29})
-        throw std::runtime_error("Invalid policy output shape");
-    for(int i=0;i<29;i++)if(!std::isfinite(result[0].GetTensorData<float>()[i]))
-        throw std::runtime_error("Invalid policy output");
-    session=std::move(candidate);input_name=std::move(nextInput);output_name=std::move(nextOutput);
-    policy_hz=nextHz;
-    if(model&&data)Reset();
+    auto load=[&](const std::string& path,std::string& inputName,std::string& outputName){
+        auto candidate=std::make_unique<Ort::Session>(env,path.c_str(),options);
+        if(candidate->GetInputCount()!=1||candidate->GetOutputCount()!=1)
+            throw std::runtime_error("Policy requires one input and one output");
+        auto validate=[&](bool input,int width){
+            auto type=input?candidate->GetInputTypeInfo(0):candidate->GetOutputTypeInfo(0);
+            if(type.GetONNXType()!=ONNX_TYPE_TENSOR)throw std::runtime_error("Policy requires tensors");
+            auto tensor=type.GetTensorTypeAndShapeInfo();auto shape=tensor.GetShape();
+            if(tensor.GetElementType()!=ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT||shape.size()!=2||
+               (shape[0]!=1&&shape[0]!=-1)||shape[1]!=width)
+                throw std::runtime_error("Incompatible policy backend shape/type");
+        };
+        validate(true,inputWidth);validate(false,outputWidth);
+        inputName=candidate->GetInputNameAllocated(0,alloc).get();
+        outputName=candidate->GetOutputNameAllocated(0,alloc).get();
+        std::vector<float> zeros(inputWidth);std::array<int64_t,2> shape{1,inputWidth};
+        auto memory=Ort::MemoryInfo::CreateCpu(OrtArenaAllocator,OrtMemTypeDefault);
+        auto tensor=Ort::Value::CreateTensor<float>(memory,zeros.data(),zeros.size(),shape.data(),shape.size());
+        const char* inputs[]={inputName.c_str()};const char* outputs[]={outputName.c_str()};
+        auto result=candidate->Run(Ort::RunOptions{nullptr},inputs,&tensor,1,outputs,1);
+        if(result[0].GetTensorTypeAndShapeInfo().GetShape()!=std::vector<int64_t>{1,outputWidth})
+            throw std::runtime_error("Invalid policy output shape");
+        for(int i=0;i<outputWidth;i++)if(!std::isfinite(result[0].GetTensorData<float>()[i]))
+            throw std::runtime_error("Invalid policy output");
+        return candidate;
+    };
+    std::string nextInput,nextOutput,nextSecondaryInput,nextSecondaryOutput;
+    auto candidate=load(policy.path,nextInput,nextOutput);
+    std::unique_ptr<Ort::Session> secondaryCandidate;
+    if(decoupled)secondaryCandidate=load(policy.secondaryPath,nextSecondaryInput,nextSecondaryOutput);
+    bodymotors::Profile nextMotors;
+    if(decoupled){
+        nextMotors=bodymotors::Load(policy.motorProfilePath.empty()?assets_directory+"/"+bodymotors::File:policy.motorProfilePath);
+        if(model)bodymotors::ValidateMapping(model,nextMotors);
+    }
+    int nextHz=50;
+    if(!decoupled){
+        // Historical metadata-free TWIST2 episodes used 100 Hz; live overrides 50.
+        auto rate=candidate->GetModelMetadata().LookupCustomMetadataMapAllocated("g1_policy_hz",alloc);
+        std::string rateText=rate?rate.get():"100";
+        if(rateText!="50"&&rateText!="100")throw std::runtime_error("Unsupported policy frequency");
+        nextHz=policy_hz_override?policy_hz_override:(rateText=="50"?50:100);
+    }
+    // Both sessions are validated before changing any active backend or state.
+    session=std::move(candidate);secondary_session=std::move(secondaryCandidate);
+    input_name=std::move(nextInput);output_name=std::move(nextOutput);
+    secondary_input_name=std::move(nextSecondaryInput);secondary_output_name=std::move(nextSecondaryOutput);
+    backend=policy.backend;policy_hz=nextHz;
+    if(decoupled)decoupled_body_motors=std::move(nextMotors);
+    if(model&&data){
+        bodymotors::Apply(model,decoupled?decoupled_body_motors:original_body_motors);
+        // Recompute model constants affected by motor inertia before restarting.
+        mj_setConst(model,data);Reset();
+    }
 }
 void Simulation::Reset() {
     mj_resetData(model,data);
     data->qpos[2]=.793; data->qpos[3]=1;
-    for(int i=0;i<29;i++){data->qpos[qadr[i]]=home[i]; target[i]=home[i];}
+    const bool decoupled=backend==questpolicy::GrootDecoupled;
+    const auto& defaults=decoupled?grootdecoupled::Home:home;
+    for(int i=0;i<29;i++){data->qpos[qadr[i]]=defaults[i]; target[i]=defaults[i];}
+    if(decoupled){data->qpos[qadr[18]]=data->qpos[qadr[25]]=1.2;}
     data->qpos[qadr[16]]=.2; data->qpos[qadr[23]]=-.2;
+    if(decoupled)for(int i=0;i<29;i++)target[i]=data->qpos[qadr[i]];
     history.fill(0); last_action.fill(0); steps=0; hand_grip.fill(0);
+    decoupled_history.fill(0);decoupled_last_action.fill(0);decoupled_command={};
+    for(int i=0;i<14;i++)decoupled_command.arms[i]=data->qpos[qadr[15+i]];
     has_reference=false;has_whole_reference=false;whole_reference.fill(0);
     mj_forward(model,data);
 }
@@ -116,7 +165,8 @@ void Simulation::PauseWholeBodyReference(){
     if(has_whole_reference)whole_reference[0]=whole_reference[1]=whole_reference[5]=0;
 }
 void Simulation::Step(bool demo,double grip,double right_grip) {
-    if(steps%(1000/policy_hz)==0) {
+    if(steps%(1000/policy_hz)==0 && backend==questpolicy::GrootDecoupled)StepDecoupled();
+    if(steps%(1000/policy_hz)==0 && backend==questpolicy::Twist2) {
         std::array<float,1432> obs{};
         obs[2]=.8f;
         for(int i=0;i<29;i++) obs[6+i]=home[i];
@@ -154,7 +204,12 @@ void Simulation::Step(bool demo,double grip,double right_grip) {
             last_action[i]=action[i]; target[i]=home[i]+.5*std::clamp(action[i],-10.f,10.f);
         }
     }
-    for(int i=0;i<29;i++) data->ctrl[aids[i]]=std::clamp((target[i]-data->qpos[qadr[i]])*kp[i]-data->qvel[vadr[i]]*kd[i],-kp[i],kp[i]);
+    for(int i=0;i<29;i++) {
+        if(backend==questpolicy::GrootDecoupled){
+            // Author motor PD; MuJoCo applies the model's actuator force limits.
+            data->ctrl[aids[i]]=(target[i]-data->qpos[qadr[i]])*grootdecoupled::Kp[i]-data->qvel[vadr[i]]*grootdecoupled::Kd[i];
+        }else data->ctrl[aids[i]]=std::clamp((target[i]-data->qpos[qadr[i]])*kp[i]-data->qvel[vadr[i]]*kd[i],-kp[i],kp[i]);
+    }
     if(right_grip<0)right_grip=grip;
     hand_grip[0]+=std::clamp(grip-hand_grip[0],-.002,.002);
     hand_grip[1]+=std::clamp(right_grip-hand_grip[1],-.002,.002);
@@ -171,4 +226,50 @@ void Simulation::Step(bool demo,double grip,double right_grip) {
     }
     mj_step(model,data); steps++;
     if(!std::isfinite(data->qpos[2]) || data->qpos[2]<.35) throw std::runtime_error("G1 fell: reset required");
+}
+
+grootdecoupled::Command Simulation::MakeDecoupledCommand() {
+    auto command=decoupled_command;
+    if(has_reference)command.arms=arm_reference;
+    if(!has_whole_reference)return command;
+    command.velocity={whole_reference[0],whole_reference[1],whole_reference[5]};
+    command.height=whole_reference[2];
+    std::copy_n(whole_reference.begin()+21,14,command.arms.begin());
+    // Derive torso orientation through the actual model, in yaw-only pelvis axes.
+    // Reference legs are deliberately absent: they cannot prescribe RL foot motion.
+    mj_resetData(model,reference_data);
+    const mjtNum rollAxis[3]={1,0,0},pitchAxis[3]={0,1,0};mjtNum roll[4],pitch[4];
+    mju_axisAngle2Quat(roll,rollAxis,whole_reference[3]);
+    mju_axisAngle2Quat(pitch,pitchAxis,whole_reference[4]);
+    mju_mulQuat(reference_data->qpos+3,pitch,roll);
+    for(int i=0;i<3;i++)reference_data->qpos[qadr[12+i]]=whole_reference[18+i];
+    mj_kinematics(model,reference_data);
+    const auto* rotation=reference_data->xmat+9*torso_body;
+    command.torsoRpy={float(std::atan2(rotation[7],rotation[8])),
+                      float(std::asin(std::clamp(-rotation[6],-1.,1.))),
+                      float(std::atan2(rotation[3],rotation[0]))};
+    return command;
+}
+void Simulation::StepDecoupled() {
+    decoupled_command=MakeDecoupledCommand();
+    std::array<double,29> q{},dq{};std::array<double,3> omega{};std::array<double,4> quat{};
+    for(int i=0;i<29;i++){q[i]=data->qpos[qadr[i]];dq[i]=data->qvel[vadr[i]];}
+    std::copy_n(data->qvel+3,3,omega.begin());std::copy_n(data->qpos+3,4,quat.begin());
+    grootdecoupled::Append(decoupled_history,grootdecoupled::Observe(decoupled_command,q,dq,omega,quat,decoupled_last_action));
+    const bool walking=grootdecoupled::Walking(decoupled_command);
+    auto& active=walking?secondary_session:session;
+    const char* ins[]={(walking?secondary_input_name:input_name).c_str()};
+    const char* outs[]={(walking?secondary_output_name:output_name).c_str()};
+    std::array<int64_t,2> shape{1,grootdecoupled::Observation};
+    auto mem=Ort::MemoryInfo::CreateCpu(OrtArenaAllocator,OrtMemTypeDefault);
+    auto input=Ort::Value::CreateTensor<float>(mem,decoupled_history.data(),decoupled_history.size(),shape.data(),2);
+    auto start=std::chrono::steady_clock::now();
+    auto outputs=active->Run(Ort::RunOptions{nullptr},ins,&input,1,outs,1);
+    inference_ms=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-start).count();
+    const auto* action=outputs[0].GetTensorData<float>();
+    for(int i=0;i<15;i++){
+        if(!std::isfinite(action[i]))throw std::runtime_error("Decoupled policy output is not finite");
+        decoupled_last_action[i]=action[i];target[i]=grootdecoupled::Home[i]+.25f*action[i];
+    }
+    std::copy(decoupled_command.arms.begin(),decoupled_command.arms.end(),target.begin()+15);
 }

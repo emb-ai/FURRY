@@ -76,6 +76,32 @@ int main() {
         for(const auto* invalid:{"{\"policy_file\":\"policy.onnx\"}",
             "{\"policy_file\":\"../policy.onnx\",\"policy_sha256\":\"bad\"}",
             "{\"policy_sha256\":\"bad\"}"}){write(invalid);Reject([&]{load();});}
+        std::ofstream(folder/"policy.onnx",std::ios::binary)<<"abc";
+        std::ofstream(folder/"policy-secondary.onnx",std::ios::binary)<<"abc";
+        const std::string pair="\"policy_file\":\"balance.onnx\",\"policy_sha256\":\""+digest+
+            "\",\"policy_secondary_file\":\"walk.onnx\",\"policy_secondary_sha256\":\""+digest+"\"";
+        const std::string motorFields=std::string(",\"body_motor_profile\":\"")+bodymotors::Id+
+            "\",\"body_motor_profile_sha256\":\""+bodymotors::Sha256+"\"";
+        std::filesystem::copy_file(std::filesystem::path(__FILE__).parent_path().parent_path()/"policies/homie-v2/body_motor_profile.txt",folder/bodymotors::File);
+        write("{"+pair+",\"policy_backend\":\"groot_decoupled_v1\",\"policy_hz\":50"+motorFields+"}");
+        auto decoupled=load().Policy("missing-assets",folder.string());
+        Check(decoupled.backend==questpolicy::GrootDecoupled &&
+              decoupled.secondaryPath==(folder/"policy-secondary.onnx").string()&&
+              decoupled.motorProfilePath==(folder/bodymotors::File).string(),"Decoupled archived identity lost");
+        std::ofstream(folder/bodymotors::File,std::ios::app)<<"tampered";
+        Reject([&]{load().Policy("assets",folder.string());});
+        std::filesystem::copy_file(std::filesystem::path(__FILE__).parent_path().parent_path()/"policies/homie-v2/body_motor_profile.txt",folder/bodymotors::File,std::filesystem::copy_options::overwrite_existing);
+        std::ofstream(folder/"policy-secondary.onnx",std::ios::binary)<<"tampered";
+        Reject([&]{load().Policy("assets",folder.string());});
+        write("{"+pair+",\"policy_backend\":\"groot_decoupled_v1\",\"policy_hz\":50}");Reject([&]{load();});
+        write("{"+pair+",\"policy_backend\":\"groot_decoupled_v1\",\"policy_hz\":50"+motorFields+",\"body_motor_profile\":\"duplicate\"}");Reject([&]{load();});
+        write("{\"body_motor_profile\":\"wrong\"}");Reject([&]{load();});
+        for(const auto* contract:{",\"policy_backend\":\"groot_decoupled_v1\"", ",\"policy_backend\":\"groot_decoupled_v1\",\"policy_hz\":100",
+                                  ",\"policy_backend\":\"twist2\",\"policy_hz\":50", ",\"policy_backend\":\"unknown\",\"policy_hz\":50"}){
+            write("{"+pair+contract+"}");Reject([&]{load();});
+        }
+        write("{\"policy_backend\":\"groot_decoupled_v1\",\"policy_hz\":50}");Reject([&]{load();});
+        write("{\"policy_backend\":\"twist2\",\"policy_backend\":\"groot_decoupled_v1\"}");Reject([&]{load();});
         std::ofstream(folder/"empty",std::ios::binary);
         Check(questpolicy::FileSha256((folder/"empty").string())=="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855","SHA256 empty vector failed");
         write("{\"sc\\u0065ne\":\"c\\u0075p\",\"nested\":[true,false,null,-1.2e+3,{\"unicode\":"

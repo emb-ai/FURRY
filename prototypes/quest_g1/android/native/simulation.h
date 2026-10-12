@@ -5,16 +5,23 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include "policy_backend.h"
+#include "groot_decoupled.h"
+#include "body_motor_model.h"
 
 // CPU controller port from TWIST2 (MIT, Copyright 2025 Yanjie Ze).
 // Shared by the Android app and the native desktop integration check.
 class Simulation {
 public:
     explicit Simulation(const std::string& assets, int physicsWorkers=2, const std::string& sceneName="lab", const std::string& policyPath="", int policyHzOverride=0);
+    Simulation(const std::string& assets, int physicsWorkers, const std::string& sceneName, const questpolicy::RuntimePolicy& policy, int policyHzOverride=0);
     ~Simulation();
     void Reset();
     // Load and probe before committing; a failure preserves the active session.
     void SelectPolicy(const std::string& path);
+    void SelectPolicy(const questpolicy::RuntimePolicy& policy);
+    const std::string& Backend() const { return backend; }
+    const grootdecoupled::Command& DecoupledCommand() const { return decoupled_command; }
     void Step(bool demo = true, double grip = 0, double right_grip = -1);
     mjModel* model = nullptr;
     mjData* data = nullptr;
@@ -29,13 +36,24 @@ public:
     const std::array<float,35>& WholeBodyReference()const{return whole_reference;}
     void ClearArmReference(){has_reference=false;}
 private:
+    std::string assets_directory;
+    bodymotors::Profile original_body_motors{},decoupled_body_motors{};
+    void StepDecoupled();
+    grootdecoupled::Command MakeDecoupledCommand();
+    std::string backend=questpolicy::Twist2;
+    mjData* reference_data=nullptr;
+    int torso_body=-1;
+    std::array<float,grootdecoupled::Observation> decoupled_history{};
+    std::array<float,grootdecoupled::Actions> decoupled_last_action{};
+    grootdecoupled::Command decoupled_command;
     int policy_hz = 100;
     // 0 follows archived ONNX metadata; live Quest explicitly selects 50 Hz.
     const int policy_hz_override;
     std::unique_ptr<mjThreadPool, decltype(&mju_threadPoolDestroy)> physicsPool{nullptr, mju_threadPoolDestroy};
     Ort::Env env{ORT_LOGGING_LEVEL_WARNING, "G1Quest"};
     Ort::SessionOptions options;
-    std::unique_ptr<Ort::Session> session;
+    std::unique_ptr<Ort::Session> session, secondary_session;
+    std::string secondary_input_name, secondary_output_name;
     std::string input_name, output_name;
     std::array<int,29> qadr{}, vadr{}, aids{};
     std::array<float,29> last_action{}, target{};

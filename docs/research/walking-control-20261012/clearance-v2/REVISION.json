@@ -1,0 +1,19 @@
+{
+  "revision": "v2-r1-initial-contract-buffer-synchronization",
+  "parent_archive_sha256": "9d41731c57a32c5afd0bddb903004f9a45c62fa621e5cbd05260e59e1bd8af6c",
+  "executable_changes": [
+    "clearance_reward.py:gpu_contract_checks only"
+  ],
+  "unchanged": [
+    "runtime reward formula/state/update/reset",
+    "trainer/PPO",
+    "actor1432/critic1743",
+    "dataset/retarget mapping",
+    "all evaluator code and baseline fingerprint"
+  ],
+  "new_tests": "test_gpu_contract_sync.py (3)",
+  "actual_GPU_evidence": "GPU_GEOMETRY_DIAGNOSTIC.json",
+  "optimizer_smoke": "pending",
+  "training": "not_run",
+  "no_deployment": true
+}

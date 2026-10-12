@@ -27,7 +27,8 @@ int main(int argc,char** argv){
                 for(int i=0;i<10;i++){running.Step(false);control.Step(false);}Equal(running,control);
             }
             for(const auto& entry:policies){
-                auto path=questpolicy::VerifiedPath(assets,entry);
+                if(entry.backend==questpolicy::GrootDecoupled && hz!=50)continue;
+                auto path=questpolicy::VerifiedPolicy(assets,entry);
                 running.SelectPolicy(path);Simulation fresh(assets,2,name,path,hz);Equal(running,fresh);
                 Check(running.PolicyHz()==hz,"Explicit cadence changed during policy selection");
                 for(int i=0;i<300;i++){running.Step(false,.6,.2);fresh.Step(false,.6,.2);}Equal(running,fresh);

@@ -1,0 +1,573 @@
+{
+  "status": {
+    "root_morph": "NOT_PROMOTED; outputs-only counterfactual; current default mapping is not fixed",
+    "training_v1": "WITHDRAWN; all four runs stopped before any actor update",
+    "training_v2": "Phase-free clearance reward; GPU smoke preparation; no outcome claimed"
+  },
+  "dataset": {
+    "train_manifest_sha256": "f6cde2c4f205831ac38c832ab84c1b83d5b3fb5ed6e8ce427cdf7fdeac1803b4",
+    "quest_originals": 33,
+    "quest_mirrors": 33
+  },
+  "coverage": {
+    "windows": {
+      "stance": 4098,
+      "swing": 112,
+      "unknown": 22190,
+      "total": 26400,
+      "whole_sole_ge35mm": 98,
+      "entry_dwell_rejects": 22,
+      "hysteresis_extra": 36,
+      "invalid": 0,
+      "method": "4x50frames per clip at50Hz, starts10/35/60/85percent oflengthminus1s; reset eachwindow"
+    },
+    "all_clips": {
+      "stance": 28244,
+      "swing": 510,
+      "unknown": 113914,
+      "total": 142668,
+      "method": "Full66clips sampled50Hz; causal reset perclip; exact pinned TWIST2 motion interpolation"
+    },
+    "published_window_count_parity": "Every one of66 per-clip stance/swing/unknown counts matched"
+  },
+  "sample": {
+    "episode": "episode-1791652646384286",
+    "unique_source_samples": 22,
+    "csv_alignment": "One row per unique source sequence; last100Hz playback tick carrying that sequence, matched by recorded_sim_time_s for both physical rollouts",
+    "frame_conventions": "Raw Meta horizontalXZ/Y-up; all G1/reference/physical sole heightsZ-up, metres",
+    "raw_ball_is_not_robot_sole": true,
+    "raw_binary_sha256": "9a8003ed5d5856f1501138c0c6ed5d0dc4296c3f46a1e06f5b19513228ad586c",
+    "source_sequence": [
+      26103,
+      26125
+    ]
+  },
+  "paired_physics": {
+    "configuration": "Installed11158650050Hz policy and physics for both variants; independent own-state catch-upON; common100frame teacherforce and exactrecordedfork. Only offline mapping source changed; no canonical runtime edits.",
+    "reports": [
+      {
+        "episode": "episode-1791652593739690",
+        "variants": {
+          "old": {
+            "rows": 3452,
+            "postfork_duration_s": 33.52,
+            "fell": false,
+            "min_height_m": 0.7520183993600184,
+            "tilt_deg": {
+              "mean": 3.4343567080299082,
+              "median": 3.111659576539398,
+              "p95_abs": 6.820049477235646,
+              "max_abs": 9.927314399946672,
+              "min": 0.039613226768150024,
+              "max": 9.927314399946672
+            },
+            "camera_xy_error_m": {
+              "mean": 0.5144886576303135,
+              "median": 0.515186641195883,
+              "p95_abs": 1.0781780878488945,
+              "max_abs": 1.2922463599288718,
+              "min": 0.010351255848445604,
+              "max": 1.2922463599288718
+            },
+            "camera_yaw_error_deg": {
+              "mean": 14.54081401873901,
+              "median": 5.3725378283728205,
+              "p95_abs": 82.322049604851,
+              "max_abs": 109.70321199463163,
+              "min": -59.450132740090794,
+              "max": 109.70321199463163
+            },
+            "loaded_slip_forceweighted_mean_m_s": 0.047668239027200576,
+            "loaded_slip_timeweighted_mean_m_s": 0.04579213599860918,
+            "integral_mean_contact_slip_m": 1.5303731850735187,
+            "leg_joint_target_rmse_deg": 6.595753723185635,
+            "body29_joint_target_rmse_deg": 5.044664962891136,
+            "root_target_xy_error_m": {
+              "mean": 0.5397000779014286,
+              "median": 0.544756390667772,
+              "p95_abs": 1.1124416063124523,
+              "max_abs": 1.3066316841490877,
+              "min": 0.011680590026742876,
+              "max": 1.3066316841490877
+            },
+            "actual_sole_clearance_m": [
+              {
+                "mean": 0.002235015008052233,
+                "median": -0.00044394417157290946,
+                "p95_abs": 0.019114417004143364,
+                "max_abs": 0.0424203153961595,
+                "min": -0.012275532248706558,
+                "max": 0.0424203153961595
+              },
+              {
+                "mean": 0.003406557952190556,
+                "median": -0.0003597105829067351,
+                "p95_abs": 0.026696325663885925,
+                "max_abs": 0.0433018004354005,
+                "min": -0.013617143262475147,
+                "max": 0.0433018004354005
+              }
+            ],
+            "reference_sole_clearance_m": [
+              {
+                "mean": 0.008285028237516402,
+                "median": 0.009437945447054386,
+                "p95_abs": 0.02037272047813365,
+                "max_abs": 0.027555031495004382,
+                "min": -0.0007561056504419598,
+                "max": 0.027555031495004382
+              },
+              {
+                "mean": 0.013369360549369547,
+                "median": 0.01221079267617128,
+                "p95_abs": 0.029748885710244696,
+                "max_abs": 0.03544327664594107,
+                "min": -0.0007983836869214595,
+                "max": 0.03544327664594107
+              }
+            ],
+            "leg_saturated_substep_fraction": 0.012321002386634847,
+            "max_leg_torque_fraction": 1.0
+          },
+          "root-morph": {
+            "rows": 3452,
+            "postfork_duration_s": 33.52,
+            "fell": false,
+            "min_height_m": 0.7374629835867866,
+            "tilt_deg": {
+              "mean": 3.3388544943415868,
+              "median": 2.8524995535598254,
+              "p95_abs": 7.144837922727087,
+              "max_abs": 10.014735331277803,
+              "min": 0.048733398654273334,
+              "max": 10.014735331277803
+            },
+            "camera_xy_error_m": {
+              "mean": 0.49310202642691653,
+              "median": 0.4774195222439106,
+              "p95_abs": 0.9946449706035809,
+              "max_abs": 1.3369455620971413,
+              "min": 0.01918532533619593,
+              "max": 1.3369455620971413
+            },
+            "camera_yaw_error_deg": {
+              "mean": 18.301233703096578,
+              "median": 5.254893901890998,
+              "p95_abs": 83.97152773593255,
+              "max_abs": 119.68084573110036,
+              "min": -47.294701052325124,
+              "max": 119.68084573110036
+            },
+            "loaded_slip_forceweighted_mean_m_s": 0.04715553271392752,
+            "loaded_slip_timeweighted_mean_m_s": 0.04637305154133391,
+            "integral_mean_contact_slip_m": 1.5419039637493523,
+            "leg_joint_target_rmse_deg": 7.381342143587365,
+            "body29_joint_target_rmse_deg": 5.506835999277104,
+            "root_target_xy_error_m": {
+              "mean": 0.5227686807300429,
+              "median": 0.5005482258904808,
+              "p95_abs": 1.0171800547466063,
+              "max_abs": 1.3040741605675226,
+              "min": 0.04002721390710448,
+              "max": 1.3040741605675226
+            },
+            "actual_sole_clearance_m": [
+              {
+                "mean": 0.0057592199119989255,
+                "median": -0.0004317705214340042,
+                "p95_abs": 0.03573682408073613,
+                "max_abs": 0.05561354429019585,
+                "min": -0.013361386041484891,
+                "max": 0.05561354429019585
+              },
+              {
+                "mean": 0.005777586275058213,
+                "median": -0.00036730648856409236,
+                "p95_abs": 0.03501146466185046,
+                "max_abs": 0.07572368803517848,
+                "min": -0.016610855269676556,
+                "max": 0.07572368803517848
+              }
+            ],
+            "reference_sole_clearance_m": [
+              {
+                "mean": 0.008573677555672472,
+                "median": 0.008677777865889733,
+                "p95_abs": 0.018987225344043655,
+                "max_abs": 0.04155627335006606,
+                "min": -0.0012264949381361008,
+                "max": 0.04155627335006606
+              },
+              {
+                "mean": 0.009604743296865096,
+                "median": 0.008812945183738843,
+                "p95_abs": 0.021972477160630898,
+                "max_abs": 0.04516442873266855,
+                "min": -0.0012379391983586658,
+                "max": 0.04516442873266855
+              }
+            ],
+            "leg_saturated_substep_fraction": 0.035202863961813845,
+            "max_leg_torque_fraction": 1.0
+          }
+        },
+        "warmup_exact_state_command_parity_max": 0.0,
+        "fork_qpos_qvel_parity_max": 0.0,
+        "old_baseline_reproduction_max": 0.0,
+        "postfork_navigation_differences": {
+          "cmd_0": {
+            "p95_abs": 0.26261744275689103,
+            "max_abs": 0.46009668707847595
+          },
+          "cmd_1": {
+            "p95_abs": 0.29758863598108287,
+            "max_abs": 0.6197023540735245
+          },
+          "cmd_5": {
+            "p95_abs": 0.6806410055607557,
+            "max_abs": 1.7782478332519531
+          },
+          "source_vx": {
+            "p95_abs": 0.07396182715892792,
+            "max_abs": 0.16130268573760986
+          },
+          "source_vy": {
+            "p95_abs": 0.07073757634498178,
+            "max_abs": 0.18536153435707092
+          },
+          "source_wz": {
+            "p95_abs": 0.1258554250001907,
+            "max_abs": 0.2979189157485962
+          },
+          "goal_x": {
+            "p95_abs": 0.021291475797789783,
+            "max_abs": 0.02726040016008424
+          },
+          "goal_y": {
+            "p95_abs": 0.01922465076514561,
+            "max_abs": 0.023492412330873402
+          },
+          "goal_yaw": {
+            "p95_abs": 0.00022022019610457022,
+            "max_abs": 0.0005044427253865225
+          }
+        }
+      },
+      {
+        "episode": "episode-1791652646384286",
+        "variants": {
+          "old": {
+            "rows": 2596,
+            "postfork_duration_s": 24.96,
+            "fell": false,
+            "min_height_m": 0.7499311145720634,
+            "tilt_deg": {
+              "mean": 3.701000590758573,
+              "median": 3.555522402051567,
+              "p95_abs": 7.5147144237039,
+              "max_abs": 11.4222410365085,
+              "min": 0.025887001701583333,
+              "max": 11.4222410365085
+            },
+            "camera_xy_error_m": {
+              "mean": 0.17019396878509244,
+              "median": 0.18858052531818223,
+              "p95_abs": 0.31022852478106483,
+              "max_abs": 0.35997989996841356,
+              "min": 0.0007207332181939945,
+              "max": 0.35997989996841356
+            },
+            "camera_yaw_error_deg": {
+              "mean": -0.8853534962696218,
+              "median": 1.2737952093033251,
+              "p95_abs": 26.374979257073676,
+              "max_abs": 48.611518042153925,
+              "min": -48.611518042153925,
+              "max": 16.575724892465143
+            },
+            "loaded_slip_forceweighted_mean_m_s": 0.04724934128061191,
+            "loaded_slip_timeweighted_mean_m_s": 0.04639640401608066,
+            "integral_mean_contact_slip_m": 1.1524866757594436,
+            "leg_joint_target_rmse_deg": 6.451226618620762,
+            "body29_joint_target_rmse_deg": 4.998324145936822,
+            "root_target_xy_error_m": {
+              "mean": 0.16499840186282724,
+              "median": 0.1761493767776989,
+              "p95_abs": 0.3242593187809175,
+              "max_abs": 0.33617740579802285,
+              "min": 0.00436867333624951,
+              "max": 0.33617740579802285
+            },
+            "actual_sole_clearance_m": [
+              {
+                "mean": 0.0029219997806267575,
+                "median": -0.000407831740347365,
+                "p95_abs": 0.025126585871526833,
+                "max_abs": 0.05674290378024084,
+                "min": -0.008222803339063136,
+                "max": 0.05674290378024084
+              },
+              {
+                "mean": 0.0034478800531173573,
+                "median": -0.00037665395476935756,
+                "p95_abs": 0.025298788887575873,
+                "max_abs": 0.06525938546475084,
+                "min": -0.010597325192403372,
+                "max": 0.06525938546475084
+              }
+            ],
+            "reference_sole_clearance_m": [
+              {
+                "mean": 0.008917920040707832,
+                "median": 0.007966045693441975,
+                "p95_abs": 0.025430431465014884,
+                "max_abs": 0.03672586427365615,
+                "min": -0.000654149582013294,
+                "max": 0.03672586427365615
+              },
+              {
+                "mean": 0.016252575178822223,
+                "median": 0.01461587644758135,
+                "p95_abs": 0.03274421717523071,
+                "max_abs": 0.04085407324363657,
+                "min": -0.0006599012932140226,
+                "max": 0.04085407324363657
+              }
+            ],
+            "leg_saturated_substep_fraction": 0.0011618589743589746,
+            "max_leg_torque_fraction": 1.0
+          },
+          "root-morph": {
+            "rows": 2596,
+            "postfork_duration_s": 24.96,
+            "fell": false,
+            "min_height_m": 0.747314438851496,
+            "tilt_deg": {
+              "mean": 3.8451299099187306,
+              "median": 3.7700300158746645,
+              "p95_abs": 8.188192642298405,
+              "max_abs": 12.91899770892801,
+              "min": 0.011391117021596332,
+              "max": 12.91899770892801
+            },
+            "camera_xy_error_m": {
+              "mean": 0.205902692701116,
+              "median": 0.20519412805756754,
+              "p95_abs": 0.3991802208541762,
+              "max_abs": 0.4721521920505411,
+              "min": 0.0022098681160301757,
+              "max": 0.4721521920505411
+            },
+            "camera_yaw_error_deg": {
+              "mean": 0.8770798849230849,
+              "median": 1.3614337089916988,
+              "p95_abs": 21.189570173996117,
+              "max_abs": 35.77689514230406,
+              "min": -35.77689514230406,
+              "max": 26.883031905888828
+            },
+            "loaded_slip_forceweighted_mean_m_s": 0.05677763642657637,
+            "loaded_slip_timeweighted_mean_m_s": 0.05174437431624543,
+            "integral_mean_contact_slip_m": 1.2806732643270744,
+            "leg_joint_target_rmse_deg": 6.9115496246792585,
+            "body29_joint_target_rmse_deg": 5.265486831136893,
+            "root_target_xy_error_m": {
+              "mean": 0.20443360998273327,
+              "median": 0.19328137794272787,
+              "p95_abs": 0.4183676739232638,
+              "max_abs": 0.4746328742582425,
+              "min": 0.000709536383575801,
+              "max": 0.4746328742582425
+            },
+            "actual_sole_clearance_m": [
+              {
+                "mean": 0.003676323532006218,
+                "median": -0.00041042089621393715,
+                "p95_abs": 0.0310039073942822,
+                "max_abs": 0.045686795835054694,
+                "min": -0.014367230336545914,
+                "max": 0.045686795835054694
+              },
+              {
+                "mean": 0.003941540842149474,
+                "median": -0.00038978354485276565,
+                "p95_abs": 0.02818783095020363,
+                "max_abs": 0.05853337759496927,
+                "min": -0.015479544472003427,
+                "max": 0.05853337759496927
+              }
+            ],
+            "reference_sole_clearance_m": [
+              {
+                "mean": 0.006885316565884316,
+                "median": 0.007605852789118424,
+                "p95_abs": 0.018031104159142664,
+                "max_abs": 0.028406809696264853,
+                "min": -0.001140875696730606,
+                "max": 0.028406809696264853
+              },
+              {
+                "mean": 0.010854164707650044,
+                "median": 0.010420618975231524,
+                "p95_abs": 0.023041723596880524,
+                "max_abs": 0.03545356837485551,
+                "min": -0.0010289446965306452,
+                "max": 0.03545356837485551
+              }
+            ],
+            "leg_saturated_substep_fraction": 0.009375,
+            "max_leg_torque_fraction": 1.0
+          }
+        },
+        "warmup_exact_state_command_parity_max": 0.0,
+        "fork_qpos_qvel_parity_max": 0.0,
+        "old_baseline_reproduction_max": 0.0,
+        "postfork_navigation_differences": {
+          "cmd_0": {
+            "p95_abs": 0.17029304057359695,
+            "max_abs": 0.42795589566230774
+          },
+          "cmd_1": {
+            "p95_abs": 0.1196821155026555,
+            "max_abs": 0.1827053725719452
+          },
+          "cmd_5": {
+            "p95_abs": 0.4602160509675741,
+            "max_abs": 1.10976592451334
+          },
+          "source_vx": {
+            "p95_abs": 0.028370320796966553,
+            "max_abs": 0.27441447228193283
+          },
+          "source_vy": {
+            "p95_abs": 0.027462894284326467,
+            "max_abs": 0.08522205799818039
+          },
+          "source_wz": {
+            "p95_abs": 0.11348645389080048,
+            "max_abs": 0.854039154946804
+          },
+          "goal_x": {
+            "p95_abs": 0.0,
+            "max_abs": 0.0
+          },
+          "goal_y": {
+            "p95_abs": 0.0,
+            "max_abs": 0.0
+          },
+          "goal_yaw": {
+            "p95_abs": 0.0,
+            "max_abs": 0.0
+          }
+        },
+        "known_low_transfer": {
+          "source_sequence": [
+            26103,
+            26125
+          ],
+          "old_source_elapsed_s": [
+            3.930563,
+            4.236694
+          ],
+          "variants": {
+            "old": {
+              "samples": 32,
+              "actual_left_sole_mm": {
+                "mean": 20.751259037526378,
+                "median": 20.53971946932777,
+                "p95_abs": 29.231838764673256,
+                "max_abs": 30.069980894655725,
+                "min": 4.7462216028943445,
+                "max": 30.069980894655725
+              },
+              "left_floor_load_n": {
+                "mean": 0.0,
+                "median": 0.0,
+                "p95_abs": 0.0,
+                "max_abs": 0.0,
+                "min": 0.0,
+                "max": 0.0
+              },
+              "left_floor_contact_fraction": 0.0,
+              "camera_xy_m": {
+                "mean": 0.12870468415001068,
+                "median": 0.1328393448243595,
+                "p95_abs": 0.16367466259786745,
+                "max_abs": 0.16780577078107425,
+                "min": 0.07810954986548538,
+                "max": 0.16780577078107425
+              },
+              "global_contact_slip_m_s": {
+                "mean": 0.020641821674367657,
+                "median": 0.010548224777930292,
+                "p95_abs": 0.06187178529151603,
+                "max_abs": 0.17193155461853085,
+                "min": 0.0016812252297949068,
+                "max": 0.17193155461853085
+              },
+              "actual_left_ankle_dof_rmse_deg": 9.043104643022431
+            },
+            "root-morph": {
+              "samples": 32,
+              "actual_left_sole_mm": {
+                "mean": 31.767364264564527,
+                "median": 32.19608696946641,
+                "p95_abs": 37.74341127143555,
+                "max_abs": 38.4211804749565,
+                "min": 19.978875503877713,
+                "max": 38.4211804749565
+              },
+              "left_floor_load_n": {
+                "mean": 0.0,
+                "median": 0.0,
+                "p95_abs": 0.0,
+                "max_abs": 0.0,
+                "min": 0.0,
+                "max": 0.0
+              },
+              "left_floor_contact_fraction": 0.0,
+              "camera_xy_m": {
+                "mean": 0.20260537310513732,
+                "median": 0.2076366713523052,
+                "p95_abs": 0.21821384364982885,
+                "max_abs": 0.22020105449533856,
+                "min": 0.1705215637905056,
+                "max": 0.22020105449533856
+              },
+              "global_contact_slip_m_s": {
+                "mean": 0.006637354205670983,
+                "median": 0.005474068671739073,
+                "p95_abs": 0.014648106722221865,
+                "max_abs": 0.016664953466396362,
+                "min": 0.0011898464304009298,
+                "max": 0.016664953466396362
+              },
+              "actual_left_ankle_dof_rmse_deg": 8.401192238178318
+            }
+          }
+        }
+      }
+    ],
+    "limitations": [
+      "Counterfactual dynamic trials from a shared observed fork, not exact reconstruction of unknown pre-recording actor history",
+      "Same source input and servo algorithm; observer reference-camera goals can change with GMR and are exported explicitly",
+      "One run per two records, no randomized repetitions or independent validation",
+      "No35mm reference label or new handtuned trip threshold used to judge improvement",
+      "Contact slip is force-weighted actual contact-point speed; signed/individualfoot histories saved for inspection"
+    ]
+  },
+  "provenance": {
+    "installed_meta_retarget_cpp_sha256": "addf7598f4a46fcdb23f5bbefdf10445da4fb5d9a1d0e6510890af2e867ade6d",
+    "installed_gmr_model_sha256": "58c04b6b9c28c15bbfd29113ab44b0104a17cb1ba3dbc86331c7a680623949dc",
+    "policy_id": "quest-111586-500",
+    "policy_hz": 50,
+    "policy_sha256": "57d6ac4b2461ac8884afeac86d32bcc9a7b4b72f376e15b898af7ac3d8a5241d",
+    "training_source_revision": "b06178f19a22f2138cbd31f60c6d494bc263f67d"
+  },
+  "artifacts_sha256": {
+    "low-transfer-22.csv": "b9a9aec355ffbbc7d2d5f535b3f124db836f754d3beecc59633dac2b909ec8e4",
+    "low-transfer.png": "b607b8d48a064853ccade50158333e42a0325db0b177c1b06d14d10aba40deb7"
+  },
+  "reproduction_limit": "Compact CSV/JSON reproduces local arithmetic and summaries. Full raw participant recordings and hidden pre-recording policy history are not published; these are counterfactual paired rollouts from an identical observed fork.",
+  "publication_csv_line_endings": "LF; numeric sample values preserved"
+}

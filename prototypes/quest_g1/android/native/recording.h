@@ -1,5 +1,7 @@
 #pragma once
 #include "retarget.h"
+#include "episode_manifest.h"
+#include "body_motor_model.h"
 #include <chrono>
 #include <filesystem>
 #include <fstream>
@@ -19,7 +21,7 @@ public:
     bool active=false;
     bool failed=false;
     std::string path()const{return directory.string();}
-    void Start(const std::string& root,const mjModel* model,const std::string& metadata="recording_metadata.json",const std::string& policyFile="",bool catchUp=false,bool firstPerson=false){
+    void Start(const std::string& root,const mjModel* model,const std::string& metadata="recording_metadata.json",const std::string& policyFile="",bool catchUp=false,bool firstPerson=false,const std::string& secondaryPolicyFile=""){
         if(active)return;
         failed=false;inputs=samples=0;
         auto stamp=std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
@@ -36,7 +38,14 @@ public:
             manifest<<raw.substr(0,open+1)<<"\n\"catch_up\":"<<(catchUp?"true":"false")
                 <<",\"first_person\":"<<(firstPerson?"true":"false")<<(raw[next]=='}'?"":",")<<raw.substr(open+1);
             manifest.close();
+            const auto identity=episodereplay::LoadManifest(directory.string());
+            if(identity.policyBackend==questpolicy::GrootDecoupled){
+                const auto profilePath=std::filesystem::path(root)/bodymotors::File;
+                bodymotors::ValidateApplied(model,bodymotors::Load(profilePath.string()));
+                std::filesystem::copy_file(profilePath,directory/bodymotors::File);
+            }
             if(!policyFile.empty())std::filesystem::copy_file(std::filesystem::path(root)/policyFile,directory/"policy.onnx");
+            if(!secondaryPolicyFile.empty())std::filesystem::copy_file(std::filesystem::path(root)/secondaryPolicyFile,directory/"policy-secondary.onnx");
             for(auto* f:{&input,&frames,&events,&body,&mimic})f->exceptions(std::ios::badbit|std::ios::failbit);
             input.open(directory/"input.csv");frames.open(directory/"frames.csv");events.open(directory/"events.csv");
             input<<"sequence,xr_time_ns,receive_ns,valid,head_flags,left_flags,right_flags,left_active,right_active,grip_left,grip_right";

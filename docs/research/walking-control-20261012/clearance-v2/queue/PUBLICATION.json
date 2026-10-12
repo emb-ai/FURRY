@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "revision": "v2-queue-r1",
+  "queue_source_sha256": "094ceb8049f7b43c7ce39772b0227ddc837a32dd7033cd4ddc549955d6ebbec7",
+  "source_files_copied_byte_exact": [
+    "run_queue.py",
+    "test_run_queue.py",
+    "independent_queue_review.py",
+    "cpu-tests.json",
+    "independent-review-tests.json",
+    "public-config-example.json",
+    "source-manifest.json"
+  ],
+  "status_as_of_utc": "2026-10-12T11:31:41Z",
+  "status": "R1_smoke_PASS_all_four_training_critic_warmup_actor0_as_of_2026-10-12T11:39:19Z",
+  "files": [
+    {
+      "file": "run_queue.py",
+      "sha256": "094ceb8049f7b43c7ce39772b0227ddc837a32dd7033cd4ddc549955d6ebbec7",
+      "bytes": 24607
+    },
+    {
+      "file": "test_run_queue.py",
+      "sha256": "116ac2aeec1396c9087ea4268fb13604bc8d890af01941a763de0b341f645451",
+      "bytes": 14306
+    },
+    {
+      "file": "independent_queue_review.py",
+      "sha256": "76f2c3861f4050b54d069ecc47582e76b9b47971c42bd1bc1531ea3a1953f2d3",
+      "bytes": 10538
+    },
+    {
+      "file": "cpu-tests.json",
+      "sha256": "5312e10fe35f879e284af39fa5f4cb4e326e17a7b773c1ffaed0eccc32882a56",
+      "bytes": 224
+    },
+    {
+      "file": "independent-review-tests.json",
+      "sha256": "d346d669bfa905ba672e22071c673da875a36c6b9b36b41d5eba01f53b3ea639",
+      "bytes": 256
+    },
+    {
+      "file": "public-config-example.json",
+      "sha256": "e0e8d544843cccf9710923bda90e5e223695928799a183ff66b02a8372eefa7f",
+      "bytes": 2184
+    },
+    {
+      "file": "source-manifest.json",
+      "sha256": "17236647f3c6aaea75597dddb1d457e8fe8d659d2eb5f4cafc8adbe9586dd0e4",
+      "bytes": 1191
+    },
+    {
+      "file": "README.md",
+      "sha256": "8345d09cd9dfa53658b66b3cc66f288aa27b807c10fe5bff098ec2b248484d27",
+      "bytes": 5213
+    }
+  ],
+  "execution_status": "../EXECUTION_STATUS.json"
+}
