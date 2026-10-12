@@ -76,6 +76,8 @@ def export_policies(assets, upstream, config=None):
             raise ValueError(f'Policy secondary model does not match backend: {ident}')
         if (backend == 'sonic_vr3_v1') != bool(row.get('planner_path')):
             raise ValueError('Planner does not match backend')
+        if row.get('input_patch') not in (None,'virtual_leg_lift10_v1') or (row.get('input_patch') and backend!='twist2'):
+            raise ValueError('Invalid source patch mode')
         if backend == 'sonic_vr3_v1':
             from scripts.sonic_assets import package
             entry={key: row[key] for key in ('id','title','note')}
@@ -92,12 +94,15 @@ def export_policies(assets, upstream, config=None):
             secondary_file = f'policy-{ident}-walk.onnx'
             shutil.copy2(row['secondary_path'], assets / secondary_file)
             entry.update(secondary_file=secondary_file, secondary_sha256=secondary_digest)
+        if row.get('input_patch'):entry['input_patch']=row['input_patch']
         catalog.append(entry)
     for scene in ('lab', 'stand', 'cup', 'push_t'):
         base = assets / ('recording_metadata.json' if scene == 'lab' else f'recording_metadata-{scene}.json')
         metadata = json.loads(base.read_text())
         for entry in catalog:
             item = deepcopy(metadata)
+            item.pop('input_patch',None)
+            if entry.get('input_patch'):item['input_patch']=entry['input_patch']
             item.update(policy_id=entry['id'], policy_title=entry['title'], policy_note=entry['note'],
                         policy_file=entry['file'], policy_sha256=entry['sha256'], policy_hz=entry['policy_hz'],
                         legacy_policy_hz=entry['legacy_policy_hz'], policy_backend=entry['backend'])
@@ -143,10 +148,11 @@ def export_policies(assets, upstream, config=None):
     lines = []
     for row in catalog:
         values = [row[key] for key in ('id', 'file', 'sha256', 'title', 'note')]
-        if row['backend'] != 'twist2':
-            values += [row['backend'], row['secondary_file'], row['secondary_sha256']]
+        if row['backend'] != 'twist2' or row.get('input_patch'):
+            values += [row['backend'], row.get('secondary_file',''), row.get('secondary_sha256','')]
         if row['backend']=='sonic_vr3_v1':
             values += [row['planner_file'],row['planner_sha256']]
+        if row.get('input_patch'):values.append(row['input_patch'])
         lines.append(' '.join(json.dumps(value, ensure_ascii=False) for value in values))
     text = '\n'.join(lines) + '\n'
     (assets / 'policy_catalog.txt').write_text(text, encoding='utf-8')

@@ -8,7 +8,7 @@ double Distance(const TrackedPose&a,const TrackedPose&b){double d[3];mju_sub3(d,
 void Normalize(double* v){if(mju_normalize3(v)<1e-6)throw std::runtime_error("Degenerate body skeleton");}
 }
 void MetaRetargeter::Calibrate(const mjModel* model,const mjData* data,const TrackingFrame& input){
-    calibrated=false;
+    calibrated=false;virtualLift.Reset();
     if(!input.body.valid)throw std::runtime_error("Full body tracking required");
     auto* gm=gmr.model();auto* gd=gmr.data();gmr.Reset();gmr.ClearCameraTarget();gd->qpos[2]=.8;
     if(swingClearance>0)swing.Load(model,gm);
@@ -92,7 +92,10 @@ void MetaRetargeter::Calibrate(const mjModel* model,const mjData* data,const Tra
     mju_negQuat(inverse,alignedHead);mju_mulQuat(cameraRotationOffset.data(),inverse,cameraOrigin.quaternion.data());
     calibrationRest=input.body.rest;skeletonVersion=input.body.skeleton_version;lastTime=0;baselinePoseStored=false;calibrated=true;
 }
-const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& input){
+const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& source){
+    TrackingFrame patched=source;
+    if(virtualLiftEnabled)patched.body=virtualLift.Apply(source.body);
+    const auto& input=patched;correctedBody=input.body;
     if(!calibrated || !input.body.valid)throw std::runtime_error("No calibrated full body sample");
     if(!Compatible(input)){calibrated=false;throw std::runtime_error("Body proportions changed: press A to recalibrate");}
     skeletonVersion=input.body.skeleton_version;

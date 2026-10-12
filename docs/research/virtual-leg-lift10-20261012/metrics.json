@@ -1,0 +1,214 @@
+{
+  "duration_s": 33.5,
+  "episode": "episode-1791652593739690",
+  "source": {
+    "estimated_swing_segments": 32,
+    "swing_fraction": 0.7168854415274463,
+    "lifted_fraction": 0.5996420047732697,
+    "max_added_height_cm": 6.181939806014353,
+    "mean_added_height_during_detected_swing_cm": 2.5050234044815975,
+    "bone_length_max_error_m": 5.551115123125783e-16,
+    "upper_position_max_change_m": 0.0,
+    "ik_limited_frames": 0,
+    "off_swing_ankle_above_support_cm": {
+      "mean": 4.57087594967706,
+      "median": 3.0483603477478027,
+      "p10": 1.0062432289123535,
+      "p95": 11.589542627334595
+    },
+    "on_swing_ankle_above_support_cm": {
+      "mean": 7.075899354158658,
+      "median": 8.776750057765023,
+      "p10": 1.6855010996996966,
+      "p95": 11.589542627334595
+    }
+  },
+  "retarget": {
+    "off": {
+      "swing_sole_clearance_cm": {
+        "mean": 0.49532871699850123,
+        "median": 0.0834687420323295,
+        "p10": -0.5098911444545067,
+        "p95": 2.67932456073949
+      },
+      "swing_low_sole_fraction": 0.7282563462338744
+    },
+    "on": {
+      "swing_sole_clearance_cm": {
+        "mean": 2.2419710344476926,
+        "median": 2.174724485179984,
+        "p10": -0.09517337787981152,
+        "p95": 5.437794329113592
+      },
+      "swing_low_sole_fraction": 0.3096129837702871
+    },
+    "wrist_target_change_cm": {
+      "mean": 0.19415379706897615,
+      "median": 0.10255288854102927,
+      "p10": 6.233907473584342e-14,
+      "p95": 0.6785020496285425
+    },
+    "root_target_change_cm": {
+      "mean": 0.17460483365320997,
+      "median": 0.09646164376759428,
+      "p10": 5.5580496856335555e-14,
+      "p95": 0.6014052227765836
+    }
+  },
+  "physical": {
+    "off": {
+      "samples": 1675,
+      "camera_xy_m": {
+        "mean": 0.4545919229310862,
+        "p95": 0.8415481603765742
+      },
+      "root_xy_m": {
+        "mean": 0.479834099890322,
+        "p95": 0.8875350575169211
+      },
+      "yaw_abs_deg": {
+        "mean": 24.084109123882598,
+        "p95": 67.60381948923303
+      },
+      "upper_world_mean_m": {
+        "mean": 0.47957643206459716,
+        "p95": 0.8740984141009406
+      },
+      "upper_local_mean_m": {
+        "mean": 0.01614570183367973,
+        "p95": 0.03067969260195796
+      },
+      "wrist_world_mean_m": {
+        "mean": 0.48176551691378444,
+        "p95": 0.8741593201062902
+      },
+      "wrist_local_mean_m": {
+        "mean": 0.023691982092529144,
+        "p95": 0.03888814865145072
+      },
+      "torso_world_m": {
+        "mean": 0.4799848203739021,
+        "p95": 0.8871409125480243
+      },
+      "torso_orientation_deg": {
+        "mean": 24.842924592942687,
+        "p95": 65.05302172230557
+      },
+      "wrist_orientation_deg": {
+        "mean": 26.354701815254316,
+        "p95": 69.08157698071778
+      },
+      "upper_joint_rmse_rad": {
+        "mean": 0.06382946364734592,
+        "p95": 0.08230459119400667
+      },
+      "contact_slip_m_s": {
+        "mean": 0.04557240828882352,
+        "p95": 0.17190564614920992
+      },
+      "slide_foot_fraction": {
+        "mean": 0.1653731343283582,
+        "p95": 0.5
+      },
+      "low_moving_foot_fraction": {
+        "mean": 0.2701492537313433,
+        "p95": 1.0
+      },
+      "braking_contact_events": 78,
+      "upward_contact_events": 0,
+      "reference_path_m": 13.731838742102724,
+      "actual_path_m": 11.854591637326745,
+      "directed_progress_ratio": 0.6587899600423179,
+      "failure": null,
+      "simulated_seconds": 33.500000000012626,
+      "swing_sole_clearance_cm": {
+        "mean": 1.0003754055171654,
+        "median": 0.3570181328279011,
+        "p10": -0.14034335864597697,
+        "p95": 3.1530666097484397
+      },
+      "swing_low_sole_fraction": 0.5726210350584308
+    },
+    "on": {
+      "samples": 1675,
+      "camera_xy_m": {
+        "mean": 0.4866023841215229,
+        "p95": 0.8990641478946064
+      },
+      "root_xy_m": {
+        "mean": 0.5129283657106793,
+        "p95": 0.9551351084536942
+      },
+      "yaw_abs_deg": {
+        "mean": 24.73338174899483,
+        "p95": 72.93739616201637
+      },
+      "upper_world_mean_m": {
+        "mean": 0.5116392684838816,
+        "p95": 0.9323701879598578
+      },
+      "upper_local_mean_m": {
+        "mean": 0.01552978538319072,
+        "p95": 0.028005991806371543
+      },
+      "wrist_world_mean_m": {
+        "mean": 0.5098197916104894,
+        "p95": 0.9298113423097443
+      },
+      "wrist_local_mean_m": {
+        "mean": 0.022898003452208104,
+        "p95": 0.03805723557618148
+      },
+      "torso_world_m": {
+        "mean": 0.5133004004947683,
+        "p95": 0.9581095671739845
+      },
+      "torso_orientation_deg": {
+        "mean": 25.5506117987141,
+        "p95": 70.92919253916705
+      },
+      "wrist_orientation_deg": {
+        "mean": 26.998549835820242,
+        "p95": 75.80907406550524
+      },
+      "upper_joint_rmse_rad": {
+        "mean": 0.06566566574240323,
+        "p95": 0.08466460616115518
+      },
+      "contact_slip_m_s": {
+        "mean": 0.04461548362674516,
+        "p95": 0.1643716734040719
+      },
+      "slide_foot_fraction": {
+        "mean": 0.1528358208955224,
+        "p95": 0.5
+      },
+      "low_moving_foot_fraction": {
+        "mean": 0.2426865671641791,
+        "p95": 1.0
+      },
+      "braking_contact_events": 75,
+      "upward_contact_events": 1,
+      "reference_path_m": 13.731838742102724,
+      "actual_path_m": 11.527740487434167,
+      "directed_progress_ratio": 0.6213108266853579,
+      "failure": null,
+      "simulated_seconds": 33.500000000012626,
+      "swing_sole_clearance_cm": {
+        "mean": 1.9910238888665033,
+        "median": 1.6731705462175435,
+        "p10": -0.17278768360559965,
+        "p95": 5.830536745116431
+      },
+      "swing_low_sole_fraction": 0.44574290484140233
+    }
+  },
+  "limitations": [
+    "Single diagnostic trajectory; no independent test or phase ground truth",
+    "Support level is opposite raw ankle height, not STAGE floor or sole",
+    "Causal estimated swing plus smooth lift; no guaranteed 10cm throughout swing",
+    "Same current APK GMR/50Hz TWIST2 +500, common unpatched camera goal, fresh rollouts, 0.5s activation blend",
+    "Incoming full-foot hardware retargeting from the historical capture is not replayed; both use current APK 14-point GMR",
+    "Contact proxies are not confirmed stumbles; zero does not mean no trips"
+  ]
+}

@@ -126,7 +126,7 @@ class JsonFields {
                 Space();
                 size_t start = pos;
                 Value();
-                if (collect && (key == "scene" || key == "nq" || key == "nv" || key == "nu" || key == "policy_file" || key == "policy_sha256" || key == "policy_backend" || key == "policy_secondary_file" || key == "policy_secondary_sha256" || key == "policy_planner_file" || key == "policy_planner_sha256" || key == "body_motor_profile" || key == "body_motor_profile_sha256" || key == "catch_up" || key == "first_person" || key == "catch_up_v2" || key == "neutral_wrists" || key == "wrist_frame_v2" || key == "policy_hz" || key == "travel_gain_percent")) {
+                if (collect && (key == "scene" || key == "nq" || key == "nv" || key == "nu" || key == "policy_file" || key == "policy_sha256" || key == "policy_backend" || key == "input_patch" || key == "policy_secondary_file" || key == "policy_secondary_sha256" || key == "policy_planner_file" || key == "policy_planner_sha256" || key == "body_motor_profile" || key == "body_motor_profile_sha256" || key == "catch_up" || key == "first_person" || key == "catch_up_v2" || key == "neutral_wrists" || key == "wrist_frame_v2" || key == "policy_hz" || key == "travel_gain_percent")) {
                     if (!out.emplace(key, text.substr(start, pos - start)).second)
                         throw std::runtime_error("Duplicate episode manifest field: " + key);
                 }
@@ -227,6 +227,7 @@ struct Manifest {
     std::string scene = "lab", raw, policyFile, policySha256;
     std::string policyBackend=questpolicy::Twist2,policySecondaryFile,policySecondarySha256,policyPlannerFile,policyPlannerSha256;
     std::string bodyMotorProfile,bodyMotorProfileSha256;
+    std::string inputPatch;
     bool catchUp=false,firstPerson=false;
     bool catchUpV2=false,neutralWrists=false,wristFrameV2=false;
     int policyHz=0; // Missing field: retain archived ONNX metadata/default cadence.
@@ -303,6 +304,10 @@ inline Manifest LoadManifest(const std::string &folder) {
         for(char c:out.policySha256)if(!((c>='0'&&c<='9')||(c>='a'&&c<='f')))throw std::runtime_error("Invalid episode policy SHA256");
     }
     if(fields.count("policy_backend"))out.policyBackend=readString("policy_backend");
+    if(fields.count("input_patch")){
+        out.inputPatch=readString("input_patch");
+        if(out.inputPatch!="virtual_leg_lift10_v1"||out.policyBackend!=questpolicy::Twist2)throw std::runtime_error("Unknown input patch");
+    }
     if(!questpolicy::KnownBackend(out.policyBackend))throw std::runtime_error("Unknown episode policy backend");
     if(fields.count("policy_secondary_file")!=fields.count("policy_secondary_sha256"))
         throw std::runtime_error("Incomplete episode secondary policy identity");

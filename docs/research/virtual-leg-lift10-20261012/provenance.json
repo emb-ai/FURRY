@@ -1,0 +1,14 @@
+{
+  "episode": "episode-1791652593739690",
+  "policy": "quest-111586-500",
+  "policy_hz": 50,
+  "physics_hz": 1000,
+  "catch_up": true,
+  "trimmed_start_seconds": 1,
+  "source_hashes": {
+    "body.csv": "6f4f1c6615095931108cfd9eea52ced1d931ac5589e53aba61c1c3375742f2f4",
+    "input.csv": "3186d500bd2ff80aa939bd8cb1f7e3bae421e7df15c38cc82d9ad9a007819eff",
+    "frames.csv": "b5ab3c6a5bd33f8d56a7f3e3c8e89c9af3d335d52ddcd806b290bd8f620e7b54",
+    "manifest.json": "21da730116105dc16b8c3da714ae921552aab60da588e693b96b3e6922cd85b7"
+  }
+}

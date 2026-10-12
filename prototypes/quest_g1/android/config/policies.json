@@ -52,5 +52,13 @@
     "path": "../../policies/sonic-vr3/model_encoder.onnx",
     "secondary_path": "../../policies/sonic-vr3/model_decoder.onnx",
     "planner_path": "../../policies/sonic-vr3/planner_sonic.onnx"
+  },
+  {
+    "id": "quest-111586-500-lift10",
+    "title": "Virtual Legs: шаг +10 см",
+    "note": "TWIST2 +500 · IK ноги",
+    "path": "../../policies/quest-111586/checkpoint_000500-50hz.onnx",
+    "sha256": "57d6ac4b2461ac8884afeac86d32bcc9a7b4b72f376e15b898af7ac3d8a5241d",
+    "input_patch": "virtual_leg_lift10_v1"
   }
 ]

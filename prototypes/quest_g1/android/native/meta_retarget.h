@@ -1,6 +1,7 @@
 #pragma once
 #include "gmr.h"
 #include "swing_clearance.h"
+#include "virtual_leg_lift.h"
 
 // Source adapter, not a second IK solver. Meta bind-skeleton coordinates are
 // aligned to the robot's anatomical T pose before entering the GMR task stack.
@@ -21,6 +22,9 @@ class MetaRetargeter {
     std::array<std::array<double,4>,2> wristNeutralInverse{},wristRest{};
     bool twistGrounding=false,toeClamp=true;
     SwingClearance swing;
+    VirtualLegLift virtualLift;
+    bool virtualLiftEnabled=false;
+    BodyFrame correctedBody;
     double swingClearance=0;
     bool baselinePoseStored=false;
     uint32_t skeletonVersion=0;
@@ -33,6 +37,10 @@ public:
     explicit MetaRetargeter(const std::string& assets):gmr(assets){}
     void Calibrate(const mjModel* model,const mjData* data,const TrackingFrame& input);
     const std::array<float,35>& Solve(const TrackingFrame& input);
+    void EnableVirtualLegLift(bool value){virtualLiftEnabled=value;virtualLift.Reset();}
+    bool VirtualLegLiftEnabled()const{return virtualLiftEnabled;}
+    const BodyFrame& CorrectedBody()const{return correctedBody;}
+    const VirtualLegLift& LiftDiagnostics()const{return virtualLift;}
     void EnableCameraTracking(bool value){cameraTracking=value;if(!value)gmr.ClearCameraTarget();}
     // Set before calibration. Keep anatomical lengths and vertical scale intact.
     void SetTravelGain(double value){if(!std::isfinite(value)||value<.5||value>1.2)throw std::runtime_error("Invalid travel gain");travelGain=value;}
@@ -58,7 +66,7 @@ public:
     // Toe-task height above a flat grounded foot as estimated, before the
     // floor clamp. Negative values asked for the toe frame under the sole.
     double ToeClearance(int side)const{return toeClearance[side];}
-    void Pause(){lastTime=0;}
+    void Pause(){lastTime=0;virtualLift.Reset();}
     bool Compatible(const TrackingFrame& f)const;
     GmrRetargeter& solver(){return gmr;}
 };

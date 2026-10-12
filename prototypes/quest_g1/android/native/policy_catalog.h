@@ -12,7 +12,7 @@
 namespace questpolicy {
 struct Entry {
     std::string id, file, sha256, title, note;
-    std::string backend=Twist2, secondaryFile{}, secondarySha256{}, plannerFile{}, plannerSha256{};
+    std::string backend=Twist2, secondaryFile{}, secondarySha256{}, plannerFile{}, plannerSha256{}, inputPatch{};
 };
 inline bool Digest(const std::string& value){
     if(value.size()!=64)return false;
@@ -64,6 +64,10 @@ inline std::vector<Entry> Load(const std::string& assets) {
         if(e.backend==Sonic){
             if(!(row>>std::quoted(e.plannerFile)>>std::quoted(e.plannerSha256))||!ModelFile(e.plannerFile)||!Digest(e.plannerSha256)||!files.insert(e.plannerFile).second)
                 throw std::runtime_error("Invalid SONIC planner identity");
+            row>>std::ws;
+        }
+        if(!row.eof()){
+            if(!(row>>std::quoted(e.inputPatch))||e.inputPatch!="virtual_leg_lift10_v1"||e.backend!=Twist2)throw std::runtime_error("Invalid source patch mode");
             row>>std::ws;
         }
         if(!KnownBackend(e.backend) ||

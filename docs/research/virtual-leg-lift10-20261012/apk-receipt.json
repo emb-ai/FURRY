@@ -1,0 +1,34 @@
+{
+  "apk": "furry-capture-autonomous-lift10.apk",
+  "apk_bytes": 827374006,
+  "apk_sha256": "02be7c4c88b6c888e4224f02f4fc9b18fbbfdd99d95abdaceb68c8c06076d7db",
+  "package": "org.g1lab.quest.capture",
+  "modes": [
+    "twist2-20k",
+    "twist2-25k",
+    "quest-111260-500",
+    "quest-111260-1000",
+    "quest-111586-200",
+    "quest-111586-300",
+    "quest-111586-500",
+    "homie-v2",
+    "sonic-vr3",
+    "quest-111586-500-lift10"
+  ],
+  "all_model_hashes_verified": true,
+  "source_hashes_verified": true,
+  "signature_verified": true,
+  "zip_verified": true,
+  "installed": false,
+  "headset_validated": false,
+  "unit_tests": {
+    "run": 101,
+    "passed": 100,
+    "skipped": 1
+  },
+  "native_policy_switch_checks": true,
+  "video_frames": 670,
+  "video_seconds": 33.5,
+  "video_decode_verified": true,
+  "video_visually_checked": true
+}

@@ -428,6 +428,7 @@ void ApplyMenuAction(questmenu::Action action,bool fresh,uint64_t sequence,int p
         userPaused=true;menuOpen=true;restartAfterCalibration=false;
         try{
             sim->SelectPolicy(questpolicy::VerifiedPolicy(assetsPath,policyCatalog[index]));
+            retarget->EnableVirtualLegLift(policyCatalog[index].inputPatch=="virtual_leg_lift10_v1");
             selectedPolicy=index;settingsDirty=true;
             calibrationSnapshot.reset();retarget->calibrated=false;retarget->Pause();calibrationReady=false;
             trackingEnabled=false;wasApplying=false;faulted=false;lastReference={};grip[0]=0;grip[1]=0;
@@ -529,6 +530,7 @@ void G1Initialize(android_app* app){
     }
     __android_log_print(ANDROID_LOG_INFO,"G1Quest","Loaded policy %s sha256=%s hz=%d",policyCatalog.at(selectedPolicy.load()).id.c_str(),policyCatalog.at(selectedPolicy.load()).sha256.c_str(),sim->PolicyHz());
     retarget=std::make_unique<MetaRetargeter>(assets);
+    retarget->EnableVirtualLegLift(policyCatalog.at(selectedPolicy.load()).inputPatch=="virtual_leg_lift10_v1");
     retarget->EnableNeutralWrists(true);
     retarget->EnableWristFrameV2(true);
 #ifdef G1_ENABLE_TWIST_GROUNDING
@@ -556,7 +558,7 @@ void G1Initialize(android_app* app){
     if(egoCamera<0)throw std::runtime_error("Missing ego camera");
     publishedGeometry.reserve(2048);PublishGeometry();
     telemetry.open(assets+"/runtime_stats.csv",std::ios::trunc);
-    telemetry<<"wall_s,sim_s,cycle_ms,physics_ms,gmr_ms,inference_ms,rtf,contacts,overlap_points,pairs,max_depth_mm,solver_iterations,constraints,body_gap_ms,input_age_ms,body_confidence,body_version,state,reason,target_x,target_y,actual_x,actual_y,cmd_vx,cmd_vy,actual_vx,actual_vy,root_error,height,tilt,gmr_residual,gmr_iterations,overruns,dropped_inputs,left_foot_contacts,right_foot_contacts,leg_error_deg,physics_workers,camera_error_m,camera_error_deg,visual_scale,camera_connected,camera_state,camera_age_ms,camera_fit_mm,camera_legs,camera_weight,camera_clock_synced,camera_clock_offset_ms,camera_clock_rtt_ms,ik_position_cm,ik_orientation_deg,camera_fit_progress,camera_fit_hint,camera_ready_legs,camera_legs_enabled,sonic_planner_ms,sonic_plan_age_s\n";
+    telemetry<<"wall_s,sim_s,cycle_ms,physics_ms,gmr_ms,inference_ms,rtf,contacts,overlap_points,pairs,max_depth_mm,solver_iterations,constraints,body_gap_ms,input_age_ms,body_confidence,body_version,state,reason,target_x,target_y,actual_x,actual_y,cmd_vx,cmd_vy,actual_vx,actual_vy,root_error,height,tilt,gmr_residual,gmr_iterations,overruns,dropped_inputs,left_foot_contacts,right_foot_contacts,leg_error_deg,physics_workers,camera_error_m,camera_error_deg,visual_scale,camera_connected,camera_state,camera_age_ms,camera_fit_mm,camera_legs,camera_weight,camera_clock_synced,camera_clock_offset_ms,camera_clock_rtt_ms,ik_position_cm,ik_orientation_deg,camera_fit_progress,camera_fit_hint,camera_ready_legs,camera_legs_enabled,sonic_planner_ms,sonic_plan_age_s,virtual_swing_side,virtual_lift_left_cm,virtual_lift_right_cm\n";
     try{exporter=std::make_unique<RecordingExport>(app->activity->vm,app->activity->clazz);exporter->Latest(assets+"/recordings");}
     catch(const std::exception& e){__android_log_print(ANDROID_LOG_ERROR,"G1Quest","Recording export unavailable: %s",e.what());}
     running=true;
@@ -753,6 +755,8 @@ void G1Initialize(android_app* app){
                         savedCameraRegistration=cameraFusion.RegistrationVersion();
                         if(!cameraFusion.SaveRegistration(CameraRegistrationPath()))__android_log_print(ANDROID_LOG_WARN,"G1Quest","Camera registration not saved");
                     }
+                    // This source mode explicitly operates on Virtual Legs, not camera corrections.
+                    if(retarget->VirtualLegLiftEnabled())for(int j=2;j<8;j++){fused.body.joints[j]=input.body.joints[j];fused.body.flags[j]=input.body.flags[j];}
                 }
                 if(applyReference){
                     if(calibratedNow || !wasApplying){
@@ -856,7 +860,7 @@ void G1Initialize(android_app* app){
                     const auto& x=sample;
                     telemetry<<x.published<<','<<x.simTime<<','<<x.cycleMs<<','<<x.physicsMs<<','<<x.gmrMs<<','<<x.inferenceMs<<','<<x.realTimeFactor<<','<<x.contacts<<','<<x.overlaps<<','<<x.pairs<<','<<x.depthMm<<','<<x.solverIterations<<','<<x.constraints<<','<<x.bodyGapMs<<','<<x.inputAgeMs<<','<<x.confidence<<','<<x.bodyVersion<<','<<x.status<<','<<x.reason;
                     for(const auto& values:{x.targetXY,x.actualXY,x.commandXY,x.velocityXY})for(double v:values)telemetry<<','<<v;
-                    telemetry<<','<<x.positionError<<','<<x.height<<','<<x.tilt<<','<<x.residual<<','<<x.gmrIterations<<','<<x.overruns<<','<<x.droppedInputs<<','<<x.footContacts[0]<<','<<x.footContacts[1]<<','<<x.legErrorDegrees<<','<<x.physicsWorkers<<','<<x.cameraPositionError<<','<<x.cameraOrientationError<<','<<x.visualScale<<','<<x.cameraConnected<<','<<x.cameraState<<','<<x.cameraAgeMs<<','<<x.cameraFitMm<<','<<x.cameraLegs<<','<<x.cameraWeight<<','<<x.cameraClockSynced<<','<<x.cameraClockOffsetMs<<','<<x.cameraClockRttMs<<','<<x.ikPositionCm<<','<<x.ikOrientationDeg<<','<<x.cameraFitProgress<<','<<x.cameraFitHint<<','<<x.cameraReady<<','<<x.cameraLegsEnabled<<','<<sim->PlannerMs()<<','<<sim->PlanAge()<<'\n';lastTelemetry=x.published;
+                    telemetry<<','<<x.positionError<<','<<x.height<<','<<x.tilt<<','<<x.residual<<','<<x.gmrIterations<<','<<x.overruns<<','<<x.droppedInputs<<','<<x.footContacts[0]<<','<<x.footContacts[1]<<','<<x.legErrorDegrees<<','<<x.physicsWorkers<<','<<x.cameraPositionError<<','<<x.cameraOrientationError<<','<<x.visualScale<<','<<x.cameraConnected<<','<<x.cameraState<<','<<x.cameraAgeMs<<','<<x.cameraFitMm<<','<<x.cameraLegs<<','<<x.cameraWeight<<','<<x.cameraClockSynced<<','<<x.cameraClockOffsetMs<<','<<x.cameraClockRttMs<<','<<x.ikPositionCm<<','<<x.ikOrientationDeg<<','<<x.cameraFitProgress<<','<<x.cameraFitHint<<','<<x.cameraReady<<','<<x.cameraLegsEnabled<<','<<sim->PlannerMs()<<','<<sim->PlanAge()<<','<<retarget->LiftDiagnostics().swingSide<<','<<100*retarget->LiftDiagnostics().lift[0]<<','<<100*retarget->LiftDiagnostics().lift[1]<<'\n';lastTelemetry=x.published;
                     if(sim->steps%1000==0)telemetry.flush();
                 }
                 if(sim->steps%5000==0)__android_log_print(ANDROID_LOG_INFO,"G1Quest","sim=%.2fs height=%.3f inference=%.3fms",sim->data->time,sim->data->qpos[2],sim->inference_ms);
