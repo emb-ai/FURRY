@@ -3,10 +3,25 @@
 #include <array>
 #include <vector>
 #include <cstdint>
+#include <memory>
 
 struct TrackedPose {
     std::array<double,3> position{};
     std::array<double,4> quaternion{1,0,0,0}; // w,x,y,z
+};
+inline constexpr int kFullBodyJoints=84;
+struct FullBodySkeleton {
+    std::array<TrackedPose,kFullBodyJoints> rest{};
+    std::array<int32_t,kFullBodyJoints> parent{};
+    uint32_t version=0;
+    FullBodySkeleton(){parent.fill(-1);}
+};
+struct FullBodyFrame {
+    std::array<TrackedPose,kFullBodyJoints> joints{};
+    std::array<uint64_t,kFullBodyJoints> flags{};
+    std::shared_ptr<const FullBodySkeleton> skeleton;
+    uint32_t version=0;
+    bool active=false;
 };
 struct BodyFrame {
     // GMR order: pelvis, chest, hips L/R, knees L/R, feet L/R,
@@ -17,6 +32,8 @@ struct BodyFrame {
     uint32_t skeleton_version=0;
     double confidence=0;
     bool valid=false,supported=false;
+    // Immutable raw SDK sample. Independent of the selected GMR inputs/fusion.
+    std::shared_ptr<const FullBodyFrame> full;
 };
 struct TrackingFrame {
     BodyFrame body;

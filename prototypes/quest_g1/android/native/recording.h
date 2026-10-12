@@ -2,6 +2,7 @@
 #include "retarget.h"
 #include "episode_manifest.h"
 #include "body_motor_model.h"
+#include "full_body_io.h"
 #include <chrono>
 #include <filesystem>
 #include <fstream>
@@ -12,6 +13,7 @@
 // A missing complete.json means interrupted/unfinalized, never a successful episode.
 class EpisodeRecorder {
     std::ofstream input, frames, events, body, mimic;
+    fullbody::Recorder fullBody;
     std::filesystem::path directory;
     uint64_t inputs=0, samples=0;
     int64_t lastFlush=0;
@@ -36,7 +38,7 @@ public:
             if(open==std::string::npos||raw[open]!='{'||next==std::string::npos)throw std::runtime_error("Invalid episode metadata");
             std::ofstream manifest;manifest.exceptions(std::ios::badbit|std::ios::failbit);manifest.open(directory/"manifest.json");
             manifest<<raw.substr(0,open+1)<<"\n\"catch_up\":"<<(catchUp?"true":"false")
-                <<",\"first_person\":"<<(firstPerson?"true":"false")<<(raw[next]=='}'?"":",")<<raw.substr(open+1);
+                <<",\"full_body_schema\":1,\"first_person\":"<<(firstPerson?"true":"false")<<(raw[next]=='}'?"":",")<<raw.substr(open+1);
             manifest.close();
             const auto identity=episodereplay::LoadManifest(directory.string());
             if(identity.policyBackend==questpolicy::GrootDecoupled){
@@ -63,6 +65,7 @@ public:
             for(int j=0;j<14;j++){body<<",flags_"<<j;for(auto kind:{"pose","rest"})for(int k=0;k<7;k++)body<<','<<kind<<'_'<<j<<'_'<<k;}
             body<<'\n'<<std::setprecision(17);
             mimic<<"sequence,step,sim_time";for(int k=0;k<35;k++)mimic<<",mimic_"<<k;mimic<<'\n'<<std::setprecision(17);
+            fullBody.Start(directory);
             active=true;Event("start",0);Flush();
         }catch(...){Abort();throw;}
     }
@@ -80,6 +83,7 @@ public:
             for(const auto& p:{f.body.joints[j],f.body.rest[j]}){Values(body,p.position.data(),3);Values(body,p.quaternion.data(),4);}
         }
         body<<'\n';
+        fullBody.Input(f,received);
     }
     void Frame(const mjModel* m,const mjData* d,int steps,const TrackingFrame& f,bool reset,bool calibrated,
                bool apply,bool valid,float left,float right,int mode,double error,bool limited,const std::array<float,29>& reference){
@@ -92,12 +96,12 @@ public:
         if(!active)return;
         mimic<<f.sequence<<','<<step<<','<<time;Values(mimic,value.data(),35);mimic<<'\n';
     }
-    void Flush(){if(active){input.flush();frames.flush();events.flush();body.flush();mimic.flush();lastFlush=Now();}}
+    void Flush(){if(active){fullBody.Flush();input.flush();frames.flush();events.flush();body.flush();mimic.flush();lastFlush=Now();}}
     void Tick(){if(active && Now()-lastFlush>1000000000LL)Flush();}
     void Stop(const char* reason="user_stop"){
         if(!active)return;
         try{
-            Event(reason,0);Flush();input.close();frames.close();events.close();body.close();mimic.close();
+            Event(reason,0);Flush();fullBody.Close();input.close();frames.close();events.close();body.close();mimic.close();
             std::ofstream done;done.exceptions(std::ios::badbit|std::ios::failbit);
             done.open(directory/"complete.tmp");
             done<<"{\"schema_version\":1,\"reason\":\""<<reason<<"\",\"input_rows\":"<<inputs<<",\"frame_rows\":"<<samples<<"}\n";
@@ -105,7 +109,7 @@ public:
         }catch(...){Abort();throw;}
     }
     void Abort()noexcept{
-        active=false;failed=true;
+        active=false;failed=true;fullBody.Abort();
         for(auto* f:{&input,&frames,&events,&body,&mimic}){f->exceptions(std::ios::goodbit);if(f->is_open())f->close();f->clear();}
     }
 };

@@ -310,7 +310,7 @@ export_gmr()
 
 for file in ['gmr_model.xml','gmr_config.txt']:
     metadata['sha256'][file]=hashlib.sha256((assets/file).read_bytes()).hexdigest()
-for file in ['gmr.cpp','gmr.h','meta_retarget.cpp','meta_retarget.h','foot_floor.h','swing_clearance.h','body_tracking.h','quest_runtime.cpp','runtime_stats.h','stats_hud.h','recording_export.h','guided_capture.h','capture_hud.h']:
+for file in ['gmr.cpp','gmr.h','meta_retarget.cpp','meta_retarget.h','foot_floor.h','swing_clearance.h','body_tracking.h','quest_runtime.cpp','runtime_stats.h','stats_hud.h','recording_export.h','guided_capture.h','capture_hud.h','retarget.h','recording.h','full_body_io.h']:
     metadata['sha256']['android/native/'+file]=hashlib.sha256((ROOT/'android/native'/file).read_bytes()).hexdigest()
 for file in ['world_skeleton.h','world_skeleton_gl.h','operator_skeleton.h','operator_skeleton_draw.h','camera_fusion.cpp','camera_fusion.h','camera_stream.cpp','quest_menu.h','quest_menu_gl.h','policy_catalog.h','policy_backend.h','groot_decoupled.h','body_motor_profile.h','body_motor_model.h','recording.h','episode_manifest.h','simulation.h','file_sha256.h','camera_pose_servo.h']:
     metadata['sha256']['android/native/'+file]=hashlib.sha256((ROOT/'android/native'/file).read_bytes()).hexdigest()
@@ -322,6 +322,7 @@ for name in ['SOURCE_LICENSE', 'MODEL_LICENSE', 'NOTICE']:
     target = assets/f'HOMIE_V2_{name}.txt'
     shutil.copy2(ROOT/'policies/homie-v2'/f'{name}.txt', target)
     metadata['sha256'][target.name] = hashlib.sha256(target.read_bytes()).hexdigest()
+metadata['full_body_recording']={'schema':1,'joints':84,'frames':'body_full.bin','bind_skeleton':'body_skeleton.bin','pose_frame':'raw OpenXR STAGE before camera fusion','joint_order':'XR_FULL_BODY_JOINT_*_META','estimated_legs':True,'policy_inputs_changed':False}
 (assets/'recording_metadata.json').write_text(json.dumps(metadata,indent=2)+'\n')
 for name in ['GMR','MINK']:
     shutil.copy2(ROOT/'third_party'/f'{name}_LICENSE.txt',assets/f'{name}_LICENSE.txt')

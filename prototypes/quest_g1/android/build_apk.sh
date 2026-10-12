@@ -27,7 +27,12 @@ cp vendor/onnxruntime-android/jni/arm64-v8a/libonnxruntime.so android/build/pack
 cp vendor/openxr-android/jni/arm64-v8a/libopenxr_loader.so android/build/package/lib/arm64-v8a/
 cp "$G1_NDK/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/aarch64-linux-android/libc++_shared.so" android/build/package/lib/arm64-v8a/
 "$G1_NDK/toolchains/llvm/prebuilt/darwin-x86_64/bin/llvm-strip" --strip-unneeded android/build/package/lib/arm64-v8a/*.so
-"$G1_BT/aapt2" link --manifest android/AndroidManifest.xml -I "$G1_SDK/platforms/android-34/android.jar" -A android/assets -o android/build/unsigned.apk
+G1_MANIFEST=android/AndroidManifest.xml
+if [[ "${G1_CAPTURE_APP:-0}" == 1 ]]; then
+  .venv/bin/python scripts/capture_app_manifest.py android/AndroidManifest.xml android/build/AndroidManifest-capture.xml
+  G1_MANIFEST=android/build/AndroidManifest-capture.xml
+fi
+"$G1_BT/aapt2" link --manifest "$G1_MANIFEST" -I "$G1_SDK/platforms/android-34/android.jar" -A android/assets -o android/build/unsigned.apk
 (cd android/build/package && /usr/bin/zip -q -r ../unsigned.apk lib)
 "$G1_BT/zipalign" -f -p 4 android/build/unsigned.apk android/build/aligned.apk
 if [[ ! -f .tools/g1-debug.keystore ]]; then

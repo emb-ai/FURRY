@@ -17,6 +17,7 @@ class BodyTracking {
     std::array<TrackedPose,14> bindSelected{};
     uint32_t version=~0u;
     bool haveSkeleton=false;
+    std::shared_ptr<const FullBodySkeleton> fullBind;
     static constexpr int indices[14]={
         XR_FULL_BODY_JOINT_HIPS_META,XR_FULL_BODY_JOINT_CHEST_META,
         XR_FULL_BODY_JOINT_LEFT_UPPER_LEG_META,XR_FULL_BODY_JOINT_RIGHT_UPPER_LEG_META,
@@ -54,6 +55,7 @@ public:
         if(XR_FAILED(result)){tracker=XR_NULL_HANDLE;enabled=false;}
     }
     void Sample(XrSpace space,XrTime time,TrackingFrame& input){
+        input.body.full.reset();
         input.body.supported=enabled;
         if(!tracker)return;
         XrBodyJointsLocateInfoFB info{XR_TYPE_BODY_JOINTS_LOCATE_INFO_FB};info.baseSpace=space;info.time=time;
@@ -69,10 +71,25 @@ public:
                     bindSelected[i]=Pose(found->pose);
                 }
                 if(haveSkeleton)version=locations.skeletonChangedCount;
+                auto all=std::make_shared<FullBodySkeleton>();all->version=locations.skeletonChangedCount;
+                std::array<bool,kFullBodyJoints> seen{};bool complete=true;
+                for(const auto& joint:bind){
+                    int id=int(joint.joint),parent=int(joint.parentJoint);
+                    if(id<0||id>=kFullBodyJoints||seen[id]){complete=false;break;}
+                    seen[id]=true;all->rest[id]=Pose(joint.pose);
+                    all->parent[id]=(parent>=0&&parent<kFullBodyJoints)?parent:-1;
+                }
+                // Malformed full topology never changes legacy 14-joint validity.
+                fullBind=complete?all:nullptr;
             }
         }
         auto& out=input.body;out.confidence=locations.confidence;out.time_ns=locations.time;out.skeleton_version=version;
         out.valid=locations.isActive && haveSkeleton && locations.confidence>0 && locations.time>0;
+        auto all=std::make_shared<FullBodyFrame>();
+        all->active=locations.isActive;all->version=locations.skeletonChangedCount;
+        if(haveSkeleton&&fullBind&&fullBind->version==all->version)all->skeleton=fullBind;
+        for(int i=0;i<kFullBodyJoints;i++){all->joints[i]=Pose(joints[i].pose);all->flags[i]=joints[i].locationFlags;}
+        out.full=std::move(all);
         for(int i=0;i<14;i++){
             out.joints[i]=Pose(joints[indices[i]].pose);out.flags[i]=joints[indices[i]].locationFlags;out.rest[i]=bindSelected[i];
             out.valid=out.valid && (out.flags[i]&3)==3;
