@@ -143,3 +143,30 @@ with an explicitly checked free GPU. That is a smoke, not critic readiness or
 permission to start the long queue. Full-fidelity physical/RNG continuation is
 not implemented: resume restores learning/curriculum state but resets physics
 and history, as explicitly reported by `resume_state.py`.
+
+## Camera-leg clips (2026-10-13)
+
+Goal: fine-tune on real leg motion (push-T kicks/pushes) from the camera
+skeleton. Actor input is the recorded live `mimic.csv` (camera fusion as run on
+the headset); the reward target is the offline-cleaned camera legs
+(`prototypes/quest_g1/training/camera_targets.py`, clean3) re-solved by native GMR.
+
+1. `prototypes/quest_g1/training/camera_dataset.py OUT --assets android/assets
+   --pair EPISODE_DIR:PREFIX ... --validation EPISODE_ID --mirror` writes
+   quest-g1-motion-v1 clips (one stage per episode, from 101) and
+   `command_bank.npz` (quest-camera-command-bank-v1, mirrors included).
+2. `camera_mixture.py combine QUEST night-v3 OUT_FROM_1` merges it with the Meta
+   Quest clips. Files are byte copies; stages must not collide.
+3. `author_dataset.py --quest QUEST ...` builds the mixture as before.
+   Run `build_phase.py` on the new mixture; Quest phase stays masked.
+4. `camera_mixture.py bank --dataset MIXTURE --banks NATIVE.npz:OLD_MIXTURE
+   OUT_FROM_1/command_bank.npz --output BANK.npz` writes one
+   quest-native-command-bank-v1 covering every Quest TRAIN clip. It is loaded
+   by the unchanged `native_command_bank.py` (`--actor-command-bank`).
+
+Checked locally on dataset-v1 (5 episodes, 187 s train + 187 s mirrors, 89 s
+validation): the unchanged author_dataset accepts the combined Quest set, and
+bank samples equal live `mimic.csv` exactly on all 40 camera clips. `bank` is
+not yet run against the server's native bank, and no GPU smoke has run.
+Family weighting is unchanged: camera families get about 38% of the Quest mass,
+i.e. roughly 1.4% of motion draws before curriculum.
