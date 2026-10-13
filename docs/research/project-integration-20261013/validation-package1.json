@@ -1,0 +1,24 @@
+{
+  "scope": "capture, autonomous backends and committed training source integrated on beeeab0",
+  "runtime_unit_tests": {
+    "run": 101,
+    "passed": 100,
+    "skipped": 1
+  },
+  "twist_trainer_tests": 61,
+  "dexweave_tests": 21,
+  "adapter_tests": 10,
+  "contact_cpu_tests": {
+    "run": 7,
+    "passed": 6,
+    "skipped": 1
+  },
+  "native_command_bank_tests": 5,
+  "sonic_native_python_max_qpos_error": 4.3143267541845276e-07,
+  "documentation_lint": "passed",
+  "documentation_links": "passed",
+  "documentation_tests": 16,
+  "upstream_isaacgym_contract": "not rerun on macOS; requires pinned Linux Isaac Gym environment",
+  "headset_installation": false,
+  "headset_acceptance": false
+}

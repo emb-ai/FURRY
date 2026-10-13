@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-12",
+  "long_training_launched": false,
+  "new_actor_input_gpu_smoke": false,
+  "ssh_latest": "three banner-exchange timeouts after previous session closed",
+  "cpu_unit_tests_passed": 12,
+  "native_history_parity": {
+    "ticks": 14,
+    "resets": 2,
+    "maximum_absolute_error": 0.0,
+    "passed": true,
+    "scope": "actual native history/tail assembly only; no Isaac dynamics/proprio parity claim"
+  },
+  "recorder_smoke": {
+    "steps": 20,
+    "state_and_observation_max_error": 0.0,
+    "contact_rows": 70,
+    "consumed_actor_input_matches": true,
+    "passed": true,
+    "scope": "one deterministic CPU smoke; not policy quality"
+  },
+  "banks": [
+    {
+      "camera_tracking": false,
+      "loaded_train_motions": 1090,
+      "native_command_clips": 66,
+      "native_events": 101870,
+      "sha256": "e0aff0c743e3c5be21432d58113b95d9a7f922bfa0d412000508fb2f05d0eae7",
+      "finite_and_author_fallback_checks": true
+    },
+    {
+      "camera_tracking": true,
+      "loaded_train_motions": 1090,
+      "native_command_clips": 66,
+      "native_events": 101870,
+      "sha256": "bec631a214dac509e70b220d5b617dd66395a84d7a63f80a4fcd97329c81c74f",
+      "finite_and_author_fallback_checks": true
+    }
+  ],
+  "pending_user_choice": "full-foot plus new training capture, or historical 14-marker Virtual Legs",
+  "independent_human_leg_ground_truth": false,
+  "deployment": false,
+  "next_steps": [
+    "Resolve target runtime mode and missing training data",
+    "Complete input/reward contract including catch-up as applicable",
+    "Run actual GPU smoke before approving any long training"
+  ]
+}

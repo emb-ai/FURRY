@@ -1,0 +1,226 @@
+{
+  "control": {
+    "status": {
+      "phase": "complete",
+      "utc": "2026-10-12T16:10:49Z",
+      "result": "/home/jovyan/vlad/FURRY/twist2-distributed-20261010/reference-adapter-r8-20261012/continue-control-s31/result.json"
+    },
+    "exit": {
+      "returncode": 0,
+      "finished_utc": "2026-10-12T16:10:49Z"
+    },
+    "final": {
+      "completed": true,
+      "iterations": 2300,
+      "paired_initial_state": true,
+      "results": {
+        "recorded": {
+          "final_distance_m": {
+            "identity_mean": 0.8464507947986325,
+            "candidate_mean": 0.5835721509841582,
+            "mean_delta": -0.26287864381447434
+          },
+          "final_yaw_error_rad": {
+            "identity_mean": 0.31874126847833395,
+            "candidate_mean": 0.21796440651329854,
+            "mean_delta": -0.1007768619650354
+          },
+          "durations_s": {
+            "identity_mean": 8.013366341590881,
+            "candidate_mean": 8.013366341590881,
+            "mean_delta": 0.0
+          },
+          "failures": {
+            "identity": 0,
+            "candidate": 0,
+            "new_failed_trials": 0
+          },
+          "low_moving_cost": {
+            "identity": 0.037681013345718384,
+            "candidate": 0.04734344780445099
+          },
+          "contact_slip_cost": {
+            "identity": 0.28715646266937256,
+            "candidate": 0.35270968079566956
+          }
+        },
+        "held_position": {
+          "final_distance_m": {
+            "identity_mean": 0.5186789610112706,
+            "candidate_mean": 0.23153323389124125,
+            "mean_delta": -0.28714572712002945
+          },
+          "final_yaw_error_rad": {
+            "identity_mean": 0.07137129665352404,
+            "candidate_mean": 0.04180561115814877,
+            "mean_delta": -0.029565685495375266
+          },
+          "durations_s": {
+            "identity_mean": 6.346661527951558,
+            "candidate_mean": 6.346661527951558,
+            "mean_delta": 0.0
+          },
+          "failures": {
+            "identity": 0,
+            "candidate": 0,
+            "new_failed_trials": 0
+          },
+          "low_moving_cost": {
+            "identity": 0.02031034417450428,
+            "candidate": 0.022534340620040894
+          },
+          "contact_slip_cost": {
+            "identity": 0.19766660034656525,
+            "candidate": 0.20769338309764862
+          }
+        },
+        "held_turn": {
+          "final_distance_m": {
+            "identity_mean": 0.3594540984680255,
+            "candidate_mean": 0.1841816862191384,
+            "mean_delta": -0.17527241224888712
+          },
+          "final_yaw_error_rad": {
+            "identity_mean": 0.07455141151634355,
+            "candidate_mean": 0.03247272809191296,
+            "mean_delta": -0.04207868342443059
+          },
+          "durations_s": {
+            "identity_mean": 6.346661527951558,
+            "candidate_mean": 6.346661527951558,
+            "mean_delta": 0.0
+          },
+          "failures": {
+            "identity": 0,
+            "candidate": 0,
+            "new_failed_trials": 0
+          },
+          "low_moving_cost": {
+            "identity": 0.018644843250513077,
+            "candidate": 0.014849535189568996
+          },
+          "contact_slip_cost": {
+            "identity": 0.19726504385471344,
+            "candidate": 0.1617421954870224
+          }
+        }
+      },
+      "checkpoint": "/home/jovyan/vlad/FURRY/twist2-distributed-20261010/reference-adapter-r8-20261012/continue-control-s31/training_block_04/adapter_002300.pt",
+      "headset_deployment": false,
+      "accepted_for_deployment": false,
+      "caveat": "One training seed. Same previously inspected Quest validation session. This experiment is not a reproduction of ReActor."
+    }
+  },
+  "x5": {
+    "status": {
+      "phase": "complete",
+      "utc": "2026-10-12T16:17:18Z",
+      "result": "/home/jovyan/vlad/FURRY/twist2-distributed-20261010/reference-adapter-r9-20261012/continue-clearance5-s31/result.json"
+    },
+    "exit": {
+      "returncode": 0,
+      "finished_utc": "2026-10-12T16:17:18Z"
+    },
+    "final": {
+      "completed": true,
+      "iterations": 2300,
+      "paired_initial_state": true,
+      "results": {
+        "recorded": {
+          "final_distance_m": {
+            "identity_mean": 0.8464507947986325,
+            "candidate_mean": 0.7756667483287553,
+            "mean_delta": -0.07078404646987717
+          },
+          "final_yaw_error_rad": {
+            "identity_mean": 0.31874126847833395,
+            "candidate_mean": 0.20952466079810014,
+            "mean_delta": -0.10921660768023382
+          },
+          "durations_s": {
+            "identity_mean": 8.013366341590881,
+            "candidate_mean": 8.013366341590881,
+            "mean_delta": 0.0
+          },
+          "failures": {
+            "identity": 0,
+            "candidate": 0,
+            "new_failed_trials": 0
+          },
+          "low_moving_cost": {
+            "identity": 0.037681013345718384,
+            "candidate": 0.0476701445877552
+          },
+          "contact_slip_cost": {
+            "identity": 0.28715646266937256,
+            "candidate": 0.3574379086494446
+          }
+        },
+        "held_position": {
+          "final_distance_m": {
+            "identity_mean": 0.5186789610112706,
+            "candidate_mean": 0.33703863855528954,
+            "mean_delta": -0.18164032245598113
+          },
+          "final_yaw_error_rad": {
+            "identity_mean": 0.07137129665352404,
+            "candidate_mean": 0.05507811539185544,
+            "mean_delta": -0.016293181261668604
+          },
+          "durations_s": {
+            "identity_mean": 6.346661527951558,
+            "candidate_mean": 6.313328221440315,
+            "mean_delta": -0.03333330651124319
+          },
+          "failures": {
+            "identity": 0,
+            "candidate": 1,
+            "new_failed_trials": 1
+          },
+          "low_moving_cost": {
+            "identity": 0.02031034417450428,
+            "candidate": 0.024778924882411957
+          },
+          "contact_slip_cost": {
+            "identity": 0.19766660034656525,
+            "candidate": 0.22366966307163239
+          }
+        },
+        "held_turn": {
+          "final_distance_m": {
+            "identity_mean": 0.3594540984680255,
+            "candidate_mean": 0.29011713319535676,
+            "mean_delta": -0.06933696527266875
+          },
+          "final_yaw_error_rad": {
+            "identity_mean": 0.07455141151634355,
+            "candidate_mean": 0.038234300411810786,
+            "mean_delta": -0.036317111104532764
+          },
+          "durations_s": {
+            "identity_mean": 6.346661527951558,
+            "candidate_mean": 6.346661527951558,
+            "mean_delta": 0.0
+          },
+          "failures": {
+            "identity": 0,
+            "candidate": 0,
+            "new_failed_trials": 0
+          },
+          "low_moving_cost": {
+            "identity": 0.018644843250513077,
+            "candidate": 0.01728522963821888
+          },
+          "contact_slip_cost": {
+            "identity": 0.19726504385471344,
+            "candidate": 0.18954122066497803
+          }
+        }
+      },
+      "checkpoint": "/home/jovyan/vlad/FURRY/twist2-distributed-20261010/reference-adapter-r9-20261012/continue-clearance5-s31/training_block_04/adapter_002300.pt",
+      "headset_deployment": false,
+      "accepted_for_deployment": false,
+      "caveat": "One training seed. Same previously inspected Quest validation session. This experiment is not a reproduction of ReActor."
+    }
+  }
+}

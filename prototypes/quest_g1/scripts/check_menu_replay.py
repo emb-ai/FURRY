@@ -63,7 +63,10 @@ def main():
                 shutil.copy2(ROOT/'android/assets'/policy['file'], episode_root/policy['file'])
                 if policy.get('secondary_file'):
                     shutil.copy2(ROOT/'android/assets'/policy['secondary_file'], episode_root/policy['secondary_file'])
-                    shutil.copy2(ROOT/'android/assets/body_motor_profile.txt', episode_root/'body_motor_profile.txt')
+                    profile_name='sonic_motor_profile.txt' if policy.get('backend')=='sonic_vr3_v1' else 'body_motor_profile.txt'
+                    shutil.copy2(ROOT/'android/assets'/profile_name, episode_root/profile_name)
+                if policy.get('planner_file'):
+                    shutil.copy2(ROOT/'android/assets'/policy['planner_file'], episode_root/policy['planner_file'])
             fixture = json.loads((ROOT/'android/assets'/metadata).read_text())
             if override_hz is not None:
                 if override_hz:
@@ -90,7 +93,7 @@ def main():
                         raise AssertionError('Wrong decoupled backend identity')
                     if not (Path(episode)/'policy-secondary.onnx').is_file():
                         raise AssertionError('Missing archived walking policy')
-                    profile_digest = hashlib.sha256((Path(episode)/'body_motor_profile.txt').read_bytes()).hexdigest()
+                    profile_digest = hashlib.sha256((Path(episode)/profile_name).read_bytes()).hexdigest()
                     if profile_digest != manifest['body_motor_profile_sha256'] or manifest['body_motor_profile'] != fixture['body_motor_profile']:
                         raise AssertionError('Missing or different archived body motor profile')
             # lab metadata has no scene field: this also checks legacy fallback.
