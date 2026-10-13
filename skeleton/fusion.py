@@ -108,6 +108,59 @@ def fuse_joints(depth_m, pts2d, intr, band=0.5, sources=None):
     return raw
 
 
+# Кости ноги: (родитель, ребёнок) по цепочке от таза.
+LEG_BONES = ((11, 13), (13, 15), (12, 14), (14, 16))
+
+
+class BoneLengths:
+    """Длины бедра/голени человека: медиана по последним кадрам сырого фьюжна.
+
+    Шум глубины удлиняет кость лишь на σ²/2L (~3 мм при σ 5 см), медиана
+    режет кадры, где окно попало на фон. До min_samples длина неизвестна.
+    """
+
+    def __init__(self, window=300, min_samples=30):
+        self.window, self.min_samples = window, min_samples
+        self.samples = {bone: [] for bone in LEG_BONES}
+
+    def update(self, raw):
+        for a, b in LEG_BONES:
+            if a in raw and b in raw:
+                s = self.samples[(a, b)]
+                s.append(float(np.linalg.norm(raw[b] - raw[a])))
+                del s[:-self.window]
+
+    def get(self, bone):
+        s = self.samples[bone]
+        return float(np.median(s)) if len(s) >= self.min_samples else None
+
+
+def constrain_legs(raw, pts2d, intr, lengths, sigma_d=0.10, sigma_l=0.01):
+    """Колено/лодыжка на 2D-луче YOLO, глубина — компромисс измеренной
+    глубины (σ_d) и длины кости от родителя (σ_l).
+
+    Глубина ноги шумит 3-5 см на кадр, а 2D-луч точен до миллиметров:
+    длина кости превращает 2D-укорочение в |Δz|, глубина решает знак и
+    вытягивает решение там, где укорочение вырождено (нога вдоль луча
+    камеры перпендикулярна). Офлайн 13.10 (3 м): дрожь направления бедра/
+    голени 8-12° -> 2-4°, наклон на подъёме колена сохраняется; RTMW3D
+    сжимал его в 3-4 раза. Родитель голени — уже поправленное колено.
+    """
+    out = dict(raw)
+    for a, b in LEG_BONES:
+        L = lengths.get((a, b))
+        if L is None or a not in out or b not in out or b not in pts2d:
+            continue
+        parent, z_meas = out[a], float(out[b][2])
+        # луч с z = 1: точка на глубине z равна z * ray
+        ray = np.array(rs.rs2_deproject_pixel_to_point(intr, [float(pts2d[b][0]), float(pts2d[b][1])], 1.0))
+        z = np.arange(parent[2] - 0.6, parent[2] + 0.6, 0.005)
+        bone = np.linalg.norm(z[:, None] * ray - parent, axis=1)
+        cost = ((z - z_meas) / sigma_d) ** 2 + ((bone - L) / sigma_l) ** 2
+        out[b] = (z[np.argmin(cost)] * ray).astype(np.float32)
+    return out
+
+
 class OneEuro:
     """Векторный One Euro filter: x — np.array(3,), t — секунды (monotonic).
 

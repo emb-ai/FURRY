@@ -14,10 +14,14 @@ launcher and stop any previous camera process first.
 Stand still for the first ten seconds, then step, turn, squat and raise each leg.
 Keep the whole body in the image. Avoid another person crossing the operator.
 
-The bounded background writer saves at most ten processed frames per second:
-unannotated BGR, unfiltered depth aligned to color (metres), intrinsics,
+The bounded background writer saves at most `--record-rgbd-hz` (default 30,
+every live frame) processed frames per second: unannotated BGR as JPEG q95,
+unfiltered depth aligned to color as uint16 millimetres, intrinsics,
 distortion, source epoch time and the same sequence number as the outgoing
-pose. It is not a complete 30 Hz sensor recording. Queue drops and write errors
+pose. Read frames with `rgbd_recording.load_frame` (it also reads the older
+raw float format). With `--ws` nothing is recorded until the headset
+is connected (uplink), and `--record-rgbd-delay` counts from that moment;
+without `--ws` it counts from the first frame. It is not a complete 30 Hz sensor recording. Queue drops and write errors
 are reported in `manifest.json`. Disk/compression load may affect live timing;
 use offline replay for comparing inference time. Empty capture is not evidence
 of a successful camera recording even if shutdown was clean.

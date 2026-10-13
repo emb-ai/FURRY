@@ -23,6 +23,7 @@ c — зафиксировать камеру по AprilTag и позе конт
   torch-cpu, 5.3 против 6.2 Гц; auto — CUDA, затем OV-экспорт) и
   --imgsz — для A/B скорости на конкретной машине; infer и age видны в [тайминг].
   --euro-mincutoff/--euro-beta — One-Euro (лаг в покое 1/(2π·mincutoff)).
+  --bone-sigma-depth — колени/лодыжки: глубина против длины кости (fusion.constrain_legs).
 Превью — в полразмера панелей (экономия ~15 мс/кадр на imshow).
 """
 import argparse
@@ -36,7 +37,7 @@ import pyrealsense2 as rs
 from ultralytics import YOLO
 
 from camera_open import latest_frames
-from fusion import OneEuro, fuse_joints
+from fusion import BoneLengths, OneEuro, constrain_legs, fuse_joints
 from marker_frame import MarkerSession, to_stage_relative
 
 W2D = "YOLO pose | 3D (smart fusion)"
@@ -161,6 +162,8 @@ def main():
     parser.add_argument("--imgsz", type=int, default=640, help="вход YOLO, px (кратно 32)")
     parser.add_argument("--euro-mincutoff", type=float, default=3.0, help="One-Euro, Гц (лаг в покое 1/(2π·f))")
     parser.add_argument("--euro-beta", type=float, default=1.5, help="One-Euro, Гц на м/с скорости")
+    parser.add_argument("--bone-sigma-depth", type=float, default=0.10,
+                        help="ноги: допуск глубины колена/лодыжки, м, против длины кости (0 = выкл)")
     parser.add_argument("--ws", action="store_true")
     parser.add_argument("--host", default="0.0.0.0")
     parser.add_argument("--port", type=int, default=8765)
@@ -169,6 +172,9 @@ def main():
     parser.add_argument("--seconds", type=float, default=0)
     parser.add_argument("--record-rgbd", help="New directory for unfiltered aligned RGB-D frames")
     parser.add_argument("--record-rgbd-seconds", type=float, default=60)
+    parser.add_argument("--record-rgbd-delay", type=float, default=0,
+                        help="с до старта записи: от подключения шлема при --ws, иначе от первого кадра")
+    parser.add_argument("--record-rgbd-hz", type=float, default=30, help="не чаще; 30 = каждый кадр живого потока")
     parser.add_argument("--marker-m", type=float, default=0.16,
                         help="сторона чёрного квадрата AprilTag, метры")
     parser.add_argument("--marker-id", type=int, default=0)
@@ -231,6 +237,7 @@ def main():
     # превью в полразмера: hstack двух 720p-панелей + imshow стоили ~20 мс/кадр
     view = View3D(w=640, h=360, scale_px=140)
     filters = {}
+    bone_lengths = BoneLengths()
     t0, frames = time.monotonic(), 0
     fps = 0.0
     pipeline = None
@@ -247,7 +254,7 @@ def main():
     try:
         if args.record_rgbd:
             from rgbd_recording import RGBDRecorder
-            rgbd_recorder = RGBDRecorder(args.record_rgbd, args.record_rgbd_seconds)
+            rgbd_recorder = RGBDRecorder(args.record_rgbd, args.record_rgbd_seconds, args.record_rgbd_hz, args.record_rgbd_delay)
         if args.ws:
             from skeleton_server import SkeletonServer, packet
             backend = "torch-" + device if device else ("coreml" if sys.platform == "darwin" else "openvino")
@@ -296,7 +303,9 @@ def main():
             color_f, depth_f = fs.get_color_frame(), fs.get_depth_frame()
             if not color_f or not depth_f:
                 continue
-            if rgbd_recorder:
+            # при --ws отсчёт задержки идёт от подключения шлема, а не от запуска:
+            # 10-13 запись 120 с закончилась раньше, чем шлем подключился
+            if rgbd_recorder and (server is None or server.latest_uplink(1.0) is not None):
                 rgbd_recorder.submit(np.asanyarray(color_f.get_data()),
                     np.asanyarray(depth_f.get_data()).astype(np.float32) * depth_scale,
                     [color_intr.fx, color_intr.fy, color_intr.ppx, color_intr.ppy],
@@ -331,6 +340,9 @@ def main():
 
                 # 3D: фьюжн общий с analyze_bag.py (fusion.py)
                 raw = fuse_joints(depth_m, pts2d, color_intr, sources=sources)
+                bone_lengths.update(raw)
+                if args.bone_sigma_depth > 0:
+                    raw = constrain_legs(raw, pts2d, color_intr, bone_lengths, args.bone_sigma_depth)
                 t = tic("fuse", t)
 
                 # отрисовка 2D

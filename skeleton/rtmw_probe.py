@@ -84,12 +84,13 @@ def main():
     ap.add_argument('--provider',default='CPUExecutionProvider')
     ap.add_argument('--runs',type=int,default=10);ap.add_argument('--output',required=True)
     args=ap.parse_args()
-    loaded=np.load(args.input,allow_pickle=False)
     depth=intr=None
-    if isinstance(loaded,np.lib.npyio.NpzFile):
+    if args.input.endswith('.npz'):
+        from rgbd_recording import load_frame
+        loaded=load_frame(args.input)
         image=loaded['color'];depth=loaded['depth_m'];intr=loaded['intrinsics']
         if depth.shape!=image.shape[:2]:raise ValueError('Depth must be aligned to color')
-    else:image=loaded
+    else:image=np.load(args.input,allow_pickle=False)
     detector,pose=load_models(args.models,args.provider)
     times=[];people=[]
     for n in range(args.runs+2):

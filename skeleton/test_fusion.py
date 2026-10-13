@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 import pyrealsense2 as rs
 
-from fusion import OneEuro, fuse_joints, window_median
+from fusion import BoneLengths, OneEuro, constrain_legs, fuse_joints, window_median
 
 
 def intrinsics():
@@ -40,6 +40,31 @@ class DistalDepthTest(unittest.TestCase):
         depth[355:358, 615:625] = 2.40  # тонкий объект перед бедром
         out = fuse_joints(depth, {11: (620.0, 360.0), 12: (680.0, 360.0)}, intrinsics())
         self.assertAlmostEqual(float(out[11][2]), 2.70, places=2)
+
+
+class LegConstraintTest(unittest.TestCase):
+    def setUp(self):
+        self.intr = intrinsics()
+        self.hip = np.array([0.0, 0.0, 2.70], np.float32)
+        # колено поднято: на 0.25 м ближе к камере, длина бедра 0.40
+        self.knee = self.hip + np.array([0.0, np.sqrt(0.40 ** 2 - 0.25 ** 2), -0.25], np.float32)
+        self.lengths = BoneLengths(min_samples=1)
+        self.lengths.update({11: self.hip, 13: self.knee})
+
+    def pixel(self, p):
+        return tuple(rs.rs2_project_point_to_pixel(self.intr, p.tolist()))
+
+    def test_bone_length_corrects_noisy_knee_depth(self):
+        noisy = self.knee.copy()
+        noisy[2] += 0.06  # шум глубины колена; 2D точное
+        raw = {11: self.hip, 13: noisy}
+        out = constrain_legs(raw, {13: self.pixel(self.knee)}, self.intr, self.lengths)
+        self.assertLess(abs(float(out[13][2] - self.knee[2])), 0.01)
+
+    def test_unknown_length_leaves_raw(self):
+        raw = {11: self.hip, 13: self.knee + np.float32(0.05)}
+        out = constrain_legs(raw, {13: self.pixel(self.knee)}, self.intr, BoneLengths())
+        np.testing.assert_array_equal(out[13], raw[13])
 
 
 class OneEuroLagTest(unittest.TestCase):

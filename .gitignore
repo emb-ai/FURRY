@@ -228,3 +228,4 @@ node_modules/
 /wiki-preview/
 /prototypes/quest_g1/outputs/quest-wifi/
 .DS_Store
+.venv3d
