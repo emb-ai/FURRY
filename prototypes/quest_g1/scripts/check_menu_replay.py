@@ -31,6 +31,9 @@ def main():
     env['DYLD_LIBRARY_PATH' if sys.platform == 'darwin' else 'LD_LIBRARY_PATH'] = str(mj)+os.pathsep+str(ort)
     with tempfile.TemporaryDirectory(prefix='furry-menu-replay-') as directory:
         folder = Path(directory)
+        if sys.platform != "darwin":
+            (folder/"libonnxruntime.so.1").symlink_to(ortlib)
+            env["LD_LIBRARY_PATH"] = directory + os.pathsep + env["LD_LIBRARY_PATH"]
         common = [str(ROOT/'android/native'/name) for name in ('gmr.cpp', 'meta_retarget.cpp', 'simulation.cpp')]
         for name in ('replay_gmr', 'replay_gmr_dynamics', 'check_replay_menu'):
             source = ROOT/('tests/check_replay_menu.cpp' if name == 'check_replay_menu' else 'android/native/'+name+'.cpp')
