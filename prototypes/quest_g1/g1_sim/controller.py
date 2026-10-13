@@ -63,8 +63,9 @@ class Controller:
         self.step_index = 0
         self.inference_ms = []
         self.grip = 0.
+        self.right_grip = 0.
 
-    def step(self, data, command=None, grip=0.):
+    def step(self, data, command=None, grip=0., direct_arms=False, right_grip=None):
         command = standing_command() if command is None else np.asarray(command)
         if command.shape != (35,) or not np.isfinite(command).all():
             raise ValueError("Expected a finite 35-value TWIST2 command")
@@ -84,7 +85,16 @@ class Controller:
             self.last_action = action.copy()
             self.target = DEFAULT + .5*np.clip(action, -10, 10)
         data.ctrl[self.aids] = np.clip((self.target-q)*KP - v*KD, -KP, KP)
+        if direct_arms:
+            # Same physical arm servo as the controller-driven Rubik scene.
+            manipulation_kp=KP[15:].copy();manipulation_kd=KD[15:].copy()
+            manipulation_kp[[4,5,6,11,12,13]]=25;manipulation_kd[[4,5,6,11,12,13]]=.6
+            arm=(command[21:35]-q[15:])*manipulation_kp-v[15:]*manipulation_kd+data.qfrc_bias[self.vadr[15:]]
+            data.ctrl[self.aids[15:]]=np.clip(arm,-KP[15:],KP[15:])
         self.grip += np.clip(grip-self.grip, -.002, .002)
+        if right_grip is None:
+            right_grip=grip
+        self.right_grip += np.clip(right_grip-self.right_grip, -.002, .002)
         for aid in self.hand_ids:
             name = self.model.actuator(aid).name
             sign = 1 if name.startswith("left") else -1
@@ -95,7 +105,7 @@ class Controller:
             else:
                 target = -sign * (1.57 if "_0_" in name else 1.74)
             jid = self.model.actuator_trnid[aid, 0]
-            data.ctrl[aid] = np.clip(target*self.grip, *self.model.jnt_range[jid])
+            data.ctrl[aid] = np.clip(target*(self.grip if sign>0 else self.right_grip), *self.model.jnt_range[jid])
         mujoco.mj_step(self.model, data)
         self.step_index += 1
 

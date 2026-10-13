@@ -18,6 +18,9 @@ class MetaRetargeter {
     bool cameraTracking=false;
     bool neutralWrists=false;
     bool wristFrameV2=false;
+    bool controllerWrists=false;
+    std::array<std::array<double,3>,2> controllerRelativeOrigin{},controllerRobotOffset{};
+    std::array<std::array<double,4>,2> controllerRotationOffset{};
     double travelGain=1;
     std::array<std::array<double,4>,2> wristNeutralInverse{},wristRest{};
     bool twistGrounding=false,toeClamp=true;
@@ -47,6 +50,7 @@ public:
     void EnableNeutralWrists(bool value){neutralWrists=value;}
     // Correct rigid-frame calibration; retain the legacy adapter for replay.
     void EnableWristFrameV2(bool value){wristFrameV2=value;}
+    void EnableControllerWrists(bool value){controllerWrists=value;}
     // Offline ablation only; the device always clamps toe targets.
     void EnableToeClamp(bool value){toeClamp=value;}
     void EnableTwistGrounding(bool value){

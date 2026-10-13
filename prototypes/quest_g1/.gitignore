@@ -1,10 +1,10 @@
-.venv/
+.venv
 .uv-cache/
-vendor/
+vendor
 __pycache__/
 outputs/
 .DS_Store
-.tools/
+.tools
 android/build/
 android/assets/
 android/generated/

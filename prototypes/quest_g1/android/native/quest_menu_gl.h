@@ -337,7 +337,9 @@ inline int DrawMinimalStatus(const float* headVP, const std::string& assetsPath,
     const char* exportText = state.exportStatus == 1 ? "Архив копируется" :
         state.exportStatus == 2 ? "Архив сохранён в Download/G1Quest" :
         state.exportStatus == 3 ? "Ошибка экспорта. Исходники в очках" : "Menu: меню     B: пауза";
-    draw.Label({-.35f, bottom + .005f, .70f, .034f}, exportText,
+    draw.Label({-.35f, bottom + .005f, .70f, .034f},
+               !HumanCapture(state)&&state.scene==Scene::Tennis?state.tennisInfo:
+               !HumanCapture(state)&&state.scene==Scene::Rubik?state.rubikInfo:std::string(exportText),
                state.exportStatus == 3 ? glmenu::Warning : glmenu::Muted, .027f);
     const float local[16] = {1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,-1.3f,1};
     float matrix[16]; glmenu::Multiply(headVP, local, matrix);

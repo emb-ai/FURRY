@@ -43,8 +43,9 @@ class SceneAssetsTests(unittest.TestCase):
 
     def test_scene_objects_are_physically_separate(self):
         expected = {"stand": set(), "cup": {"table", "cup"},
-                    "push_t": {"t_box", "t_target"}}
-        all_props = {"table", "cup", "t_box", "t_target"}
+                    "push_t": {"t_box", "t_target"}, "tennis": {"tennis_table", "tennis_racket", "tennis_feeder", "tennis_ball"},
+                    "rubik": {"table", "rubik_core"}}
+        all_props = {"table", "cup", "t_box", "t_target", "tennis_table", "tennis_racket", "tennis_feeder", "tennis_ball", "rubik_core"}
         for name, model in self.models.items():
             with self.subTest(scene=name):
                 props = {model.body(i).name for i in range(model.nbody)} & all_props
@@ -53,15 +54,17 @@ class SceneAssetsTests(unittest.TestCase):
                 self.assertEqual(model.opt.timestep, .001)
                 self.assertEqual(model.opt.solver, mujoco.mjtSolver.mjSOL_NEWTON)
                 dynamic_prop = "cup" if name == "cup" else "t_box" if name == "push_t" else None
-                self.assertEqual((model.nq, model.nv), (57, 55) if dynamic_prop else (50, 49))
+                self.assertEqual((model.nq, model.nv), (119, 109) if name == "rubik" else (64, 61) if name == "tennis" else (57, 55) if dynamic_prop else (50, 49))
                 if dynamic_prop:
                     body = model.body(dynamic_prop)
                     self.assertGreater(body.mass[0], 0)
                     joint = model.joint(dynamic_prop + "_free")
                     self.assertEqual(joint.type[0], mujoco.mjtJoint.mjJNT_FREE)
                     geoms = np.flatnonzero(model.geom_bodyid == body.id)
-                    self.assertTrue(np.all(model.geom_contype[geoms] == PROP))
-                    self.assertTrue(np.all(model.geom_conaffinity[geoms] > 0))
+                    physical = geoms[(model.geom_contype[geoms] != 0) | (model.geom_conaffinity[geoms] != 0)]
+                    self.assertGreater(len(physical), 0)
+                    self.assertTrue(np.all(model.geom_contype[physical] == PROP))
+                    self.assertTrue(np.all(model.geom_conaffinity[physical] > 0))
                 if name == "push_t":
                     goal_geoms = np.flatnonzero(model.geom_bodyid == model.body("t_target").id)
                     self.assertTrue(np.all(model.geom_contype[goal_geoms] == 0))
@@ -165,7 +168,7 @@ class SceneAssetsTests(unittest.TestCase):
         self.assertEqual(json.loads((self.assets / "recording_metadata.json").read_text()), self.shared)
         self.assertEqual(json.loads((self.assets / "scene_manifest.json").read_text()), self.manifest)
         self.assertEqual(self.manifest["default_scene"], "stand")
-        self.assertEqual(set(self.manifest["scenes"]), {"stand", "cup", "push_t"})
+        self.assertEqual(set(self.manifest["scenes"]), {"stand", "cup", "push_t", "tennis", "rubik"})
 
 
 if __name__ == "__main__":

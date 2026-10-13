@@ -31,7 +31,7 @@ Simulation::Simulation(const std::string& assets,int physicsWorkers,const std::s
     if(policyHzOverride!=0 && policyHzOverride!=50 && policyHzOverride!=100)
         throw std::runtime_error("Unsupported explicit policy frequency");
     if(physicsWorkers<0 || physicsWorkers>4)throw std::runtime_error("Invalid MuJoCo worker count");
-    if(sceneName!="lab" && sceneName!="stand" && sceneName!="cup" && sceneName!="push_t")
+    if(sceneName!="lab" && sceneName!="stand" && sceneName!="cup" && sceneName!="push_t" && sceneName!="tennis" && sceneName!="rubik")
         throw std::runtime_error("Unknown Quest scene: "+sceneName);
     options.SetIntraOpNumThreads(1);
     options.SetInterOpNumThreads(1);
@@ -66,6 +66,8 @@ Simulation::Simulation(const std::string& assets,int physicsWorkers,const std::s
         bodymotors::Apply(model,decoupled_body_motors);
         mj_setConst(model,data);
     }
+    tennis.Initialize(model);
+    rubik.Initialize(model);
     Reset();
 }
 Simulation::~Simulation(){ sonic_controller.reset(); mj_deleteData(reference_data); mj_deleteData(data); mj_deleteModel(model); }
@@ -159,6 +161,8 @@ void Simulation::Reset() {
     for(int i=0;i<14;i++)decoupled_command.arms[i]=data->qpos[qadr[15+i]];
     has_reference=false;has_whole_reference=false;whole_reference.fill(0);
     mj_forward(model,data);
+    tennis.Reset(model,data);
+    rubik.Reset(model,data);
 }
 void Simulation::SetArmReference(const std::array<float,29>& joints){
     if(!has_reference)for(int k=0;k<14;k++)arm_reference[k]=data->qpos[qadr[15+k]];
@@ -230,9 +234,18 @@ void Simulation::Step(bool demo,double grip,double right_grip) {
         }else if(sonic_controller)data->ctrl[aids[i]]=(target[i]-data->qpos[qadr[i]])*sonic::kp[i]-data->qvel[vadr[i]]*sonic::kd[i];
         else data->ctrl[aids[i]]=std::clamp((target[i]-data->qpos[qadr[i]])*kp[i]-data->qvel[vadr[i]]*kd[i],-kp[i],kp[i]);
     }
+    if(backend==questpolicy::Twist2&&scene_name=="rubik"&&has_whole_reference)for(int i=15;i<29;i++){
+        // Controller-driven manipulation uses direct joint PD for the arms;
+        // TWIST2 still controls legs/waist. The object remains free/contact-only.
+        bool wrist=(i>=19&&i<=21)||i>=26;
+        double manipulationKp=wrist?25:kp[i],manipulationKd=wrist?.6:kd[i];
+        double torque=(whole_reference[6+i]-data->qpos[qadr[i]])*manipulationKp-data->qvel[vadr[i]]*manipulationKd+data->qfrc_bias[vadr[i]];
+        data->ctrl[aids[i]]=std::clamp(torque,-kp[i],kp[i]);
+    }
     if(right_grip<0)right_grip=grip;
     hand_grip[0]+=std::clamp(grip-hand_grip[0],-.002,.002);
     hand_grip[1]+=std::clamp(right_grip-hand_grip[1],-.002,.002);
+    tennis.UpdateGrip(model,data,grip,right_grip);
     for(int aid:hands) {
         std::string name=mj_id2name(model,mjOBJ_ACTUATOR,aid);
         double sign=name.rfind("left",0)==0 ? 1 : -1;
@@ -242,9 +255,15 @@ void Simulation::Step(bool demo,double grip,double right_grip) {
             else target=-sign*(name.find("_0_")!=std::string::npos ? 1.57 : 1.74);
         }
         int j=model->actuator_trnid[aid*2];
-        data->ctrl[aid]=std::clamp(target*hand_grip[sign>0?0:1],model->jnt_range[2*j],model->jnt_range[2*j+1]);
+        double control=tennis.HandControl(data,name,target*hand_grip[sign>0?0:1]);
+        data->ctrl[aid]=std::clamp(control,model->jnt_range[2*j],model->jnt_range[2*j+1]);
     }
-    mj_step(model,data); steps++;
+    tennis.Begin(data);
+    rubik.Begin(model,data,grip,right_grip);
+    mj_step(model,data);
+    tennis.Finish(model,data);
+    rubik.Finish(model,data);
+    steps++;
     if(!std::isfinite(data->qpos[2]) || data->qpos[2]<.35) throw std::runtime_error("G1 fell: reset required");
 }
 

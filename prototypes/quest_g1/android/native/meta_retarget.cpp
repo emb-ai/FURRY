@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <limits>
+#include <memory>
 namespace {
 double Distance(const TrackedPose&a,const TrackedPose&b){double d[3];mju_sub3(d,a.position.data(),b.position.data());return mju_norm3(d);}
 void Normalize(double* v){if(mju_normalize3(v)<1e-6)throw std::runtime_error("Degenerate body skeleton");}
@@ -83,6 +84,23 @@ void MetaRetargeter::Calibrate(const mjModel* model,const mjData* data,const Tra
         if(source<0)throw std::runtime_error("GMR/physics joint mapping mismatch");initial[gm->jnt_qposadr[j]]=data->qpos[model->jnt_qposadr[source]];
     }
     gmr.Reset(initial.data());translationOrigin=input.body.joints[0].position;rootOrigin={data->qpos[0],data->qpos[1],data->qpos[2]};
+    // mj_step leaves body transforms from before its final integration.
+    // Anchor controllers to FK of the saved/current qpos, also in replay.
+    std::unique_ptr<mjData,decltype(&mj_deleteData)> controllerData(nullptr,mj_deleteData);
+    if(controllerWrists){
+        controllerData.reset(mj_makeData(model));
+        std::copy_n(data->qpos,model->nq,controllerData->qpos);
+        mj_kinematics(model,controllerData.get());
+    }
+    if(controllerWrists)for(int h=0;h<2;h++){
+        if(!input.hand_active[h]||(input.location_flags[h+1]&3)!=3)throw std::runtime_error("Both controllers required for hand calibration");
+        int body=mj_name2id(model,mjOBJ_BODY,h==0?"left_wrist_yaw_link":"right_wrist_yaw_link");
+        mju_sub3(controllerRelativeOrigin[h].data(),input.hands[h].position.data(),input.body.joints[0].position.data());
+        mju_sub3(controllerRobotOffset[h].data(),controllerData->xpos+3*body,data->qpos);
+        double aligned[4],inverse[4],robotQuat[4];mju_mulQuat(aligned,basisQuat,input.hands[h].quaternion.data());
+        mju_negQuat(inverse,aligned);mju_mat2Quat(robotQuat,controllerData->xmat+9*body);
+        mju_mulQuat(controllerRotationOffset[h].data(),inverse,robotQuat);
+    }
     cameraOrigin=gmr.CameraPose();cameraHeadOrigin=input.head;
     double eyeHeight=input.head.position[1];
     if(!std::isfinite(eyeHeight) || eyeHeight<.7 || eyeHeight>2.4)
@@ -99,7 +117,8 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& source){
     if(!calibrated || !input.body.valid)throw std::runtime_error("No calibrated full body sample");
     if(!Compatible(input)){calibrated=false;throw std::runtime_error("Body proportions changed: press A to recalibrate");}
     skeletonVersion=input.body.skeleton_version;
-    if(lastTime && input.body.time_ns<=lastTime)return mimic;
+    const int64_t referenceTime=controllerWrists&&input.xr_time_ns>0?input.xr_time_ns:input.body.time_ns;
+    if(lastTime && referenceTime<=lastTime)return mimic;
     // Clearance must not contaminate the next source solve or the velocity
     // finite difference. Restore the previous unmodified source warm start.
     if(swingClearance>0 && baselinePoseStored){
@@ -126,7 +145,16 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& source){
         for(int a=0;a<3;a++)targets[i].position[a]=root[a]+scales[i]*mapped[a]+offset[a];
     }
     std::array<std::array<double,3>,2> wristAngles{};
-    if(neutralWrists)for(int h=0;h<2;h++){
+    if(controllerWrists)for(int h=0;h<2;h++){
+        if(!input.hand_active[h]||(input.location_flags[h+1]&3)!=3)throw std::runtime_error("Controller tracking lost");
+        double relative[3],delta[3],mapped[3],aligned[4];
+        mju_sub3(relative,input.hands[h].position.data(),input.body.joints[0].position.data());
+        mju_sub3(delta,relative,controllerRelativeOrigin[h].data());mju_mulMatVec(mapped,basis,delta,3,3);
+        for(int k=0;k<3;k++)targets[12+h].position[k]=root[k]+controllerRobotOffset[h][k]+scales[12+h]*mapped[k];
+        mju_mulQuat(aligned,basisQuat,input.hands[h].quaternion.data());
+        mju_mulQuat(targets[12+h].quaternion.data(),aligned,controllerRotationOffset[h].data());
+    }
+    if(neutralWrists&&!controllerWrists)for(int h=0;h<2;h++){
         double inverse[4],relative[4],delta[4],corrected[4];
         mju_negQuat(inverse,targets[10+h].quaternion.data());mju_mulQuat(relative,inverse,targets[12+h].quaternion.data());
         if(wristFrameV2){
@@ -178,7 +206,7 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& source){
         gmr.AlignTargetsToCameraXY(camera);gmr.SetCameraTarget(camera);
     }else gmr.ClearCameraTarget();
     gmr.Solve();error=gmr.error;
-    if(neutralWrists&&!wristFrameV2){
+    if(neutralWrists&&!wristFrameV2&&!controllerWrists){
         for(int h=0;h<2;h++)for(int k=0;k<3;k++){
             const char* part[]={"wrist_roll_joint","wrist_pitch_joint","wrist_yaw_joint"};
             std::string name=std::string(h?"right_":"left_")+part[k];int j=mj_name2id(gmr.model(),mjOBJ_JOINT,name.c_str());
@@ -193,12 +221,12 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& source){
         if(swing.lastLift[0]>0 || swing.lastLift[1]>0){gmr.SetTargets(raised);gmr.Solve();error=gmr.error;}
     }
     const double* q=gmr.data()->qpos;double delta[35]={},worldVel[3]={},localVel[3]={},R[9];mju_quat2Mat(R,q+3);
-    double dt=lastTime?(input.body.time_ns-lastTime)*1e-9:0;
+    double dt=lastTime?(referenceTime-lastTime)*1e-9:0;
     if(dt>0 && dt<=.2){mj_differentiatePos(gmr.model(),delta,dt,lastQ.data(),sourceQ.data());std::copy_n(delta,3,worldVel);mju_quat2Mat(R,sourceQ.data()+3);mju_mulMatTVec(localVel,R,worldVel,3,3);}
     mimic[0]=localVel[0];mimic[1]=localVel[1];mimic[2]=q[2];
     double w=q[3],x=q[4],y=q[5],z=q[6];mimic[3]=std::atan2(2*(w*x+y*z),1-2*(x*x+y*y));mimic[4]=std::asin(std::clamp(2*(w*y-z*x),-1.,1.));mimic[5]=delta[5];
     for(int i=0;i<29;i++)mimic[6+i]=q[7+i];
-    lastQ=sourceQ;baselinePoseStored=true;lastTime=input.body.time_ns;return mimic;
+    lastQ=sourceQ;baselinePoseStored=true;lastTime=referenceTime;return mimic;
 }
 
 bool MetaRetargeter::Compatible(const TrackingFrame& f)const{

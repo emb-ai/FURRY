@@ -55,6 +55,11 @@ jobs:
           if not result.wasSuccessful() or result.skipped or not result.testsRun:
               raise SystemExit('Pinned OpenXR menu checks must execute and pass without skips')
           PY
+      - name: Prepare pinned native headers and complete scene assets
+        run: |
+          python scripts/fetch_android_sources.py
+          bash scripts/fetch_camera_transport.sh
+          python scripts/prepare_android.py
       - run: python -m unittest discover -s tests -v
       - name: Check session-menu controls, recording locks and ray selection
         run: |
@@ -93,10 +98,7 @@ jobs:
         run: python -m pip install -r android/requirements-gmr-test.txt
       - name: Fetch pinned GMR source
         run: |
-          git init vendor/GMR
-          git -C vendor/GMR remote add origin https://github.com/YanjieZe/GMR.git
-          git -C vendor/GMR fetch --depth 1 origin bb1bbe40774794fceb2a7c579a3464a28e68c844
-          git -C vendor/GMR checkout --detach FETCH_HEAD
+          test "$(git -C vendor/GMR rev-parse HEAD)" = bb1bbe40774794fceb2a7c579a3464a28e68c844
       - name: Compare native retargeter with upstream GMR
         run: |
           python scripts/export_gmr.py

@@ -14,7 +14,7 @@ class PolicyAssetsTests(unittest.TestCase):
     def test_default_catalog_contains_published_candidates(self):
         with tempfile.TemporaryDirectory() as directory, patch.dict('os.environ', {}, clear=True):
             root = Path(directory)
-            for scene in ('lab', 'stand', 'cup', 'push_t'):
+            for scene in ('lab', 'stand', 'cup', 'push_t', 'tennis', 'rubik'):
                 name = 'recording_metadata.json' if scene == 'lab' else f'recording_metadata-{scene}.json'
                 (root / name).write_text(json.dumps({'sha256': {}, 'scene': scene}))
             catalog = export_policies(root, UPSTREAM)
@@ -104,7 +104,7 @@ class PolicyAssetsTests(unittest.TestCase):
     def test_candidate_metadata_and_stale_asset_cleanup(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            for scene in ('lab', 'stand', 'cup', 'push_t'):
+            for scene in ('lab', 'stand', 'cup', 'push_t', 'tennis', 'rubik'):
                 name = 'recording_metadata.json' if scene == 'lab' else f'recording_metadata-{scene}.json'
                 (root / name).write_text(json.dumps({'sha256': {'policy.onnx': 'baseline', 'scene.xml': 'geometry'},
                                                     'scene': scene, 'nq': 50}))
@@ -115,7 +115,7 @@ class PolicyAssetsTests(unittest.TestCase):
                                                title='Candidate', note='Experimental')]))
             catalog = export_policies(root, UPSTREAM, config)
             self.assertEqual([row['id'] for row in catalog], ['twist2-20k', 'twist2-25k', 'test-candidate'])
-            for scene in ('lab', 'stand', 'cup', 'push_t'):
+            for scene in ('lab', 'stand', 'cup', 'push_t', 'tennis', 'rubik'):
                 metadata = json.loads((root / f'recording_metadata-{scene}-policy-test-candidate.json').read_text())
                 self.assertEqual(metadata['policy_sha256'], digest)
                 self.assertEqual(metadata['sha256']['policy-test-candidate.onnx'], digest)

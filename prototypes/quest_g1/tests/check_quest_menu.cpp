@@ -77,7 +77,7 @@ int main() {
     state.mode = Mode::Trajectories; state.recording = true;
     layout = BuildLayout(state);
     for (Action a : {Action::ModeSimulation, Action::ModeTrajectories, Action::CaptureRobot,
-                     Action::CaptureHuman, Action::SceneEmpty, Action::SceneCup, Action::ScenePushT})
+                     Action::CaptureHuman, Action::SceneEmpty, Action::SceneCup, Action::ScenePushT, Action::SceneTennis})
         Check(CentreHit(layout, a) == Action::None, "Recording configuration is editable");
     Check(CentreHit(layout, Action::Calibrate) == Action::Calibrate, "Recording calibration is locked");
     Check(CentreHit(layout, Action::Save) == Action::Save, "Paused recording cannot be saved");
@@ -88,7 +88,7 @@ int main() {
           CentreHit(layout, Action::PlanTest) == Action::None, "Recording protocol is editable");
     Check(HumanCapture(state), "Human capture predicate");
     for (const auto& w : layout)
-        Check(w.action != Action::SceneEmpty && w.action != Action::SceneCup && w.action != Action::ScenePushT,
+        Check(w.action != Action::SceneEmpty && w.action != Action::SceneCup && w.action != Action::ScenePushT && w.action != Action::SceneTennis,
               "Human capture advertises a simulated scene");
     state.page = Page::View;
     layout = BuildLayout(state);

@@ -46,8 +46,10 @@ def configure_props(world):
     # Floor remains category 1; foot boxes contact props, not the floor. The
     # four TWIST2 sole spheres provide floor contacts without duplicate boxes.
     for body in world.findall('body'):
-        if body.get('name') not in ('table', 'cup', 't_box'):
+        if body.get('name') not in ('table', 'cup', 't_box', 'tennis_table', 'tennis_racket', 'tennis_feeder'):
             continue
         for geom in body.iter('geom'):
+            if geom.get('contype') == '0' and geom.get('conaffinity') == '0':
+                continue
             geom.set('contype', str(PROP))
             geom.set('conaffinity', str(FLOOR | BODY | HAND | FOOT_BOX | PROP))

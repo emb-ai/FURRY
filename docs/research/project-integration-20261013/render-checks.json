@@ -1,0 +1,309 @@
+{
+  "head": {
+    "before": {
+      "triangles": 89359,
+      "renderer": "Apple M4",
+      "native_shader": true,
+      "headset_capture": false,
+      "segment_alpha": {},
+      "faded_geom_bodies": [],
+      "camera_fade": false,
+      "depth_center": 0.9942964911460876,
+      "rgba_center": [
+        170,
+        174,
+        161,
+        255
+      ]
+    },
+    "after": {
+      "triangles": 81959,
+      "renderer": "Apple M4",
+      "native_shader": true,
+      "headset_capture": false,
+      "segment_alpha": {
+        "torso_link": 0.0,
+        "logo_link": 0.4255813658237457,
+        "head_link": 0.0,
+        "left_shoulder_pitch_link": 0.36374521255493164,
+        "left_shoulder_roll_link": 0.5458346009254456,
+        "right_shoulder_pitch_link": 0.3635202646255493,
+        "right_shoulder_roll_link": 0.54520583152771
+      },
+      "faded_geom_bodies": [
+        "left_shoulder_pitch_link",
+        "left_shoulder_roll_link",
+        "right_shoulder_pitch_link",
+        "right_shoulder_roll_link",
+        "torso_link"
+      ],
+      "camera_fade": true,
+      "depth_center": 0.9942964911460876,
+      "rgba_center": [
+        170,
+        174,
+        161,
+        255
+      ]
+    },
+    "mean_pixel_difference": 35.00778414351852
+  },
+  "head-above": {
+    "before": {
+      "triangles": 89359,
+      "renderer": "Apple M4",
+      "native_shader": true,
+      "headset_capture": false,
+      "segment_alpha": {},
+      "faded_geom_bodies": [],
+      "camera_fade": false,
+      "depth_center": 0.9945383667945862,
+      "rgba_center": [
+        26,
+        37,
+        39,
+        255
+      ]
+    },
+    "after": {
+      "triangles": 87759,
+      "renderer": "Apple M4",
+      "native_shader": true,
+      "headset_capture": false,
+      "segment_alpha": {
+        "torso_link": 0.996814489364624,
+        "head_link": 0.0
+      },
+      "faded_geom_bodies": [
+        "torso_link"
+      ],
+      "camera_fade": true,
+      "depth_center": 0.9945383667945862,
+      "rgba_center": [
+        26,
+        37,
+        39,
+        255
+      ]
+    },
+    "mean_pixel_difference": 11.31007349537037
+  },
+  "torso": {
+    "before": {
+      "triangles": 89359,
+      "renderer": "Apple M4",
+      "native_shader": true,
+      "headset_capture": false,
+      "segment_alpha": {},
+      "faded_geom_bodies": [],
+      "camera_fade": false,
+      "depth_center": 0.04818042367696762,
+      "rgba_center": [
+        155,
+        156,
+        152,
+        255
+      ]
+    },
+    "after": {
+      "triangles": 80903,
+      "renderer": "Apple M4",
+      "native_shader": true,
+      "headset_capture": false,
+      "segment_alpha": {
+        "pelvis": 0.40894076228141785,
+        "pelvis_contour_link": 0.7100690603256226,
+        "left_hip_pitch_link": 0.9725214242935181,
+        "right_hip_pitch_link": 0.9723567366600037,
+        "waist_yaw_link": 0.0020693347323685884,
+        "waist_roll_link": 0.011851073242723942,
+        "torso_link": 0.0,
+        "logo_link": 0.13749755918979645,
+        "head_link": 0.7768158912658691,
+        "left_shoulder_pitch_link": 0.6060749292373657,
+        "left_shoulder_roll_link": 0.4158044159412384,
+        "left_shoulder_yaw_link": 0.34688737988471985,
+        "left_elbow_link": 0.6842250227928162,
+        "left_wrist_roll_link": 0.9968158006668091,
+        "left_wrist_pitch_link": 0.9989048838615417,
+        "right_shoulder_pitch_link": 0.6052310466766357,
+        "right_shoulder_roll_link": 0.41421666741371155,
+        "right_shoulder_yaw_link": 0.3465844988822937,
+        "right_elbow_link": 0.684075653553009,
+        "right_wrist_roll_link": 0.9967918992042542,
+        "pelvis_collision": 0.0
+      },
+      "faded_geom_bodies": [
+        "left_elbow_link",
+        "left_hip_pitch_link",
+        "left_shoulder_pitch_link",
+        "left_shoulder_roll_link",
+        "left_shoulder_yaw_link",
+        "left_wrist_pitch_link",
+        "left_wrist_roll_link",
+        "pelvis",
+        "right_elbow_link",
+        "right_hip_pitch_link",
+        "right_shoulder_pitch_link",
+        "right_shoulder_roll_link",
+        "right_shoulder_yaw_link",
+        "right_wrist_roll_link",
+        "torso_link",
+        "waist_roll_link",
+        "waist_yaw_link"
+      ],
+      "camera_fade": true,
+      "depth_center": 0.9638239741325378,
+      "rgba_center": [
+        12,
+        100,
+        100,
+        255
+      ]
+    },
+    "mean_pixel_difference": 42.87426678240741
+  },
+  "wrist": {
+    "before": {
+      "triangles": 89359,
+      "renderer": "Apple M4",
+      "native_shader": true,
+      "headset_capture": false,
+      "segment_alpha": {},
+      "faded_geom_bodies": [],
+      "camera_fade": false,
+      "depth_center": 0.13263492286205292,
+      "rgba_center": [
+        163,
+        164,
+        159,
+        255
+      ]
+    },
+    "after": {
+      "triangles": 75702,
+      "renderer": "Apple M4",
+      "native_shader": true,
+      "headset_capture": false,
+      "segment_alpha": {
+        "pelvis": 0.5574097633361816,
+        "pelvis_contour_link": 0.5221619009971619,
+        "left_hip_pitch_link": 0.0,
+        "left_hip_roll_link": 0.0,
+        "left_hip_yaw_link": 0.6483843922615051,
+        "waist_yaw_link": 0.8612884283065796,
+        "torso_link": 0.4760934114456177,
+        "left_shoulder_yaw_link": 0.34029969573020935,
+        "left_elbow_link": 0.0,
+        "left_wrist_roll_link": 0.0,
+        "left_wrist_pitch_link": 0.0,
+        "left_wrist_yaw_link": 0.0,
+        "left_hand_palm_link": 0.0,
+        "left_hand_thumb_0_link": 0.00010963855311274529,
+        "left_hand_thumb_1_link": 0.0,
+        "left_hand_thumb_2_link": 0.04301639646291733,
+        "left_hand_middle_0_link": 0.28921762108802795,
+        "left_hand_middle_1_link": 0.7679691314697266,
+        "left_hand_index_0_link": 0.43446239829063416,
+        "left_hand_index_1_link": 0.8557331562042236
+      },
+      "faded_geom_bodies": [
+        "left_elbow_link",
+        "left_hand_index_0_link",
+        "left_hand_index_1_link",
+        "left_hand_middle_0_link",
+        "left_hand_middle_1_link",
+        "left_hand_thumb_0_link",
+        "left_hand_thumb_1_link",
+        "left_hand_thumb_2_link",
+        "left_hip_pitch_link",
+        "left_hip_roll_link",
+        "left_hip_yaw_link",
+        "left_shoulder_yaw_link",
+        "left_wrist_pitch_link",
+        "left_wrist_roll_link",
+        "left_wrist_yaw_link",
+        "pelvis",
+        "torso_link",
+        "waist_yaw_link"
+      ],
+      "camera_fade": true,
+      "depth_center": 0.9619795083999634,
+      "rgba_center": [
+        11,
+        90,
+        91,
+        255
+      ]
+    },
+    "mean_pixel_difference": 37.30755555555555
+  },
+  "far": {
+    "before": {
+      "triangles": 89359,
+      "renderer": "Apple M4",
+      "native_shader": true,
+      "headset_capture": false,
+      "segment_alpha": {},
+      "faded_geom_bodies": [],
+      "camera_fade": false,
+      "depth_center": 0.9966282844543457,
+      "rgba_center": [
+        96,
+        110,
+        106,
+        255
+      ]
+    },
+    "after": {
+      "triangles": 89359,
+      "renderer": "Apple M4",
+      "native_shader": true,
+      "headset_capture": false,
+      "segment_alpha": {},
+      "faded_geom_bodies": [],
+      "camera_fade": true,
+      "depth_center": 0.9966282844543457,
+      "rgba_center": [
+        96,
+        110,
+        106,
+        255
+      ]
+    },
+    "mean_pixel_difference": 0.0
+  },
+  "depth_blending": {
+    "before_pixel": [
+      102,
+      0,
+      0
+    ],
+    "after_pixel": [
+      109,
+      25,
+      0
+    ],
+    "head_alpha": 0.5,
+    "depth_center": 0.943171501159668,
+    "opaque_reference_depth": 0.943171501159668
+  },
+  "premultiplied_frame": {
+    "rgba_center": [
+      109,
+      0,
+      0,
+      192
+    ],
+    "openxr_unpremultiplied_flag": false
+  },
+  "near_prop": {
+    "rgba_center": [
+      0,
+      102,
+      0,
+      255
+    ],
+    "unchanged": true
+  }
+}

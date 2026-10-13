@@ -17,7 +17,7 @@ if str(ROOT) not in sys.path:
 from g1_sim.scene import make_model
 from g1_sim.visuals import export_visual_meshes
 
-SCENES = ("stand", "cup", "push_t")
+SCENES = ("stand", "cup", "push_t", "tennis", "rubik")
 HUD_MAX_TRIANGLES = 8192
 OPERATOR_SKELETON_MAX_TRIANGLES = 2048  # 1024 unique triangles, two depth passes
 MAX_TRIANGLES_PER_EYE = 100000
@@ -152,7 +152,7 @@ def _export_visuals(model: mujoco.MjModel, path: Path, scene_name: str) -> dict:
 
 
 def export_scenes(assets: Path) -> dict:
-    """Export stand/cup/push_t after shared policy/GMR/metadata preparation.
+    """Export selectable scenes after shared policy/GMR/metadata preparation.
 
     The legacy lab files remain available for desktop checks and old episodes.
     Each scene's stream and dimensions come from its separately loaded model.
@@ -185,6 +185,32 @@ def export_scenes(assets: Path) -> dict:
         metadata.update(scene=scene_name, scene_name=scene_name, model_file=files["model"],
                         visual_meshes_file=files["visual_meshes"], nq=model.nq, nv=model.nv,
                         nu=model.nu, joints=[model.joint(i).name for i in range(model.njnt)])
+        if scene_name == "cup":
+            from g1_sim.cup_lab import STYLE, GOAL
+            metadata["appearance"] = dict(style=STYLE, room="visual-only; hidden in passthrough",
+                mug_mass_kg=.240, mug_handle="12 physical capsules; 32-step visual loop",
+                placement_cue=dict(goal_xyz_m=list(GOAL[:3]),radius_m=GOAL[3],
+                    height_tolerance_m=.012,upright_cosine_min=.966,
+                    linear_speed_max_m_s=.05,angular_speed_max_rad_s=.2,
+                    affects_task_score=False),lighting="hemisphere + directional + analytic contact cues")
+        if scene_name == "tennis":
+            metadata["tennis"] = dict(schema_version=4, ball_mass_kg=.0027, ball_diameter_m=.04,
+                gravity_m_s2=9.81, air_density_kg_m3=1.204, drag_coefficient=.5,
+                first_touch_delay_s=7, serve_interval_s=4, muzzle_speed_m_s=5.5,
+                racket_restitution=1, table_restitution=.9, spin=False, magnus=False,
+                grip_assist=True, grip_style="shakehand_g1_three_fingers", grab_radius_m=.12, grip_acquire=.65, grip_release=.25,
+                impact="frictionless normal impulse with finite generalized racket effective mass (active grip weld included)",
+                state_file="tennis.csv", success="first table landing after racket hit on opponent half",
+                table_length_m=2.74, table_width_m=1.525, table_height_m=.76, net_height_m=.1525)
+        if scene_name == "rubik":
+            metadata["rubik"] = dict(schema_version=1,model="2x2-magnetic-contact-v1",edge_m=.0628,
+                total_mass_kg=.122,cubies=8,faces=["R","L","B","F","U","D"],
+                scramble="R U' F R'",grip_assist=False,face_motor=False,
+                state_file="rubik.csv",state_values=64,success="six uniform color faces at a completed detent",
+                magnetic_window_deg=15,magnetic_stiffness_nm_rad=.24,hinge_armature_kg_m2=.00001,
+                controller_wrists=True,table_height_m=.825,stand_top_m=.900,
+                retaining_mechanism="idealized switchable internal layer bindings",direct_arm_pd=True,
+                control="controller wrist poses and ordinary per-hand Grip; two loaded hands and relative wrist rotation select the free internal layer")
         # A legacy model hash with the wrong state dimensions would make an
         # episode ambiguous. Preserve policy, GMR and source-code provenance.
         metadata["sha256"] = {

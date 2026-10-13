@@ -96,7 +96,7 @@ def export_policies(assets, upstream, config=None):
             entry.update(secondary_file=secondary_file, secondary_sha256=secondary_digest)
         if row.get('input_patch'):entry['input_patch']=row['input_patch']
         catalog.append(entry)
-    for scene in ('lab', 'stand', 'cup', 'push_t'):
+    for scene in ('lab', 'stand', 'cup', 'push_t', 'tennis', 'rubik'):
         base = assets / ('recording_metadata.json' if scene == 'lab' else f'recording_metadata-{scene}.json')
         metadata = json.loads(base.read_text())
         for entry in catalog:

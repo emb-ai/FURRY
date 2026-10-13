@@ -27,7 +27,7 @@ int main() {
     };
     auto load = [&] { return episodereplay::LoadManifest(folder.string()); };
     try {
-        for (const auto *scene : {"lab", "stand", "cup", "push_t"}) {
+        for (const auto *scene : {"lab", "stand", "cup", "push_t", "tennis", "rubik"}) {
             write(std::string("{\"scene\":\"") + scene + "\",\"nq\":50,\"nv\":48,\"nu\":43}");
             auto manifest = load();
             Check(manifest.scene == scene, "Wrong scene selected");

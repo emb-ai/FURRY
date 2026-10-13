@@ -44,7 +44,7 @@ int main(int argc,char** argv){try{
         auto p=questpolicy::VerifiedPolicy(assets,find(id));sim.SelectPolicy(p);
         for(int i=0;i<200;i++)sim.Step(false);Check(sim.data->qpos[2]>.35,"Mode switch fell");
     }
-    for(auto name:{"cup","push_t"}){Simulation task(assets,0,name,policy,50);for(int i=0;i<500;i++)task.Step(false);}
+    for(auto name:{"cup","push_t","tennis","rubik"}){Simulation task(assets,0,name,policy,50);for(int i=0;i<500;i++)task.Step(false);}
     // Android scheduling: separate planner, reset with in-flight work, fresh startup.
     policy.asyncPlanner=true;sim.SelectPolicy(policy);
     for(int frame=0;frame<65;frame++){

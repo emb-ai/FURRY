@@ -150,7 +150,7 @@ void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
         vertices[i]=left?-.98f+(vertices[i]+1.18f)*factor:.30f+(vertices[i]-.35f)*factor;
         vertices[i+1]=.68f+(vertices[i+1]-.96f)*factor;
     }
-    glDisable(GL_DEPTH_TEST);glEnable(GL_BLEND);glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_DEPTH_TEST);glEnable(GL_BLEND);glBlendFuncSeparate(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA,GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
     glUseProgram(program);glUniformMatrix4fv(glGetUniformLocation(program,"headViewProjection"),1,GL_FALSE,headViewProjection);
     glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,texture);glUniform1i(glGetUniformLocation(program,"atlas"),0);
     glBindVertexArray(vao);glBindBuffer(GL_ARRAY_BUFFER,vbo);glBufferData(GL_ARRAY_BUFFER,vertices.size()*sizeof(float),vertices.data(),GL_STREAM_DRAW);

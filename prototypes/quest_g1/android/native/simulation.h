@@ -1,5 +1,7 @@
 #pragma once
 #include <mujoco/mujoco.h>
+#include "tennis_task.h"
+#include "rubik_task.h"
 #include <onnxruntime_cxx_api.h>
 #include <array>
 #include <memory>
@@ -18,6 +20,9 @@ public:
     Simulation(const std::string& assets, int physicsWorkers, const std::string& sceneName, const questpolicy::RuntimePolicy& policy, int policyHzOverride=0);
     ~Simulation();
     void Reset();
+    std::string TennisStatus()const{return tennis.Status(data);}
+    std::string RubikStatus()const{return rubik.Status(data);}
+    bool RubikSolved()const{return rubik.Solved(data);}
     // Load and probe before committing; a failure preserves the active session.
     void SelectPolicy(const std::string& path);
     void SelectPolicy(const questpolicy::RuntimePolicy& policy);
@@ -50,6 +55,8 @@ private:
     std::array<float,grootdecoupled::Observation> decoupled_history{};
     std::array<float,grootdecoupled::Actions> decoupled_last_action{};
     grootdecoupled::Command decoupled_command;
+    TennisTask tennis;
+    RubikTask rubik;
     int policy_hz = 100;
     // 0 follows archived ONNX metadata; live Quest explicitly selects 50 Hz.
     const int policy_hz_override;

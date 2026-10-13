@@ -1,0 +1,46 @@
+{
+  "source_snapshot": "9ea7ae6 + scene working changes; applied with main camera status preserved",
+  "runtime_unit_tests": {
+    "run": 109,
+    "passed": 108,
+    "skipped": 1
+  },
+  "android_arm64_build": "passed",
+  "apk_sha256": "0dc1432c651d55aba3d7d4efeb04917b361cb7d21f73d7541d7f00026a5267c5",
+  "apk_bytes": 832271587,
+  "apk_crc": "passed",
+  "policy_digests": "all encoder, decoder, planner, primary and secondary hashes matched",
+  "default_policy": "twist2-20k",
+  "policy_ids": [
+    "twist2-20k",
+    "twist2-25k",
+    "quest-111260-500",
+    "quest-111260-1000",
+    "quest-111586-200",
+    "quest-111586-300",
+    "quest-111586-500",
+    "homie-v2",
+    "sonic-vr3",
+    "quest-111586-500-lift10"
+  ],
+  "scenes": [
+    "stand",
+    "cup",
+    "push_t",
+    "tennis",
+    "rubik"
+  ],
+  "visual_checks": "head/torso/wrist distance; head mesh independent of torso; far appearance invariant; alpha .5 blend; no transparent depth write; physics unchanged",
+  "headset_installation": false,
+  "headset_acceptance": false,
+  "rubik_bimanual_turn_accepted": false,
+  "synthetic_replay_cases": 37,
+  "synthetic_max_state_error": 0.0,
+  "synthetic_max_reference_error": 0.0,
+  "sonic_native_python_max_qpos_error": 4.3143267541845276e-07,
+  "final_targeted_tests": 21,
+  "final_targeted_tests_passed": true,
+  "projection_alpha": "premultiplied; shared HMD distance; props remain opaque",
+  "linux_ci_fix": "portable MuJoCo library search and headers; CI prepares pinned runtime dependencies and scene assets",
+  "final_source_provenance": "graphics/runtime/fade/camera/menu hashes matched packaged metadata"
+}

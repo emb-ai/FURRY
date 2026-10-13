@@ -1,0 +1,21 @@
+{
+  "method": "QEM; crease-aware corner normals; visual only",
+  "meshes": {
+    "torso_link": {
+      "source_sha256": "ee24fc7d69ce98e734551e97f3066ac9f0b7b7e610ea540c6e98775d41de2d8a",
+      "sha256": "56ce1f8db94b408310cf3e29d84af1f741968b2d4d53948798835e92c83f6a0d",
+      "source_triangles": 9000,
+      "triangles": 5800,
+      "sampled_bidirectional_surface_error_max_m": 0.0028381996446041786,
+      "surface_samples": 9451
+    },
+    "head_link": {
+      "source_sha256": "e76b73bbc43e41e11146162e6dbf7b117efda49579059ada24c6b62b9156969c",
+      "sha256": "c23127a921552fdadf8e83aef57d0f613ea6c315a1763821edc9295d00500d6f",
+      "source_triangles": 3500,
+      "triangles": 1600,
+      "sampled_bidirectional_surface_error_max_m": 0.0007788623314234891,
+      "surface_samples": 3279
+    }
+  }
+}

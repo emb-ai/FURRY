@@ -231,7 +231,7 @@ for name in names:
                             'if (frameState.shouldRender == XR_TRUE) {\n            layers.push_back(passthrough.Layer());')
         a = text.index('        layer.layerFlags =')
         b = text.index('        layer.viewCount', a)
-        text = text[:a] + '        layer.layerFlags = XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT | XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT;\n' + text[b:]
+        text = text[:a] + '        layer.layerFlags = XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT;\n' + text[b:]
         text = text.replace('"HelloXR"', '"G1 Quest Lab"')
         text = text.replace('CHECK_XRCMD(xrRequestExitSession(m_session));', 'G1Reset();')
         text = text.replace('"Quit Session"', '"Reset scene"').replace('"Grab Object"', '"Close fingers"')
@@ -312,8 +312,15 @@ for file in ['gmr_model.xml','gmr_config.txt']:
     metadata['sha256'][file]=hashlib.sha256((assets/file).read_bytes()).hexdigest()
 for file in ['gmr.cpp','gmr.h','meta_retarget.cpp','meta_retarget.h','foot_floor.h','swing_clearance.h','body_tracking.h','quest_runtime.cpp','runtime_stats.h','stats_hud.h','recording_export.h','guided_capture.h','capture_hud.h','retarget.h','recording.h','full_body_io.h']:
     metadata['sha256']['android/native/'+file]=hashlib.sha256((ROOT/'android/native'/file).read_bytes()).hexdigest()
-for file in ['world_skeleton.h','world_skeleton_gl.h','operator_skeleton.h','operator_skeleton_draw.h','camera_fusion.cpp','camera_fusion.h','camera_stream.cpp','quest_menu.h','quest_menu_gl.h','policy_catalog.h','policy_backend.h','groot_decoupled.h','sonic.h','sonic_constants.h','virtual_leg_lift.h','body_motor_profile.h','body_motor_model.h','recording.h','episode_manifest.h','simulation.h','file_sha256.h','camera_pose_servo.h']:
+for file in ['world_skeleton.h', 'world_skeleton_gl.h', 'operator_skeleton.h', 'operator_skeleton_draw.h', 'camera_fusion.cpp', 'camera_fusion.h', 'camera_stream.cpp', 'quest_menu.h', 'quest_menu_gl.h', 'policy_catalog.h', 'policy_backend.h', 'groot_decoupled.h', 'sonic.h', 'sonic_constants.h', 'virtual_leg_lift.h', 'body_motor_profile.h', 'body_motor_model.h', 'recording.h', 'episode_manifest.h', 'simulation.h', 'file_sha256.h', 'camera_pose_servo.h', 'tennis_task.h', 'render_geom.h', 'cup_lab_shaders.h', 'cup_placement_cue.h', 'rubik_task.h', 'camera_fade.h', 'graphics.cpp']:
     metadata['sha256']['android/native/'+file]=hashlib.sha256((ROOT/'android/native'/file).read_bytes()).hexdigest()
+metadata['camera_fade'] = dict(schema_version=1, enabled=True, render_only=True,
+    invisible_distance_m=.08, opaque_distance_m=.22, segments='robot visual/collision geometry only',
+    distance='oriented bounds of uploaded vertices in STAGE metres', camera='shared centre HMD',
+    depth_write=False, projection_alpha='premultiplied')
+metadata['sha256']['scripts/prepare_android.py']=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+metadata['sha256']['g1_sim/cup_lab.py']=hashlib.sha256((ROOT/'g1_sim/cup_lab.py').read_bytes()).hexdigest()
+metadata['sha256']['g1_sim/rubik.py']=hashlib.sha256((ROOT/'g1_sim/rubik.py').read_bytes()).hexdigest()
 metadata['ik_error_semantics']='unweighted GMR stage-2 SE3 residual norm; mixed metres/radians, not wrist distance'
 metadata.update(catch_up_v2=True,neutral_wrists=True,wrist_frame_v2=True,travel_gain_percent=100)
 metadata['body_tracking']={'source':'XR_FB_body_tracking + XR_META_body_tracking_full_body','lower_body':'runtime-estimated, not measured foot trackers','retargeting':'GMR two-stage SE3 box QP; Meta bind-skeleton adapter','root_xy':'Meta pelvis displacement from A, scaled to robot proportions; head-relative sway excluded','scaling':'leg height and arm lengths from Meta bind skeleton; source-specific bone-axis offsets','joints':['Pelvis','Spine3','Left_Hip','Right_Hip','Left_Knee','Right_Knee','Left_Foot','Right_Foot','Left_Shoulder','Right_Shoulder','Left_Elbow','Right_Elbow','Left_Wrist','Right_Wrist']}

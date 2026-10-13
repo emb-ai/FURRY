@@ -281,7 +281,7 @@ inline Manifest LoadManifest(const std::string &folder) {
         out.scene = reader.String();
         reader.End();
     }
-    if (out.scene != "lab" && out.scene != "stand" && out.scene != "cup" && out.scene != "push_t")
+    if (out.scene != "lab" && out.scene != "stand" && out.scene != "cup" && out.scene != "push_t" && out.scene != "tennis" && out.scene != "rubik")
         throw std::runtime_error("Unknown episode scene: " + out.scene);
     auto readString=[&](const std::string& key){detail::JsonFields reader(fields.at(key));auto value=reader.String();reader.End();return value;};
     auto readBool=[&](const std::string& key){

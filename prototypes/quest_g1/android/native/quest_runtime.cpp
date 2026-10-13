@@ -1,6 +1,10 @@
 #include "view_frames.h"
 #include "quest_runtime.h"
 #include "simulation.h"
+#include "render_geom.h"
+#include "camera_fade.h"
+#include "cup_lab_shaders.h"
+#include "cup_placement_cue.h"
 #include "meta_retarget.h"
 #ifdef G1_ENABLE_FOOT_FLOOR_GUARD
 #include "foot_floor.h"
@@ -169,7 +173,11 @@ double frameAgeMs=0,frameDrawMs=0,frameNow=0;
 int frameStatus=0,frameExportStatus=0;
 std::atomic<bool> firstPerson{false};
 std::atomic<bool> refreshEgoAnchor{true};
-int egoCamera=-1,headBody=-1;
+int egoCamera=-1;
+std::string publishedTennis;
+std::string publishedRubik;
+std::array<float,4> publishedCupShade{},frameCupShade{};
+std::array<float,2> publishedRobotPosition{},frameRobotPosition{};
 void PublishGeometry(){
     mjvOption option;mjv_defaultOption(&option);option.geomgroup[3]=debugEnabled&&debugContacts;
     // Collision inspection replaces the exterior shell so contacts remain
@@ -186,6 +194,22 @@ void PublishGeometry(){
     }
     std::lock_guard<std::mutex> guard(geometryMutex);
     publishedGeometry.assign(workerScene.geoms,workerScene.geoms+workerScene.ngeom);
+    publishedRobotPosition={float(sim->data->qpos[0]),float(sim->data->qpos[1])};
+    publishedCupShade=CupPlacementCue(sim->model,sim->data);
+    if(sim->scene_name=="rubik"){
+        int core=mj_name2id(sim->model,mjOBJ_BODY,"rubik_core");
+        const auto* p=sim->data->xpos+core*3;float bottom=1e6f;
+        for(int i=0;i<workerScene.ngeom;i++){
+            const auto& g=workerScene.geoms[i];
+            const char* name=g.objtype==mjOBJ_GEOM&&g.objid>=0?mj_id2name(sim->model,mjOBJ_GEOM,g.objid):nullptr;
+            if(name&&std::string(name).rfind("rubik_block_",0)==0){
+                float z=g.pos[2];for(int j=0;j<3;j++)z-=std::abs(g.mat[6+j])*g.size[j];bottom=std::min(bottom,z);
+            }
+        }
+        publishedCupShade={float(p[0]),float(p[1]),bottom,sim->RubikSolved()?1.f:0.f};
+    }
+    publishedTennis=sim->TennisStatus();
+    publishedRubik=sim->RubikStatus();
     publishedTargets={};
     if(retarget->calibrated&&debugEnabled&&debugTargets){
         auto* gm=retarget->solver().model();auto* gd=retarget->solver().data();
@@ -207,10 +231,13 @@ void PublishGeometry(){
     }
 }
 GLuint program=0;
-struct Mesh {GLuint vao=0,vbo=0; GLsizei count=0;};
+struct Mesh {GLuint vao=0,vbo=0; GLsizei count=0;camerafade::Bounds bounds;};
 std::map<int,Mesh> meshes;
 std::vector<std::vector<float>> visualMeshes;
 GLint vpLocation, modelLocation, colorLocation;
+GLint sceneModelLocation,normalLocation,eyeLocation,keyLocation,upLocation,
+      materialLocation,cupShadeLocation,cupGoalLocation,surfaceLocation,labStyleLocation;
+GLint robotPositionLocation;
 
 void CloseFailedRecordingStreams()noexcept{
     for(auto* stream:{&cameraRecording,&captureTimeline}){
@@ -279,27 +306,18 @@ GLuint Shader(GLenum type,const char* source){
 }
 void InitGraphics(){
     if(program) return;
-    const char* vs=R"(#version 320 es
-layout(location=0) in vec3 position;
-layout(location=1) in vec3 normal;
-uniform mat4 vp;
-uniform mat4 model;
-out vec3 worldNormal;
-void main(){gl_Position=vp*model*vec4(position,1);worldNormal=normalize(mat3(model)*normal);}
-)";
-    const char* fs=R"(#version 320 es
-precision mediump float;
-in vec3 worldNormal;
-uniform vec4 color;
-out vec4 fragColor;
-void main(){float light=.4+.6*max(dot(normalize(worldNormal),normalize(vec3(.5,1,.4))),0.);fragColor=vec4(color.rgb*light,color.a);}
-)";
-    GLuint v=Shader(GL_VERTEX_SHADER,vs),f=Shader(GL_FRAGMENT_SHADER,fs);
+    GLuint v=Shader(GL_VERTEX_SHADER,cuplab::VertexShader),f=Shader(GL_FRAGMENT_SHADER,cuplab::FragmentShader);
     program=glCreateProgram();glAttachShader(program,v);glAttachShader(program,f);glLinkProgram(program);
     GLint linked;glGetProgramiv(program,GL_LINK_STATUS,&linked);
     if(!linked) throw std::runtime_error("G1 shader link failed");
     glDeleteShader(v);glDeleteShader(f);
     vpLocation=glGetUniformLocation(program,"vp"); modelLocation=glGetUniformLocation(program,"model");colorLocation=glGetUniformLocation(program,"color");
+    sceneModelLocation=glGetUniformLocation(program,"sceneModel");normalLocation=glGetUniformLocation(program,"normalMatrix");
+    eyeLocation=glGetUniformLocation(program,"eyePosition");keyLocation=glGetUniformLocation(program,"keyDirection");
+    upLocation=glGetUniformLocation(program,"upDirection");materialLocation=glGetUniformLocation(program,"materialParams");
+    cupShadeLocation=glGetUniformLocation(program,"cupShade");cupGoalLocation=glGetUniformLocation(program,"cupGoal");
+    surfaceLocation=glGetUniformLocation(program,"surfaceKind");labStyleLocation=glGetUniformLocation(program,"labStyle");
+    robotPositionLocation=glGetUniformLocation(program,"robotPosition");
 }
 void Triangle(std::vector<float>& out,const std::array<float,3>& a,const std::array<float,3>& b,const std::array<float,3>& c){
     float u[3]={b[0]-a[0],b[1]-a[1],b[2]-a[2]},v[3]={c[0]-a[0],c[1]-a[1],c[2]-a[2]};
@@ -308,7 +326,7 @@ void Triangle(std::vector<float>& out,const std::array<float,3>& a,const std::ar
     for(auto p:{a,b,c}){for(float x:p)out.push_back(x);for(float x:n)out.push_back(length>1e-10?x/length:0);}
 }
 Mesh Upload(const std::vector<float>& verts){
-    Mesh out; out.count=verts.size()/6;
+    Mesh out; out.count=verts.size()/6;out.bounds=camerafade::VertexBounds(verts.data(),out.count);
     glGenVertexArrays(1,&out.vao);glBindVertexArray(out.vao);
     glGenBuffers(1,&out.vbo);glBindBuffer(GL_ARRAY_BUFFER,out.vbo);
     glBufferData(GL_ARRAY_BUFFER,verts.size()*sizeof(float),verts.data(),GL_STATIC_DRAW);
@@ -361,7 +379,7 @@ void LoadPreferences(){
     selectedPolicy=0;catchUpEnabled=true;cameraLegsEnabled=true;
     std::ifstream input(assetsPath+"/menu_settings.txt");
     int version,mode,sc,kind,plan,view,pass,enabled,ds,dm,dc,dt,dcontacts;
-    if(input>>version>>mode>>sc>>kind>>plan>>view>>pass>>enabled>>ds>>dm>>dc>>dt>>dcontacts && version==1 && mode>=0&&mode<2 && sc>=0&&sc<3 && kind>=0&&kind<2 && plan>=0&&plan<2){
+    if(input>>version>>mode>>sc>>kind>>plan>>view>>pass>>enabled>>ds>>dm>>dc>>dt>>dcontacts && version==1 && mode>=0&&mode<2 && sc>=0&&sc<5 && kind>=0&&kind<2 && plan>=0&&plan<2){
         sessionMode=mode;sessionScene=sc;sessionCapture=kind;sessionPlan=plan;firstPerson=view!=0;passthroughVisible=pass!=0;
         debugEnabled=enabled!=0;debugStats=ds!=0;debugMeta=dm!=0;debugCamera=dc!=0;debugTargets=dt!=0;debugContacts=dcontacts!=0;
     }
@@ -441,9 +459,9 @@ void ApplyMenuAction(questmenu::Action action,bool fresh,uint64_t sequence,int p
         return;
     }
     if(action==A::ModeSimulation||action==A::ModeTrajectories||action==A::CaptureRobot||action==A::CaptureHuman||action==A::PlanTrain||action==A::PlanTest){ChangeConfiguration(action);return;}
-    if(action==A::SceneEmpty||action==A::SceneCup||action==A::ScenePushT){
+    if(action==A::SceneEmpty||action==A::SceneCup||action==A::ScenePushT||action==A::SceneTennis||action==A::SceneRubik){
         if(recorder.active){Notice("Сначала сохраните запись.");return;}
-        int selected=action==A::SceneEmpty?0:action==A::SceneCup?1:2;
+        int selected=action==A::SceneEmpty?0:action==A::SceneCup?1:action==A::ScenePushT?2:action==A::SceneTennis?3:4;
         if(selected!=sessionScene.load()){restartAfterCalibration=false;requestedScene=selected;userPaused=true;menuOpen=true;Notice("Загрузка сцены...");}
         return;
     }
@@ -494,12 +512,13 @@ void ReloadScene(){
         if(nextCamera<0)throw std::runtime_error("Missing ego camera");
         mjv_freeScene(&scene);mjv_freeScene(&workerScene);
         for(auto& entry:meshes){glDeleteBuffers(1,&entry.second.vbo);glDeleteVertexArrays(1,&entry.second.vao);}meshes.clear();
-        calibrationSnapshot.reset();sim=std::move(nextSim);visualMeshes=std::move(nextVisuals);egoCamera=nextCamera;headBody=mj_name2id(sim->model,mjOBJ_BODY,"head_link");
+        calibrationSnapshot.reset();sim=std::move(nextSim);visualMeshes=std::move(nextVisuals);egoCamera=nextCamera;
         mjv_defaultScene(&scene);mjv_makeScene(sim->model,&scene,2048);mjv_defaultScene(&workerScene);mjv_makeScene(sim->model,&workerScene,2048);
 #ifdef G1_ENABLE_FOOT_FLOOR_GUARD
         floorGuard=std::make_unique<FootFloorGuard>(sim->model,retarget->solver().model());
 #endif
         retarget->calibrated=false;retarget->Pause();trackingEnabled=false;wasApplying=false;calibrationReady=false;faulted=false;
+        retarget->EnableControllerWrists(name=="rubik");
         cameraFusion.Reset();lastReference={};grip[0]=0;grip[1]=0;trackingStatus=0;pauseReason=0;calibrate=false;
         sessionScene=selected;settingsDirty=true;placeScene=true;refreshEgoAnchor=true;PublishGeometry();
         {std::lock_guard<std::mutex> statsGuard(statsMutex);stats={};stats.physicsWorkers=sim->physics_workers;}
@@ -533,6 +552,7 @@ void G1Initialize(android_app* app){
     retarget->EnableVirtualLegLift(policyCatalog.at(selectedPolicy.load()).inputPatch=="virtual_leg_lift10_v1");
     retarget->EnableNeutralWrists(true);
     retarget->EnableWristFrameV2(true);
+    retarget->EnableControllerWrists(sim->scene_name=="rubik");
 #ifdef G1_ENABLE_TWIST_GROUNDING
     retarget->EnableTwistGrounding(true);
 #endif
@@ -549,12 +569,15 @@ void G1Initialize(android_app* app){
     for(int i=0;i<29;i++)trace<<",reference_"<<i;
     trace<<",tracking_valid,mode,ik_error,limited,height,root_qw,root_qx,root_qy,root_qz";
     for(auto name:{"head","left","right"})for(int i=0;i<7;i++)trace<<","<<name<<"_"<<i;
+    trace<<",scene,policy,calibrated,holder,root_x,root_y";
+    for(int i=0;i<6;i++)trace<<",whole_"<<i;
+    for(int i=0;i<29;i++)trace<<",actual_"<<i;
+    for(int h=0;h<2;h++)for(auto kind:{"target_wrist","actual_wrist"})for(int k=0;k<4;k++)trace<<","<<kind<<"_"<<h<<"_"<<k;
     trace<<"\n"<<std::setprecision(9);
     visualMeshes=LoadVisualMeshes(sim->scene_name,sim->model);
     mjv_defaultScene(&scene);mjv_makeScene(sim->model,&scene,2048);
     mjv_defaultScene(&workerScene);mjv_makeScene(sim->model,&workerScene,2048);
     egoCamera=mj_name2id(sim->model,mjOBJ_CAMERA,"ego");
-    headBody=mj_name2id(sim->model,mjOBJ_BODY,"head_link");
     if(egoCamera<0)throw std::runtime_error("Missing ego camera");
     publishedGeometry.reserve(2048);PublishGeometry();
     telemetry.open(assets+"/runtime_stats.csv",std::ios::trunc);
@@ -797,6 +820,16 @@ void G1Initialize(android_app* app){
                     for(const auto& pose:{input.head,input.hands[0],input.hands[1]}){
                         for(auto p:pose.position)trace<<","<<p;for(auto q:pose.quaternion)trace<<","<<q;
                     }
+                    trace<<","<<sim->scene_name<<","<<policyCatalog.at(selectedPolicy.load()).id<<","<<calibratedNow<<","<<(sim->scene_name=="tennis"?sim->data->userdata[TennisTask::Holder]:0)<<","<<sim->data->qpos[0]<<","<<sim->data->qpos[1];
+                    for(int k=0;k<6;k++)trace<<","<<sim->WholeBodyReference()[k];
+                    auto* gm=retarget->solver().model();
+                    for(int j=1;j<gm->njnt;j++){int source=mj_name2id(sim->model,mjOBJ_JOINT,mj_id2name(gm,mjOBJ_JOINT,j));trace<<","<<sim->data->qpos[sim->model->jnt_qposadr[source]];}
+                    for(int h=0;h<2;h++){
+                        int targetWrist=retarget->solver().tasks()[12+h].body;
+                        for(int k=0;k<4;k++)trace<<","<<retarget->solver().data()->xquat[4*targetWrist+k];
+                        int w=mj_name2id(sim->model,mjOBJ_BODY,h?"right_wrist_yaw_link":"left_wrist_yaw_link");
+                        for(int k=0;k<4;k++)trace<<","<<sim->data->xquat[4*w+k];
+                    }
                     trace<<"\n";if(sim->steps%1000==0)trace.flush();
                 }
                 double physicsStart=ClockSeconds();
@@ -1016,7 +1049,8 @@ void G1PrepareFrame(){
     if(!guard.owns_lock()){skippedSceneUpdates++;return;}
     scene.ngeom=std::min(int(publishedGeometry.size()),scene.maxgeom);
     std::copy_n(publishedGeometry.begin(),scene.ngeom,scene.geoms);frameCamera=publishedCamera;
-    frameTargets=publishedTargets;
+    frameTargets=publishedTargets;menuState.tennisInfo=publishedTennis;frameCupShade=publishedCupShade;frameRobotPosition=publishedRobotPosition;
+    menuState.rubikInfo=publishedRubik;
     if(publishedEgoCalibrated){frameEgoRotation=publishedEgoRotation;frameEgoScale=publishedEgoScale;frameEgoWorld=publishedEgoWorld;refreshEgoAnchor=false;}
     else if(refreshEgoAnchor && (frameTracking.location_flags[0]&3)==3){
         frameEgoRotation=LevelEgoRotation(frameCamera,headMatrix);
@@ -1046,13 +1080,31 @@ void G1Render(const float* vp,const float* projection){
     // MuJoCo +Z up -> XR +Y up, anchored ahead of the initial headset pose.
     XrMatrix4x4f world{};std::copy(sceneTransform.begin(),sceneTransform.end(),world.m);
     if(firstPerson)world=frameEgoWorld;
+    bool labStyle=sim->scene_name=="cup"||sim->scene_name=="rubik";
+    glUniform1i(labStyleLocation,labStyle);
+    glUniform3fv(eyeLocation,1,headMatrix.m+12);
+    float key[3],up[3];
+    for(int r=0;r<3;r++){key[r]=-2.f*world.m[r]-3.f*world.m[4+r]+4.f*world.m[8+r];up[r]=world.m[8+r];}
+    glUniform3fv(keyLocation,1,key);glUniform3fv(upLocation,1,up);
+    glUniform4fv(cupShadeLocation,1,frameCupShade.data());
+    glUniform2fv(robotPositionLocation,1,frameRobotPosition.data());
+    int goalId=mj_name2id(sim->model,mjOBJ_NUMERIC,"cup_lab_goal");
+    float goal[4]={};if(goalId>=0&&sim->model->numeric_size[goalId]==4)for(int j=0;j<4;j++)goal[j]=float(sim->model->numeric_data[sim->model->numeric_adr[goalId]+j]);
+    glUniform4fv(cupGoalLocation,1,goal);
+    int room=mj_name2id(sim->model,mjOBJ_BODY,"cup_lab_room"),storage=mj_name2id(sim->model,mjOBJ_BODY,"cup_lab_storage");
+    struct DrawItem {const mjvGeom* geom;Mesh* mesh;XrMatrix4x4f local,model;int body;float alpha,distance;};
+    std::vector<DrawItem> draws;draws.reserve(scene.ngeom);
+    int robotRoot=mj_name2id(sim->model,mjOBJ_BODY,"pelvis");
+    auto robotBody=[&](int body){for(int b=body;b>0;b=sim->model->body_parentid[b])if(b==robotRoot)return true;return false;};
     int renderedTriangles=2;
     for(int i=0;i<scene.ngeom;i++){
         const mjvGeom& g=scene.geoms[i];if(g.rgba[3]<.01)continue;
-        if(firstPerson && g.objtype==mjOBJ_GEOM && g.objid>=0 &&
-           sim->model->geom_bodyid[g.objid]==headBody)continue;
         // The physical floor remains, but real surroundings are visible through it.
         if(g.type==mjGEOM_PLANE&&G1PassthroughVisible())continue;
+        if(G1PassthroughVisible()&&g.objtype==mjOBJ_GEOM&&g.objid>=0){
+            int body=sim->model->geom_bodyid[g.objid];
+            if(body==room||body==storage)continue;
+        }
         if(g.type!=mjGEOM_MESH && g.type!=mjGEOM_BOX && g.type!=mjGEOM_PLANE && g.type!=mjGEOM_SPHERE && g.type!=mjGEOM_ELLIPSOID && g.type!=mjGEOM_CYLINDER && g.type!=mjGEOM_CAPSULE)continue;
         bool collision=debugEnabled&&debugContacts&&g.objtype==mjOBJ_GEOM&&g.objid>=0&&sim->model->geom_group[g.objid]==3;
         auto& mesh=Geometry(g,collision);
@@ -1061,19 +1113,56 @@ void G1Render(const float* vp,const float* projection){
         // stats counter still reports every physical contact.
         if(g.category==mjCAT_DECOR&&renderedTriangles+mesh.count/3>100000-8192-2048)continue;
         renderedTriangles+=mesh.count/3;
-        float size[3]={g.size[0],g.size[1],g.size[2]};
-        if(g.type==mjGEOM_MESH)size[0]=size[1]=size[2]=1;
-        if(g.type==mjGEOM_SPHERE)size[1]=size[2]=size[0];
-        if(g.type==mjGEOM_CYLINDER || g.type==mjGEOM_CAPSULE){size[2]=size[1];size[1]=size[0];}
-        if(g.type==mjGEOM_PLANE){size[0]=size[1]=15;size[2]=.005;}
+        const auto size=RenderGeomSize(g);
         XrMatrix4x4f local{};local.m[15]=1;
         for(int row=0;row<3;row++)for(int col=0;col<3;col++)local.m[col*4+row]=g.mat[row*3+col]*size[col];
         for(int j=0;j<3;j++)local.m[12+j]=g.pos[j];
         if(g.type==mjGEOM_PLANE)local.m[14]-=.005f;
         XrMatrix4x4f model;XrMatrix4x4f_Multiply(&model,&world,&local);
-        glUniformMatrix4fv(modelLocation,1,GL_FALSE,model.m);
-        glUniform4fv(colorLocation,1,g.rgba);glBindVertexArray(mesh.vao);glDrawArrays(GL_TRIANGLES,0,mesh.count);
+        int body=g.objtype==mjOBJ_GEOM&&g.objid>=0?sim->model->geom_bodyid[g.objid]:-1;
+        // Head and torso meshes share torso_link in the source model. Fade
+        // individual rendered segments rather than their physical body owner.
+        float alpha=g.rgba[3];
+        if(body>=0&&robotBody(body))alpha*=camerafade::Alpha(model.m,mesh.bounds,headMatrix.m+12);
+        float distance=0;for(int r=0;r<3;r++){float d=model.m[12+r]-headMatrix.m[12+r];distance+=d*d;}
+        draws.push_back({&g,&mesh,local,model,body,alpha,distance});
     }
+    // Opaque first, then transparent objects back-to-front without depth writes.
+    std::stable_sort(draws.begin(),draws.end(),[](const DrawItem& a,const DrawItem& b){
+        bool at=a.alpha<.999f,bt=b.alpha<.999f;
+        if(at!=bt)return !at;
+        return at?a.distance>b.distance:false;
+    });
+    glDisable(GL_BLEND);glDepthMask(GL_TRUE);bool blending=false;
+    for(const auto& item:draws){
+        if(item.alpha<.01f)continue;
+        if(!blending&&item.alpha<.999f){
+            glEnable(GL_BLEND);glBlendFuncSeparate(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA,GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
+            glDepthMask(GL_FALSE);blending=true;
+        }
+        const auto& g=*item.geom;const auto& mesh=*item.mesh;const auto& model=item.model;const auto& local=item.local;
+        glUniformMatrix4fv(modelLocation,1,GL_FALSE,model.m);
+        glUniformMatrix4fv(sceneModelLocation,1,GL_FALSE,local.m);
+        // Inverse transpose for orthogonal TRS; nonuniform thin slabs must
+        // not distort their lighting normals. No per-vertex matrix inversion.
+        float normal[9];
+        for(int c=0;c<3;c++){
+            float length2=0;for(int r=0;r<3;r++)length2+=model.m[4*c+r]*model.m[4*c+r];
+            for(int r=0;r<3;r++)normal[3*c+r]=model.m[4*c+r]/std::max(length2,1e-12f);
+        }
+        glUniformMatrix3fv(normalLocation,1,GL_FALSE,normal);
+        glUniform3f(materialLocation,g.specular,g.shininess,g.emission);
+        int surface=0;
+        if(labStyle&&g.objtype==mjOBJ_GEOM&&g.objid>=0){
+            int mat=sim->model->geom_matid[g.objid];
+            const char* name=mat>=0?mj_id2name(sim->model,mjOBJ_MATERIAL,mat):nullptr;
+            if(name){std::string m(name);surface=m=="lab_floor"?1:m=="lab_wood"?2:m=="lab_ceramic"?3:m=="lab_goal"?4:m=="lab_window"?5:0;}
+        }
+        glUniform1i(surfaceLocation,surface);
+        float color[4]={g.rgba[0],g.rgba[1],g.rgba[2],item.alpha};
+        glUniform4fv(colorLocation,1,color);glBindVertexArray(mesh.vao);glDrawArrays(GL_TRIANGLES,0,mesh.count);
+    }
+    glDepthMask(GL_TRUE);glDisable(GL_BLEND);
     if(renderedTriangles>100000)throw std::runtime_error("Rendered scene exceeds 100000 triangle budget");
     static bool reported=false;
     if(!reported){__android_log_print(ANDROID_LOG_INFO,"G1Quest","Rendered scene: %d triangles per eye",renderedTriangles);reported=true;}

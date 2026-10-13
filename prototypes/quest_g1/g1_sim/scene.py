@@ -4,6 +4,8 @@ import xml.etree.ElementTree as ET
 import mujoco
 from .controller import UPSTREAM
 from .geometry import apply_hybrid, configure_props
+from .cup_lab import add_workcell
+from .rubik import add_puzzle
 
 
 def add(parent, tag, **attrs):
@@ -57,8 +59,8 @@ def make_model(scene="lab", hands=True, geometry="hybrid"):
     # Camera looks along robot +X; MuJoCo camera looks along local -Z.
     torso = root.find(".//body[@name='torso_link']")
     add(torso, "camera", name="ego", pos=".08 0 .43", xyaxes="0 -1 0 0 0 1", fovy="80")
-    if scene in ("cup", "lab"):
-        x, y = (.65, 0.) if scene == "cup" else (.8, -.8)
+    if scene in ("cup", "lab", "rubik"):
+        x, y = (.65, 0.) if scene in ("cup", "rubik") else (.8, -.8)
         table = add(world, "body", name="table", pos=f"{x} {y} 0")
         add(table, "geom", name="tabletop", type="box", size=".32 .45 .025", pos="0 0 .725", rgba=".42 .26 .15 1", friction=".8 .005 .0001")
         for dx in (-.26, .26):
@@ -81,6 +83,84 @@ def make_model(scene="lab", hands=True, geometry="hybrid"):
         target = add(world, "body", name="t_target", pos=f"{x+.9} {y} .002")
         for pos, size in [(".12 0 0", ".09 .3 .002"), ("-.12 0 0", ".15 .09 .002")]:
             add(target, "geom", type="box", pos=pos, size=size, contype="0", conaffinity="0", rgba=".15 .7 1 .45")
+    if scene == "tennis":
+        # +X is opponent side; near edge is reachable from standing G1.
+        table = add(world, "body", name="tennis_table", pos="1.77 0 0")
+        add(table, "geom", name="tennis_top", type="box", size="1.37 .7625 .015", pos="0 0 .745", rgba=".035 .22 .4 1")
+        for dx in (-1.12, 1.12):
+            for dy in (-.61, .61):
+                add(table, "geom", type="box", size=".035 .035 .365", pos=f"{dx} {dy} .365", rgba=".17 .19 .22 1")
+        for dy in (-.7525, .7525):
+            add(table, "geom", type="box", size="1.37 .01 .001", pos=f"0 {dy} .761", rgba="1 1 1 1", contype="0", conaffinity="0")
+        for dx in (-1.36, 1.36):
+            add(table, "geom", type="box", size=".01 .7625 .001", pos=f"{dx} 0 .761", rgba="1 1 1 1", contype="0", conaffinity="0")
+        add(table, "geom", type="box", size="1.37 .0015 .001", pos="0 0 .761", rgba="1 1 1 1", contype="0", conaffinity="0")
+        add(table, "geom", name="tennis_net", type="box", size=".006 .915 .07625", pos="0 0 .83625", rgba=".7 .75 .8 .65")
+        add(table, "geom", type="box", size=".007 .915 .004", pos="0 0 .9125", rgba="1 1 1 1", contype="0", conaffinity="0")
+        # Ball-feeding robot: hopper, motor housing and nozzle (static machine).
+        feeder = add(world, "body", name="tennis_feeder", pos="3.34 0 0")
+        add(feeder, "geom", type="box", size=".15 .16 .40", pos="0 0 .40", rgba=".22 .25 .3 1")
+        add(feeder, "geom", type="cylinder", size=".16 .10", pos="0 0 .90", rgba=".7 .4 .12 1")
+        add(feeder, "geom", type="cylinder", size=".045 .15", pos="-.16 0 1.15", euler="0 1.57079632679 0", rgba=".16 .18 .2 1")
+        racket = add(world, "body", name="tennis_racket", pos=".57 -.22 .770")
+        add(racket, "freejoint", name="tennis_racket_free")
+        add(racket, "geom", name="tennis_racket_face", type="cylinder", size=".085 .006", mass=".14", rgba=".8 .07 .055 1", friction="1 .005 .0001")
+        add(racket, "geom", name="tennis_racket_handle", type="box", size=".055 .014 .009", pos="-.13 0 0", mass=".035", rgba=".56 .32 .13 1", friction="1 .005 .0001")
+        ball = add(world, "body", name="tennis_ball", pos="3.05 0 -1")
+        add(ball, "freejoint", name="tennis_ball_free")
+        add(ball, "geom", name="tennis_ball_geom", type="sphere", size=".02", mass=".0027", rgba="1 .8 .08 1", contype="0", conaffinity="0")
+        # Native TennisTask owns ball flight/contact; never double-integrate it.
+        size = root.find("size")
+        if size is None:
+            size = add(root, "size")
+        size.set("nuserdata", "9")
+        custom = root.find("custom")
+        if custom is None:
+            custom = add(root, "custom")
+        # delay, interval, launch speed, Cd, air density, table restitution
+        add(custom, "numeric", name="tennis_config", data="7 4 5.5 .5 1.204 .9")
+        equality = root.find("equality")
+        if equality is None:
+            equality = add(root, "equality")
+        # Three-finger G1 adaptation of a shakehand grip: index along the blade,
+        # thumb on the opposite face, middle finger around the handle.
+        add(custom, "numeric", name="tennis_grip_fingers",
+            data="-.35 .85 .85 -.2 -.05 -.75 -1.6")
+        # Upstream finger position actuators have no damping. The deliberate
+        # holding pose otherwise excites finger oscillation after acquisition.
+        for actuator in root.findall("actuator/position"):
+            if "hand_" in actuator.get("name", ""):
+                actuator.set("kp", "5")
+        for joint in root.iter("joint"):
+            if "hand_" in joint.get("name", ""):
+                # Joint damping is integrated implicitly with the 1 ms Euler
+                # step; actuator velocity feedback is explicit and unstable
+                # for the distal fingers' very small inertia at this rate.
+                joint.set("damping", ".03")
+        tilt = math.radians(25)
+        q0 = math.cos(math.pi/4-tilt/2)/math.sqrt(2)
+        q1 = math.sin(math.pi/4-tilt/2)/math.sqrt(2)
+        for side, sign in (("left", 1), ("right", -1)):
+            # Handle crosses the palm toward the index-finger side (+local Z),
+            # with a small forward tilt. Blade normal is the palm's local Y.
+            position = (.13+.13*math.sin(tilt), -sign*.032, -.02+.13*math.cos(tilt))
+            quaternion = (q0, -sign*q0, -q1, -sign*q1)
+            add(equality, "weld", name=f"tennis_grip_{side}",
+                body1=f"{side}_wrist_yaw_link", body2="tennis_racket", active="false",
+                relpose=" ".join(str(x) for x in (*position, *quaternion)),
+                solref=".002 1", solimp=".99 .999 .001")
+        contact = root.find("contact")
+        if contact is None:
+            contact = add(root, "contact")
+        for body in root.iter("body"):
+            if any(g.get("contype") == "4" for g in body.findall("geom")):
+                # Avoid fighting the holding constraint with finger/palm penetration.
+                # Exact touching is still queried explicitly by native TennisTask.
+                add(contact, "exclude", body1=body.get("name"), body2="tennis_racket")
+    if scene in ("cup", "rubik"):
+        add_workcell(root)
+    if scene == "rubik":
+        add_puzzle(root)
     if hands and geometry != "source":
         configure_props(world)
     xml = ET.tostring(root, encoding="unicode")

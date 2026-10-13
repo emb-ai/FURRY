@@ -12,13 +12,13 @@ namespace questmenu {
 
 enum class Page { Session, View, Debug, Policy };
 enum class Mode { Simulation, Trajectories };
-enum class Scene { Empty, Cup, PushT };
+enum class Scene { Empty, Cup, PushT, Tennis, Rubik };
 enum class Capture { Robot, Human };
 enum class Plan { Train, Test };
 enum class Action {
     None, Close, Start, Save, Reset, QuickReset, ToggleRecording, Calibrate, Place,
     ModeSimulation, ModeTrajectories, CaptureRobot, CaptureHuman, PlanTrain, PlanTest,
-    SceneEmpty, SceneCup, ScenePushT, ViewObserver, ViewFirstPerson, Passthrough,
+    SceneEmpty, SceneCup, ScenePushT, SceneTennis, SceneRubik, ViewObserver, ViewFirstPerson, Passthrough,
     DebugEnabled, DebugStats, DebugMeta, DebugCamera, DebugTargets, DebugContacts,
     PageSession, PageView, PageDebug, PagePolicy, CatchUp, PolicyPrevious, PolicyNext,
     PolicySelect0, PolicySelect1, PolicySelect2, PolicySelect3, LegsMeta, LegsCamera,
@@ -37,7 +37,7 @@ struct State {
     bool firstPerson = false, passthrough = true;
     bool debugEnabled = false, debugStats = true, debugMeta = false;
     bool debugCamera = false, debugTargets = false, debugContacts = false;
-    std::string notice, recordingInfo, cameraInfo, cameraStatus;
+    std::string notice, recordingInfo, cameraInfo, cameraStatus, tennisInfo, rubikInfo;
     int cameraLevel = 0; // 0 hidden, 1 muted, 2 warning, 3 good
     int exportStatus = 0;
     std::vector<questpolicy::Entry> policies;
@@ -96,6 +96,8 @@ inline const char* SceneName(Scene scene) {
     case Scene::Empty: return "stand";
     case Scene::Cup: return "cup";
     case Scene::PushT: return "push_t";
+    case Scene::Tennis: return "tennis";
+    case Scene::Rubik: return "rubik";
     }
     return "stand";
 }
@@ -104,6 +106,8 @@ inline const char* SceneTitle(Scene scene) {
     case Scene::Empty: return "Пустая";
     case Scene::Cup: return "Стол и чашка";
     case Scene::PushT: return "Push-T";
+    case Scene::Tennis: return "Настольный теннис";
+    case Scene::Rubik: return "Кубик Рубика 2×2";
     }
     return "Пустая";
 }
@@ -172,9 +176,9 @@ inline std::vector<Widget> BuildLayout(const State& s) {
             y -= .069f;
         } else {
             label(y, "Сцена");
-            const Scene scenes[] = {Scene::Empty, Scene::Cup, Scene::PushT};
-            const Action actions[] = {Action::SceneEmpty, Action::SceneCup, Action::ScenePushT};
-            for (int i = 0; i != 3; ++i) {
+            const Scene scenes[] = {Scene::Empty, Scene::Cup, Scene::PushT, Scene::Tennis, Scene::Rubik};
+            const Action actions[] = {Action::SceneEmpty, Action::SceneCup, Action::ScenePushT, Action::SceneTennis, Action::SceneRubik};
+            for (int i = 0; i != 5; ++i) {
                 add({-.192f, y, .544f, .055f}, SceneTitle(scenes[i]), actions[i],
                     !s.recording, s.scene == scenes[i], Kind::Radio);
                 y -= .056f;
@@ -185,8 +189,10 @@ inline std::vector<Widget> BuildLayout(const State& s) {
         add({-.192f, y, .24f, .054f}, s.calibrated ? "Готова" : "Нужна калибровка");
         add({.061f, y, .291f, .054f}, "Калибровать", Action::Calibrate, s.paused, false, Kind::Button);
         y -= .064f;
-        label(y, "Трекинг");
-        text(y, s.trackingValid ? "Meta: трекинг есть" : "Meta: нет свежего трекинга");
+        if(human || s.mode == Mode::Simulation){
+            label(y, "Трекинг");
+            text(y, s.trackingValid ? "Meta: трекинг есть" : "Meta: нет свежего трекинга");
+        }
     } else if (s.page == Page::View) {
         label(.214f, "Камера");
         segments(.214f, "Наблюдатель", "От первого лица", Action::ViewObserver,

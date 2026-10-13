@@ -44,3 +44,19 @@ Package-one checks are recorded in `validation-package1.json`. CPU, native
 backend and recording checks passed; the Linux Isaac Gym contract is a
 separate environment check. Final Android build and scene checks are recorded
 when complete. No headset installation is performed.
+
+## Scene and visibility package
+
+The second package brings cup laboratory visuals and placement feedback,
+table tennis, the experimental physical 2x2 cube and controller wrist inputs
+into the same runtime as HOMIE/SONIC. Robot meshes fade smoothly near the
+operator camera; props remain opaque. The head mesh is identified separately
+from its shared torso body. Transparent geometry does not write depth.
+
+`validation-package2.json` records the combined build and checks. The nearby
+head comparison images are desktop previews with the native shader, not
+headset captures. Existing camera leg controls and registration are retained.
+
+The Rubik scene remains a prototype. A free contact lift and a fixed-core face
+fixture passed; reliable G1 bimanual quarter-turns and a manual VR solve are
+not accepted. No physical robot or new trained policy is deployed.

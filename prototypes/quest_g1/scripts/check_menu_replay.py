@@ -37,10 +37,11 @@ def main():
             subprocess.run([os.environ.get('CXX', 'c++'), '-O1', '-std=c++17', '-I'+str(ROOT/'android/native'),
                             '-I'+str(ROOT/'vendor/mujoco/include'), '-I'+str(ROOT/'vendor/onnxruntime-android/headers'),
                             str(source), *common, str(mjlib), str(ortlib), '-o', str(folder/name)], check=True)
-        cases = [(name, None, False, 'observer') for name in ('lab', 'stand', 'cup', 'push_t')]
+        cases = [(name, None, False, 'observer') for name in ('lab', 'stand', 'cup', 'push_t', 'tennis', 'rubik')]
         catalog = json.loads((ROOT/'android/assets/policy_catalog.json').read_text())
         cases += [('cup', row, False, 'observer') for row in catalog[1:]]
         cases += [('cup', row, True, 'observer') for row in catalog]
+        cases += [('rubik', row, catch, 'observer') for row in catalog if row.get('backend') in ('groot_decoupled_v1','sonic_vr3_v1') for catch in (False,True)]
         cases += [('cup', catalog[0], True, view) for view in ('first', 'switch')]
         # Cadence and wrist-frame versions are episode semantics. Exercise both
         # old100 Hz manifests and missing-field fallbacks against the new live50.
@@ -96,6 +97,9 @@ def main():
                     profile_digest = hashlib.sha256((Path(episode)/profile_name).read_bytes()).hexdigest()
                     if profile_digest != manifest['body_motor_profile_sha256'] or manifest['body_motor_profile'] != fixture['body_motor_profile']:
                         raise AssertionError('Missing or different archived body motor profile')
+                if policy.get('planner_file'):
+                    if hashlib.sha256((Path(episode)/'policy-planner.onnx').read_bytes()).hexdigest()!=policy['planner_sha256']:
+                        raise AssertionError('Missing archived SONIC planner')
             # lab metadata has no scene field: this also checks legacy fallback.
             subprocess.run([str(folder/'replay_gmr'), str(ROOT/'android/assets'), episode], env=env, check=True)
             for mode in ('saved', 'retarget'):

@@ -12,7 +12,7 @@
 // Caller serializes access. Files stay local to the application; no participant identifiers.
 // A missing complete.json means interrupted/unfinalized, never a successful episode.
 class EpisodeRecorder {
-    std::ofstream input, frames, events, body, mimic;
+    std::ofstream input, frames, events, body, mimic, tennis, rubik;
     fullbody::Recorder fullBody;
     std::filesystem::path directory;
     uint64_t inputs=0, samples=0;
@@ -55,7 +55,7 @@ public:
             }
             if(!policyFile.empty())std::filesystem::copy_file(std::filesystem::path(root)/policyFile,directory/"policy.onnx");
             if(!secondaryPolicyFile.empty())std::filesystem::copy_file(std::filesystem::path(root)/secondaryPolicyFile,directory/"policy-secondary.onnx");
-            for(auto* f:{&input,&frames,&events,&body,&mimic})f->exceptions(std::ios::badbit|std::ios::failbit);
+            for(auto* f:{&input,&frames,&events,&body,&mimic,&tennis,&rubik})f->exceptions(std::ios::badbit|std::ios::failbit);
             input.open(directory/"input.csv");frames.open(directory/"frames.csv");events.open(directory/"events.csv");
             input<<"sequence,xr_time_ns,receive_ns,valid,head_flags,left_flags,right_flags,left_active,right_active,grip_left,grip_right";
             for(auto name:{"head","left","right"})for(auto c:{"x","y","z","qw","qx","qy","qz"})input<<','<<name<<'_'<<c;
@@ -73,6 +73,17 @@ public:
             body<<'\n'<<std::setprecision(17);
             mimic<<"sequence,step,sim_time";for(int k=0;k<35;k++)mimic<<",mimic_"<<k;mimic<<'\n'<<std::setprecision(17);
             fullBody.Start(directory);
+            if((model->nuserdata==8||model->nuserdata==9) && mj_name2id(model,mjOBJ_BODY,"tennis_ball")>=0){
+                tennis.open(directory/"tennis.csv");
+                tennis<<"sequence,step,sim_time,armed,next_serve_s,active,racket_hit,own_bounces,serves,returns,misses";
+                if(model->nuserdata==9)tennis<<",holding_hand";
+                tennis<<'\n'<<std::setprecision(17);
+            }
+            if(model->nuserdata==64&&mj_name2id(model,mjOBJ_BODY,"rubik_core")>=0){
+                rubik.open(directory/"rubik.csv");rubik<<"sequence,step,sim_time";
+                for(int i=0;i<64;i++)rubik<<",state_"<<i;
+                rubik<<'\n'<<std::setprecision(17);
+            }
             active=true;Event("start",0);Flush();
         }catch(...){Abort();throw;}
     }
@@ -98,17 +109,21 @@ public:
         frames<<Now()<<','<<f.sequence<<','<<steps<<','<<d->time<<','<<reset<<','<<calibrated<<','<<apply<<','<<valid<<','<<left<<','<<right<<','<<mode<<','<<error<<','<<limited;
         Values(frames,reference.data(),29);Values(frames,d->qpos,m->nq);Values(frames,d->qvel,m->nv);Values(frames,d->ctrl,m->nu);
         frames<<'\n';samples++;
+        if(tennis.is_open()){
+            tennis<<f.sequence<<','<<steps<<','<<d->time;Values(tennis,d->userdata,m->nuserdata);tennis<<'\n';
+        }
+        if(rubik.is_open()){rubik<<f.sequence<<','<<steps<<','<<d->time;Values(rubik,d->userdata,m->nuserdata);rubik<<'\n';}
     }
     void Mimic(const TrackingFrame& f,int step,double time,const std::array<float,35>& value){
         if(!active)return;
         mimic<<f.sequence<<','<<step<<','<<time;Values(mimic,value.data(),35);mimic<<'\n';
     }
-    void Flush(){if(active){fullBody.Flush();input.flush();frames.flush();events.flush();body.flush();mimic.flush();lastFlush=Now();}}
+    void Flush(){if(active){fullBody.Flush();input.flush();frames.flush();events.flush();body.flush();mimic.flush();if(tennis.is_open())tennis.flush();if(rubik.is_open())rubik.flush();lastFlush=Now();}}
     void Tick(){if(active && Now()-lastFlush>1000000000LL)Flush();}
     void Stop(const char* reason="user_stop"){
         if(!active)return;
         try{
-            Event(reason,0);Flush();fullBody.Close();input.close();frames.close();events.close();body.close();mimic.close();
+            Event(reason,0);Flush();fullBody.Close();input.close();frames.close();events.close();body.close();mimic.close();if(tennis.is_open())tennis.close();if(rubik.is_open())rubik.close();
             std::ofstream done;done.exceptions(std::ios::badbit|std::ios::failbit);
             done.open(directory/"complete.tmp");
             done<<"{\"schema_version\":1,\"reason\":\""<<reason<<"\",\"input_rows\":"<<inputs<<",\"frame_rows\":"<<samples<<"}\n";
@@ -117,6 +132,6 @@ public:
     }
     void Abort()noexcept{
         active=false;failed=true;fullBody.Abort();
-        for(auto* f:{&input,&frames,&events,&body,&mimic}){f->exceptions(std::ios::goodbit);if(f->is_open())f->close();f->clear();}
+        for(auto* f:{&input,&frames,&events,&body,&mimic,&tennis,&rubik}){f->exceptions(std::ios::goodbit);if(f->is_open())f->close();f->clear();}
     }
 };
