@@ -212,5 +212,21 @@ int main(){
   Require(!empty.LoadRegistration(path) && !empty.Aligned(),"Non-rotation registration accepted");
   std::remove(path.c_str());
  }
- puts("Camera rigid fit, delayed correction, bone projection, stale, expiry, invalid heartbeat, degeneracy, second person, knee lift, knee hinge, leg-source switch, registration persistence and STAGE re-verification checks passed");
+ // The 15 Hz overlay with 5 cm depth jumps must render as a smooth point,
+ // while a point that appears or jumps 50 cm snaps instead of sweeping.
+ {
+  CameraOverlaySmoother smoother;CameraOverlay overlay;overlay.aligned=true;overlay.valid[5]=true;overlay.points[5]={0,.1,2};
+  double worst=0;std::array<double,3> last{};
+  for(int n=0;n<=180;n++){
+   if(n%5==0)overlay.points[5][2]=2+((n/5)%2?.05:-.05);
+   auto out=smoother.Smooth(overlay,n/72.);
+   if(n==0)Require(out.points[5]==overlay.points[5],"New overlay point does not snap");
+   if(n)worst=std::max(worst,std::abs(out.points[5][2]-last[2]));last=out.points[5];
+  }
+  Require(worst<.012,"Overlay renders camera packets as steps");
+  overlay.points[5][0]+=.8;Require(smoother.Smooth(overlay,181/72.).points[5]==overlay.points[5],"Overlay sweeps a 80 cm jump");
+  overlay.valid[5]=false;Require(!smoother.Smooth(overlay,182/72.).valid[5],"Dropped overlay point still drawn");
+  overlay.valid[5]=true;overlay.points[5][1]+=.3;Require(smoother.Smooth(overlay,183/72.).points[5]==overlay.points[5],"Reappearing overlay point does not snap");
+ }
+ puts("Camera rigid fit, delayed correction, bone projection, stale, expiry, invalid heartbeat, degeneracy, second person, knee lift, knee hinge, leg-source switch, registration persistence, STAGE re-verification and overlay smoothing checks passed");
 }

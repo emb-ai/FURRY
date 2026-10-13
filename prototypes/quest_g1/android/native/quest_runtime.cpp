@@ -164,6 +164,7 @@ bool publishedEgoCalibrated=false;
 TrackingFrame frameTracking;
 RuntimeStats frameStats;
 CameraOverlay frameOperatorCamera;
+CameraOverlaySmoother operatorCameraSmoother;
 WorldSkeleton publishedTargets,frameTargets,frameMenuRays;
 double frameAgeMs=0,frameDrawMs=0,frameNow=0;
 int frameStatus=0,frameExportStatus=0;
@@ -958,7 +959,7 @@ void G1PrepareFrame(){
             optical=stageMapper.MapForDisplay(&packet,frameTracking,CameraEpochMs());
         }
     }else optical={};
-    frameOperatorCamera=optical;
+    frameOperatorCamera=operatorCameraSmoother.Smooth(optical,now);
     menuState.policyIndex=selectedPolicy;menuState.catchUp=catchUpEnabled;
     menuState.cameraConfigured=cameraConfigured;menuState.cameraLegs=cameraLegsEnabled;
     menuState.mode=questmenu::Mode(sessionMode.load());menuState.scene=questmenu::Scene(sessionScene.load());
