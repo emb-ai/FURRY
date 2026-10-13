@@ -339,7 +339,11 @@ TrackingFrame CameraFusion::Apply(const TrackingFrame&raw,const CameraSkeleton*c
  // jerk; 60 ms stages cut fused knee jerk 25% and ankle acceleration 30%
  // in replay (2026-10-12 episode) for ~15 ms more lag on the fused leg.
  // Speed-adaptive stages did no better: depth jumps look like steps.
- double smooth=1-std::exp(-dt/.06);
+ // At 3.9 m (2026-10-12 17:30) legs still shook at 1.8x Meta's acceleration;
+ // 80 ms stages cut it ~20% for 11 ms more lag. Depth-axis-only stages and a
+ // per-packet Kalman filter did no better: frontal leg swing is along depth
+ // and the noise is a 1-4 Hz wander, not per-packet white noise.
+ double smooth=1-std::exp(-dt/kCameraStageSeconds);
  for(int j=2;j<6;j++)for(int a=0;a<3;a++){halfway[j][a]+=smooth*(target[j][a]-halfway[j][a]);correction[j][a]+=smooth*(halfway[j][a]-correction[j][a]);}
  V lateral=Sub(raw.body.joints[2].position,raw.body.joints[3].position);lateral[1]=0;
  for(int side=0;side<2;side++){
@@ -383,6 +387,21 @@ CameraOverlay CameraFusion::MapForDisplay(const CameraSkeleton*c,const TrackingF
   const auto&j=i==13?c->pelvis:c->joints[i];if(!Good(j))continue;
   out.points[i]=relative?Add(c->pelvis.p,i==13?V{}:j.p):Add(Rotate(rotation,j.p),translation);
   out.valid[i]=true;
+ }
+ return out;
+}
+
+CameraOverlay CameraOverlaySmoother::Smooth(const CameraOverlay&in,double nowS){
+ double dt=nowS-lastS;bool gap=lastS<0 || dt<0 || dt>.25;lastS=nowS;
+ double smooth=1-std::exp(-std::clamp(dt,0.,.05)/kCameraStageSeconds);
+ CameraOverlay out=in;
+ for(int i=0;i<14;i++){
+  // A new point, a frame gap or a 50 cm jump (another person, a new
+  // registration) is not noise: snap instead of sweeping across the room.
+  if(!in.aligned || !in.valid[i]){valid[i]=false;continue;}
+  if(gap || !valid[i] || Norm(Sub(in.points[i],points[i]))>.5){halfway[i]=points[i]=in.points[i];valid[i]=true;continue;}
+  for(int a=0;a<3;a++){halfway[i][a]+=smooth*(in.points[i][a]-halfway[i][a]);points[i][a]+=smooth*(halfway[i][a]-points[i][a]);}
+  out.points[i]=points[i];
  }
  return out;
 }

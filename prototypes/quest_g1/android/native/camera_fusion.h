@@ -12,6 +12,17 @@ struct CameraOverlay {
  std::array<std::array<double,3>,14> points{}; // camera joints, then pelvis
  std::array<bool,14> valid{};bool aligned=false;double ageMs=-1;
 };
+// Time constant of each of the two frame-rate stages that smooth camera legs.
+constexpr double kCameraStageSeconds=.08;
+// The overlay maps raw packets: at ~15 Hz with camera-depth noise its ankles
+// jumped 2 cm per packet (p90 6, p99 17 cm, 2026-10-12 17:30 at 3.9 m). Call
+// once per rendered frame; the same two stages as the legs keep the overlay
+// in step with what drives the robot. Points that appear or jump snap.
+class CameraOverlaySmoother {
+ std::array<std::array<double,3>,14> halfway{},points{};std::array<bool,14> valid{};double lastS=-1;
+public:
+ CameraOverlay Smooth(const CameraOverlay&,double nowS);
+};
 // Registration progress for the HUD. hint: 0 ok, 1 no person/shoulders,
 // 2 operator side-on, 3 needs more walking, 4 inconsistent (other person?),
 // 5 the stored registration stopped matching (camera moved): walk again.
@@ -37,7 +48,7 @@ class CameraFusion {
  // wrong one (other camera place) can still put the pelvis within the gate.
  std::deque<char> checks;uint64_t registrationVersion=0;bool moved=false,verified=false;
  void Blend();void CommitWindow();
- // Per-packet leg target, smoothed at frame rate by two 60 ms stages.
+ // Per-packet leg target, smoothed at frame rate by two kCameraStageSeconds stages.
  std::array<std::array<double,3>,6> target{},halfway{},correction{};
  std::array<double,2> weights{},activeWeights{},lastGoodMs{};
  bool aligned=false;uint64_t lastSequence=~0ull;double lastApplyMs=0;
