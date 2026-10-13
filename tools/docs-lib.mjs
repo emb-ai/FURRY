@@ -17,6 +17,7 @@ export const PAGES = [
   ["Common-Ground", "Common Ground"],
   ["Data-and-Evaluation", "Data And Evaluation"],
   ["Policy-Learning", "Policy Learning"],
+  ["DexWeave", "DexWeave"],
   ["Contributing", "Contributing"],
 ].map(([slug, title]) => ({ slug, title, source: `docs/${slug}.md` }));
 
@@ -101,7 +102,7 @@ export function validateKnowledgeBase(files) {
   const literature = headings(parse(files.get("docs/Literature-Review.md") ?? ""));
   for (const id of ["twist-2025", "twist2-2025", "gmr-2025", "omnih2o-2024", "hover-2024",
     "sonic-2025", "avatarposer-2022", "questsim-2022", "xrobotoolkit-2025",
-    "open-television-2024", "open-teach-2024", "anyteleop-2023"]) {
+    "open-television-2024", "open-teach-2024", "anyteleop-2023", "dexweave-2026"]) {
     if (!literature.has(id)) errors.push(`Missing bibliography entry: ${id}`);
   }
   return errors;

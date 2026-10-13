@@ -72,7 +72,7 @@ git diff --check
 ```
 
 The checker parses Markdown, validates repository links/heading anchors and
-checks the eight-page navigation and bibliography. Tests cover mirror conversion
+checks the ten-page navigation and bibliography. Tests cover mirror conversion
 and publication safeguards. External citations require a primary-source
 spot-check; network availability is not part of the offline test suite. Review
 paper claims against code availability and record the inspection date.
@@ -109,14 +109,14 @@ git -C ../FURRY.wiki diff
 `--ref` defaults to `HEAD` and resolves to a full commit SHA. Uncommitted source
 edits are never published. Dry-run is the default and writes nothing. `--write`
 requires a clean, separate checkout with the FURRY Wiki origin; it updates only
-the eight named pages, `_Sidebar.md` and `_Footer.md`. Existing versions of those
+the ten named pages, `_Sidebar.md` and `_Footer.md`. Existing versions of those
 pages will be replaced, including the initial Home placeholder; review the dry
 run and Git diff. Other files are preserved. No script commits or pushes.
 
 After reviewing the generated changes, stage only the generated files:
 
 ```bash
-git -C ../FURRY.wiki add -- Home.md Getting-Started.md Literature-Review.md TWIST2-Baseline.md Architecture-and-Decisions.md Common-Ground.md Data-and-Evaluation.md Contributing.md _Sidebar.md _Footer.md
+git -C ../FURRY.wiki add -- Home.md Getting-Started.md Literature-Review.md TWIST2-Baseline.md Architecture-and-Decisions.md Common-Ground.md Data-and-Evaluation.md Policy-Learning.md DexWeave.md Contributing.md _Sidebar.md _Footer.md
 git -C ../FURRY.wiki commit -m "Mirror reviewed FURRY documentation"
 git -C ../FURRY.wiki push origin HEAD
 ```
