@@ -23,7 +23,7 @@ def main():
                         '-I' + str(ROOT / 'android/native'), '-I' + str(mj / 'include'),
                         '-I' + str(ROOT / 'vendor/onnxruntime-android/headers'),
                         str(ROOT / 'tests/check_decoupled_backend.cpp'), str(ROOT / 'android/native/simulation.cpp'),
-                        str(next(mj.glob('libmujoco' + suffix))), str(next(ort.glob('libonnxruntime' + suffix))),
+                        str(next(mj.glob('libmujoco' + suffix))), str(next(p for p in ort.glob('libonnxruntime'+suffix) if not p.name.startswith('libonnxruntime_providers_'))),
                         '-o', str(binary)], check=True)
         subprocess.run([str(binary), str(ROOT / 'android/assets')], env=env, check=True)
 

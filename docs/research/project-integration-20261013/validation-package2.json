@@ -42,5 +42,6 @@
   "final_targeted_tests_passed": true,
   "projection_alpha": "premultiplied; shared HMD distance; props remain opaque",
   "linux_ci_fix": "portable MuJoCo library search and headers; CI prepares pinned runtime dependencies and scene assets",
-  "final_source_provenance": "graphics/runtime/fade/camera/menu hashes matched packaged metadata"
+  "final_source_provenance": "graphics/runtime/fade/camera/menu hashes matched packaged metadata",
+  "apk_build_source": "scene integration snapshot before Linux-only test/export portability fixes"
 }

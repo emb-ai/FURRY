@@ -26,7 +26,7 @@ def main():
     mj, ort = map(Path, json.loads(runtime))
     extension = '*.dylib' if sys.platform == 'darwin' else '*.so*'
     mjlib = next(mj.glob('libmujoco'+extension))
-    ortlib = next(ort.glob('libonnxruntime'+extension))
+    ortlib = next(p for p in ort.glob('libonnxruntime'+extension) if not p.name.startswith('libonnxruntime_providers_'))
     env = dict(os.environ)
     env['DYLD_LIBRARY_PATH' if sys.platform == 'darwin' else 'LD_LIBRARY_PATH'] = str(mj)+os.pathsep+str(ort)
     with tempfile.TemporaryDirectory(prefix='furry-menu-replay-') as directory:

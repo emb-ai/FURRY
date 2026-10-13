@@ -36,7 +36,8 @@ public:
         if(magnetStiffness<=0||magnetWindow<10*Pi/180-1e-8||magnetWindow>15*Pi/180+1e-8||magnetDamping<0)throw std::runtime_error("Invalid magnetic configuration");
         for(int f=0;f<6;f++){
             int j=mj_name2id(m,mjOBJ_JOINT,(std::string("rubik_hinge_")+Faces[f]).c_str());
-            if(j<0)throw std::runtime_error("Missing Rubik hinge");qa[f]=m->jnt_qposadr[j];va[f]=m->jnt_dofadr[j];
+            if(j<0)throw std::runtime_error("Missing Rubik hinge");
+            qa[f]=m->jnt_qposadr[j];va[f]=m->jnt_dofadr[j];
         }
         for(int i=0;i<8;i++){
             cubie[i]=mj_name2id(m,mjOBJ_BODY,("rubik_cubie_"+std::to_string(i)).c_str());
@@ -152,7 +153,8 @@ public:
         }
     }
     void Finish(mjModel* m,mjData* d){
-        if(core<0)return;int f=int(d->userdata[Active]);if(f<0)return;
+        if(core<0)return;
+        int f=int(d->userdata[Active]);if(f<0)return;
         double delta=d->qpos[qa[f]]-d->userdata[Start],speed=d->qvel[va[f]];
         int quarter=int(std::round(delta/(Pi/2)));
         (void)speed;
@@ -187,7 +189,8 @@ public:
         return true;
     }
     std::string Status(const mjData* d)const{
-        if(core<0)return {};char text[160];int face=int(d->userdata[Active]);
+        if(core<0)return {};
+        char text[160];int face=int(d->userdata[Active]);
         std::snprintf(text,sizeof(text),"2x2: %s / turns %d%s%s",Solved(d)?"SOLVED":"scrambled",int(d->userdata[Turns]),face>=0?" / layer ":"",face>=0?Faces[face]:"");return text;
     }
 };

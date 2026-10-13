@@ -13,7 +13,7 @@ class ControllerWristsTests(unittest.TestCase):
     def test_native_controller_position_rotation_and_loss(self):
         root=Path(__file__).resolve().parents[1];mj=Path(mujoco.__file__).parent;ort=Path(onnxruntime.__file__).parent/'capi'
         pattern='*.dylib' if sys.platform=='darwin' else '*.so*'
-        mjlib=next(mj.glob('libmujoco'+pattern));ortlib=next(ort.glob('libonnxruntime'+pattern))
+        mjlib=next(mj.glob('libmujoco'+pattern));ortlib=next(p for p in ort.glob('libonnxruntime'+pattern) if not p.name.startswith('libonnxruntime_providers_'))
         with tempfile.TemporaryDirectory() as directory:
             binary=Path(directory)/'check_controller_wrists'
             sources=[root/'tests/check_controller_wrists.cpp',*[root/'android/native'/s for s in ['gmr.cpp','meta_retarget.cpp','simulation.cpp']]]
