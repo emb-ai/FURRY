@@ -181,9 +181,11 @@ void CameraFusion::Fit(const CameraSkeleton& c,const TrackingFrame& f){
  if(!Good(c.joints[7]) || !Good(c.joints[8])){if(!aligned)stats.fitHint=1;return;}
  // Side-on shoulders put the depth sample on the near arm or the silhouette
  // edge (2026-10-12 episode: residual doubles beyond ~35 deg). Camera axes:
- // x right, z forward, so a frontal shoulder line is mostly along x.
+ // x right, z forward, so a frontal shoulder line is mostly along x. Up to
+ // 35 deg let the far shoulder (20-30 cm off, 2026-10-13 12:12) into windows:
+ // one moved the camera 40 cm and the next consistency check dropped it.
  V across=Sub(c.joints[7].p,c.joints[8].p);
- if(std::abs(across[2])>.7*std::abs(across[0])){if(!aligned)stats.fitHint=2;return;}
+ if(std::abs(across[2])>.4*std::abs(across[0])){if(!aligned)stats.fitHint=2;return;}
  // Use homologous shoulder landmarks, not nose == HMD origin. Across a short
  // translation phase the paired shoulders supply a non-collinear rigid fit.
  FitPacket packet;
@@ -198,7 +200,9 @@ void CameraFusion::Fit(const CameraSkeleton& c,const TrackingFrame& f){
   checks.push_back(in);if(checks.size()>checkSize)checks.pop_front();
   size_t consistent=std::count(checks.begin(),checks.end(),1);
   if(!verified && checks.size()>=minVerify && consistent>=.6*checks.size()){verified=true;stats.fitHint=0;stats.fitProgress=1;}
-  if(checks.size()>=checkSize && consistent<minConsistent*checkSize){ForgetRegistration();moved=true;}
+  // Buffered pairs are camera vs current STAGE and stay valid: dropping them
+  // restarted registration from zero (8-15 s more Meta legs, 2026-10-13 12:12).
+  if(checks.size()>=checkSize && consistent<minConsistent*checkSize){auto kept=std::move(fitBuffer);ForgetRegistration();fitBuffer=std::move(kept);moved=true;}
  }
  fitBuffer.push_back(packet);if(fitBuffer.size()>windowSize)fitBuffer.pop_front();
  windowPackets++;stats.fitPackets=int(fitBuffer.size());
