@@ -92,9 +92,22 @@ budget = dict(maximum_triangles_per_eye=100000, scene_triangles_per_eye=scene_tr
     menagerie_revision=collision_spec['menagerie_revision'],
     finger_error_m=collision_spec['finger_error_m'], palm_error_m=collision_spec['palm_error_m']), indent=2)+'\n')
 print('Complete rendered scene triangles per eye:', scene_triangles, '/ 100000')
-font_path = '/System/Library/Fonts/Supplemental/Arial.ttf'
-title_font = ImageFont.truetype(font_path, 48)
-body_font = ImageFont.truetype(font_path, 36)
+def hud_font(size, monospaced=False):
+    candidates = (['/System/Library/Fonts/Menlo.ttc',
+                   '/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf',
+                   'DejaVuSansMono.ttf'] if monospaced else
+                  ['/System/Library/Fonts/Supplemental/Arial.ttf',
+                   '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',
+                   'DejaVuSans.ttf'])
+    for candidate in candidates:
+        try:
+            return ImageFont.truetype(candidate, size)
+        except OSError:
+            pass
+    raise RuntimeError('Install DejaVu fonts or provide the platform HUD fonts')
+
+title_font = hud_font(48)
+body_font = hud_font(36)
 states = ['G1 · Для калибровки нажмите A', 'G1 · GMR: полный скелет',
                               'G1 · Трекинг на паузе', 'G1 · Нет полного скелета',
                               'G1 · Робот упал. X → рестарт', 'G1 · GMR: большая ошибка позы']
@@ -113,7 +126,7 @@ for state in range(18):
     (assets/f'controls_{state}.rgba').write_bytes(panel.tobytes())
 (assets/'controls.rgba').unlink(missing_ok=True)
 # Fixed native HUD glyph atlas. Runtime only changes a small vertex buffer.
-font = ImageFont.truetype('/System/Library/Fonts/Menlo.ttc', 26)
+font = hud_font(26, monospaced=True)
 atlas = Image.new('L', (512, 240), 0)
 draw = ImageDraw.Draw(atlas)
 for code in range(32, 127):
@@ -130,7 +143,7 @@ for i,char in enumerate(capture_chars):
 capture_draw.rectangle((15*32,5*40,511,239),fill=255)
 (assets/'capture_font.bin').write_bytes(capture_atlas.tobytes())
 # Menu labels use proportional advances with the same Russian/ASCII mapping.
-menu_font = ImageFont.truetype(font_path, 26)
+menu_font = hud_font(26)
 menu_atlas = Image.new('L', (512, 440), 0)
 menu_draw = ImageDraw.Draw(menu_atlas)
 for i, char in enumerate(capture_chars):
