@@ -1,3 +1,6 @@
-models/
+models/*
+!models/denoiser_v1.pt
+!models/denoiser_v1.onnx
+!models/denoiser_v1.onnx.fixture.npz
 recordings/
 .cache/
