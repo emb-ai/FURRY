@@ -76,6 +76,43 @@ def clearance_penalty(actual, target, valid, scale=.025):
     return loss.sum(-1) / valid.sum(-1).clamp(min=1)
 
 
+def lift_penalty(robot, reference, force_z, valid, lifted=.03, scale=.05):
+    """Per foot while the reference sole is up: robot contact plus one-sided
+    height shortfall. robot/reference clearance [E,2] m, force_z [E,2], valid [E]."""
+    up = (reference > lifted) & valid[:, None]
+    shortfall = ((reference-robot).clamp(min=0.)/scale).square().clamp(max=4.)
+    return (up * ((force_z > 5.).to(robot.dtype) + shortfall)).sum(-1)
+
+
+class LiftTable:
+    """build_lift.py output: floor-relative reference sole clearance, Quest TRAIN clips."""
+    def __init__(self, path, files, dataset, device):
+        path = Path(path)
+        self.metadata = json.loads(path.with_suffix('.json').read_text())
+        if self.metadata['dataset_manifest_sha256'] != sha(Path(dataset)/'manifest.json'):
+            raise ValueError('Lift dataset differs')
+        if self.metadata['npz_sha256'] != sha(path):
+            raise ValueError('Lift table changed')
+        index = self.metadata['files']
+        names = [str(Path(f).resolve().relative_to(Path(dataset).resolve())) for f in files]
+        if set(names) != set(index):
+            raise ValueError('Lift motion set differs')
+        with np.load(path, allow_pickle=False) as z:
+            arrays = [z[index[name]['key']] for name in names]
+        padded = np.zeros((len(arrays), max(len(x) for x in arrays), 2), np.float32)
+        for i, arr in enumerate(arrays):
+            padded[i, :len(arr)] = arr
+        self.table = torch.as_tensor(padded, device=device)
+        self.fps = torch.tensor([index[n].get('fps', 1.) for n in names], device=device)
+        self.lengths = torch.tensor([len(x) for x in arrays], device=device)
+        self.valid = torch.tensor([bool(index[n]['valid']) for n in names], device=device)
+
+    def sample(self, ids, times):
+        idx = torch.floor(times*self.fps[ids]).long().clamp(min=0)
+        inside = idx < self.lengths[ids]
+        return self.table[ids, torch.minimum(idx, self.lengths[ids]-1)], self.valid[ids] & inside
+
+
 class PhaseTable:
     """Offline TRAIN-only kinematic teacher, indexed by immutable motion filename."""
     def __init__(self, path, files, dataset, device):
@@ -111,8 +148,11 @@ class PhaseTable:
 class ContactClearance:
     feature_dim = 6  # target/valid/stance per foot, same in A/B/C
 
-    def __init__(self, env, config, sole_urdf, phase_path, dataset):
+    def __init__(self, env, config, sole_urdf, phase_path, dataset, lift_path=None):
         self.env, self.config = env, config
+        self.lift_weight = float(config.get('lift_penalty_weight', 0.))
+        if self.lift_weight < 0 or bool(self.lift_weight) != bool(lift_path):
+            raise ValueError('lift_penalty_weight > 0 needs a lift table, and only then')
         centers, radii, com = read_soles(sole_urdf)
         self.centers = torch.tensor(centers, dtype=torch.float32, device=env.device)
         self.radii = torch.tensor(radii, dtype=torch.float32, device=env.device)
@@ -132,6 +172,7 @@ class ContactClearance:
                                              for ps in properties],device=env.device)
         self.weight = torch.tensor(masses, device=env.device) * 9.81
         self.phase = PhaseTable(phase_path, env._motion_lib._motion_files, dataset, env.device) if phase_path else None
+        self.lift = LiftTable(lift_path, env._motion_lib._motion_files, dataset, env.device) if lift_path else None
         if config['condition'] == 'C' and self.phase is None:
             raise ValueError('C requires a validated teacher')
         self.features = torch.zeros(env.num_envs, self.feature_dim, device=env.device)
@@ -156,14 +197,21 @@ class ContactClearance:
         total, sliding, missing, loads = contact_penalty(gaps, velocity,
             e.contact_forces[:, e.feet_indices, 2], expected_support, self.weight)
         self.raw = {'contact_points': total, 'sole_clearance': clearance_penalty(actual, phase[..., 0], phase[..., 1])}
+        if self.lift is not None:
+            reference, valid = self.lift.sample(e._motion_ids, e._get_motion_times())
+            valid = valid & (e.episode_length_buf > 2)
+            self.raw['lift_follow'] = lift_penalty(actual, reference, e.contact_forces[:, e.feet_indices, 2], valid)
         self.diagnostics = dict(clearance=actual, gap=gaps, velocity=velocity, points=points,
                                 phase=phase, loads=loads, sliding=sliding, missing_support=missing)
 
     def _install(self):
         e = self.env
         original_reward, original_reset, original_push = e.compute_reward, e.reset_idx, e._push_robots
-        weights = self.config['weights']
-        for name in ('contact_points', 'sole_clearance'):
+        weights = dict(self.config['weights'])
+        names = ('contact_points', 'sole_clearance')
+        if self.lift is not None:
+            weights['lift_follow'] = self.lift_weight; names += ('lift_follow',)
+        for name in names:
             e.reward_names.append(name)
             e.reward_functions.append(lambda name=name: -self.raw[name])
             e.reward_scales[name] = float(weights[name])*e.dt

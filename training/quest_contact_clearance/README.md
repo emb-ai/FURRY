@@ -171,6 +171,10 @@ Published inputs (Git LFS; `git lfs pull --include="datasets/**"`):
    clips with the Meta Quest clips. Files are byte copies; stages must not collide.
 3. `author_dataset.py --quest QUEST ...` builds the mixture as before.
    Run `build_phase.py` on the new mixture; Quest phase stays masked.
+   For the lifted-foot penalty also run `build_lift.py --dataset MIXTURE
+   --assets ASSETS --output lift.npz` (reference sole clearance of Quest TRAIN
+   clips) and pass `--lift-table lift.npz --lift-penalty W`, pinned by the
+   experiment keys `lift_penalty_weight` and `lift_table_sha256` (0 = off).
 4. `camera_mixture.py bank --dataset MIXTURE --banks native-bank-camera-off/bank.npz
    dataset-v1/command_bank.npz --output BANK.npz` writes one
    quest-native-command-bank-v1 covering every Quest TRAIN clip. Both banks
