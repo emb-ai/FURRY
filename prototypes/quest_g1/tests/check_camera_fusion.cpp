@@ -228,5 +228,46 @@ int main(){
   overlay.valid[5]=false;Require(!smoother.Smooth(overlay,182/72.).valid[5],"Dropped overlay point still drawn");
   overlay.valid[5]=true;overlay.points[5][1]+=.3;Require(smoother.Smooth(overlay,183/72.).points[5]==overlay.points[5],"Reappearing overlay point does not snap");
  }
- puts("Camera rigid fit, delayed correction, bone projection, stale, expiry, invalid heartbeat, degeneracy, second person, knee lift, knee hinge, leg-source switch, registration persistence, STAGE re-verification and overlay smoothing checks passed");
+ // RGB-only 2D keypoints with an AprilTag registration: a knee lift that
+ // Meta does not generate reaches the legs from reprojection alone.
+ {
+  auto body=frames.back();auto H=body.body.joints[2].position;
+  std::array<double,3> pos{2,1.2,2.5},aim{body.body.joints[0].position[0],1,0},f,d,r;
+  for(int a=0;a<3;a++)f[a]=aim[a]-pos[a];mju_normalize3(f.data());
+  d={0,-1,0};double fd=mju_dot3(d.data(),f.data());for(int a=0;a<3;a++)d[a]-=fd*f[a];mju_normalize3(d.data());mju_cross(r.data(),d.data(),f.data());
+  CameraSkeleton packet;packet.frame="camera";packet.hasStagePose=packet.hasKeypoints=true;
+  packet.stageRotation={r[0],d[0],f[0],r[1],d[1],f[1],r[2],d[2],f[2]};packet.stageTranslation=pos;packet.intrinsics={910,905,640,360};
+  auto project=[&](std::array<double,3> p,int i,std::array<double,2> shift={0,0}){
+   double q[3],c[3];mju_sub3(q,p.data(),pos.data());mju_mulMatTVec(c,packet.stageRotation.data(),q,3,3);
+   auto&k=packet.keypoints[i];k.u=910*c[0]/c[2]+640+shift[0];k.v=905*c[1]/c[2]+360+shift[1];k.confidence=.9;k.valid=true;
+  };
+  double thigh=0,shin=0;{double a[3],b[3];mju_sub3(a,body.body.joints[4].position.data(),H.data());mju_sub3(b,body.body.joints[6].position.data(),body.body.joints[4].position.data());thigh=mju_norm3(a);shin=mju_norm3(b);}
+  std::array<double,3> knee{H[0],H[1]-.5*thigh,H[2]+.866*thigh},ankle{knee[0],knee[1]-shin,knee[2]};
+  auto fill=[&](std::array<double,2> shift){
+   project(body.body.joints[2].position,0,shift);project(body.body.joints[3].position,1,shift);
+   project(knee,2,shift);project(ankle,4,shift);project(body.body.joints[5].position,3,shift);project(body.body.joints[7].position,5,shift);
+  };
+  fill({0,0});
+  auto run=[&](CameraFusion& f,double start){TrackingFrame out;
+   for(int n=0;n<=40;n++){double ms=start+20*n;body.xr_time_ns=body.body.time_ns=int64_t(ms*1e6);f.Observe(body,ms);
+    if(n%4==0){packet.sequence++;packet.sourceMs=packet.receivedMs=ms;}out=f.Apply(body,&packet,ms);}
+   return out;};
+  CameraFusion rays;auto out=run(rays,700000);
+  double e[3];mju_sub3(e,out.body.joints[4].position.data(),knee.data());
+  Require(rays.stats.legs==2 && rays.stats.legs2d==2,"2D keypoints did not drive the legs");
+  Require(mju_norm3(e)<.03,"2D knee lift not recovered");
+  mju_sub3(e,out.body.joints[6].position.data(),ankle.data());Require(mju_norm3(e)<.03,"2D ankle not recovered");
+  Require(rays.stats.reprojPx>=0 && rays.stats.reprojPx<2,"2D solution does not reproject");
+  auto shown=rays.MapForDisplay(&packet,body,packet.sourceMs);mju_sub3(e,shown.points[2].data(),knee.data());
+  Require(shown.aligned && shown.valid[2] && mju_norm3(e)<.03 && !shown.valid[7],"2D legs not shown, or shoulders invented");
+  // Off: the depth path, which RGB-only packets cannot feed.
+  CameraFusion off;off.use2d=false;run(off,710000);Require(off.stats.legs==0,"2D keypoints drive the legs with 2D off");
+  // Another person: detected hips 60 px (~0.2 m per 60 px at 3 m) away is
+  // within the gate; 300 px is not the operator.
+  fill({300,0});CameraFusion crowd;run(crowd,720000);Require(crowd.stats.legs2d==0,"Keypoints of another person drive the legs");
+  // RGB-only without the AprilTag: no legs, and the HUD asks for the tag.
+  fill({0,0});packet.hasStagePose=false;CameraFusion unregistered;run(unregistered,730000);
+  Require(unregistered.stats.legs==0 && unregistered.stats.state==1 && unregistered.stats.fitHint==6,"RGB-only packets without registration");
+ }
+ puts("Camera rigid fit, delayed correction, bone projection, stale, expiry, invalid heartbeat, degeneracy, second person, knee lift, knee hinge, leg-source switch, registration persistence, STAGE re-verification and overlay smoothing, 2D keypoint legs checks passed");
 }

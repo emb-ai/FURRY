@@ -24,6 +24,11 @@ c — зафиксировать камеру по AprilTag и позе конт
   --imgsz — для A/B скорости на конкретной машине; infer и age видны в [тайминг].
   --euro-mincutoff/--euro-beta — One-Euro (лаг в покое 1/(2π·mincutoff)).
   --bone-sigma-depth — колени/лодыжки: глубина против длины кости (fusion.constrain_legs).
+  --no-depth — только RGB-поток RealSense: в пакетах лишь 2D-кейпоинты (kp2d) и
+  интринсики; шлем строит ноги по лучам камеры. Связка камера→STAGE тогда
+  только по AprilTag (клавиша c), плечевой регистрации нужны 3D-точки.
+Каждый пакет (кроме --no-kp2d) несёт kp2d/intr (сырые 2D до One-Euro, без дисторсии), после
+фиксации маркера — и stage_from_camera.
 Превью — в полразмера панелей (экономия ~15 мс/кадр на imshow).
 """
 import argparse
@@ -39,6 +44,7 @@ from ultralytics import YOLO
 
 from camera_open import latest_frames
 from fusion import BoneLengths, OneEuro, constrain_legs, fuse_joints
+from keypoints2d import wire_keypoints
 from person_track import PersonTrack
 from marker_frame import MarkerSession, to_stage_relative
 
@@ -182,7 +188,15 @@ def main():
     parser.add_argument("--marker-id", type=int, default=0)
     parser.add_argument("--marker-hand", choices=["right", "left"], default="right")
     parser.add_argument("--session", help="JSON связки камера→STAGE: загрузить, если файл есть, и писать сюда по клавише c")
+    parser.add_argument("--no-depth", action="store_true",
+                        help="только цвет: 2D-кейпоинты без глубины; связка камеры по AprilTag")
+    parser.add_argument("--no-kp2d", action="store_true",
+                        help="не слать 2D-кейпоинты: шлем строит ноги по глубине (A/B со старым путём)")
     args = parser.parse_args()
+    if args.no_depth and args.no_kp2d:
+        parser.error("--no-depth без kp2d не даёт шлему ни одной точки ног")
+    if args.no_depth and args.record_rgbd:
+        parser.error("--record-rgbd пишет глубину; с --no-depth используйте --log")
     size, filt = args.size, args.filters
     server = None
     rgbd_recorder = None
@@ -194,7 +208,8 @@ def main():
 
     cfg = rs.config()
     cfg.enable_stream(rs.stream.color, 1280, 720, rs.format.bgr8, 30)
-    cfg.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
+    if not args.no_depth:
+        cfg.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
 
     # depth-фильтры SDK (stateful, создаём один раз)
     spatial = rs.spatial_filter()
@@ -272,14 +287,15 @@ def main():
             if pipeline is None:
                 filters.clear()
                 pipeline, profile = open_camera()
-                align = rs.align(rs.stream.color)
-                depth_scale = profile.get_device().first_depth_sensor().get_depth_scale()
+                align = None if args.no_depth else rs.align(rs.stream.color)
+                depth_scale = None if args.no_depth else profile.get_device().first_depth_sensor().get_depth_scale()
                 color_intr = (profile.get_stream(rs.stream.color)
                               .as_video_stream_profile().get_intrinsics())
                 marker_K = np.array([[color_intr.fx, 0, color_intr.ppx],
                                      [0, color_intr.fy, color_intr.ppy],
                                      [0, 0, 1]], np.float64)
                 marker_dist = np.asarray(color_intr.coeffs, np.float64)
+                intrinsics = [color_intr.fx, color_intr.fy, color_intr.ppx, color_intr.ppy]
                 print(f"USB: {profile.get_device().get_info(rs.camera_info.usb_type_descriptor)}", flush=True)
             t = time.perf_counter()
             try:
@@ -305,10 +321,12 @@ def main():
             age_sum += timing["frame_age_ms"]
             dropped_sum += dropped
             t = tic("wait", t)
-            fs = align.process(fs)
+            if align is not None:
+                fs = align.process(fs)
             t = tic("align", t)
-            color_f, depth_f = fs.get_color_frame(), fs.get_depth_frame()
-            if not color_f or not depth_f:
+            color_f = fs.get_color_frame()
+            depth_f = None if args.no_depth else fs.get_depth_frame()
+            if not color_f or (not args.no_depth and not depth_f):
                 continue
             # при --ws отсчёт задержки идёт от подключения шлема, а не от запуска:
             # 10-13 запись 120 с закончилась раньше, чем шлем подключился
@@ -321,11 +339,12 @@ def main():
                      "distortion_coeffs": np.array(color_intr.coeffs),
                      "timestamp_domain": str(color_f.get_frame_timestamp_domain())})
             # depth-фильтры SDK по выбранному режиму
-            for flt in chain:
-                depth_f = flt.process(depth_f)
+            if depth_f is not None:
+                for flt in chain:
+                    depth_f = flt.process(depth_f)
             t = tic("filters", t)
             color = np.asanyarray(color_f.get_data())
-            depth_m = np.asanyarray(depth_f.get_data()).astype(np.float32) * depth_scale
+            depth_m = None if depth_f is None else np.asanyarray(depth_f.get_data()).astype(np.float32) * depth_scale
             # AprilTag (~4+ мс на 720p) нужен только для фиксации клавишей c.
             if marker_K is not None and not args.headless and not session.locked:
                 session.observe(color, marker_K, marker_dist)
@@ -334,7 +353,7 @@ def main():
             res = model.predict(color, imgsz=args.imgsz, conf=0.3, classes=0,
                                 **({"device": device} if device else {}), verbose=False)[0]
             t = tic("infer", t)
-            raw, pts2d, sources, confidence = {}, {}, {}, {}
+            raw, pts2d, sources, confidence, kp2d = {}, {}, {}, {}, {}
             pick = None
             if res.keypoints is not None and len(res.keypoints):
                 kxy = res.keypoints.xy.cpu().numpy().reshape(-1, 17, 2)
@@ -345,16 +364,18 @@ def main():
                 skipped += pick is None
             if pick is not None:
                 xy, conf = kxy[pick], kconf[pick]
+                kp2d = wire_keypoints(xy, conf, intrinsics, marker_dist)
                 for i in range(min(17, len(xy))):
                     if conf[i] > 0.5:
                         confidence[i] = float(conf[i])
                         pts2d[i] = (float(xy[i][0]), float(xy[i][1]))
 
-                # 3D: фьюжн общий с analyze_bag.py (fusion.py)
-                raw = fuse_joints(depth_m, pts2d, color_intr, sources=sources)
-                bone_lengths.update(raw)
-                if args.bone_sigma_depth > 0:
-                    raw = constrain_legs(raw, pts2d, color_intr, bone_lengths, args.bone_sigma_depth)
+                # 3D: фьюжн общий с analyze_bag.py (fusion.py); без глубины — только 2D
+                if depth_m is not None:
+                    raw = fuse_joints(depth_m, pts2d, color_intr, sources=sources)
+                    bone_lengths.update(raw)
+                    if args.bone_sigma_depth > 0:
+                        raw = constrain_legs(raw, pts2d, color_intr, bone_lengths, args.bone_sigma_depth)
                 t = tic("fuse", t)
 
                 # отрисовка 2D
@@ -377,9 +398,11 @@ def main():
             sequence += 1
             if server:
                 wire, wire_frame, pelvis = smoothed, "camera", None
+                flat = dict(kp2d=None if args.no_kp2d else kp2d, intrinsics=intrinsics,
+                            stage_from_camera=(session.R, session.t) if session.locked else None)
                 if session.locked:
                     server.record("camera", packet(smoothed, confidence, sources, frame_timestamp,
-                                                   sequence, fps, backend, timing=timing, session_id=session_id))
+                                                   sequence, fps, backend, timing=timing, session_id=session_id, **flat))
                     converted = to_stage_relative(smoothed, session.R, session.t)
                     wire_frame = "pelvis-relative"
                     if converted:
@@ -388,7 +411,7 @@ def main():
                     else:
                         wire, pelvis = {}, {"p": [0, 0, 0], "conf": 0}
                 server.publish(packet(wire, confidence, sources, frame_timestamp,
-                                      sequence, fps, backend, wire_frame, pelvis, timing, session_id))
+                                      sequence, fps, backend, wire_frame, pelvis, timing, session_id, **flat))
             frames += 1
             dt = time.monotonic() - t0
             if dt > 1:
@@ -407,9 +430,10 @@ def main():
                 quad = session.corners.astype(np.int32).reshape(-1, 1, 2)
                 cv2.polylines(color, [quad], True, (0, 220, 255), 2, cv2.LINE_AA)
             pelvis = smoothed.get(11)
+            depth_info = "RGB only" if args.no_depth else f"pelvis {'-' if pelvis is None else f'{pelvis[2]:.2f} m'}"
             marker = "STAGE" if session.locked else ("маркер" if session.corners is not None else "нет маркера")
             info = (f"fps {fps:4.1f} | joints {len(smoothed)}/17 | "
-                    f"pelvis {'-' if pelvis is None else f'{pelvis[2]:.2f} m'} | {marker}")
+                    f"{depth_info} | {marker}")
             cv2.putText(color, info, (12, 30), 6, 0.7, (60, 255, 60), 2)
             cv2.putText(color, "c — зафиксировать камеру контроллером", (12, 86),
                         6, 0.55, (200, 200, 200), 1)

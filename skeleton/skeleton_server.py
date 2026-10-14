@@ -13,7 +13,8 @@ JOINTS = {"lhip": 11, "lknee": 13, "lankle": 15, "rhip": 12,
 
 
 def packet(points, confidence, sources, timestamp, seq, fps, backend,
-           frame="camera", pelvis=None, timing=None, session_id=None):
+           frame="camera", pelvis=None, timing=None, session_id=None,
+           kp2d=None, intrinsics=None, stage_from_camera=None):
     def joint(i):
         p = points.get(i)
         if p is None or not all(math.isfinite(float(x)) for x in p):
@@ -39,6 +40,19 @@ def packet(points, confidence, sources, timestamp, seq, fps, backend,
     # хранит payload целиком) с логом и RGB-D этой сессии без сверки по времени
     if session_id:
         value["session_id"] = session_id
+    # kp2d: сырые 2D-кейпоинты детектора до One-Euro, пиксели цветного кадра
+    # без дисторсии (pinhole intr = [fx, fy, cx, cy]), по имени сустава
+    # [u, v, conf]. Шлем строит ноги по лучам камеры, без глубины.
+    if kp2d is not None and intrinsics is not None:
+        value["intr"] = [float(x) for x in intrinsics]
+        value["kp2d"] = {name: [float(kp2d[i][0]), float(kp2d[i][1]), float(kp2d[i][2])]
+                         for name, i in JOINTS.items() if i in kp2d
+                         and all(math.isfinite(float(x)) for x in kp2d[i])}
+    # stage_from_camera: связка AprilTag, p_stage = R @ p_camera + t (R по строкам).
+    if stage_from_camera is not None:
+        rotation, translation = stage_from_camera
+        value["stage_from_camera"] = {"R": [float(x) for row in rotation for x in row],
+                                      "t": [float(x) for x in translation]}
     return value
 
 

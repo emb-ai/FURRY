@@ -1,4 +1,5 @@
 #include "camera_fusion.h"
+#include "camera_legs2d.h"
 #include <algorithm>
 #include <cerrno>
 #include <cmath>
@@ -115,7 +116,7 @@ void Mix(const std::array<double,9>&Ra,const V&ta,const std::array<double,9>&Rb,
 constexpr int windowSize=300,maxWindows=9,checkSize=100;constexpr size_t minVerify=20;
 constexpr double inlierM=.15,minConsistent=.2,maxStoredDeg=12,maxStoredM=.25;
 }
-void CameraFusion::Reset(){history.clear();lastSequence=~0ull;lastApplyMs=0;target={};halfway={};correction={};weights={};activeWeights={};lastGoodMs={};stats.state=stats.legs=stats.ready=0;stats.ageMs=-1;stats.weight=0;}
+void CameraFusion::Reset(){history.clear();lastSequence=~0ull;lastApplyMs=0;target={};halfway={};correction={};weights={};activeWeights={};lastGoodMs={};solvedMs={};stats.state=stats.legs=stats.ready=stats.legs2d=0;stats.ageMs=-1;stats.weight=0;stats.reprojPx=stats.flipGap=-1;}
 void CameraFusion::ForgetRegistration(){
  fitBuffer.clear();fitRandom=1;fitCountdown=0;aligned=false;checks.clear();
  rotation=storedRotation=windowRotation={1,0,0,0,1,0,0,0,1};translation=storedTranslation=windowTranslation={};
@@ -292,51 +293,91 @@ TrackingFrame CameraFusion::Apply(const TrackingFrame&raw,const CameraSkeleton*c
  bool usableAge=c && stats.ageMs>=0 && stats.ageMs<500 && now-c->sourceMs>=-100;
  bool newPacket=c && c->sequence!=lastSequence;
  if(newPacket){
-  lastSequence=c->sequence;weights={};
+  lastSequence=c->sequence;weights={};stats.legs2d=0;stats.reprojPx=stats.flipGap=-1;
   // Registration compares timestamp-matched historical poses. Its latency
   // limit need not be the strict limit for driving the current physical legs.
   bool registrationFresh=c && stats.ageMs>=0 && stats.ageMs<1000 && now-c->sourceMs>=-100;
   if(!history.empty() && registrationFresh){auto it=std::min_element(history.begin(),history.end(),[&](const Sample&a,const Sample&b){return std::abs(a.ms-c->sourceMs)<std::abs(b.ms-c->sourceMs);});
    if(std::abs(it->ms-c->sourceMs)<60){
     Fit(*c,it->frame);if(moved && !aligned && stats.fitHint>=3)stats.fitHint=5;
+    // RGB-only packets carry no 3D shoulders: only the AprilTag can register.
+    if(!aligned && c->hasKeypoints && !c->hasStagePose && !Good(c->joints[7]) && !Good(c->joints[8]))stats.fitHint=6;
     bool usable=aligned && verified && c->frame=="camera";
     // pelvis-relative packets already use STAGE axes and need no camera R.
     bool stage=c->frame=="pelvis-relative";
-    if(usableAge && (usable || stage) && Good(c->pelvis)){
+    const auto& meta=it->frame.body.joints;
+    // Operator's left, horizontal: the knee hinge axis up to thigh roll.
+    V lateral=Sub(meta[2].position,meta[3].position);lateral[1]=0;
+    // Lay thigh and shin directions out from Meta's hip with Meta's bone
+    // lengths. Camera positions put knees 5-7 cm and ankles 10-14 cm high
+    // (hip-midpoint pelvis, short 2D shins): that would bend standing legs.
+    // Large lifts are valid, so there is no correction-size limit.
+    auto drive=[&](int side,V thigh,V shin,double conf){
+     V metaThigh=Sub(meta[4+side].position,meta[2+side].position),metaShin=Sub(meta[6+side].position,meta[4+side].position);
+     double upper=Norm(metaThigh),lower=Norm(metaShin);
+     Hinge(thigh,shin,lateral,Unit(metaThigh),Unit(metaShin),upper,lower);
+     V knee=Add(meta[2+side].position,Mul(thigh,upper));
+     V ankle=Add(knee,Mul(shin,lower));
+     std::array<V,3> delta{V{},Sub(knee,meta[4+side].position),Sub(ankle,meta[6+side].position)};
+     // A leg that is not being driven starts from this packet, not from an
+     // old correction swept in by the smoother.
+     bool idle=activeWeights[side]<.01;
+     for(int k=0;k<3;k++){target[2*k+side]=delta[k];if(idle)halfway[2*k+side]=correction[2*k+side]=delta[k];}
+     weights[side]=conf;lastGoodMs[side]=c->sourceMs;
+    };
+    bool rays=use2d && c->hasKeypoints && (c->hasStagePose || usable);
+    if(usableAge && rays){
+     // 2D keypoints: knee and ankle must reproject onto the detector's pixels.
+     // Camera depth is not used; the depth axis is regularised (legs2d).
+     legs2d::Camera cam;
+     cam.R=c->hasStagePose?c->stageRotation:rotation;cam.t=c->hasStagePose?c->stageTranslation:translation;
+     cam.fx=c->intrinsics[0];cam.fy=c->intrinsics[1];cam.cx=c->intrinsics[2];cam.cy=c->intrinsics[3];
+     auto pixel=[&](int i){legs2d::Pixel p;const auto&k=c->keypoints[i];p.valid=k.valid && k.confidence>=.55;p.u=k.u;p.v=k.v;p.confidence=k.confidence;return p;};
+     // Another person (or a broken registration): Meta's hips must project
+     // near the detected hips, within 35 cm at Meta's hip depth.
+     auto lh=pixel(0),rh=pixel(1);bool person=false;
+     if(lh.valid && rh.valid){
+      V mid=Mul(Add(meta[2].position,meta[3].position),.5);double u,v;
+      if(cam.Project(mid,u,v)){double depth=cam.Depth(mid);person=std::hypot(u-.5*(lh.u+rh.u),v-.5*(lh.v+rh.v))*depth/std::max(1.,.5*(cam.fx+cam.fy))<=.35;}
+     }
+     for(int side=0;side<2 && person;side++){
+      legs2d::LegInput in;in.hip=meta[2+side].position;in.metaKnee=meta[4+side].position;in.metaAnkle=meta[6+side].position;
+      in.thigh=Norm(Sub(in.metaKnee,in.hip));in.shin=Norm(Sub(in.metaAnkle,in.metaKnee));in.lateral=lateral;
+      in.knee=pixel(2+side);in.ankle=pixel(4+side);
+      // Temporal depth prior: the previous solution, moved with Meta's hip.
+      if(solvedMs[side] && c->sourceMs-solvedMs[side]<300){in.hasPrevious=true;in.previousKnee=Add(in.hip,solvedKnee[side]);in.previousAnkle=Add(in.hip,solvedAnkle[side]);}
+      auto leg=legs2d::SolveLeg(cam,in);
+      // A solution that cannot reproject within 25 px fits no leg pose
+      // (keypoint swapped or on another person): drive nothing.
+      if(!leg.ok || leg.kneePx>25 || leg.anklePx>25)continue;
+      solvedKnee[side]=Sub(leg.knee,in.hip);solvedAnkle[side]=Sub(leg.ankle,in.hip);solvedMs[side]=c->sourceMs;
+      stats.legs2d++;stats.reprojPx=std::max({stats.reprojPx,leg.kneePx,leg.anklePx});
+      if(leg.flipGap>=0)stats.flipGap=stats.flipGap<0?leg.flipGap:std::min(stats.flipGap,leg.flipGap);
+      // Full weight: confidence already weighs the pixels inside the solve.
+      // Scaling the correction by it (as the depth path does) would shrink
+      // every lift by ~10% at YOLO's typical 0.9.
+      drive(side,leg.thighDir,leg.shinDir,1);
+     }
+    }
+    else if(usableAge && (usable || stage) && Good(c->pelvis)){
      for(int side=0;side<2;side++){
       bool good=Good(c->joints[side]) && Good(c->joints[2+side]) && Good(c->joints[4+side]);
       if(!good){weights[side]=0;continue;}
       double conf=1;for(int k=0;k<3;k++)conf=std::min(conf,c->joints[2*k+side].confidence);
-      const auto& meta=it->frame.body.joints;
       // A registered camera pelvis far from Meta's is another person (or a
       // broken registration), not a leg pose. STAGE packets carry no position.
       if(!stage && Norm(Sub(Add(Rotate(rotation,c->pelvis.p),translation),meta[0].position))>.35){weights[side]=0;continue;}
-      // Transfer thigh and shin directions only, from Meta's hip with Meta's
-      // bone lengths. Camera positions put knees 5-7 cm and ankles 10-14 cm
-      // high (hip-midpoint pelvis, short 2D shins): that would bend standing
-      // legs. Large lifts are valid, so there is no correction-size limit.
+      // Transfer thigh and shin directions only.
       auto direction=[&](int from,int to){V d=Sub(c->joints[to].p,c->joints[from].p);return Unit(stage?d:Rotate(rotation,d));};
-      V thigh=direction(side,2+side),shin=direction(2+side,4+side);
-      // Operator's left, horizontal: the knee hinge axis up to thigh roll.
-      V lateral=Sub(meta[2].position,meta[3].position);lateral[1]=0;
-      V metaThigh=Sub(meta[4+side].position,meta[2+side].position),metaShin=Sub(meta[6+side].position,meta[4+side].position);
-      double upper=Norm(metaThigh),lower=Norm(metaShin);
-      Hinge(thigh,shin,lateral,Unit(metaThigh),Unit(metaShin),upper,lower);
-      V knee=Add(meta[2+side].position,Mul(thigh,upper));
-      V ankle=Add(knee,Mul(shin,lower));
-      std::array<V,3> delta{V{},Sub(knee,meta[4+side].position),Sub(ankle,meta[6+side].position)};
-      // A leg that is not being driven starts from this packet, not from an
-      // old correction swept in by the smoother.
-      bool idle=activeWeights[side]<.01;
-      for(int k=0;k<3;k++){target[2*k+side]=delta[k];if(idle)halfway[2*k+side]=correction[2*k+side]=delta[k];}
-      weights[side]=conf;lastGoodMs[side]=c->sourceMs;
+      drive(side,direction(side,2+side),direction(2+side,4+side),conf);
      }
     }
    }
   }
  }
  
- stats.state=(!(aligned && verified) && c && c->frame=="camera")?1:fresh?2:stats.ageMs<500 && c?3:0;
+ bool registered=c && (c->hasStagePose || c->frame=="pelvis-relative" || (aligned && verified));
+ stats.state=(c && !registered && c->frame=="camera")?1:fresh?2:stats.ageMs<500 && c?3:0;
  // Packets arrive at ~12 Hz with 4-5 cm of depth noise; holding each target
  // fed the policy a 12 Hz staircase (fused knee/ankle 2nd difference 12x
  // Meta's). Two 40 ms stages still left the live reference 2-2.5x Meta's
@@ -386,11 +427,19 @@ CameraOverlay CameraFusion::MapForDisplay(const CameraSkeleton*c,const TrackingF
  out.ageMs=std::max(now-c->sourceMs,now-c->receivedMs);
  bool relative=c->frame=="pelvis-relative";
  out.aligned=(aligned && c->frame=="camera") || (relative && Good(c->pelvis));
- if(!out.aligned || out.ageMs<0 || out.ageMs>=500)return out;
- for(int i=0;i<14;i++){
+ if(out.ageMs<0 || out.ageMs>=500)return out;
+ if(out.aligned)for(int i=0;i<14;i++){
   const auto&j=i==13?c->pelvis:c->joints[i];if(!Good(j))continue;
   out.points[i]=relative?Add(c->pelvis.p,i==13?V{}:j.p):Add(Rotate(rotation,j.p),translation);
   out.valid[i]=true;
+ }
+ // 2D-solved legs replace measured ones: they are what drives the robot.
+ // Hips are Meta's (the anchor of the solve), knees and ankles the solution.
+ if(use2d && c->hasKeypoints)for(int side=0;side<2;side++){
+  if(!solvedMs[side] || c->sourceMs-solvedMs[side]>=500)continue;
+  V hip=raw.body.joints[2+side].position;
+  out.points[side]=hip;out.points[2+side]=Add(hip,solvedKnee[side]);out.points[4+side]=Add(hip,solvedAnkle[side]);
+  out.valid[side]=out.valid[2+side]=out.valid[4+side]=true;out.aligned=true;
  }
  return out;
 }

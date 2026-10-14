@@ -3,10 +3,16 @@
 #include <deque>
 #include <string>
 struct CameraJoint {std::array<double,3> p{};double confidence=0;bool measured=false;};
+// Raw detector keypoint: undistorted colour-image pixels before smoothing.
+struct CameraKeypoint {double u=0,v=0,confidence=0;bool valid=false;};
 struct CameraSkeleton {
  // hips L/R, knees L/R, ankles L/R, nose, shoulders L/R, wrists L/R, elbows L/R
  std::array<CameraJoint,13> joints{};CameraJoint pelvis;
  uint64_t sequence=0;double sourceMs=0,receivedMs=0;std::string frame;
+ // Optional 2D stream: same joint order, pinhole intrinsics fx, fy, cx, cy.
+ std::array<CameraKeypoint,13> keypoints{};std::array<double,4> intrinsics{};bool hasKeypoints=false;
+ // Optional PC-side AprilTag registration: p_stage = R p_camera + t.
+ std::array<double,9> stageRotation{1,0,0,0,1,0,0,0,1};std::array<double,3> stageTranslation{};bool hasStagePose=false;
 };
 struct CameraOverlay {
  std::array<std::array<double,3>,14> points{}; // camera joints, then pelvis
@@ -25,9 +31,13 @@ public:
 };
 // Registration progress for the HUD. hint: 0 ok, 1 no person/shoulders,
 // 2 operator side-on, 3 needs more walking, 4 inconsistent (other person?),
-// 5 the stored registration stopped matching (camera moved): walk again.
+// 5 the stored registration stopped matching (camera moved): walk again,
+// 6 2D-only packets and no AprilTag registration (press c on the PC).
 // ready: legs the camera could drive now, also while legsEnabled is off.
-struct CameraFusionStats {int state=0,legs=0,ready=0,fitPackets=0,fitHint=1;double ageMs=-1,fitMm=-1,weight=0,fitProgress=0,fitSplitDeg=-1,fitSpreadCm=0,fitInliers=0;};
+// legs2d: legs of the last packet solved from 2D keypoints (no camera depth);
+// reprojPx: their worst knee/ankle reprojection error; flipGap: the smallest
+// cost margin to the mirrored knee branch (small = the view was ambiguous).
+struct CameraFusionStats {int state=0,legs=0,ready=0,fitPackets=0,fitHint=1,legs2d=0;double ageMs=-1,fitMm=-1,weight=0,fitProgress=0,fitSplitDeg=-1,fitSpreadCm=0,fitInliers=0,reprojPx=-1,flipGap=-1;};
 class CameraFusion {
  struct Sample{double ms;TrackingFrame frame;};
  std::deque<Sample> history;
@@ -52,12 +62,18 @@ class CameraFusion {
  std::array<std::array<double,3>,6> target{},halfway{},correction{};
  std::array<double,2> weights{},activeWeights{},lastGoodMs{};
  bool aligned=false;uint64_t lastSequence=~0ull;double lastApplyMs=0;
+ // Last 2D leg solution per side, knee and ankle relative to Meta's hip:
+ // the temporal depth prior and the overlay.
+ std::array<std::array<double,3>,2> solvedKnee{},solvedAnkle{};std::array<double,2> solvedMs{};
  void Fit(const CameraSkeleton&,const TrackingFrame&);
 public:
  CameraFusionStats stats;
  // Off: legs fade back to Meta's estimate over ~100 ms; registration keeps
  // running, so switching back to the camera needs no recalibration.
  bool legsEnabled=true;
+ // Packets with 2D keypoints drive the legs by reprojection (camera depth
+ // unused). Off: the depth-fused 3D path, for A/B on the same stream.
+ bool use2d=true;
  // Operator-side state only (A calibration, robot reset, policy change).
  void Reset();
  // Camera moved: register from scratch.

@@ -6,7 +6,7 @@ struct RuntimeStats {
     CameraOverlay cameraOverlay;
     double ikPositionCm=0,ikOrientationDeg=0;
     int physicsWorkers=0;
-    int cameraState=0,cameraLegs=0,cameraReady=0;bool cameraConnected=false,cameraClockSynced=false,cameraLegsEnabled=true;
+    int cameraState=0,cameraLegs=0,cameraLegs2d=0,cameraReady=0;bool cameraConnected=false,cameraClockSynced=false,cameraLegsEnabled=true;
     double cameraClockOffsetMs=0,cameraClockRttMs=-1;
     double cameraAgeMs=-1,cameraFitMm=-1,cameraWeight=0,cameraFitProgress=0;int cameraFitHint=1;
     double cameraPositionError=-1,cameraOrientationError=-1,visualScale=1;
