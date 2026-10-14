@@ -35,7 +35,8 @@ int main(int argc, char** argv) {
         Simulation sim(argv[1], 0);
         MetaRetargeter meta(argv[1]);
         meta.EnableCameraTracking(std::string(argv[4]) == "1");
-        meta.EnableFullFeet(false);
+        // The native source in main has no full-foot mode: 14 markers only,
+        // as the contract below records.
         std::ifstream src(argv[2]); std::ofstream out(argv[3]);
         if (!src || !out) throw std::runtime_error("Cannot open stream");
         TrackingFrame f;

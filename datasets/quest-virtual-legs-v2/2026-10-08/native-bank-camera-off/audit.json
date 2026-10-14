@@ -1,0 +1,790 @@
+{
+  "schema": 1,
+  "bank_sha256": "9232f391b233846019976e2bd9a0d6063ab35b3fbbba90f6dbefc4aac9fcc3c1",
+  "original_train_clips": 33,
+  "validation_clips_used": 0,
+  "mirrors_counted_as_new_data": false,
+  "units": "radians or metres as named",
+  "interpretation": "Difference between reconstructed native commands and existing filtered GMR targets. Neither is measured human leg ground truth; no gait improvement is established.",
+  "metrics": {
+    "legs_rad": {
+      "mean_absolute": 0.005541043883613746,
+      "p95_absolute": 0.02367120666146733,
+      "max_absolute": 0.18578369798567118,
+      "rms": 0.01053156576332229
+    },
+    "upper_body_rad": {
+      "mean_absolute": 0.0030597036200308444,
+      "p95_absolute": 0.010735341325370743,
+      "max_absolute": 0.20465616162449626,
+      "rms": 0.00598330479311973
+    },
+    "root_height_m": {
+      "mean_absolute": 0.002765886527511085,
+      "p95_absolute": 0.010906184143566004,
+      "max_absolute": 0.021197060630533282,
+      "rms": 0.004613709823342719
+    }
+  },
+  "per_clip": [
+    {
+      "id": "stage01-run01-000000-part00",
+      "stage": 1,
+      "frames": 3000,
+      "legs_rad": {
+        "mean_absolute": 0.006339265650284615,
+        "p95_absolute": 0.02621585182068297,
+        "max_absolute": 0.09888700615406687,
+        "rms": 0.010940267024191931
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.001893245760546402,
+        "p95_absolute": 0.004772229791454876,
+        "max_absolute": 0.05092652678234336,
+        "rms": 0.0044257584797146865
+      },
+      "root_height_m": {
+        "mean_absolute": 0.0040381357918297086,
+        "p95_absolute": 0.010811086229073955,
+        "max_absolute": 0.013320280092317227,
+        "rms": 0.005676116855171946
+      }
+    },
+    {
+      "id": "stage01-run01-003000-part00",
+      "stage": 1,
+      "frames": 2837,
+      "legs_rad": {
+        "mean_absolute": 0.007212549435643611,
+        "p95_absolute": 0.030412040342912693,
+        "max_absolute": 0.08860554121042918,
+        "rms": 0.012469417474968814
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.0022660458350746687,
+        "p95_absolute": 0.0062012914338893995,
+        "max_absolute": 0.04795576152172416,
+        "rms": 0.005239653435491716
+      },
+      "root_height_m": {
+        "mean_absolute": 0.004512470262536321,
+        "p95_absolute": 0.012357097579081032,
+        "max_absolute": 0.015622780056914642,
+        "rms": 0.006506627200311436
+      }
+    },
+    {
+      "id": "stage03-run01-000000-part00",
+      "stage": 3,
+      "frames": 3000,
+      "legs_rad": {
+        "mean_absolute": 0.007238615128821389,
+        "p95_absolute": 0.028208496444148762,
+        "max_absolute": 0.1208384857208411,
+        "rms": 0.01249652265634019
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.002777901019697212,
+        "p95_absolute": 0.00723063697535812,
+        "max_absolute": 0.05660371522977171,
+        "rms": 0.005213043028592839
+      },
+      "root_height_m": {
+        "mean_absolute": 0.004255286085824376,
+        "p95_absolute": 0.011590854726210414,
+        "max_absolute": 0.015632024068623518,
+        "rms": 0.005914065938683784
+      }
+    },
+    {
+      "id": "stage03-run01-003000-part00",
+      "stage": 3,
+      "frames": 867,
+      "legs_rad": {
+        "mean_absolute": 0.007293571916660339,
+        "p95_absolute": 0.026753613135569912,
+        "max_absolute": 0.13627331550274613,
+        "rms": 0.012467400099164461
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.0025421497922917583,
+        "p95_absolute": 0.006391524424459595,
+        "max_absolute": 0.051662733252862705,
+        "rms": 0.004790956455370642
+      },
+      "root_height_m": {
+        "mean_absolute": 0.003900368344297443,
+        "p95_absolute": 0.010132764352320363,
+        "max_absolute": 0.013957293535201809,
+        "rms": 0.005254158960485164
+      }
+    },
+    {
+      "id": "stage03-run02-000000-part00",
+      "stage": 3,
+      "frames": 1928,
+      "legs_rad": {
+        "mean_absolute": 0.006108998458194289,
+        "p95_absolute": 0.02448364242368395,
+        "max_absolute": 0.12617540004871225,
+        "rms": 0.011197692088165127
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.002440330093776142,
+        "p95_absolute": 0.006448870230644936,
+        "max_absolute": 0.054326811402923725,
+        "rms": 0.0043990501621269185
+      },
+      "root_height_m": {
+        "mean_absolute": 0.003032204541875557,
+        "p95_absolute": 0.01012756873490755,
+        "max_absolute": 0.014897651555528468,
+        "rms": 0.004586442466825009
+      }
+    },
+    {
+      "id": "stage04-run00-000000-part00",
+      "stage": 4,
+      "frames": 3000,
+      "legs_rad": {
+        "mean_absolute": 0.006748541707188378,
+        "p95_absolute": 0.02917969075208573,
+        "max_absolute": 0.14673312876201444,
+        "rms": 0.012802752502436269
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.0030361932692498568,
+        "p95_absolute": 0.009121091620485598,
+        "max_absolute": 0.06461791960929286,
+        "rms": 0.0056701969012524734
+      },
+      "root_height_m": {
+        "mean_absolute": 0.003932817572245656,
+        "p95_absolute": 0.012940063214495813,
+        "max_absolute": 0.018906899638666097,
+        "rms": 0.0059334491132309744
+      }
+    },
+    {
+      "id": "stage04-run00-003000-part00",
+      "stage": 4,
+      "frames": 760,
+      "legs_rad": {
+        "mean_absolute": 0.007941283306269784,
+        "p95_absolute": 0.028373609609912486,
+        "max_absolute": 0.17605002948781812,
+        "rms": 0.014155237128042952
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.00412860124705203,
+        "p95_absolute": 0.012791631396886941,
+        "max_absolute": 0.06809443996688003,
+        "rms": 0.006521034793074623
+      },
+      "root_height_m": {
+        "mean_absolute": 0.003406192207242175,
+        "p95_absolute": 0.010916369960432337,
+        "max_absolute": 0.021138210273993985,
+        "rms": 0.005022807298227805
+      }
+    },
+    {
+      "id": "stage04-run01-000000-part00",
+      "stage": 4,
+      "frames": 2238,
+      "legs_rad": {
+        "mean_absolute": 0.006838647807371375,
+        "p95_absolute": 0.024738069339282638,
+        "max_absolute": 0.10530435921507686,
+        "rms": 0.011378465905530268
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.0032406268570799096,
+        "p95_absolute": 0.0093431262683321,
+        "max_absolute": 0.04983887302021617,
+        "rms": 0.005115983115498274
+      },
+      "root_height_m": {
+        "mean_absolute": 0.003420954529814672,
+        "p95_absolute": 0.009455563515329385,
+        "max_absolute": 0.013440268864094329,
+        "rms": 0.004630627804215688
+      }
+    },
+    {
+      "id": "stage05-run00-000000-part00",
+      "stage": 5,
+      "frames": 3000,
+      "legs_rad": {
+        "mean_absolute": 0.0053401385166348065,
+        "p95_absolute": 0.020639917226536884,
+        "max_absolute": 0.08935376844011372,
+        "rms": 0.009091788009767374
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.0018724751854064566,
+        "p95_absolute": 0.0052845758053955685,
+        "max_absolute": 0.04173177808209605,
+        "rms": 0.003622341431965231
+      },
+      "root_height_m": {
+        "mean_absolute": 0.002273185359307315,
+        "p95_absolute": 0.008065529862120746,
+        "max_absolute": 0.010296686874504024,
+        "rms": 0.0035331651641399764
+      }
+    },
+    {
+      "id": "stage05-run00-003000-part00",
+      "stage": 5,
+      "frames": 3000,
+      "legs_rad": {
+        "mean_absolute": 0.0053576431062032455,
+        "p95_absolute": 0.018871296564182734,
+        "max_absolute": 0.08224817252108213,
+        "rms": 0.008741159835085105
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.0018454634381355945,
+        "p95_absolute": 0.005419680001233973,
+        "max_absolute": 0.03679005978410865,
+        "rms": 0.0032448363525804766
+      },
+      "root_height_m": {
+        "mean_absolute": 0.002379432748919318,
+        "p95_absolute": 0.007130264082894032,
+        "max_absolute": 0.008886736624375335,
+        "rms": 0.0033384617781454934
+      }
+    },
+    {
+      "id": "stage06-run00-000000-part00",
+      "stage": 6,
+      "frames": 3000,
+      "legs_rad": {
+        "mean_absolute": 0.004128817221719839,
+        "p95_absolute": 0.01474172368079207,
+        "max_absolute": 0.061952314030027544,
+        "rms": 0.006693603444235588
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.0025496932800139474,
+        "p95_absolute": 0.0074511655168061075,
+        "max_absolute": 0.0398191061623443,
+        "rms": 0.003856805722902585
+      },
+      "root_height_m": {
+        "mean_absolute": 0.0011020169734180464,
+        "p95_absolute": 0.0032878478832734804,
+        "max_absolute": 0.006194198055700428,
+        "rms": 0.0015123525954919498
+      }
+    },
+    {
+      "id": "stage06-run00-003000-part00",
+      "stage": 6,
+      "frames": 2999,
+      "legs_rad": {
+        "mean_absolute": 0.0037694219095676064,
+        "p95_absolute": 0.013712362200249392,
+        "max_absolute": 0.11803050148209815,
+        "rms": 0.006539645927631567
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.0024078878425156385,
+        "p95_absolute": 0.006970108412212894,
+        "max_absolute": 0.040188667465649475,
+        "rms": 0.003595960138952828
+      },
+      "root_height_m": {
+        "mean_absolute": 0.0008680491941890863,
+        "p95_absolute": 0.0027727892313198256,
+        "max_absolute": 0.007938193204283128,
+        "rms": 0.0013200275826150466
+      }
+    },
+    {
+      "id": "stage07-run00-000000-part00",
+      "stage": 7,
+      "frames": 467,
+      "legs_rad": {
+        "mean_absolute": 0.005302131964443699,
+        "p95_absolute": 0.01801643904922391,
+        "max_absolute": 0.0609709349503878,
+        "rms": 0.008362993026748141
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.0028012924952499616,
+        "p95_absolute": 0.008451790308001438,
+        "max_absolute": 0.028215008111861554,
+        "rms": 0.004199866862820065
+      },
+      "root_height_m": {
+        "mean_absolute": 0.001820759455680589,
+        "p95_absolute": 0.005251525317319483,
+        "max_absolute": 0.007302833425055999,
+        "rms": 0.0024945418891774707
+      }
+    },
+    {
+      "id": "stage07-run01-000000-part00",
+      "stage": 7,
+      "frames": 3000,
+      "legs_rad": {
+        "mean_absolute": 0.0043764131618513,
+        "p95_absolute": 0.01549774968592845,
+        "max_absolute": 0.08570401944061345,
+        "rms": 0.007289139256287281
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.004227311110725149,
+        "p95_absolute": 0.014797402505169541,
+        "max_absolute": 0.11126219432672285,
+        "rms": 0.007120477199805397
+      },
+      "root_height_m": {
+        "mean_absolute": 0.001049950172581302,
+        "p95_absolute": 0.003274918238201345,
+        "max_absolute": 0.010154935033816814,
+        "rms": 0.0016247610657788522
+      }
+    },
+    {
+      "id": "stage07-run01-003000-part00",
+      "stage": 7,
+      "frames": 825,
+      "legs_rad": {
+        "mean_absolute": 0.0034061292538917335,
+        "p95_absolute": 0.012015053313855745,
+        "max_absolute": 0.04704114083256444,
+        "rms": 0.005601653671115178
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.0036736385778923177,
+        "p95_absolute": 0.010838619273346527,
+        "max_absolute": 0.08369622993991305,
+        "rms": 0.005828610362735445
+      },
+      "root_height_m": {
+        "mean_absolute": 0.0007650233917331617,
+        "p95_absolute": 0.0024231475992810164,
+        "max_absolute": 0.005881397177264325,
+        "rms": 0.001105926820187104
+      }
+    },
+    {
+      "id": "stage07-run02-000000-part00",
+      "stage": 7,
+      "frames": 1702,
+      "legs_rad": {
+        "mean_absolute": 0.005145768137299262,
+        "p95_absolute": 0.0190774198972781,
+        "max_absolute": 0.07984789242801443,
+        "rms": 0.008465326101446817
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.0038502374871411775,
+        "p95_absolute": 0.012852156720247076,
+        "max_absolute": 0.07775569471397387,
+        "rms": 0.006385607858345325
+      },
+      "root_height_m": {
+        "mean_absolute": 0.0013766065388876015,
+        "p95_absolute": 0.004617607994084718,
+        "max_absolute": 0.009386330529709164,
+        "rms": 0.002095575128345098
+      }
+    },
+    {
+      "id": "stage08-run00-000000-part00",
+      "stage": 8,
+      "frames": 253,
+      "legs_rad": {
+        "mean_absolute": 0.0008833338774553504,
+        "p95_absolute": 0.0033759272622880046,
+        "max_absolute": 0.013241738018652971,
+        "rms": 0.0015839965348572772
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.001286557490875638,
+        "p95_absolute": 0.003821453311478429,
+        "max_absolute": 0.00915478574335582,
+        "rms": 0.0017926769495709596
+      },
+      "root_height_m": {
+        "mean_absolute": 7.639452857916292e-05,
+        "p95_absolute": 0.0004296605385995852,
+        "max_absolute": 0.0005961684973055936,
+        "rms": 0.00014251511609269447
+      }
+    },
+    {
+      "id": "stage08-run01-000000-part00",
+      "stage": 8,
+      "frames": 3000,
+      "legs_rad": {
+        "mean_absolute": 0.00757799445975211,
+        "p95_absolute": 0.030065356858433027,
+        "max_absolute": 0.15784585844983573,
+        "rms": 0.01349434542553765
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.002729593411936865,
+        "p95_absolute": 0.007779765604556882,
+        "max_absolute": 0.05879305659127637,
+        "rms": 0.005543419984785327
+      },
+      "root_height_m": {
+        "mean_absolute": 0.004403748498110378,
+        "p95_absolute": 0.013380581949913359,
+        "max_absolute": 0.018568951751988916,
+        "rms": 0.006310721231818292
+      }
+    },
+    {
+      "id": "stage08-run01-003000-part00",
+      "stage": 8,
+      "frames": 2744,
+      "legs_rad": {
+        "mean_absolute": 0.0070791050079440304,
+        "p95_absolute": 0.028796900135979103,
+        "max_absolute": 0.18578369798567118,
+        "rms": 0.013067277669437341
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.0026178571759458953,
+        "p95_absolute": 0.007151798640978653,
+        "max_absolute": 0.05804206150678187,
+        "rms": 0.005122129963429495
+      },
+      "root_height_m": {
+        "mean_absolute": 0.0036366040360276304,
+        "p95_absolute": 0.012996833467723507,
+        "max_absolute": 0.017156221412719996,
+        "rms": 0.005532120616948079
+      }
+    },
+    {
+      "id": "stage10-run00-000000-part00",
+      "stage": 10,
+      "frames": 3000,
+      "legs_rad": {
+        "mean_absolute": 0.010228238730057225,
+        "p95_absolute": 0.03532170920195621,
+        "max_absolute": 0.15720506658560673,
+        "rms": 0.016486855442050224
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.003676361899199549,
+        "p95_absolute": 0.009295893080497577,
+        "max_absolute": 0.06264110450111396,
+        "rms": 0.006764559028662755
+      },
+      "root_height_m": {
+        "mean_absolute": 0.0062279021216474235,
+        "p95_absolute": 0.014131869495822912,
+        "max_absolute": 0.021197060630533282,
+        "rms": 0.00781551419068747
+      }
+    },
+    {
+      "id": "stage10-run00-003000-part00",
+      "stage": 10,
+      "frames": 1120,
+      "legs_rad": {
+        "mean_absolute": 0.009699093375871416,
+        "p95_absolute": 0.032968670856197986,
+        "max_absolute": 0.1586754644036935,
+        "rms": 0.015522272354805664
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.00340098338264523,
+        "p95_absolute": 0.008470972117303055,
+        "max_absolute": 0.05324867894254467,
+        "rms": 0.00613621471777666
+      },
+      "root_height_m": {
+        "mean_absolute": 0.005612726463751638,
+        "p95_absolute": 0.012606318001983682,
+        "max_absolute": 0.017637536523547048,
+        "rms": 0.0069679135404574115
+      }
+    },
+    {
+      "id": "stage10-run01-000000-part00",
+      "stage": 10,
+      "frames": 1878,
+      "legs_rad": {
+        "mean_absolute": 0.009983374215363586,
+        "p95_absolute": 0.034672815068463786,
+        "max_absolute": 0.14555152819206962,
+        "rms": 0.015829465465831506
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.004023303805447963,
+        "p95_absolute": 0.009961153716991078,
+        "max_absolute": 0.05704551864583075,
+        "rms": 0.006787189076351516
+      },
+      "root_height_m": {
+        "mean_absolute": 0.005573509788546683,
+        "p95_absolute": 0.013381728374348645,
+        "max_absolute": 0.01768572898972176,
+        "rms": 0.007026718475586484
+      }
+    },
+    {
+      "id": "stage11-run00-000000-part00",
+      "stage": 11,
+      "frames": 3000,
+      "legs_rad": {
+        "mean_absolute": 0.0037905815097581917,
+        "p95_absolute": 0.018865654182304223,
+        "max_absolute": 0.11576199534492537,
+        "rms": 0.008334284025838303
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.0020484810136527252,
+        "p95_absolute": 0.007073145264023992,
+        "max_absolute": 0.0784801742408856,
+        "rms": 0.004202920038202001
+      },
+      "root_height_m": {
+        "mean_absolute": 0.0016162404846692886,
+        "p95_absolute": 0.00810487294845073,
+        "max_absolute": 0.013054489687363113,
+        "rms": 0.0030871039870028413
+      }
+    },
+    {
+      "id": "stage11-run00-003000-part00",
+      "stage": 11,
+      "frames": 2357,
+      "legs_rad": {
+        "mean_absolute": 0.002980917695398669,
+        "p95_absolute": 0.013620898325856815,
+        "max_absolute": 0.07463163192513556,
+        "rms": 0.00601920759051372
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.0053902472377564585,
+        "p95_absolute": 0.019509877031482898,
+        "max_absolute": 0.12348820177168812,
+        "rms": 0.009119257394904842
+      },
+      "root_height_m": {
+        "mean_absolute": 0.0012381872161961543,
+        "p95_absolute": 0.006567104767230146,
+        "max_absolute": 0.011549044454831958,
+        "rms": 0.002500167585525131
+      }
+    },
+    {
+      "id": "stage11-run00-003000-part01",
+      "stage": 11,
+      "frames": 586,
+      "legs_rad": {
+        "mean_absolute": 0.005519963132947439,
+        "p95_absolute": 0.021729003423904224,
+        "max_absolute": 0.07509751014566335,
+        "rms": 0.009550247672172253
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.006324802638446534,
+        "p95_absolute": 0.022772075121627416,
+        "max_absolute": 0.07118528176053796,
+        "rms": 0.009992342429428938
+      },
+      "root_height_m": {
+        "mean_absolute": 0.002734342629090498,
+        "p95_absolute": 0.009047277664477105,
+        "max_absolute": 0.010297119240249453,
+        "rms": 0.004254652250836373
+      }
+    },
+    {
+      "id": "stage12-run00-000000-part00",
+      "stage": 12,
+      "frames": 2625,
+      "legs_rad": {
+        "mean_absolute": 0.0038608853808157866,
+        "p95_absolute": 0.016326628817343546,
+        "max_absolute": 0.1167913934273822,
+        "rms": 0.007689858781542548
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.006674190094913032,
+        "p95_absolute": 0.025664660490678268,
+        "max_absolute": 0.1514224183580754,
+        "rms": 0.01163964660286765
+      },
+      "root_height_m": {
+        "mean_absolute": 0.0016953281466649092,
+        "p95_absolute": 0.008363145091547067,
+        "max_absolute": 0.013145381664987688,
+        "rms": 0.0031803712329749627
+      }
+    },
+    {
+      "id": "stage12-run01-000000-part00",
+      "stage": 12,
+      "frames": 3000,
+      "legs_rad": {
+        "mean_absolute": 0.003933464487304445,
+        "p95_absolute": 0.01841751698946579,
+        "max_absolute": 0.11832222953537708,
+        "rms": 0.008340011557875376
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.005526389622096755,
+        "p95_absolute": 0.02115769303681005,
+        "max_absolute": 0.20465616162449626,
+        "rms": 0.009966103270909316
+      },
+      "root_height_m": {
+        "mean_absolute": 0.001860478754291819,
+        "p95_absolute": 0.01003960784152631,
+        "max_absolute": 0.015922057583248717,
+        "rms": 0.003820238314815922
+      }
+    },
+    {
+      "id": "stage12-run01-003000-part00",
+      "stage": 12,
+      "frames": 373,
+      "legs_rad": {
+        "mean_absolute": 0.0012927127030372858,
+        "p95_absolute": 0.005940437770152393,
+        "max_absolute": 0.0295980406385577,
+        "rms": 0.003120241367841201
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.0012673968233967844,
+        "p95_absolute": 0.0037530146311335333,
+        "max_absolute": 0.026322628252502478,
+        "rms": 0.0022641286145735117
+      },
+      "root_height_m": {
+        "mean_absolute": 0.00040288892393327896,
+        "p95_absolute": 0.0022088911714080108,
+        "max_absolute": 0.0036226636676214286,
+        "rms": 0.0008133764403327007
+      }
+    },
+    {
+      "id": "stage13-run00-000000-part00",
+      "stage": 13,
+      "frames": 1780,
+      "legs_rad": {
+        "mean_absolute": 0.006196708185494084,
+        "p95_absolute": 0.027573654286365136,
+        "max_absolute": 0.08831893603085128,
+        "rms": 0.011610960966979333
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.0029404505868362296,
+        "p95_absolute": 0.010236299970066089,
+        "max_absolute": 0.06387275707837381,
+        "rms": 0.005755528431235785
+      },
+      "root_height_m": {
+        "mean_absolute": 0.0031502040160329356,
+        "p95_absolute": 0.011603942394948151,
+        "max_absolute": 0.015747043769244518,
+        "rms": 0.005023994322612753
+      }
+    },
+    {
+      "id": "stage13-run01-000000-part00",
+      "stage": 13,
+      "frames": 2999,
+      "legs_rad": {
+        "mean_absolute": 0.006683690924929175,
+        "p95_absolute": 0.028521953102211037,
+        "max_absolute": 0.14348657135874326,
+        "rms": 0.01218653436887157
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.003784985550509582,
+        "p95_absolute": 0.01249362964793601,
+        "max_absolute": 0.10667130830644045,
+        "rms": 0.006613377451502528
+      },
+      "root_height_m": {
+        "mean_absolute": 0.0035970922177585283,
+        "p95_absolute": 0.012294545966643885,
+        "max_absolute": 0.017682714685992584,
+        "rms": 0.0055460137392583046
+      }
+    },
+    {
+      "id": "stage13-run02-000000-part00",
+      "stage": 13,
+      "frames": 1217,
+      "legs_rad": {
+        "mean_absolute": 0.00849248747653271,
+        "p95_absolute": 0.0346194488252726,
+        "max_absolute": 0.14945473705815004,
+        "rms": 0.014903077070692074
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.003791323488047,
+        "p95_absolute": 0.011928475650113292,
+        "max_absolute": 0.06054957812511248,
+        "rms": 0.006910995888558288
+      },
+      "root_height_m": {
+        "mean_absolute": 0.004962251792538487,
+        "p95_absolute": 0.013976990550676072,
+        "max_absolute": 0.017961176816137847,
+        "rms": 0.007054930571842892
+      }
+    },
+    {
+      "id": "stage15-run00-000000-part00",
+      "stage": 15,
+      "frames": 3000,
+      "legs_rad": {
+        "mean_absolute": 0.0006512340781373133,
+        "p95_absolute": 0.0023066468926671467,
+        "max_absolute": 0.030715481648215928,
+        "rms": 0.0017339685983577635
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.001008491533356754,
+        "p95_absolute": 0.0030938805418362983,
+        "max_absolute": 0.18241486503524662,
+        "rms": 0.0029955525627727475
+      },
+      "root_height_m": {
+        "mean_absolute": 0.00021176707618821223,
+        "p95_absolute": 0.001646801810608578,
+        "max_absolute": 0.002769667828039446,
+        "rms": 0.0005808437176599805
+      }
+    },
+    {
+      "id": "stage15-run01-000000-part00",
+      "stage": 15,
+      "frames": 2788,
+      "legs_rad": {
+        "mean_absolute": 0.0004954209445539557,
+        "p95_absolute": 0.0019119021307234668,
+        "max_absolute": 0.01193268038020101,
+        "rms": 0.0011066107440771563
+      },
+      "upper_body_rad": {
+        "mean_absolute": 0.0008592796706393111,
+        "p95_absolute": 0.0027056205374304323,
+        "max_absolute": 0.06927234746683986,
+        "rms": 0.0018985554783659084
+      },
+      "root_height_m": {
+        "mean_absolute": 9.499324621702686e-05,
+        "p95_absolute": 0.0004655024050677418,
+        "max_absolute": 0.001918307347787307,
+        "rms": 0.00033173408094880206
+      }
+    }
+  ]
+}

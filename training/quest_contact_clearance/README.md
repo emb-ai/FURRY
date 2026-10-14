@@ -115,7 +115,7 @@ The source revision is `b06178f19a22f2138cbd31f60c6d494bc263f67d`.
 root; include that directory on `PYTHONPATH` when running CPU evaluation.
 The native exporter requires the explicitly selected native source/assets
 snapshot, MuJoCo and ONNX Runtime. `build_native_export.py` records source,
-header, asset and library hashes. Its current build helper targets macOS.
+header, asset and library hashes. The build helper supports macOS and Linux.
 
 Use the existing isolated uv environments on the shared server. Do not install
 system packages, change drivers, or touch another user's processes. One GPU per
@@ -155,18 +155,38 @@ the headset); the reward target is the offline-cleaned camera legs
    --pair EPISODE_DIR:PREFIX ... --validation EPISODE_ID --mirror` writes
    quest-g1-motion-v1 clips (one stage per episode, from 101) and
    `command_bank.npz` (quest-camera-command-bank-v1, mirrors included).
-2. `camera_mixture.py combine QUEST night-v3 OUT_FROM_1` merges it with the Meta
-   Quest clips. Files are byte copies; stages must not collide.
+Published inputs (Git LFS; `git lfs pull --include="datasets/**"`):
+- `datasets/quest-camera-legs/2026-10-13/dataset-v1`: step 1 output with its
+  camera command bank.
+- `datasets/quest-virtual-legs-v2/2026-10-08/native-bank-camera-off`: native
+  command bank for the night-v3 Meta TRAIN clips (camera tracking OFF, as in
+  the observer-view camera episodes), rebuilt on Linux (2026-10-14).
+
+2. `camera_mixture.py combine QUEST night-v3 dataset-v1` merges the camera
+   clips with the Meta Quest clips. Files are byte copies; stages must not collide.
 3. `author_dataset.py --quest QUEST ...` builds the mixture as before.
    Run `build_phase.py` on the new mixture; Quest phase stays masked.
-4. `camera_mixture.py bank --dataset MIXTURE --banks NATIVE.npz:OLD_MIXTURE
-   OUT_FROM_1/command_bank.npz --output BANK.npz` writes one
-   quest-native-command-bank-v1 covering every Quest TRAIN clip. It is loaded
-   by the unchanged `native_command_bank.py` (`--actor-command-bank`).
+4. `camera_mixture.py bank --dataset MIXTURE --banks native-bank-camera-off/bank.npz
+   dataset-v1/command_bank.npz --output BANK.npz` writes one
+   quest-native-command-bank-v1 covering every Quest TRAIN clip. Both banks
+   match by original NPZ hash, so no old mixture is needed. It is loaded by the
+   unchanged `native_command_bank.py` (`--actor-command-bank`).
+
+Rebuilding the native bank (no macOS needed):
+`meta_epochs.py EPISODE OUT` recreates prepare.py's calibration-epoch sources
+and run origins from the raw night-v3 episode (origins and exclusions match the
+night-v3 manifest exactly); `build_native_export.py` compiles the exporter on
+macOS or Linux; `export_native_commands` runs per epoch (camera tracking 0);
+`build_command_bank.py --dataset VIEW` uses a view of night-v3 with
+`source=quest`/`npz_file` added (`night-v3-quest.manifest.json`). The native
+source in main has no full-foot mode, so the exporter no longer selects it.
+`audit_command_bank.py` reproduces the original camera-OFF bank statistics to
+every printed digit (legs mean 0.00554, p95 0.02367, max 0.18578 rad).
 
 Checked locally on dataset-v1 (5 episodes, 187 s train + 187 s mirrors, 89 s
-validation): the unchanged author_dataset accepts the combined Quest set, and
-bank samples equal live `mimic.csv` exactly on all 40 camera clips. `bank` is
-not yet run against the server's native bank, and no GPU smoke has run.
+validation): the unchanged author_dataset accepts the combined Quest set, bank
+samples equal live `mimic.csv` exactly on all 40 camera clips, and `bank`
+merges the published native and camera banks over all 106 Quest TRAIN clips
+(1426 s Meta + 374 s camera, no unused entries). No GPU smoke has run.
 Family weighting is unchanged: camera families get about 38% of the Quest mass,
 i.e. roughly 1.4% of motion draws before curriculum.

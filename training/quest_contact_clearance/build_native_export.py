@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 
 
 def main():
@@ -19,10 +20,24 @@ def main():
     ort = Path(onnxruntime.__file__).parent/'capi'
     cpp = Path(__file__).with_name('export_native_commands.cpp')
     a.output.parent.mkdir(parents=True, exist_ok=True)
-    libraries = [next(mj.glob('libmujoco*.dylib')), next(ort.glob('libonnxruntime*.dylib'))]
+    # macOS wheels ship .dylib; Linux wheels ship versioned .so, found via rpath.
+    lib = '*.dylib' if sys.platform == 'darwin' else '*.so*'
+    libraries = [next(mj.glob('libmujoco'+lib)), next(ort.glob('libonnxruntime'+lib))]
     sources = [cpp] + [native/n for n in ('gmr.cpp', 'meta_retarget.cpp', 'simulation.cpp')]
     cmd = ['c++', '-O2', '-std=c++17', '-I'+str(native), '-I'+str(mj/'include'),
            '-I'+str(a.source.resolve()/'vendor/onnxruntime-android/headers')]
+    if sys.platform != 'darwin':
+        # The onnxruntime wheel has libonnxruntime.so.1.x.y but no file named
+        # by its SONAME (libonnxruntime.so.1): link the SONAMEs next to the binary.
+        libdir = a.output.resolve().parent/(a.output.name+'.lib')
+        libdir.mkdir(exist_ok=True)
+        for library in libraries:
+            dynamic = subprocess.run(['readelf', '-d', str(library)], check=True, capture_output=True, text=True).stdout
+            soname = dynamic.split('Library soname: [', 1)[1].split(']', 1)[0]
+            link = libdir/soname
+            if not link.exists():
+                link.symlink_to(library)
+        cmd += [f'-Wl,-rpath,{libdir}']
     subprocess.run(cmd + list(map(str, sources+libraries)) + ['-o', str(a.output)], check=True)
     assets = a.source.resolve()/'android/assets'
     inputs = sources + list(native.glob('*.h')) + list(assets.rglob('*.xml')) + list(assets.glob('*.txt'))

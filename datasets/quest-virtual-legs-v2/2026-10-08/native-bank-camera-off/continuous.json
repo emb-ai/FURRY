@@ -1,0 +1,184 @@
+{
+  "schema": "quest-capture-run-origins-v1",
+  "source_episode": "episode-1791467626074995",
+  "source_sha256": {
+    "input.csv": "4368d7a3f65d30ddbba2c179a5117e357de12773e0343a4072feeb0392431dae",
+    "body.csv": "ac122e5be6bc1ed65b62cc7c770ec8f7461e611a9e4b6019672b0aa13e1b10ec",
+    "capture_timeline.csv": "792436a1a17de139c9998372190acf835a3f4863c1871f2b64dc308ed952ec11",
+    "events.csv": "5157d7b9d07babf7e00d1ee2068943818d721f271587d2e1ee5edfce2f06a856"
+  },
+  "exclusions_wall_seconds": [
+    [
+      1100.2276078300001,
+      1101.2276078300001
+    ],
+    [
+      1100.2415952270003,
+      1101.2415952270003
+    ],
+    [
+      1151.8252183860004,
+      1152.8252183860004
+    ]
+  ],
+  "epochs": [
+    {
+      "file": "epoch0.txt",
+      "calibration_sequence": 8720,
+      "frames": 18276
+    },
+    {
+      "file": "epoch1.txt",
+      "calibration_sequence": 30925,
+      "frames": 62331
+    }
+  ],
+  "clips": [
+    {
+      "id": "stage01-run01-000000",
+      "stage": 1,
+      "source_start_wall_s": 8.971887456000331
+    },
+    {
+      "id": "stage02-run00-000000",
+      "stage": 2,
+      "source_start_wall_s": 72.36088189600014
+    },
+    {
+      "id": "stage02-run01-000000",
+      "stage": 2,
+      "source_start_wall_s": 74.98612283399962
+    },
+    {
+      "id": "stage02-run02-000000",
+      "stage": 2,
+      "source_start_wall_s": 82.95835149300001
+    },
+    {
+      "id": "stage03-run01-000000",
+      "stage": 3,
+      "source_start_wall_s": 217.27785414499886
+    },
+    {
+      "id": "stage03-run02-000000",
+      "stage": 3,
+      "source_start_wall_s": 318.0190120449988
+    },
+    {
+      "id": "stage04-run00-000000",
+      "stage": 4,
+      "source_start_wall_s": 342.32505274699906
+    },
+    {
+      "id": "stage04-run01-000000",
+      "stage": 4,
+      "source_start_wall_s": 379.9525111309995
+    },
+    {
+      "id": "stage05-run00-000000",
+      "stage": 5,
+      "source_start_wall_s": 437.6443126079994
+    },
+    {
+      "id": "stage06-run00-000000",
+      "stage": 6,
+      "source_start_wall_s": 502.67238184599955
+    },
+    {
+      "id": "stage07-run00-000000",
+      "stage": 7,
+      "source_start_wall_s": 567.6863857179997
+    },
+    {
+      "id": "stage07-run01-000000",
+      "stage": 7,
+      "source_start_wall_s": 572.3806730609995
+    },
+    {
+      "id": "stage07-run02-000000",
+      "stage": 7,
+      "source_start_wall_s": 610.6581407800004
+    },
+    {
+      "id": "stage08-run00-000000",
+      "stage": 8,
+      "source_start_wall_s": 632.69998657
+    },
+    {
+      "id": "stage08-run01-000000",
+      "stage": 8,
+      "source_start_wall_s": 635.255644896999
+    },
+    {
+      "id": "stage09-run00-000000",
+      "stage": 9,
+      "source_start_wall_s": 697.7140260670003
+    },
+    {
+      "id": "stage10-run00-000000",
+      "stage": 10,
+      "source_start_wall_s": 762.727859053999
+    },
+    {
+      "id": "stage10-run01-000000",
+      "stage": 10,
+      "source_start_wall_s": 803.9499429529988
+    },
+    {
+      "id": "stage11-run00-000000",
+      "stage": 11,
+      "source_start_wall_s": 860.6307439640004
+    },
+    {
+      "id": "stage12-run00-000000",
+      "stage": 12,
+      "source_start_wall_s": 925.6447264819999
+    },
+    {
+      "id": "stage12-run01-000000",
+      "stage": 12,
+      "source_start_wall_s": 951.9220451410001
+    },
+    {
+      "id": "stage13-run00-000000",
+      "stage": 13,
+      "source_start_wall_s": 990.6583966039998
+    },
+    {
+      "id": "stage13-run01-000000",
+      "stage": 13,
+      "source_start_wall_s": 1008.4776981189989
+    },
+    {
+      "id": "stage13-run02-000000",
+      "stage": 13,
+      "source_start_wall_s": 1038.4914459009997
+    },
+    {
+      "id": "stage14-run00-000000",
+      "stage": 14,
+      "source_start_wall_s": 1055.6861274049988
+    },
+    {
+      "id": "stage14-run01-000000",
+      "stage": 14,
+      "source_start_wall_s": 1060.0058067419995
+    },
+    {
+      "id": "stage14-run03-000000",
+      "stage": 14,
+      "source_start_wall_s": 1101.2554097049997
+    },
+    {
+      "id": "stage15-run00-000000",
+      "stage": 15,
+      "source_start_wall_s": 1120.700224922999
+    },
+    {
+      "id": "stage15-run01-000000",
+      "stage": 15,
+      "source_start_wall_s": 1152.825282447
+    }
+  ],
+  "note": "Rebuilt with prepare.py selection logic; origins only, no retargeted clips."
+}
