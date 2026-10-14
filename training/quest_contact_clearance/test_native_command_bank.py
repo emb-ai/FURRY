@@ -94,6 +94,16 @@ class NativeCommandTests(unittest.TestCase):
             env.reset_idx(torch.tensor([0])); env.compute_observations()
             self.assertEqual(env.obs_buf[0, 127:1397].count_nonzero(), 0)
             self.assertGreater(env.obs_buf[1, 127:1397].count_nonzero(), 0)
+            # Optional transform (catch-up) sees the bank command and changes only the actor command.
+            seen = []
+            def transform(command):
+                seen.append(command.clone()); out = command.clone(); out[:, 0] += 1000.; return out
+            install(env, path, root, transform=transform)
+            torch.testing.assert_close(env.obs_buf[:, 0], seen[-1][:, 0]+1000.)
+            self.assertTrue(torch.equal(seen[-1][1], clean[1, :35]))
+            self.assertTrue(torch.equal(env.obs_buf[:, 35:127], clean[:, 35:127]))
+            self.assertTrue(torch.equal(env.obs_buf[:, 1397:], env.obs_buf[:, :35]))
+            self.assertTrue(torch.equal(env.privileged_obs_buf, critic))
 
     def test_reflection_is_involutive_and_preserves_pitch(self):
         names = ['left_hip_roll_joint', 'left_hip_pitch_joint', 'right_hip_roll_joint', 'right_hip_pitch_joint']
