@@ -7,6 +7,9 @@ evaluate: roll a 50 Hz ONNX policy over the validation clips from frame 0.
   --mode live feeds the live commands to the actor (zero-order hold, no future
   interpolation); --mode target feeds commands derived from the cleaned target
   (the usual evaluate.py input). Reward target and metrics are the same in both.
+  The lift metric compares sole clearance (floor-colliding spheres) of the robot
+  with the reference while the reference foot is up: contact, shortfall, peak
+  ratio and retention 1 s into held lifts, split by training's moving mask.
 Usage:
   camera_validation.py commands --dataset DATASET --episodes EPISODE_DIR ... --output CMD.npz
   camera_validation.py evaluate --assets ASSETS --dataset DATASET --policy P.onnx
@@ -19,6 +22,11 @@ from pathlib import Path
 import numpy as np
 
 LEGS = slice(0, 12)
+# Lifted-foot metric: reference sole clearance (floor-colliding spheres) above
+# LIFT_ON counts as lifted; an event is a lifted run whose peak reaches
+# LIFT_PEAK. Held events last at least HELD_S; retention is read 1 s after
+# the lift starts. Contact uses the reward's 5 N threshold.
+LIFT_ON, LIFT_PEAK, HELD_S, RETAIN_S = .03, .05, .5, 1.
 
 
 def sha(path):
@@ -60,10 +68,55 @@ def build_commands(dataset, episodes, output):
     print(json.dumps({'clips': len(files), 'stages': sorted({f['stage'] for f in files.values()})}))
 
 
+def lift_events(ref, robot, contact, dt):
+    """ref/robot sole clearance [T, 2] (m), contact [T, 2] bool -> per-event rows."""
+    rows = []
+    for side in range(ref.shape[1]):
+        up = ref[:, side] > LIFT_ON
+        edges = np.diff(np.r_[0, up.astype(int), 0])
+        for a, b in zip(np.flatnonzero(edges == 1), np.flatnonzero(edges == -1)):
+            r, h = ref[a:b, side], robot[a:b, side]
+            if r.max() < LIFT_PEAK:
+                continue
+            row = {'side': side, 'seconds': (b - a) * dt, 'ref_peak_m': float(r.max()),
+                   'peak_ratio': float(h.max() / r.max()), 'contact_fraction': float(contact[a:b, side].mean())}
+            k = a + round(RETAIN_S / dt)
+            if k < b:
+                w = slice(max(a, k - round(.1 / dt)), min(b, k + round(.1 / dt) + 1))
+                row['retention_1s'] = float(robot[w, side].mean() / ref[w, side].mean())
+            rows.append(row)
+    return rows
+
+
+def lift_summary(events, ref, robot, contact, dt, moving=None):
+    """Pooled over trials: events from lift_events, frame arrays concatenated [T, 2];
+    moving [T] is training's relaxed-leg mask, used only to split the contact fraction."""
+    lifted = ref > LIFT_ON
+    held = [e for e in events if e['seconds'] >= HELD_S]
+    retained = [e['retention_1s'] for e in held if 'retention_1s' in e]
+    median = lambda xs: float(np.median(xs)) if len(xs) else None
+    return {'lifted_foot_seconds': float(lifted.sum() * dt),
+            'lifted_contact_fraction': float(contact[lifted].mean()) if lifted.any() else None,
+            'lifted_shortfall_cm_mean': float(100 * np.maximum(ref - robot, 0)[lifted].mean()) if lifted.any() else None,
+            'events': len(events), 'held_events': len(held),
+            'peak_ratio_median': median([e['peak_ratio'] for e in events]),
+            'held_peak_ratio_median': median([e['peak_ratio'] for e in held]),
+            'held_contact_fraction_median': median([e['contact_fraction'] for e in held]),
+            'retention_1s_events': len(retained), 'retention_1s_median': median(retained),
+            'retention_1s_p25': float(np.percentile(retained, 25)) if retained else None,
+            **({} if moving is None else {
+                'lifted_seconds_' + name: float((lifted & mask[:, None]).sum() * dt) for name, mask in
+                (('moving', moving), ('still', ~moving))}),
+            **({} if moving is None else {
+                'lifted_contact_fraction_' + name: float(contact[lifted & mask[:, None]].mean())
+                if (lifted & mask[:, None]).any() else None for name, mask in (('moving', moving), ('still', ~moving))})}
+
+
 def evaluate(assets, dataset, policy, output, commands=None, mode='target', seeds=(0,)):
     import onnxruntime as ort
     import env as mj
     from gait_evaluation import runtime_env_class
+    from sole_geometry import sole_clearance
     motions = mj.Motions(dataset, 'validation')
     live = None
     if mode == 'live':
@@ -101,12 +154,13 @@ def evaluate(assets, dataset, policy, output, commands=None, mode='target', seed
     session = ort.InferenceSession(str(policy), sess_options=opts, providers=['CPUExecutionProvider'])
     name = session.get_inputs()[0].name
     env = Env(assets, motions); env.max_steps = 10**7
-    trials = []
+    trials, frames = [], []
     for clip, item in enumerate(motions.items):
         for seed in seeds:
             env.rng = np.random.default_rng(seed)
             obs = env.reset(clip=clip, start=0, randomize=seed != 0)
             leg, slip, root, moving = [], [], [], []
+            ref_h, robot_h, loaded, pelvis = [], [], [], []
             while True:
                 if env.steps % env.policy_stride == 0:
                     action = session.run(None, {name: obs[None]})[0][0]
@@ -119,9 +173,16 @@ def evaluate(assets, dataset, policy, output, commands=None, mode='target', seed
                 contact = env.contact_force > 5  # loaded feet only, as the sliding reward
                 slip.extend(env.contact_speed[contact])
                 root.append(info['root_xy_error_m'])
+                ref_h.append([sole_clearance(env.model, env.ref, f, env.floor) for f in env.feet])
+                robot_h.append([sole_clearance(env.model, env.data, f, env.floor) for f in env.feet])
+                loaded.append(contact)
+                pelvis.append((env.data.qpos[2], env.data.qpos[2] - env.ref.qpos[2]))
                 if done:
                     break
             leg, moving = np.array(leg), np.array(moving)
+            ref_h, robot_h, loaded, pelvis = np.array(ref_h), np.array(robot_h), np.array(loaded), np.array(pelvis)
+            events = lift_events(ref_h, robot_h, loaded, mj.DT)
+            frames.append((events, ref_h, robot_h, loaded, moving))
             trials.append({'clip': item['meta']['id'], 'stage': item['meta']['stage'], 'seed': seed,
                            'camera_share': item['meta'].get('camera_share'),
                            'reference_seconds': (len(item['q']) - 1) * mj.DT, 'survived_seconds': info['seconds'],
@@ -133,7 +194,10 @@ def evaluate(assets, dataset, policy, output, commands=None, mode='target', seed
                            'support_slip_m_s_mean': float(np.mean(slip)) if slip else 0.,
                            'support_slip_m_s_p90': float(np.percentile(slip, 90)) if slip else 0.,
                            'slide_path_m': info['slide_path_m'],
-                           'root_xy_error_m_final': root[-1], 'root_xy_error_m_max': float(np.max(root))})
+                           'root_xy_error_m_final': root[-1], 'root_xy_error_m_max': float(np.max(root)),
+                           'pelvis_z_min_m': float(pelvis[:, 0].min()), 'pelvis_below_reference_max_m': float(-pelvis[:, 1].min()),
+                           'reference_stance_clearance_p10_m': float(np.percentile(ref_h, 10)),
+                           'lift': lift_summary(events, ref_h, robot_h, loaded, mj.DT, moving)})
             print(json.dumps(trials[-1]), flush=True)
     summary = {}
     for stage in sorted({t['stage'] for t in trials}):
@@ -151,6 +215,10 @@ def evaluate(assets, dataset, policy, output, commands=None, mode='target', seed
                if all(t[k] is not None for t in rows)},
             'moving_fraction': float(np.average([t['moving_fraction'] for t in rows], weights=w)),
             'root_xy_error_m_max': float(np.max([t['root_xy_error_m_max'] for t in rows]))}
+    ref_h, robot_h, loaded, moving = [np.concatenate([f[i] for f in frames]) for i in (1, 2, 3, 4)]
+    summary['lift'] = lift_summary([e for f in frames for e in f[0]], ref_h, robot_h, loaded, mj.DT, moving)
+    summary['falls'] = sum(t['fell'] for t in trials)
+    summary['pelvis_z_min_m'] = min(t['pelvis_z_min_m'] for t in trials)
     report = {'policy': str(policy), 'policy_sha256': sha(policy), 'mode': mode,
               'commands_sha256': sha(commands) if live is not None else None,
               'dataset_manifest_sha256': sha(Path(dataset)/'manifest.json'),
