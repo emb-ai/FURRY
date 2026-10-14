@@ -64,7 +64,7 @@ def build(dataset, assets, output):
     quest = [f for f in files.values() if f['quest']]
     report = dict(schema='train-reference-sole-clearance-v1', files=files,
                   dataset_manifest_sha256=sha(dataset/'manifest.json'), scene_sha256=sha(assets/'scene.xml'),
-                  npz_sha256=sha(output), floor='per clip: 20% quantile of the lower foot, |floor| <= %.2f m' % MAX_FLOOR,
+                  npz_sha256=sha(output), floor='per clip: 20%% quantile of the lower foot, |floor| <= %.2f m' % MAX_FLOOR,
                   quest_clips=len(quest), invalid_quest_clips=sum(not f['valid'] for f in quest),
                   lifted_foot_seconds=sum(f['lifted_foot_seconds'] for f in quest if f['valid']), validation_used=False)
     output.with_suffix('.json').write_text(json.dumps(report, indent=2))
