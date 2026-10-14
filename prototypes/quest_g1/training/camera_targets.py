@@ -12,9 +12,14 @@ Measured on ep5-ep9 (2026-10-13):
   along the depth axis, so low ankles are smoothed with a velocity penalty.
   Robot stance-foot skating p90 drops 47-57 -> 24-27 cm/s (Meta 20-28),
   and hip/knee motion amplitude is kept.
-Usage: camera_targets.py prefix out.txt
+One session (camera unmoved) has one shin bias. Per-episode estimates from
+short or busy episodes swing by tens of degrees (2026-10-14, ep12: right shin
+-12..+39 deg; a raised leg under still Meta legs counts as "quiet"), so
+--session pools the quiet-stance frames of all listed episode prefixes and
+takes the per-frame median; --shin passes that printed value directly.
+Usage: camera_targets.py prefix out.txt [--session PREFIX ... | --shin LP LR RP RR (deg)]
 """
-import sys
+import argparse
 import numpy as np
 from types import SimpleNamespace
 from scipy.linalg import solve_banded
@@ -87,16 +92,35 @@ def set_leg(out, s, hip, knee, ankle):
     out[:, 11 + 14 * ANKLE[s]:14 + 14 * ANKLE[s]] = ankle
 
 
-def shin_bias(cam, meta, st, t, hz=4.):
-    """Session-constant shin pitch/roll bias from quiet stance, Meta bone
-    lengths from the Meta hip, 4 Hz zero-phase bone directions."""
+def quiet_shin(cam, meta, st, t):
+    """Camera minus Meta shin [pitch, roll] on quiet camera-leg stance, [N, 2 legs, 2]."""
     left, fwd = frame(meta)
-    A, M = angles(cam, left, fwd), angles(meta, left, fwd)
     on = (st.camera_legs == 2) & (st.camera_weight > .9)
     q = quiet(meta, t) & on
+    return (angles(cam, left, fwd) - angles(meta, left, fwd))[q][:, :, 1]
+
+
+def session_bias(prefixes):
+    """Per-frame median of the quiet-stance shin offsets pooled over episodes."""
+    rows = []
+    for p in prefixes:
+        cam, st = load(p); meta, _ = load(p + '.meta')
+        rows.append(quiet_shin(cam, meta, st, times(cam)))
+    return np.median(np.concatenate(rows), 0), sum(map(len, rows))
+
+
+def shin_bias(cam, meta, st, t, hz=4., shin=None):
+    """Session-constant shin pitch/roll bias from quiet stance (or the given
+    `shin` [2 legs, 2]), Meta bone lengths from the Meta hip, 4 Hz zero-phase
+    bone directions."""
+    left, fwd = frame(meta)
     b = np.zeros((2, 2, 2))
-    if q.any():
-        b[:, 1] = (A - M)[q][:, :, 1].mean(0)
+    if shin is not None:
+        b[:, 1] = shin
+    else:
+        d = quiet_shin(cam, meta, st, t)
+        if len(d):
+            b[:, 1] = d.mean(0)
     out = cam.copy(); w = np.clip(st.camera_weight, 0, 1)
     sos = butter(2, hz, fs=1 / np.median(np.diff(t)), output='sos')
     rot = lambda axis, angle: R.from_rotvec(axis * angle[:, None])
@@ -193,15 +217,27 @@ def lock_feet(rows, meta, st, t):
     return out, np.stack(masks, 1)
 
 
-def clean(prefix):
+def clean(prefix, shin=None):
     cam, st = load(prefix); meta, _ = load(prefix + '.meta')
     t = times(cam)
-    rows, bias = shin_bias(cam, meta, st, t)
+    rows, bias = shin_bias(cam, meta, st, t, shin=shin)
     rows, low = lock_feet(rows, meta, st, t)
     return rows, dict(shin_bias_deg=np.degrees(bias[:, 1]).round(1).tolist(), low_share=low.mean(0).round(2).tolist())
 
 
 if __name__ == '__main__':
-    rows, info = clean(sys.argv[1])
-    np.savetxt(sys.argv[2], rows, fmt='%.17g')
-    print(sys.argv[1], info)
+    p = argparse.ArgumentParser(usage=__doc__)
+    p.add_argument('prefix'); p.add_argument('out')
+    g = p.add_mutually_exclusive_group()
+    g.add_argument('--session', nargs='+', metavar='PREFIX', help='pool the shin bias over these episodes')
+    g.add_argument('--shin', nargs=4, type=float, metavar=('LP', 'LR', 'RP', 'RR'), help='shin bias in degrees')
+    a = p.parse_args()
+    shin = None
+    if a.session:
+        shin, frames = session_bias(a.session)
+        print('session shin bias deg', np.degrees(shin).round(1).tolist(), 'from', frames, 'quiet frames')
+    elif a.shin:
+        shin = np.radians(np.reshape(a.shin, (2, 2)))
+    rows, info = clean(a.prefix, shin)
+    np.savetxt(a.out, rows, fmt='%.17g')
+    print(a.prefix, info)

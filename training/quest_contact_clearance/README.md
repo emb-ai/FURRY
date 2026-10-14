@@ -158,6 +158,11 @@ the headset); the reward target is the offline-cleaned camera legs
 Published inputs (Git LFS; `git lfs pull --include="datasets/**"`):
 - `datasets/quest-camera-legs/2026-10-13/dataset-v1`: step 1 output with its
   camera command bank.
+- `datasets/quest-camera-legs/2026-10-14/dataset-v2`: supersedes v1 (v1
+  episodes + ep11 + 23 ep12 episodes; 1972 s train originals, validation
+  stages 103 and 116). Camera clips are now 73% of Quest TRAIN seconds
+  (3945 s incl. mirrors vs 1426 s Meta), so revisit the family weighting
+  below. Combine with night-v3 checked locally (stages 0–15 vs 101–129).
 - `datasets/quest-virtual-legs-v2/2026-10-08/native-bank-camera-off`: native
   command bank for the night-v3 Meta TRAIN clips (camera tracking OFF, as in
   the observer-view camera episodes), rebuilt on Linux (2026-10-14).
