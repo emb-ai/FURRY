@@ -26,11 +26,11 @@ def load_frame(path):
 
 
 class RGBDRecorder:
-    def __init__(self, directory, seconds=60, max_hz=15, delay=0):
+    def __init__(self, directory, seconds=60, max_hz=15, delay=0, session_id=None):
         if seconds<=0 or max_hz<=0:raise ValueError('Recording duration/rate must be positive')
         self.directory=Path(directory)
         self.directory.mkdir(parents=True,exist_ok=False)
-        self.seconds,self.period,self.delay=seconds,1/max_hz,delay
+        self.seconds,self.period,self.delay,self.session_id=seconds,1/max_hz,delay,session_id
         self.armed=None
         self.started=None;self.last=-1e30;self.finished=False
         self.frames=0;self.dropped=0;self.error=None
@@ -78,7 +78,7 @@ class RGBDRecorder:
             report={'schema_version':1,'frames':self.frames,'dropped_queue':self.dropped,
                     'error':self.error,'complete':self.error is None,
                     'format':'color_jpeg BGR q95; depth_mm uint16 unfiltered, aligned to color; pinhole [fx,fy,cx,cy]; read with load_frame',
-                    'requested_seconds':self.seconds,'max_hz':1/self.period}
+                    'requested_seconds':self.seconds,'max_hz':1/self.period,'session_id':self.session_id}
             try:(self.directory/'manifest.json').write_text(json.dumps(report,indent=2))
             except OSError as exc:print('RGB-D MANIFEST ERROR: '+str(exc),flush=True)
             print(f'RGB-D REC STOP: {self.frames} frames, {self.dropped} dropped; {self.directory}',flush=True)

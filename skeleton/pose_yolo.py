@@ -30,6 +30,7 @@ import argparse
 import os
 import sys
 import time
+import uuid
 
 import cv2
 import numpy as np
@@ -38,6 +39,7 @@ from ultralytics import YOLO
 
 from camera_open import latest_frames
 from fusion import BoneLengths, OneEuro, constrain_legs, fuse_joints
+from person_track import PersonTrack
 from marker_frame import MarkerSession, to_stage_relative
 
 W2D = "YOLO pose | 3D (smart fusion)"
@@ -238,6 +240,10 @@ def main():
     view = View3D(w=640, h=360, scale_px=140)
     filters = {}
     bone_lengths = BoneLengths()
+    track = PersonTrack()
+    skipped = 0  # кадры с людьми, где оператора не узнали (пакет без суставов)
+    session_id = uuid.uuid4().hex
+    print(f"session_id {session_id}", flush=True)
     t0, frames = time.monotonic(), 0
     fps = 0.0
     pipeline = None
@@ -254,7 +260,8 @@ def main():
     try:
         if args.record_rgbd:
             from rgbd_recording import RGBDRecorder
-            rgbd_recorder = RGBDRecorder(args.record_rgbd, args.record_rgbd_seconds, args.record_rgbd_hz, args.record_rgbd_delay)
+            rgbd_recorder = RGBDRecorder(args.record_rgbd, args.record_rgbd_seconds, args.record_rgbd_hz, args.record_rgbd_delay,
+                                         session_id)
         if args.ws:
             from skeleton_server import SkeletonServer, packet
             backend = "torch-" + device if device else ("coreml" if sys.platform == "darwin" else "openvino")
@@ -328,11 +335,16 @@ def main():
                                 **({"device": device} if device else {}), verbose=False)[0]
             t = tic("infer", t)
             raw, pts2d, sources, confidence = {}, {}, {}, {}
+            pick = None
             if res.keypoints is not None and len(res.keypoints):
-                kxy = res.keypoints.xy.cpu().numpy()
-                kconf = (res.keypoints.conf.cpu().numpy()
+                kxy = res.keypoints.xy.cpu().numpy().reshape(-1, 17, 2)
+                kconf = (res.keypoints.conf.cpu().numpy().reshape(-1, 17)
                          if res.keypoints.conf is not None else np.ones(kxy.shape[:-1]))
-                xy, conf = (kxy[0], kconf[0]) if kxy.ndim == 3 else (kxy, kconf)
+                # не kxy[0]: самый уверенный в кадре может оказаться посторонним
+                pick = track.select(res.boxes.xyxy.cpu().numpy(), time.monotonic())
+                skipped += pick is None
+            if pick is not None:
+                xy, conf = kxy[pick], kconf[pick]
                 for i in range(min(17, len(xy))):
                     if conf[i] > 0.5:
                         confidence[i] = float(conf[i])
@@ -367,7 +379,7 @@ def main():
                 wire, wire_frame, pelvis = smoothed, "camera", None
                 if session.locked:
                     server.record("camera", packet(smoothed, confidence, sources, frame_timestamp,
-                                                   sequence, fps, backend, timing=timing))
+                                                   sequence, fps, backend, timing=timing, session_id=session_id))
                     converted = to_stage_relative(smoothed, session.R, session.t)
                     wire_frame = "pelvis-relative"
                     if converted:
@@ -376,7 +388,7 @@ def main():
                     else:
                         wire, pelvis = {}, {"p": [0, 0, 0], "conf": 0}
                 server.publish(packet(wire, confidence, sources, frame_timestamp,
-                                      sequence, fps, backend, wire_frame, pelvis, timing))
+                                      sequence, fps, backend, wire_frame, pelvis, timing, session_id))
             frames += 1
             dt = time.monotonic() - t0
             if dt > 1:
@@ -385,9 +397,10 @@ def main():
                 br = " ".join(f"{k}:{v / max(1, n):.0f}ms"
                               for k, v in sorted(stage_t.items(), key=lambda kv: -kv[1]))
                 print(f"    [тайминг] {br} | age:{age_sum / max(1, n):.0f}ms ({clock}) "
-                      f"drop:{dropped_sum / max(1, n):.1f}", flush=True)
+                      f"drop:{dropped_sum / max(1, n):.1f} не узнан:{skipped}", flush=True)
                 stage_t.clear()
                 age_sum = dropped_sum = 0.0
+                skipped = 0
             if args.headless:
                 continue
             if session.corners is not None:

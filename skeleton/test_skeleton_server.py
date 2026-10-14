@@ -25,6 +25,10 @@ class TransportTest(unittest.TestCase):
         self.assertEqual((p["clock"], p["frame_age_ms"], p["dropped"]), ("global_time", 40, 3))
         self.assertNotIn("clock", packet({}, {}, {}, 1, 1, 30, "test"))
 
+    def test_session_id(self):
+        self.assertEqual(packet({}, {}, {}, 1, 1, 30, "test", session_id="abc")["session_id"], "abc")
+        self.assertNotIn("session_id", packet({}, {}, {}, 1, 1, 30, "test"))
+
     def test_stage_frame_keeps_absolute_pelvis(self):
         p = packet({11: [0, -.1, 0], 12: [0, .1, 0]}, {11: .9, 12: .8}, {},
                    1, 1, 30, "test", "pelvis-relative", {"p": [1, 2, 3], "conf": .85})

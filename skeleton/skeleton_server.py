@@ -13,7 +13,7 @@ JOINTS = {"lhip": 11, "lknee": 13, "lankle": 15, "rhip": 12,
 
 
 def packet(points, confidence, sources, timestamp, seq, fps, backend,
-           frame="camera", pelvis=None, timing=None):
+           frame="camera", pelvis=None, timing=None, session_id=None):
     def joint(i):
         p = points.get(i)
         if p is None or not all(math.isfinite(float(x)) for x in p):
@@ -35,6 +35,10 @@ def packet(points, confidence, sources, timestamp, seq, fps, backend,
     # frame_age_ms: возраст кадра к выходу из wait, dropped: выброшено старых
     if timing:
         value.update(timing)
+    # session_id: один на запуск pose_yolo; связывает эпизод Quest (camera.jsonl
+    # хранит payload целиком) с логом и RGB-D этой сессии без сверки по времени
+    if session_id:
+        value["session_id"] = session_id
     return value
 
 
