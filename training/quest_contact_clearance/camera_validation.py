@@ -106,24 +106,30 @@ def evaluate(assets, dataset, policy, output, commands=None, mode='target', seed
         for seed in seeds:
             env.rng = np.random.default_rng(seed)
             obs = env.reset(clip=clip, start=0, randomize=seed != 0)
-            leg, slip, root = [], [], []
+            leg, slip, root, moving = [], [], [], []
             while True:
                 if env.steps % env.policy_stride == 0:
                     action = session.run(None, {name: obs[None]})[0][0]
                 obs, _, done, info = env.step(action)
                 q = env.motion['q'][env.k]
                 leg.append(np.degrees(np.abs(env.data.qpos[env.qa[LEGS]] - q[7:19])))
+                # Training's relaxed-leg mask (locomotion_ablation): reference root moving or turning.
+                v = env.motion['v'][env.k]
+                moving.append(np.hypot(*env.motion['cmd'][env.k, :2]) > .05 or abs(v[5]) > .15)
                 contact = env.contact_force > 5  # loaded feet only, as the sliding reward
                 slip.extend(env.contact_speed[contact])
                 root.append(info['root_xy_error_m'])
                 if done:
                     break
-            leg = np.array(leg)
+            leg, moving = np.array(leg), np.array(moving)
             trials.append({'clip': item['meta']['id'], 'stage': item['meta']['stage'], 'seed': seed,
                            'camera_share': item['meta'].get('camera_share'),
                            'reference_seconds': (len(item['q']) - 1) * mj.DT, 'survived_seconds': info['seconds'],
                            'fell': info['fall'], 'leg_joint_error_deg_mean': float(leg.mean()),
                            'leg_joint_error_deg_p95': float(np.percentile(leg, 95)),
+                           'moving_fraction': float(moving.mean()),
+                           'leg_joint_error_deg_still': float(leg[~moving].mean()) if (~moving).any() else None,
+                           'leg_joint_error_deg_moving': float(leg[moving].mean()) if moving.any() else None,
                            'support_slip_m_s_mean': float(np.mean(slip)) if slip else 0.,
                            'support_slip_m_s_p90': float(np.percentile(slip, 90)) if slip else 0.,
                            'slide_path_m': info['slide_path_m'],
@@ -140,6 +146,10 @@ def evaluate(assets, dataset, policy, output, commands=None, mode='target', seed
                ('leg_joint_error_deg_mean', 'leg_joint_error_deg_p95', 'support_slip_m_s_mean', 'support_slip_m_s_p90')},
             'slide_path_m_per_s': float(sum(t['slide_path_m'] for t in rows) / w.sum()),
             'root_xy_error_m_final_mean': float(np.mean([t['root_xy_error_m_final'] for t in rows])),
+            **{k: float(np.average([t[k] for t in rows], weights=[t['survived_seconds'] * (f if k.endswith('moving') else 1 - f) for t, f in ((t, t['moving_fraction']) for t in rows)]))
+               for k in ('leg_joint_error_deg_still', 'leg_joint_error_deg_moving')
+               if all(t[k] is not None for t in rows)},
+            'moving_fraction': float(np.average([t['moving_fraction'] for t in rows], weights=w)),
             'root_xy_error_m_max': float(np.max([t['root_xy_error_m_max'] for t in rows]))}
     report = {'policy': str(policy), 'policy_sha256': sha(policy), 'mode': mode,
               'commands_sha256': sha(commands) if live is not None else None,

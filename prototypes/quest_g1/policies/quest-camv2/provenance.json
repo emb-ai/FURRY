@@ -1,0 +1,260 @@
+{
+  "schema_version": 1,
+  "training_date": "2026-10-14",
+  "run": "camv2-B-111586-s11",
+  "trainer_commit": "2c6e1cf30b0b4643136a2bd2b492acea0a952928",
+  "upstream_twist2_commit": "b06178f19a22f2138cbd31f60c6d494bc263f67d",
+  "parent_checkpoint": "111586/checkpoint_000500.pt",
+  "parent_checkpoint_sha256": "13e93d837b014317ca1179303bc2b580c1a7940f2a5d868dae20bd36774d3a21",
+  "initialization": "actor, frozen normalization and std restored; new critic (551 warmup iterations) and optimizer",
+  "experiment_config_sha256": "1ec7a45c1513024ae057ab82caba17fc5f804d60e27f376046c13dacf2d48403",
+  "recipe": "pilot B contract: lower-body tracking x0.25 while the reference root moves, nonlooping, 1 s window reward, contact_points 0.1; seed 11; 4096 envs; 1000 actor updates",
+  "data": {
+    "camera_dataset": "datasets/quest-camera-legs/2026-10-14/dataset-v2",
+    "camera_manifest_sha256": "c4f33ac27352cbca1f5c648775bb2999e9276f8de8cce839bb95da1be3982f19",
+    "meta_base": "clamp-mirrored (as 111586)",
+    "meta_manifest_sha256": "cfb130e6bb4d97bc4df5572883c1bc9a45dcf450147ce432a909587f76a549ff",
+    "mixture_manifest_sha256": "ddb2684d3257d2d44747df1997d1c91fc24784e4a938c93d053339e775c6e59e",
+    "quest_sampling": "Quest x2 (7.0% of draws), Meta/camera 50/50",
+    "actor_command_bank_sha256": "c7f0960fa855f0eb9e07e03af9a2f8f8b0a886a1acb6feb4c23eee7142c08362",
+    "phase_table_sha256": "576efe85373ac921ac70849227758ec4f584aebea425ccef3b9b980f2af35f39"
+  },
+  "runtime_policy_hz": 50,
+  "runtime_physics_hz": 1000,
+  "metadata_key": "g1_policy_hz",
+  "input_float32_shape": [
+    1,
+    1432
+  ],
+  "output_float32_shape": [
+    1,
+    29
+  ],
+  "default_actor_remains": "twist2-20k",
+  "status": "experimental menu candidates; better stance (no fall/drift on ep9 camera-leg replay, -30..50% support slip) at the cost of +0.5..1.8 deg leg joint tracking error vs 111586-300",
+  "evaluation": {
+    "tool": "training/quest_contact_clearance/camera_validation.py",
+    "validation_stages": [
+      103,
+      116
+    ],
+    "validation_commands_sha256": "e8d549d619b5f3ea62034dfc9e2c05a05c8b6658ba196e311661e41c9a95b787",
+    "scene_sha256": "9c3e2385f4e0a4e30287d1d20a741cccabd9bb298d11bce077970496ac1b624a",
+    "baselines": {
+      "quest-111586-300": {
+        "live/103": {
+          "falls": 0,
+          "trials": 64,
+          "leg_joint_error_deg": 4.73,
+          "support_slip_m_s": 0.047,
+          "root_xy_error_m_final": 0.22,
+          "root_xy_error_m_max": 1.16
+        },
+        "live/116": {
+          "falls": 1,
+          "trials": 12,
+          "leg_joint_error_deg": 6.22,
+          "support_slip_m_s": 0.075,
+          "root_xy_error_m_final": 3.24,
+          "root_xy_error_m_max": 17.78
+        },
+        "target/103": {
+          "falls": 0,
+          "trials": 64,
+          "leg_joint_error_deg": 4.36,
+          "support_slip_m_s": 0.04,
+          "root_xy_error_m_final": 0.24,
+          "root_xy_error_m_max": 1.1
+        },
+        "target/116": {
+          "falls": 0,
+          "trials": 12,
+          "leg_joint_error_deg": 5.34,
+          "support_slip_m_s": 0.056,
+          "root_xy_error_m_final": 1.54,
+          "root_xy_error_m_max": 7.0
+        }
+      },
+      "quest-111586-500": {
+        "live/103": {
+          "falls": 0,
+          "trials": 64,
+          "leg_joint_error_deg": 5.16,
+          "support_slip_m_s": 0.055,
+          "root_xy_error_m_final": 0.38,
+          "root_xy_error_m_max": 2.05
+        },
+        "live/116": {
+          "falls": 0,
+          "trials": 12,
+          "leg_joint_error_deg": 6.42,
+          "support_slip_m_s": 0.072,
+          "root_xy_error_m_final": 2.58,
+          "root_xy_error_m_max": 10.42
+        },
+        "target/103": {
+          "falls": 0,
+          "trials": 64,
+          "leg_joint_error_deg": 4.65,
+          "support_slip_m_s": 0.038,
+          "root_xy_error_m_final": 0.24,
+          "root_xy_error_m_max": 1.21
+        },
+        "target/116": {
+          "falls": 0,
+          "trials": 12,
+          "leg_joint_error_deg": 6.12,
+          "support_slip_m_s": 0.088,
+          "root_xy_error_m_final": 5.1,
+          "root_xy_error_m_max": 13.6
+        }
+      }
+    }
+  },
+  "artifacts": [
+    {
+      "file": "checkpoint_000250-50hz.onnx",
+      "id": "quest-camv2-250",
+      "additional_actor_updates": 250,
+      "bytes": 3183334,
+      "sha256": "89addcfe6ae513d36c04f7956b32dd8a8ca3a8897f9092712fe62d583087708d",
+      "checkpoint_sha256": "3a483b084485c9c1645d5bd572d0c6451998562c230282671d891987c2e445be",
+      "export": {
+        "sha256": "89addcfe6ae513d36c04f7956b32dd8a8ca3a8897f9092712fe62d583087708d",
+        "metadata_parity_max_error": 0,
+        "torch_parity": {
+          "max_absolute_error": 1.9073486328125e-06,
+          "samples": 128
+        }
+      },
+      "validation": {
+        "mujoco_seeds_0_3": {
+          "live/103": {
+            "falls": 0,
+            "trials": 64,
+            "leg_joint_error_deg": 5.97,
+            "support_slip_m_s": 0.033,
+            "root_xy_error_m_final": 0.17,
+            "root_xy_error_m_max": 0.66
+          },
+          "live/116": {
+            "falls": 0,
+            "trials": 12,
+            "leg_joint_error_deg": 6.71,
+            "support_slip_m_s": 0.042,
+            "root_xy_error_m_final": 0.84,
+            "root_xy_error_m_max": 2.55
+          },
+          "target/103": {
+            "falls": 0,
+            "trials": 64,
+            "leg_joint_error_deg": 5.45,
+            "support_slip_m_s": 0.025,
+            "root_xy_error_m_final": 0.16,
+            "root_xy_error_m_max": 0.69
+          },
+          "target/116": {
+            "falls": 0,
+            "trials": 12,
+            "leg_joint_error_deg": 6.59,
+            "support_slip_m_s": 0.052,
+            "root_xy_error_m_final": 2.17,
+            "root_xy_error_m_max": 7.18
+          }
+        },
+        "native_replay": {
+          "ep9_stand_train": {
+            "fall_s": null,
+            "net_m": 1.52,
+            "root_drift_m_final": 1.58,
+            "leg_joint_error_deg": 8.22
+          },
+          "ep7_stage103": {
+            "fall_s": null,
+            "net_m": 2.38,
+            "root_drift_m_final": 2.06,
+            "leg_joint_error_deg": 6.17
+          },
+          "ep12_stage116": {
+            "fall_s": null,
+            "net_m": 4.95,
+            "root_drift_m_final": 4.73,
+            "leg_joint_error_deg": 7.08
+          }
+        }
+      }
+    },
+    {
+      "file": "checkpoint_000500-50hz.onnx",
+      "id": "quest-camv2-500",
+      "additional_actor_updates": 500,
+      "bytes": 3183334,
+      "sha256": "5ef828087cc1ad5d9dcab3b6d1656eae4ae5e0cee01dd51f6792eb61a49dfab1",
+      "checkpoint_sha256": "f9539b12d9d413c0b8cd14f50fa534c3d653db703f4e45442d7f6dfd6d80093c",
+      "export": {
+        "sha256": "5ef828087cc1ad5d9dcab3b6d1656eae4ae5e0cee01dd51f6792eb61a49dfab1",
+        "metadata_parity_max_error": 0,
+        "torch_parity": {
+          "max_absolute_error": 2.1457672119140625e-06,
+          "samples": 128
+        }
+      },
+      "validation": {
+        "mujoco_seeds_0_3": {
+          "live/103": {
+            "falls": 0,
+            "trials": 64,
+            "leg_joint_error_deg": 6.56,
+            "support_slip_m_s": 0.03,
+            "root_xy_error_m_final": 0.17,
+            "root_xy_error_m_max": 0.79
+          },
+          "live/116": {
+            "falls": 0,
+            "trials": 12,
+            "leg_joint_error_deg": 7.5,
+            "support_slip_m_s": 0.037,
+            "root_xy_error_m_final": 0.72,
+            "root_xy_error_m_max": 1.43
+          },
+          "target/103": {
+            "falls": 0,
+            "trials": 64,
+            "leg_joint_error_deg": 6.16,
+            "support_slip_m_s": 0.023,
+            "root_xy_error_m_final": 0.13,
+            "root_xy_error_m_max": 0.71
+          },
+          "target/116": {
+            "falls": 0,
+            "trials": 12,
+            "leg_joint_error_deg": 7.24,
+            "support_slip_m_s": 0.04,
+            "root_xy_error_m_final": 1.71,
+            "root_xy_error_m_max": 6.33
+          }
+        },
+        "native_replay": {
+          "ep9_stand_train": {
+            "fall_s": null,
+            "net_m": 2.5,
+            "root_drift_m_final": 2.4,
+            "leg_joint_error_deg": 8.21
+          },
+          "ep7_stage103": {
+            "fall_s": null,
+            "net_m": 1.53,
+            "root_drift_m_final": 0.84,
+            "leg_joint_error_deg": 6.74
+          },
+          "ep12_stage116": {
+            "fall_s": null,
+            "net_m": 2.72,
+            "root_drift_m_final": 2.47,
+            "leg_joint_error_deg": 7.58
+          }
+        }
+      }
+    }
+  ]
+}
