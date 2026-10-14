@@ -57,7 +57,9 @@ def validate_motion(x, expected_links=None, strict_quaternions=True):
     return (n - 1) / fps, names
 
 
-def quest_weights(clips, total):
+def quest_weights(clips, total, shares=None):
+    """Equal mass per family (original + mirrors). With shares, each input_source
+    (quest-meta, quest-camera, ...) first gets its fraction of the Quest mass."""
     train = {c['id']: c for c in clips if c['split'] == 'train'}
     families = collections.defaultdict(list)
     for c in train.values():
@@ -69,7 +71,14 @@ def quest_weights(clips, total):
         families[parent].append(c['id'])
     if not families:
         raise ValueError('No Quest train clips')
-    return {name: total / len(families) / len(group) for group in families.values() for name in group}
+    if not shares:
+        return {name: total / len(families) / len(group) for group in families.values() for name in group}
+    source = lambda parent: train[parent].get('input_source', 'quest-meta')
+    per_source = collections.Counter(source(parent) for parent in families)
+    if set(shares) != set(per_source) or abs(sum(shares.values()) - 1) > 1e-9 or min(shares.values()) <= 0:
+        raise ValueError(f'Quest shares must be positive, sum to 1 and name exactly the sources {sorted(per_source)}')
+    return {name: total * shares[source(parent)] / per_source[source(parent)] / len(group)
+            for parent, group in families.items() for name in group}
 
 
 def guard_quest_split(clips, validation_stages):
@@ -91,7 +100,7 @@ def guard_quest_split(clips, validation_stages):
         hashes[c['sha256']] = c['split']
 
 
-def build(selection_path, raw, quest, output, author_manifest):
+def build(selection_path, raw, quest, output, author_manifest, quest_scale=1.0, quest_shares=None):
     selection = json.loads(selection_path.read_text())
     author_text = author_manifest.read_text()
     members = set(re.findall(r'^- file: (.+)$', author_text, re.M))
@@ -105,7 +114,9 @@ def build(selection_path, raw, quest, output, author_manifest):
     # Existing public demo fixtures include PICO; they are deliberately not imported.
     qc = [c for c in qm['clips'] if c['split'] in ('train', 'validation')]
     guard_quest_split(qc, qm['validation_stages'])
-    weights = quest_weights(qc, selection['quest_replacement_weight'])
+    if quest_scale <= 0:
+        raise ValueError('Quest scale must be positive')
+    weights = quest_weights(qc, selection['quest_replacement_weight'] * quest_scale, quest_shares)
     download = json.loads((raw / 'download-manifest.json').read_text())
     if download['selection_sha256'] != sha(selection_path):
         raise ValueError('Download/selection mismatch')
@@ -163,6 +174,17 @@ def build(selection_path, raw, quest, output, author_manifest):
         'counts': dict(collections.Counter(c['source'] + '/' + c['split'] for c in rows)),
         'seconds': {k: sum(c['seconds'] for c in rows if c['source'] + '/' + c['split'] == k) for k in {c['source'] + '/' + c['split'] for c in rows}},
         'clips': rows}
+    if quest_scale != 1.0 or quest_shares:
+        train = [c for c in rows if c['split'] == 'train']
+        total = sum(c['weight'] for c in train)
+        quest_train = [c for c in train if c['source'] == 'quest']
+        summary['quest_probability_before_curriculum'] = sum(c['weight'] for c in quest_train) / total
+        summary['quest_sampling'] = {
+            'scale': quest_scale, 'shares': quest_shares,
+            'rule': 'Quest mass = scale x replaced PICO mass; each input_source gets its share, split equally over its families (original + mirrors).',
+            'probability_by_input_source': {s: sum(c['weight'] for c in quest_train if c.get('input_source', 'quest-meta') == s) / total
+                                            for s in sorted({c.get('input_source', 'quest-meta') for c in quest_train})}}
+        summary['clips'] = summary.pop('clips')  # keep clips last
     for split in ('train', 'validation'):
         # Upstream resolves root_path against CWD; the launch entrypoint must chdir to this dataset.
         lines = ['root_path: .', 'motions:']
@@ -178,6 +200,9 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser()
     for arg in ('selection', 'raw', 'quest', 'output', 'author-manifest'):
         p.add_argument('--' + arg, type=Path, required=True)
+    p.add_argument('--quest-scale', type=float, default=1.0, help='Multiply the Quest (replaced PICO) sampling mass')
+    p.add_argument('--quest-shares', help='Split Quest mass by input_source, e.g. quest-meta=0.5,quest-camera=0.5')
     a = p.parse_args()
-    result = build(a.selection, a.raw, a.quest, a.output, a.author_manifest)
+    shares = {k: float(v) for k, v in (x.split('=') for x in a.quest_shares.split(','))} if a.quest_shares else None
+    result = build(a.selection, a.raw, a.quest, a.output, a.author_manifest, a.quest_scale, shares)
     print(json.dumps({k: v for k, v in result.items() if k != 'clips'}, indent=2))

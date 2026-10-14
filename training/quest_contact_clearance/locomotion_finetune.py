@@ -47,8 +47,10 @@ def main():
     experiment_sha = hashlib.sha256(a.experiment_config.read_bytes()).hexdigest()
     if a.lower_body_coefficient != .25 or a.yaw_airtime or a.leg_faults or not (a.nonlooping and a.window_reward):
         raise ValueError('ABC common contract requires relax .25, nonlooping/window, no yaw hook or leg faults')
-    if not a.smoke and (a.iterations != 5000 or not experiment.get('pilot_passed')):
-        raise ValueError('Long runs require frozen successful pilot and 5000 actor updates')
+    # A/B/C contract: 5000 actor updates from 111260/1000. A camera-leg experiment
+    # config may pin another length and initial actor; the experiment hash freezes both.
+    if not a.smoke and (a.iterations != experiment.get('actor_updates', 5000) or not experiment.get('pilot_passed')):
+        raise ValueError('Long runs require frozen successful pilot and the pinned actor update count')
     if not a.smoke and (not a.actor_command_bank or not experiment.get('input_alignment_approved')):
         raise ValueError('Long runs paused: align Virtual Legs input and reward goals first')
     input_hashes = None
@@ -57,11 +59,12 @@ def main():
                         [('npz', a.actor_command_bank), ('metadata', a.actor_command_bank.with_suffix('.json'))]}
         if input_hashes != experiment.get('actor_command_bank_sha256'):
             raise ValueError('Actor command bank differs from frozen experiment')
-        if not a.smoke and not json.loads(a.actor_command_bank.with_suffix('.json').read_text()).get('long_run_ready'):
+        if not a.smoke and not (json.loads(a.actor_command_bank.with_suffix('.json').read_text()).get('long_run_ready')
+                                or experiment.get('actor_command_bank_approval')):
             raise ValueError('Command bank still has unresolved runtime-contract gaps')
     if hashlib.sha256(a.phase_table.read_bytes()).hexdigest() != experiment['phase_table_sha256']:
         raise ValueError('Teacher differs from frozen experiment')
-    if a.init_checkpoint and not a.resume and hashlib.sha256(a.init_checkpoint.read_bytes()).hexdigest() != '5bbfbddf34b19d8be8c7b37ecfbe61cdef83f03c759f22305fb64d0ee0e06a7f':
+    if a.init_checkpoint and not a.resume and hashlib.sha256(a.init_checkpoint.read_bytes()).hexdigest() != experiment.get('init_checkpoint_sha256', '5bbfbddf34b19d8be8c7b37ecfbe61cdef83f03c759f22305fb64d0ee0e06a7f'):
         raise ValueError('Wrong common actor checkpoint')
     out.mkdir(parents=True, exist_ok=False)
     sys.argv = [sys.argv[0]] + rest

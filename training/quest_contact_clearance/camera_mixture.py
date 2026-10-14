@@ -11,9 +11,13 @@ bank: after author_dataset.py, pair every Quest TRAIN clip of the mixture with
   (author_dataset.py copies NPZ bytes and rebuilds the PKL). A native bank
   given as BANK:OLD_MIXTURE matches on the NPZ hash recorded in its own
   mixture instead, so a rebuilt PKL with different bytes still pairs.
+  --retarget OLD_QUEST NEW_QUEST moves timelines built for OLD_QUEST clips to
+  the NEW_QUEST clip with the same id (e.g. night-v3 -> its toe-clamp rebuild):
+  the input commands stay, only the reward target they pair with changes. Every
+  clip field except sha256 and the frame count must match.
 Usage:
   camera_mixture.py combine OUT QUEST_DATASET ...
-  camera_mixture.py bank --dataset MIXTURE --banks BANK.npz[:OLD_MIXTURE] ... --output OUT.npz
+  camera_mixture.py bank --dataset MIXTURE --banks BANK.npz[:OLD_MIXTURE] ... [--retarget OLD_QUEST NEW_QUEST] --output OUT.npz
 """
 import argparse
 import hashlib
@@ -66,10 +70,33 @@ def combine(output, sources):
     return manifest
 
 
-def bank(dataset, banks, output):
+def retarget_map(old, new):
+    old, new = Path(old), Path(new)
+    # Only the splits combine() imports; e.g. night-v3 also lists upstream replay clips.
+    a = {c['id']: c for c in json.loads((old/'manifest.json').read_text())['clips'] if c['split'] in ('train', 'validation')}
+    b = {c['id']: c for c in json.loads((new/'manifest.json').read_text())['clips'] if c['split'] in ('train', 'validation')}
+    if a.keys() != b.keys():
+        raise ValueError('Retarget datasets have different clip ids')
+    mapping = {}
+    for name, c in a.items():
+        d = b[name]
+        if {k: v for k, v in c.items() if k != 'sha256'} != {k: v for k, v in d.items() if k != 'sha256'}:
+            raise ValueError(f'Retarget clip metadata differs: {name}')
+        if sha(old/c['file']) != c['sha256'] or sha(new/d['file']) != d['sha256']:
+            raise ValueError(f'Retarget source changed: {name}')
+        with np.load(old/c['file']) as x, np.load(new/d['file']) as y:
+            if x['qpos'].shape != y['qpos'].shape:
+                raise ValueError(f'Retarget frame count differs: {name}')
+        mapping[c['sha256']] = d['sha256']
+    return mapping, {'from': str(old.resolve()), 'from_manifest_sha256': sha(old/'manifest.json'),
+                     'to': str(new.resolve()), 'to_manifest_sha256': sha(new/'manifest.json'), 'clips': len(mapping)}
+
+
+def bank(dataset, banks, output, retarget=None):
     dataset, output = Path(dataset), Path(output)
     if output.exists() or output.with_suffix('.json').exists():
         raise ValueError('Use a fresh output path')
+    moved, retarget_row = retarget_map(*retarget) if retarget else ({}, None)
     manifest = json.loads((dataset/'manifest.json').read_text())
     if manifest.get('schema') != 'twist2-quest-mixture-v2':
         raise ValueError('Expected an author_dataset.py mixture')
@@ -87,6 +114,7 @@ def bank(dataset, banks, output):
             npz_of = {c['file']: c['npz_sha256'] for c in json.loads((Path(own)/'manifest.json').read_text())['clips'] if 'npz_sha256' in c}
         for name, row in meta['files'].items():
             target = npz_of[name] if own else row['target_sha256']
+            target = moved.get(target, target)
             if target in by_hash:
                 raise ValueError('Two banks provide the same reward target')
             by_hash[target] = (i, row['key'], name)
@@ -115,6 +143,7 @@ def bank(dataset, banks, output):
                 'merged_banks': sources, 'unused_bank_entries': len(by_hash) - len(used),
                 'seconds_by_input': {s: sum(f['seconds'] for f in files.values() if f['input_source'] == s) for s in inputs},
                 'command_sampling': 'causal zero-order hold at original command times; no future interpolation',
+                **({'retarget': retarget_row} if retarget_row else {}),
                 'long_run_ready': False,
                 'limitations': ['Merged inputs keep their own limitations; see merged_banks.']}
     output.with_suffix('.json').write_text(json.dumps(metadata, indent=2)+'\n')
@@ -127,12 +156,13 @@ def main():
     c = sub.add_parser('combine'); c.add_argument('output', type=Path); c.add_argument('sources', type=Path, nargs='+')
     b = sub.add_parser('bank'); b.add_argument('--dataset', type=Path, required=True)
     b.add_argument('--banks', nargs='+', required=True); b.add_argument('--output', type=Path, required=True)
+    b.add_argument('--retarget', nargs=2, type=Path, metavar=('OLD_QUEST', 'NEW_QUEST'))
     a = p.parse_args()
     if a.command == 'combine':
         m = combine(a.output, a.sources)
         print(json.dumps({k: m[k] for k in ('validation_stages', 'duration_seconds', 'seconds_by_source')}))
     else:
-        m = bank(a.dataset, a.banks, a.output)
+        m = bank(a.dataset, a.banks, a.output, a.retarget)
         print(json.dumps({'clips': len(m['files']), 'seconds_by_input': m['seconds_by_input'],
                           'unused_bank_entries': m['unused_bank_entries'], 'sha256': m['npz_sha256']}))
 

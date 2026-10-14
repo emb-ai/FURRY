@@ -199,3 +199,15 @@ It first needed `native_command_bank.install` to skip the observation rebuild
 before the first physics step (the source has no roll/pitch yet).
 Family weighting is unchanged: camera families get about 38% of the Quest mass,
 i.e. roughly 1.4% of motion draws before curriculum.
+
+dataset-v2 training mixture (approved 2026-10-14): Meta base is the server
+`clamp-mirrored` set (night-v3 rebuilt with the 3d0164f toe clamp; its NPZ equal
+the 111586 training set). `author_dataset.py --quest-scale 2 --quest-shares
+quest-meta=0.5,quest-camera=0.5` doubles the Quest mass and splits it evenly
+by input source (each 3.5% of draws before curriculum; author motions 93%).
+The native bank is built for git night-v3, so `bank` takes `--retarget
+night-v3 clamp-mirrored`: same commands, paired with the clamp clip of the same
+id. Coverage 278 Quest TRAIN clips (66 Meta + 212 camera), no unused entries;
+bank samples equal the source timelines exactly. Starting from 111586/500 needs
+an experiment config with `init_checkpoint_sha256` (and `actor_updates` for a
+length other than 5000); the lineage audit uses the 111586 dataset manifest.

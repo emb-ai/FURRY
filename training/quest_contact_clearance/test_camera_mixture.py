@@ -74,6 +74,35 @@ class CameraMixtureTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 bank(root/'mix', [root/'native.npz', root/'camera.npz'], root/'out2.npz')
 
+    def test_retarget_moves_native_timeline_to_rebuilt_clip(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d); files = self.fixture(root)
+            for name, value in (('old', 0.), ('new', .01)):
+                (root/name/'train').mkdir(parents=True)
+                np.savez(root/name/'train/m.npz', qpos=np.full((41, 36), value))
+                clip = dict(id='m', file='train/m.npz', split='train', stage=1, seconds=.4, sha256=h(root/name/'train/m.npz'))
+                (root/name/'manifest.json').write_text(json.dumps(dict(clips=[clip])))
+            # The native bank pairs with the old target; the mixture holds the rebuilt one.
+            clips = json.loads((root/'mix/manifest.json').read_text())
+            clips['clips'][0]['npz_sha256'] = h(root/'new/train/m.npz')
+            (root/'mix/manifest.json').write_text(json.dumps(clips))
+            meta = json.loads((root/'native.json').read_text())
+            meta['files']['quest/train/m.pkl']['target_sha256'] = h(root/'old/train/m.npz')
+            (root/'native.json').write_text(json.dumps(meta))
+            with self.assertRaises(ValueError):
+                bank(root/'mix', [root/'native.npz', root/'camera.npz'], root/'out.npz')
+            out = bank(root/'mix', [root/'native.npz', root/'camera.npz'], root/'out.npz', (root/'old', root/'new'))
+            self.assertEqual(out['retarget']['clips'], 1)
+            loaded = NativeCommandBank(root/'out.npz', files, root/'mix', 'cpu')
+            got = loaded.sample(torch.tensor([0]), torch.tensor([.2], dtype=torch.float64), torch.zeros(1, 35))
+            self.assertEqual(got[0, 6].item(), 1.)
+            np.savez(root/'new/train/m.npz', qpos=np.zeros((40, 36)))
+            clips = json.loads((root/'new/manifest.json').read_text())
+            clips['clips'][0]['sha256'] = h(root/'new/train/m.npz')
+            (root/'new/manifest.json').write_text(json.dumps(clips))
+            with self.assertRaises(ValueError):
+                bank(root/'mix', [root/'native.npz', root/'camera.npz'], root/'out2.npz', (root/'old', root/'new'))
+
     def test_combine_rejects_shared_stage(self):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
