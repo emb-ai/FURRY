@@ -70,6 +70,13 @@ class NativeCommandTests(unittest.TestCase):
             env = SimpleNamespace(dt=.02, num_obs=1432, obs_type='student_future', num_envs=2,
                                   device='cpu', _motion_lib=SimpleNamespace(_motion_files=files),
                                   _motion_ids=torch.tensor([0, 1]), obs_history_buf=torch.zeros(2, 10, 127))
+            # Freshly constructed source env: no physics step yet, so no roll/pitch and a zero actor buffer.
+            env.obs_buf = torch.zeros(2, 1432)
+            env.compute_observations = lambda: self.fail('source observations need a physics step')
+            env.reset_idx = lambda ids: None
+            install(env, path, root)
+            self.assertEqual(env.obs_buf.count_nonzero(), 0)
+            env.roll = torch.zeros(2)
             clean = torch.arange(2864).reshape(2, 1432).float()
             critic = torch.randn(2, 500)
             env.ref_dof_pos = torch.randn(2, 29); ref_before = env.ref_dof_pos.clone()

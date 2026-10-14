@@ -114,5 +114,8 @@ def install(env, path, dataset):
     env.compute_observations, env.reset_idx = observe, reset
     # Environment constructed before installation; rebuild its initial actor
     # observation without retroactively filling history with unavailable frames.
-    observe()
+    # Before the first physics step the source has no roll/pitch and leaves the
+    # actor buffer zero, as on the legacy path; keep it.
+    if hasattr(env, 'roll'):
+        observe()
     return {'bank': bank, 'history': history, 'counters': counters}

@@ -187,6 +187,10 @@ Checked locally on dataset-v1 (5 episodes, 187 s train + 187 s mirrors, 89 s
 validation): the unchanged author_dataset accepts the combined Quest set, bank
 samples equal live `mimic.csv` exactly on all 40 camera clips, and `bank`
 merges the published native and camera banks over all 106 Quest TRAIN clips
-(1426 s Meta + 374 s camera, no unused entries). No GPU smoke has run.
+(1426 s Meta + 374 s camera, no unused entries). GPU smoke (2026-10-14, H100,
+pilot B on this mixture with the merged bank, 4096 envs, 20 actor updates):
+finite losses, value loss 0.86 -> 0.30, bank commands on 8.6% of env steps.
+It first needed `native_command_bank.install` to skip the observation rebuild
+before the first physics step (the source has no roll/pitch yet).
 Family weighting is unchanged: camera families get about 38% of the Quest mass,
 i.e. roughly 1.4% of motion draws before curriculum.
