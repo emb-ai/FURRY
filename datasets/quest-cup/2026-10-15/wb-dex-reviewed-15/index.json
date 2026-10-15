@@ -1,0 +1,157 @@
+{
+  "scene": "wb_dex",
+  "count": 15,
+  "criterion": "Object origin remains within x=0.58 +/-0.15m, y=-0.64 +/-0.17m, z=(0,0.16)m throughout final 0.5s; object translational speed <0.03m/s throughout final 0.5s; grip released; no simulation_fault; input.valid never zero. Final replay images inspected. Upright placement is NOT required. Source outcome labels remain unchanged.",
+  "episodes": [
+    {
+      "episode_id": "1792055048009737",
+      "archive": "g1-episode-1792055048009737.zip",
+      "sha256": "407d7e5f8cb92e23671af58a436b990b9f6286084c51ebf213221ee85ea8880d",
+      "original_outcome": 1,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 18.09000000000003,
+      "tail_max_speed_mps": 1.4514552689056908e-08,
+      "final_tilt_degrees": 94.37165024998735
+    },
+    {
+      "episode_id": "1792055093480872",
+      "archive": "g1-episode-1792055093480872.zip",
+      "sha256": "668dd45bdff53534a62f9cb6e9bb44e83a9817cac6acc452133ea402e06b2201",
+      "original_outcome": 0,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 17.71999999999997,
+      "tail_max_speed_mps": 2.18475321733926e-15,
+      "final_tilt_degrees": 179.99999599544665
+    },
+    {
+      "episode_id": "1792055166899546",
+      "archive": "g1-episode-1792055166899546.zip",
+      "sha256": "0c16e806435cee9a9e064710cf4f068a64b718da1ff84f829ed9b3dfecebfddb",
+      "original_outcome": 0,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 9.819999999999837,
+      "tail_max_speed_mps": 9.978480956739431e-06,
+      "final_tilt_degrees": 89.96835559219605
+    },
+    {
+      "episode_id": "1792056963421678",
+      "archive": "g1-episode-1792056963421678.zip",
+      "sha256": "16c693bc7c36d95bee4b0d1961c3d07a765d8d72f812b60ab3540ee91cbb0b79",
+      "original_outcome": 1,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 23.08000000000081,
+      "tail_max_speed_mps": 1.119652344464681e-05,
+      "final_tilt_degrees": 0.0007615656138892
+    },
+    {
+      "episode_id": "1792057183181030",
+      "archive": "g1-episode-1792057183181030.zip",
+      "sha256": "fa08941578246c36cf36ac722a20bd01cf766556fe6e3ae79e0f88126489eb08",
+      "original_outcome": 0,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 15.019999999999724,
+      "tail_max_speed_mps": 5.168310072025443e-09,
+      "final_tilt_degrees": 179.99999517032694
+    },
+    {
+      "episode_id": "1792057212446809",
+      "archive": "g1-episode-1792057212446809.zip",
+      "sha256": "4a801e092a8096afffaac82be0bf292f753daa448993db1284eb132a2130598c",
+      "original_outcome": 0,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 26.73000000000138,
+      "tail_max_speed_mps": 0.0188233027232131,
+      "final_tilt_degrees": 0.0008359743306239
+    },
+    {
+      "episode_id": "1792057313973997",
+      "archive": "g1-episode-1792057313973997.zip",
+      "sha256": "d245ac5ebb7dfafebc3f05e89e83685941d4606f9ddeb2259b7b0f0b01a89be5",
+      "original_outcome": 0,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 19.1600000000002,
+      "tail_max_speed_mps": 2.759691699977237e-07,
+      "final_tilt_degrees": 89.96835602699916
+    },
+    {
+      "episode_id": "1792057343752554",
+      "archive": "g1-episode-1792057343752554.zip",
+      "sha256": "3d22f808a2f2e3366661c3982461d08be568e6a143f593c8f8e71ec11cf0d16a",
+      "original_outcome": 0,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 21.030000000000488,
+      "tail_max_speed_mps": 0.0097035624077458,
+      "final_tilt_degrees": 1.244109326566461
+    },
+    {
+      "episode_id": "1792057456389048",
+      "archive": "g1-episode-1792057456389048.zip",
+      "sha256": "c3ba89fd8aa06cb3b0dad4346cc54dfe09bebc79478035d26c950d35d77de7e7",
+      "original_outcome": 1,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 11.739999999999794,
+      "tail_max_speed_mps": 0.0021945968801212,
+      "final_tilt_degrees": 0.0008860874887688
+    },
+    {
+      "episode_id": "1792057471874810",
+      "archive": "g1-episode-1792057471874810.zip",
+      "sha256": "1be8ad92d2fa28d9023d1c40059b873f6ae9cc300772bdcb95d54e759c36e5e8",
+      "original_outcome": 1,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 11.889999999999793,
+      "tail_max_speed_mps": 0.0181079450879588,
+      "final_tilt_degrees": 0.0009043111457759
+    },
+    {
+      "episode_id": "1792057487511620",
+      "archive": "g1-episode-1792057487511620.zip",
+      "sha256": "18251e54b79a6f98cbd934eb79d399aa741989137707fea2b6a5175feca6604d",
+      "original_outcome": 0,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 29.600000000001828,
+      "tail_max_speed_mps": 1.1133427298400831e-11,
+      "final_tilt_degrees": 89.96835598870786
+    },
+    {
+      "episode_id": "1792057570598841",
+      "archive": "g1-episode-1792057570598841.zip",
+      "sha256": "04bbb1dd011159352428729fd25a8fc5bc4b03d346ced51ae1e4ccb1fe68f6c1",
+      "original_outcome": 0,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 13.759999999999753,
+      "tail_max_speed_mps": 0.0014818593241677,
+      "final_tilt_degrees": 89.96851463851664
+    },
+    {
+      "episode_id": "1792057619385801",
+      "archive": "g1-episode-1792057619385801.zip",
+      "sha256": "529d0f3cdde12df11b7d2edccb3f5e76f58f5c7bbdb353a35430f94deff51d02",
+      "original_outcome": 1,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 11.709999999999797,
+      "tail_max_speed_mps": 4.984651949949582e-06,
+      "final_tilt_degrees": 0.0011790017449284
+    },
+    {
+      "episode_id": "1792057687369141",
+      "archive": "g1-episode-1792057687369141.zip",
+      "sha256": "a77fc4056d79dfd896646048190e09552244f31db2364b2f516766ac1c51aee6",
+      "original_outcome": 0,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 13.979999999999746,
+      "tail_max_speed_mps": 0.0005184127794771,
+      "final_tilt_degrees": 89.96838367763615
+    },
+    {
+      "episode_id": "1792057706778514",
+      "archive": "g1-episode-1792057706778514.zip",
+      "sha256": "08a603477dbf6e488254237becc310b951a33e37a9d3fb6c7797d1fb4e094572",
+      "original_outcome": 1,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 15.819999999999707,
+      "tail_max_speed_mps": 7.924509115944985e-06,
+      "final_tilt_degrees": 0.0010881297391937
+    }
+  ]
+}
