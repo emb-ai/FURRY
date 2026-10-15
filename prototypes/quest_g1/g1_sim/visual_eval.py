@@ -44,6 +44,46 @@ class Camera:
     def close(self): self.renderer.close()
 
 
+class DemoView:
+    """Third-person 1280x720 view (with shadows) plus the policy camera inset, piped to an ffmpeg mp4."""
+    def __init__(self, model, lookat=(.4, 0, .8), azimuth=-150, elevation=-28, distance=2.):
+        import mujoco
+        self.mj = mujoco; self.model = model
+        self.renderer = mujoco.Renderer(model, height=720, width=1280)
+        self.camera = mujoco.MjvCamera(); self.camera.type = mujoco.mjtCamera.mjCAMERA_FREE
+        self.camera.lookat[:] = lookat; self.camera.azimuth, self.camera.elevation, self.camera.distance = azimuth, elevation, distance
+        from PIL import ImageFont
+        try: self.font, self.small = ImageFont.load_default(size=28), ImageFont.load_default(size=18)
+        except TypeError: self.font = self.small = ImageFont.load_default()  # Pillow < 10.1
+        self.process = None; self.shadows = model.light_castshadow.copy()  # create before Camera, which clears them
+
+    def open(self, path):
+        import subprocess
+        self.process = subprocess.Popen(['ffmpeg', '-loglevel', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgb24',
+                                         '-s', '1280x720', '-r', str(FPS), '-i', '-', '-c:v', 'libx264', '-pix_fmt', 'yuv420p',
+                                         '-crf', '20', str(path)], stdin=subprocess.PIPE)
+
+    def __call__(self, data, ego, caption):
+        from PIL import Image, ImageDraw
+        # light_castshadow is shared with the policy Camera (no shadows); restore it only for this view.
+        self.mj.mj_kinematics(self.model, data)
+        policy_shadows = self.model.light_castshadow.copy(); self.model.light_castshadow[:] = self.shadows
+        self.renderer.update_scene(data, self.camera)
+        self.model.light_castshadow[:] = policy_shadows
+        frame = Image.fromarray(self.renderer.render())
+        frame.paste(Image.fromarray(ego).resize((320, 320), Image.Resampling.BILINEAR), (1280-336, 16))
+        draw = ImageDraw.Draw(frame)
+        draw.rectangle((1280-338, 14, 1280-14, 338), outline=(255, 255, 255), width=2)
+        draw.text((1280-336, 344), 'policy camera (224x224 input)', fill=(255, 255, 255), font=self.small)
+        draw.text((20, 16), caption, fill=(255, 255, 255), font=self.font, stroke_width=2, stroke_fill=(0, 0, 0))
+        self.process.stdin.write(np.asarray(frame).tobytes())
+
+    def finish(self):
+        self.process.stdin.close(); self.process.wait(); self.process = None
+
+    def close(self): self.renderer.close()
+
+
 class PiHigh:
     def __init__(self, checkpoint, bounds, device='cpu', ddim_steps=20, seed=0):
         import torch
@@ -82,7 +122,7 @@ class PiHigh:
         return x[0].cpu().numpy()*self.std+self.mean
 
 
-def run_trial(sim, camera, policy, start, execute=8, seconds=40., record=False):
+def run_trial(sim, camera, policy, start, execute=8, seconds=40., record=False, demo=None, label=''):
     """start: dict(seed) for a fresh layout, or dict(state=...) for a recorded start."""
     if 'state' in start:
         s = start['state']; sim.reset(int(start['seed'])); sim.load_state(*s)
@@ -96,7 +136,9 @@ def run_trial(sim, camera, policy, start, execute=8, seconds=40., record=False):
         while sim.data.time-t0 < seconds:
             previous_gaze = actions[-1][37:39] if actions else gaze
             frames.append(camera(sim.data, *previous_gaze)); frames = frames[-2:]
-            if record: video.append(frames[-1])
+            if record and demo is None: video.append(frames[-1])
+            if record and demo is not None:
+                demo(sim.data, frames[-1], f"{label}  {start.get('episode') or 'seed %d' % start['seed']}  t = {sim.data.time-t0:4.1f} s")
             if chunk is None or tick-base >= execute:
                 rgb = np.stack([frames[0], frames[-1]])
                 prev = lambda k: actions[k-1] if k >= 1 else np.zeros(39, np.float32)
@@ -117,7 +159,7 @@ def run_trial(sim, camera, policy, start, execute=8, seconds=40., record=False):
     result = dict(seed=int(start['seed']), source=start.get('episode'), status=status, outcome=outcome,
                   seconds=round(float(sim.data.time-t0), 2), lift_left=bool(u[4]), lift_right=bool(u[5]),
                   root_xy=[round(float(v), 3) for v in sim.data.qpos[:2]], wall=round(time.time()-wall, 1))
-    return result, (np.stack(video) if record else None)
+    return result, (np.stack(video) if record and demo is None else None)
 
 
 def recorded_starts(dataset, raw):
@@ -157,15 +199,22 @@ def worker(args):
     out = []
     for k, start in enumerate(starts):
         if start['model'] not in sims:
-            sim = QuestSim(start['model']); sims[start['model']] = (sim, Camera(sim.model))
-        sim, camera = sims[start['model']]
+            sim = QuestSim(start['model']); demo = DemoView(sim.model) if o['demo_view'] else None
+            sims[start['model']] = (sim, Camera(sim.model), demo)
+        sim, camera, demo = sims[start['model']]
         record = o['videos'] and start.get('record', False)
-        result, video = run_trial(sim, camera, policy, start, o['execute'], o['seconds'], record)
+        stem = Path(o['output']).with_name(f"{Path(o['output']).stem}-{start.get('episode') or start['seed']}")
+        if record and demo is not None: demo.open(stem.with_suffix('.partial.mp4'))
+        result, video = run_trial(sim, camera, policy, start, o['execute'], o['seconds'], record, demo if record else None, o['label'])
+        if record and demo is not None:
+            demo.finish(); stem.with_suffix('.partial.mp4').rename(f"{stem}-{result['status'].split(':')[0]}.mp4")
         if video is not None:
             path = Path(o['output']).with_name(f"{Path(o['output']).stem}-{result['source'] or result['seed']}.npz")
             np.savez_compressed(path, video=video)
         print(json.dumps(result), flush=True); out.append(result)
-    for _, camera in sims.values(): camera.close()
+    for _, camera, demo in sims.values():
+        camera.close()
+        if demo is not None: demo.close()
     return out
 
 
@@ -177,6 +226,9 @@ def main():
     p.add_argument('--seconds', type=float, default=40.); p.add_argument('--workers', type=int, default=8)
     p.add_argument('--threads', type=int, default=2); p.add_argument('--device', default='cpu')
     p.add_argument('--videos', type=int, default=3, help='record this many fresh and valid trials')
+    p.add_argument('--demo-view', action='store_true',
+                   help='recorded trials become 1280x720 third-person mp4s with the policy camera inset (needs ffmpeg)')
+    p.add_argument('--label', default='', help='caption prefix for --demo-view videos')
     p.add_argument('--fresh-episode', help='raw episode whose model runs fresh layouts (default: first validation episode)')
     p.add_argument('--gaze', type=float, nargs=2, default=(0.0056, -0.823), metavar=('YAW', 'PITCH'),
                    help='initial camera gaze for fresh layouts')
@@ -190,7 +242,8 @@ def main():
     for k, s in enumerate(starts):
         s['record'] = k < a.videos or (len(starts)-a.fresh <= k < len(starts)-a.fresh+a.videos)
     o = dict(checkpoint=a.checkpoint, bounds=action_bounds(a.dataset), device=a.device, ddim_steps=a.ddim_steps,
-             execute=a.execute, seconds=a.seconds, threads=a.threads, videos=a.videos > 0, output=str(output))
+             execute=a.execute, seconds=a.seconds, threads=a.threads, videos=a.videos > 0, output=str(output),
+             demo_view=a.demo_view, label=a.label)
     jobs = [(i, starts[i::a.workers], o) for i in range(a.workers)]
     t = time.time()
     with mp.get_context('spawn').Pool(a.workers) as pool:
