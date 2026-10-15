@@ -1,0 +1,11 @@
+{
+ "raw_files_hash_checked": 2100,
+ "episodes": 69,
+ "train": 62,
+ "valid": 7,
+ "rendered_frames_checked": 207,
+ "render_max_abs_diff": 1,
+ "render_max_mismatch_fraction": 6.64328231292517e-06,
+ "render_platform": "Linux EGL, MuJoCo 3.3.7",
+ "device_sha_receipt": "All 2100 raw files read with sha256sum on the Quest 3 on 2026-10-15 and matched after transfer"
+}

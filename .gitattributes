@@ -9,3 +9,10 @@ datasets/quest-cup/**/raw/**/*.mjb filter=lfs diff=lfs merge=lfs -text
 datasets/quest-cup/**/raw/**/*.onnx filter=lfs diff=lfs merge=lfs -text
 datasets/quest-cup/**/raw/**/*.jsonl filter=lfs diff=lfs merge=lfs -text
 datasets/quest-cup/**/rendered/*.hdf5 filter=lfs diff=lfs merge=lfs -text
+
+datasets/quest-bimanual/**/raw/**/*.csv filter=lfs diff=lfs merge=lfs -text
+datasets/quest-bimanual/**/raw/**/*.bin filter=lfs diff=lfs merge=lfs -text
+datasets/quest-bimanual/**/raw/**/*.mjb filter=lfs diff=lfs merge=lfs -text
+datasets/quest-bimanual/**/raw/**/*.onnx filter=lfs diff=lfs merge=lfs -text
+datasets/quest-bimanual/**/raw/**/*.jsonl filter=lfs diff=lfs merge=lfs -text
+datasets/quest-bimanual/**/rendered/*.hdf5 filter=lfs diff=lfs merge=lfs -text
