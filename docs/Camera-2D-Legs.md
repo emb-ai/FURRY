@@ -111,6 +111,43 @@ shoulder fit can register the camera too. On the headset the leg row reads
 `Ноги: камера 2D` when 2D keypoints drive the legs, and `нужна связка
 AprilTag` when RGB-only packets arrive without a registration.
 
+## Desktop Viewer Without The Headset
+
+`skeleton/gmr_view.py` shows the same idea on a Mac or PC alone: the
+RealSense colour frame with the YOLO keypoints and the solved body on the
+left, and the G1 after GMR on the right, rendered from the same camera
+viewpoint so both panels show one pose from one place.
+
+Without Meta there is no hip anchor, so `skeleton/body2d.py` solves the whole
+body from the 2D keypoints:
+
+- Bone lengths come from `--height` (anthropometric ratios).
+- The pelvis, heading and torso are solved, and the floor fixes the depth axis:
+  the lower ankle stands on the floor, located by the D435i accelerometer
+  (gravity) and `--camera-height`, or by an AprilTag `--session`.
+- Limbs use the same ray-sphere branches and anatomical limits as the headset,
+  plus no backward elbow bend. The branch is chosen on data and anatomy only,
+  never on the temporal prior: tracked limbs must not lock onto the wrong
+  branch. Limbs decided by the regulariser alone show as "front/back unsure".
+
+`skeleton/gmr_live.py` feeds the pinned upstream GMR/Mink solver (the one the
+native port is checked against) with targets aligned to the robot's T pose, as
+`meta_retarget.cpp` does on the headset.
+
+```sh
+pip install -r skeleton/requirements-gmr-view.txt
+sudo python skeleton/gmr_view.py s --camera-height 1.20 --height 1.78   # macOS needs sudo for the camera
+python skeleton/gmr_view.py --source synthetic                          # no camera
+```
+
+Synthetic checks (`skeleton/test_body2d.py`, `skeleton/test_gmr_live.py`,
+locally reproduced): exact keypoints recover standing, tracked knee lifts to
+90° and back on frontal and 40° oblique cameras (median leg error under 3 cm),
+and GMR maps them to the expected G1 hip and knee angles (knee lift 60°/70° to
+hip pitch −60°, knee 70°, within 4°). With 3 px keypoint noise the frontal
+leg error is bounded at a 12 cm median. Near standing, the two ray-sphere
+roots of a frontal leg are close and both anatomical, so small lifts can lag.
+
 ## Limitations
 
 - Synthetic checks only; no live operator session yet.
