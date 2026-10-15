@@ -1,0 +1,12 @@
+{
+  "episodes": 44,
+  "train_episodes": 40,
+  "valid_episodes": 4,
+  "frames": 12982,
+  "sha256": "6f0cd24a85e68a9a5ca140418e7edf784e4f2cf43a8698afbb9ac39b0b9ccd39",
+  "split_disjoint": true,
+  "previous_command_exact": true,
+  "finite_actions": true,
+  "causal_sampling": true,
+  "all_images_decoded": true
+}
