@@ -1,10 +1,12 @@
 #pragma once
+#include "graphics_epoch.h"
 #include "world_skeleton.h"
 #include <GLES3/gl32.h>
 #include <stdexcept>
 
 inline int DrawWorldSkeleton(const float* vp,const WorldSkeleton& skeleton){
     static GLuint program=0,vao=0,vbo=0;
+    static uint64_t generation=0;g1graphics::ForgetStale(generation,program,vao,vbo);
     if(!program){
         auto shader=[](GLenum type,const char* src){GLuint s=glCreateShader(type);glShaderSource(s,1,&src,nullptr);glCompileShader(s);GLint ok;glGetShaderiv(s,GL_COMPILE_STATUS,&ok);if(!ok)throw std::runtime_error("World skeleton shader failed");return s;};
         GLuint v=shader(GL_VERTEX_SHADER,R"(#version 320 es

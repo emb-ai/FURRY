@@ -6,6 +6,7 @@
 #include <mujoco/mujoco.h>
 #include <stdexcept>
 #include <string>
+#include <deque>
 
 // Internal retaining mechanism only. There is no hand weld, face motor,
 // cubie qpos overwrite, or visual-only sticker permutation during play.
@@ -13,21 +14,64 @@
 class RubikTask {
 public:
     static constexpr double Pi=3.141592653589793;
-    static constexpr int Size=64, Active=0, Start=1, Turns=2, LastFace=3, LastSign=4, Candidate=5, CandidateTime=6, Corners=8;
+    static constexpr int Size=64, Active=0, Start=1, Turns=2, LastFace=3, LastSign=4, Candidate=5, CandidateTime=6, RotationIntent=7, Corners=8;
+    static constexpr int GuardSize=67, GripLeft=64, GripRight=65, GripSettled=66;
     inline static constexpr const char* Faces[6]={"R","L","B","F","U","D"};
     inline static constexpr int Axis[6][3]={{1,0,0},{-1,0,0},{0,1,0},{0,-1,0},{0,0,1},{0,0,-1}};
     int core=-1,initial=-1;
+    bool requireRotationIntent=false;
+    bool rotationIntent=false;
+    double intentTime=-1;
+    std::deque<std::pair<double,std::array<double,4>>> intentHistory;
+    // Infer a request from operator target orientations, never from a wrist
+    // shaken by contact forces or from an approximate IK solution. Common
+    // rotation of both hands cancels in their relative quaternion.
+    void ObserveGoal(const double* left,const double* right,double time){
+        if(core<0)return;
+        if(!intentHistory.empty() && time<=intentHistory.back().first)return;
+        if(!intentHistory.empty() && time-intentHistory.back().first>.1)intentHistory.clear();
+        double inverse[4];std::array<double,4> relative;
+        mju_negQuat(inverse,left);
+        mju_mulQuat(relative.data(),inverse,right);
+        bool movingNow=false;
+        if(!intentHistory.empty()){
+            double recentDot=std::abs(mju_dot(relative.data(),intentHistory.back().second.data(),4));
+            movingNow=2*std::acos(std::clamp(recentDot,0.,1.))>.1*(time-intentHistory.back().first);
+        }
+        intentHistory.push_back({time,relative});
+        while(intentHistory.size()>1 && intentHistory[1].first<=time-.2)intentHistory.pop_front();
+        double dot=std::abs(mju_dot(relative.data(),intentHistory.front().second.data(),4));
+        rotationIntent=time-intentHistory.front().first>=.18 && 2*std::acos(std::clamp(dot,0.,1.))>.25*(time-intentHistory.front().first) && (!gripGuard||movingNow);
+        intentTime=time;
+    }
+    bool HasRotationIntent(double time)const{
+        return !requireRotationIntent || (rotationIntent && time-intentTime<.05);
+    }
+
     std::array<int,6> qa{},va{};
     std::array<int,8> cubie{},rest{};
     std::array<std::array<int,8>,6> layer{};
     std::array<int,2> contactMasks{};
     std::array<int,2> wrist{-1,-1};
     double cornerSpacing=.024,magnetStiffness=.24,magnetWindow=15*Pi/180,magnetDamping=.00012;
+    bool gripGuard=false;
+    double brakeFriction=.5,gripSettleTime=.25,gripDeadband=.015,minimumGrip=.35,gripLimit=.8;
     void Initialize(const mjModel* m){
         core=mj_name2id(m,mjOBJ_BODY,"rubik_core");if(core<0)return;
+        requireRotationIntent=mj_name2id(m,mjOBJ_NUMERIC,"rubik_rotation_intent")>=0;
         wrist={mj_name2id(m,mjOBJ_BODY,"left_wrist_yaw_link"),mj_name2id(m,mjOBJ_BODY,"right_wrist_yaw_link")};
         initial=mj_name2id(m,mjOBJ_NUMERIC,"rubik_initial");
-        if(m->nuserdata!=Size||initial<0||m->numeric_size[initial]!=56)throw std::runtime_error("Invalid Rubik scene");
+        int guard=mj_name2id(m,mjOBJ_NUMERIC,"rubik_grip_guard_v2");
+        gripGuard=guard>=0;
+        if(m->nuserdata!=(gripGuard?GuardSize:Size)||initial<0||m->numeric_size[initial]!=56)throw std::runtime_error("Invalid Rubik scene");
+        if(gripGuard){
+            if(m->numeric_size[guard]!=4)throw std::runtime_error("Invalid Rubik grip guard");
+            const double* g=m->numeric_data+m->numeric_adr[guard];
+            brakeFriction=g[0];gripSettleTime=g[1];gripDeadband=g[2];minimumGrip=g[3];
+            if(brakeFriction<=0||gripSettleTime<=0||gripDeadband<=0||minimumGrip<0||minimumGrip>1)throw std::runtime_error("Invalid Rubik grip guard parameters");
+            int limit=mj_name2id(m,mjOBJ_NUMERIC,"rubik_grip_limit");
+            if(limit>=0)gripLimit=m->numeric_data[m->numeric_adr[limit]];
+        }
         cornerSpacing=std::abs(m->numeric_data[m->numeric_adr[initial]]);
         int magnet=mj_name2id(m,mjOBJ_NUMERIC,"rubik_magnet");
         if(magnet<0||m->numeric_size[magnet]!=3)throw std::runtime_error("Missing magnetic configuration");
@@ -49,7 +93,9 @@ public:
     }
     void Reset(mjModel* m,mjData* d){
         if(core<0)return;
-        mju_zero(d->userdata,Size);d->userdata[Active]=-1;d->userdata[LastFace]=-1;d->userdata[Candidate]=-1;
+        intentHistory.clear();rotationIntent=false;intentTime=-1;
+        mju_zero(d->userdata,m->nuserdata);d->userdata[Active]=-1;d->userdata[LastFace]=-1;d->userdata[Candidate]=-1;
+        if(gripGuard)for(int f=0;f<6;f++)m->dof_frictionloss[va[f]]=0;
         mju_copy(d->userdata+Corners,m->numeric_data+m->numeric_adr[initial],56);
         for(int i=0;i<8;i++)mju_normalize4(d->userdata+Corners+i*7+3);
         Configure(m,d);mj_forward(m,d);
@@ -139,13 +185,34 @@ public:
     }
     void Begin(mjModel* m,mjData* d,double leftGrip,double rightGrip){
         if(core<0)return;
-        (void)leftGrip;(void)rightGrip;
+        bool mayTurn=!requireRotationIntent||d->userdata[RotationIntent]>.5;
+        if(gripGuard){
+            // A physical internal friction brake resists closing/regripping
+            // fingers even when a layer remains active after an earlier turn.
+            // Only intentional rotation with an established hold releases it.
+            // All history is in userdata, including snapshot/replay resumes.
+            const double left=std::clamp(leftGrip,0.,gripLimit),right=std::clamp(rightGrip,0.,gripLimit);
+            if(std::abs(left-d->userdata[GripLeft])>gripDeadband||std::abs(right-d->userdata[GripRight])>gripDeadband){
+                d->userdata[GripLeft]=left;d->userdata[GripRight]=right;d->userdata[GripSettled]=0;
+            }else d->userdata[GripSettled]=std::min(gripSettleTime,d->userdata[GripSettled]+m->opt.timestep);
+            mayTurn=mayTurn&&left>=minimumGrip&&right>=minimumGrip&&d->userdata[GripSettled]>=gripSettleTime;
+        }
         contactMasks=Contacts(m,d);
-        int requested=TorqueFace(m,d);
+        int requested=mayTurn?TorqueFace(m,d):-1;
         if(requested!=int(d->userdata[Candidate])){
             d->userdata[Candidate]=requested;d->userdata[CandidateTime]=0;
         }else if(requested>=0)d->userdata[CandidateTime]+=m->opt.timestep;
         if(requested>=0&&requested!=int(d->userdata[Active])&&d->userdata[CandidateTime]>=.04)Activate(m,d,requested);
+        if(gripGuard)for(int f=0;f<6;f++){
+            bool brake=f==int(d->userdata[Active])&&!mayTurn;
+            // A directional clutch in the detent window permits the existing
+            // magnet to seat the layer, but resists motion away from alignment.
+            // Outside that window a stopped partial turn remains resisted.
+            double offset=std::remainder(d->qpos[qa[f]]-d->userdata[Start],Pi/2);
+            if(brake&&std::abs(offset)<magnetWindow&&std::abs(offset)>.002)
+                brake=std::copysign(1.,offset)*d->qvel[va[f]]>1e-4;
+            m->dof_frictionloss[va[f]]=brake?brakeFriction:0;
+        }
         Configure(m,d);
         for(int f=0;f<6;f++){
             double angle=d->qpos[qa[f]],speed=d->qvel[va[f]];

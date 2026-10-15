@@ -18,10 +18,11 @@ class MetaRetargeter {
     bool cameraTracking=false;
     bool neutralWrists=false;
     bool wristFrameV2=false;
-    bool controllerWrists=false;
-    std::array<std::array<double,3>,2> controllerRelativeOrigin{},controllerRobotOffset{};
+    bool controllerWrists=false,controllerStageTargets=false,controllerAnatomicalFrame=false;
+    std::array<std::array<double,3>,2> controllerRelativeOrigin{},controllerRobotOffset{},controllerGripOffset{};
     std::array<std::array<double,4>,2> controllerRotationOffset{};
     double travelGain=1;
+    bool narrowStance=false;
     std::array<std::array<double,4>,2> wristNeutralInverse{},wristRest{};
     bool twistGrounding=false,toeClamp=true;
     SwingClearance swing;
@@ -40,6 +41,7 @@ public:
     explicit MetaRetargeter(const std::string& assets):gmr(assets){}
     void Calibrate(const mjModel* model,const mjData* data,const TrackingFrame& input);
     const std::array<float,35>& Solve(const TrackingFrame& input);
+    void EnableNarrowStance(bool value){narrowStance=value;}
     void EnableVirtualLegLift(bool value){virtualLiftEnabled=value;virtualLift.Reset();}
     bool VirtualLegLiftEnabled()const{return virtualLiftEnabled;}
     const BodyFrame& CorrectedBody()const{return correctedBody;}
@@ -50,7 +52,14 @@ public:
     void EnableNeutralWrists(bool value){neutralWrists=value;}
     // Correct rigid-frame calibration; retain the legacy adapter for replay.
     void EnableWristFrameV2(bool value){wristFrameV2=value;}
+    bool UsesControllerWrists()const{return controllerWrists;}
     void EnableControllerWrists(bool value){controllerWrists=value;}
+    // Neutral hand follows the source forearm at A, independent of the
+    // physical robot's current arm pose. Missing legacy manifest flag is false.
+    void EnableControllerAnatomicalFrame(bool value){controllerAnatomicalFrame=value;}
+    // In first person, controller positions use the inverse of the same fixed
+    // calibrated STAGE transform as rendering, without anatomical arm scaling.
+    void EnableControllerStageTargets(bool value){controllerStageTargets=value;gmr.EnableControllerHands(value);if(value)controllerWrists=true;}
     // Offline ablation only; the device always clamps toe targets.
     void EnableToeClamp(bool value){toeClamp=value;}
     void EnableTwistGrounding(bool value){
@@ -63,6 +72,7 @@ public:
         if(metres>0 && twistGrounding)throw std::runtime_error("Choose TWIST2 grounding or swing correction");
         swingClearance=metres;
     }
+    const std::array<double,3>& ControllerGripOffset(int side)const{return controllerGripOffset.at(side);}
     double VisualScale()const{return 1/cameraScale;}
     const double* StageToRobotRotation()const{return basis;}
     const TrackedPose& CameraCalibrationPose()const{return cameraOrigin;}

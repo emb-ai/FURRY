@@ -40,7 +40,7 @@ def main():
             subprocess.run([os.environ.get('CXX', 'c++'), '-O1', '-std=c++17', '-I'+str(ROOT/'android/native'),
                             '-I'+str(ROOT/'vendor/mujoco/include'), '-I'+str(ROOT/'vendor/onnxruntime-android/headers'),
                             str(source), *common, str(mjlib), str(ortlib), '-o', str(folder/name)], check=True)
-        cases = [(name, None, False, 'observer') for name in ('lab', 'stand', 'cup', 'push_t', 'tennis', 'rubik')]
+        cases = [(name, None, False, 'observer') for name in ('lab', 'stand', 'cup', 'push_t', 'tennis', 'rubik', 'wb_dex', 'bimanual', 'basket')]
         catalog = json.loads((ROOT/'android/assets/policy_catalog.json').read_text())
         cases += [('cup', row, False, 'observer') for row in catalog[1:]]
         cases += [('cup', row, True, 'observer') for row in catalog]
@@ -53,7 +53,20 @@ def main():
                   for hz in (50, 100) for wrist in (False, True)]
         cases += [('stand', row, False, 'observer', 0, False)
                   for row in (catalog[0], [row for row in catalog if row.get("backend", "twist2") == "twist2"][-1])]
+        if os.environ.get('G1_COLLECTION_REPLAY_ONLY'):
+            cases = [case for case in cases if case[0] in ('cup','tennis','wb_dex','bimanual','basket') and case[1] is None]
+        if os.environ.get('G1_STANDING_REPLAY_ONLY'):
+            standing=next(row for row in catalog if row['id']=='homie-standing')
+            cases=[(scene,standing,False,view,None,None) for scene in ('stand','cup','bimanual','rubik') for view in ('observer','first','switch')]
+        # This recorder/replayer carries TWIST-style velocity references. DexWeave
+        # needs its absolute 36-value reference stream; neither this synthetic
+        # fixture nor replay_gmr_dynamics implements that contract yet.
+        unsupported = [case for case in cases if case[1] and case[1].get('backend') == 'dexweave_body_v1']
+        if unsupported:
+            print(f'SKIP {len(unsupported)} DexWeave cases: absolute-reference dynamic replay is unsupported', flush=True)
+        cases = [case for case in cases if case not in unsupported]
         for scene, policy, catch_up, view, override_hz, wrist_v2 in cases:
+            if policy and policy.get('input_patch')=='homie_stand_v1':catch_up=False
             case = scene if policy is None else scene+"-"+policy["id"]
             if catch_up:
                 case += "-catch-up-"+view
@@ -73,6 +86,8 @@ def main():
                     shutil.copy2(ROOT/'android/assets'/policy['planner_file'], episode_root/policy['planner_file'])
             fixture = json.loads((ROOT/'android/assets'/metadata).read_text())
             if override_hz is not None:
+                fixture.pop('controller_stage_targets',None)
+                fixture.pop('controller_anatomical_frame',None)
                 if override_hz:
                     fixture['policy_hz'] = override_hz
                 else:
@@ -118,6 +133,9 @@ def main():
                 if max(float(row['cmd_error']) for row in rows) > 1e-5:
                     raise AssertionError(f'{scene}: pause blending/reference replay diverged')
             print(f'{case}: policy, scene, dimensions, pauses and calibration snapshots passed', flush=True)
+            # Each case has independent recorded model copies. Drop only this
+            # completed synthetic fixture so large planners do not accumulate.
+            shutil.rmtree(episode_root)
 
 
 if __name__ == '__main__':

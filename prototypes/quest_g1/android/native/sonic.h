@@ -13,6 +13,7 @@
 #include <vector>
 
 namespace sonic {
+struct PlannerPending : std::exception { const char* what()const noexcept override{return "SONIC waiting for planner";} };
 using Pose=std::array<double,36>;
 struct Plan {std::vector<Pose> poses; double start=0,ms=0;};
 struct Request {std::array<float,144> context{};std::array<float,3> move{},face{};float speed=.01f;int64_t mode=0;double time=0;};
@@ -37,7 +38,7 @@ class Controller {
     std::future<Plan> pending;
     bool asynchronous;
     Plan plan;
-    double requested=-1;
+    double requested=-1,pinnedTime=0;bool planPinned=false;
     std::array<std::array<double,93>,10> history{}; // omega, q, dq, previous action, gravity
     std::array<double,29> previous{};
     Plan Predict(Request r){
@@ -69,7 +70,7 @@ public:
         Predict(r);Reset(); // Probe all three actual models before committing a selection.
     }
     ~Controller(){if(pending.valid())pending.wait();}
-    void Reset(){if(pending.valid()){pending.wait();try{pending.get();}catch(...){}}plan={};requested=-1;previous.fill(0);history={};for(auto& h:history)h[92]=-1;plannerMs=planAge=0;}
+    void Reset(){if(pending.valid()){pending.wait();try{pending.get();}catch(...){}}plan={};requested=-1;planPinned=false;previous.fill(0);history={};for(auto& h:history)h[92]=-1;plannerMs=planAge=0;}
     Pose At(double time)const{
         if(plan.poses.empty())throw std::runtime_error("SONIC missing plan");
         double x=std::clamp((time-plan.start)*30.,0.,double(plan.poses.size()-1));size_t a=size_t(x),b=std::min(a+1,plan.poses.size()-1);double w=x-a;Pose q;
@@ -79,9 +80,14 @@ public:
         if(dot<.9995){double theta=std::acos(dot);wa=std::sin((1-w)*theta)/std::sin(theta);wb=std::sin(w*theta)/std::sin(theta);}
         for(int k=0;k<4;k++)q[3+k]=wa*qa[k]+wb*sign*qb[k];mju_normalize4(q.data()+3);return q;
     }
-    void PlanFor(const Pose& state,const std::array<float,35>& cmd,double now){
+    bool PlanFor(const Pose& state,const std::array<float,35>& cmd,double now){
+        // PrepareStep and Update belong to the same physical policy tick. A
+        // future completing between them must not replace the already approved
+        // plan after the runtime has recorded that tick's source frame.
+        if(planPinned&&now==pinnedTime)return true;
         if(pending.valid()&&pending.wait_for(std::chrono::seconds(0))==std::future_status::ready){plan=pending.get();plannerMs=plan.ms;}
-        if(plan.poses.empty()||(!pending.valid()&&now-requested>=.2-1e-8)){
+        const double remaining=plan.poses.empty()?0:plan.start+(plan.poses.size()-1)/30.-now;
+        if(!pending.valid()&&(plan.poses.empty()||now-requested>=.2-1e-8||(asynchronous&&remaining<=.2))){
             Request r;r.time=now;Pose last;
             for(int j=0;j<4;j++){last=plan.poses.empty()?state:At(now+j/30.);for(int k=0;k<36;k++)r.context[j*36+k]=last[k];}
             double local[3]={cmd[0],cmd[1],0},world[3];mju_rotVecQuat(world,local,state.data()+3);double speed=std::hypot(world[0],world[1]);
@@ -89,12 +95,21 @@ public:
             r.move={float(world[0]/std::max(speed,1e-8)),float(world[1]/std::max(speed,1e-8)),0};
             auto* q=last.data()+3;double yaw=std::atan2(2*(q[0]*q[3]+q[1]*q[2]),1-2*(q[2]*q[2]+q[3]*q[3]))+cmd[5]*.3;
             r.face={float(std::cos(yaw)),float(std::sin(yaw)),0};requested=now;
-            if(asynchronous&&!plan.poses.empty())pending=std::async(std::launch::async,[this,r]{return Predict(r);});
+            if(asynchronous)pending=std::async(std::launch::async,[this,r]{return Predict(r);});
             else {plan=Predict(r);plannerMs=plan.ms;}
         }
-        planAge=now-plan.start;
-        // Never silently freeze the last predicted frame when compute cannot keep up.
-        if(planAge>(plan.poses.size()-1)/30.-.02)throw std::runtime_error("SONIC planner late: trajectory exhausted");
+        planAge=plan.poses.empty()?0:now-plan.start;
+        // Backpressure simulation time instead of advancing on an exhausted
+        // plan. Rendering/input stay live while the asynchronous result arrives.
+        if(plan.poses.empty()||planAge>(plan.poses.size()-1)/30.-.02){
+            if(asynchronous&&pending.valid())return false;
+            throw std::runtime_error("SONIC planner late: trajectory exhausted");
+        }
+        pinnedTime=now;planPinned=true;return true;
+    }
+    bool Prepare(const mjData* data,const std::array<int,29>& qa,const std::array<float,35>& cmd){
+        Pose state;std::copy_n(data->qpos,7,state.begin());for(int k=0;k<29;k++)state[7+k]=data->qpos[qa[k]];
+        return PlanFor(state,cmd,data->time);
     }
     std::vector<float> EncoderObservation(const mjModel* model,mjData* ref,const Pose& state,const std::array<int,29>& qa,const std::array<float,35>& cmd,double now){
         std::vector<float> obs(1762);obs[0]=1; // teleop_mode scalar id, not one-hot
@@ -113,7 +128,7 @@ public:
     }
     std::array<float,29> Update(const mjModel* model,mjData* data,mjData* ref,const std::array<int,29>& qa,const std::array<int,29>& va,const std::array<float,35>& cmd){
         Pose state;std::copy_n(data->qpos,7,state.begin());for(int k=0;k<29;k++)state[7+k]=data->qpos[qa[k]];
-        PlanFor(state,cmd,data->time);auto token=Run(*encoder,EncoderObservation(model,ref,state,qa,cmd,data->time),64);
+        if(!PlanFor(state,cmd,data->time))throw PlannerPending{};auto token=Run(*encoder,EncoderObservation(model,ref,state,qa,cmd,data->time),64);
         std::move(history.begin()+1,history.end(),history.begin());auto& h=history.back();
         for(int k=0;k<3;k++)h[k]=data->qvel[3+k];for(int k=0;k<29;k++){h[3+k]=data->qpos[qa[to_isaac[k]]]-home[to_isaac[k]];h[32+k]=data->qvel[va[to_isaac[k]]];h[61+k]=previous[k];}
         double inv[4],g[3]={0,0,-1};Inverse(inv,state.data()+3);mju_rotVecQuat(h.data()+90,g,inv);

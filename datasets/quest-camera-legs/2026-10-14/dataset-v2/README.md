@@ -24,6 +24,7 @@ Supersedes dataset-v1: same builder and format, ~10× more data.
   `prototypes/quest_g1/CAMERA_RECORDING.md`.
 
 Differences from dataset-v1:
+
 - ep12 targets use one shin bias for the whole session
   (`camera_targets.py --shin -6.5 -2.2 4.1 0.5`, the per-frame median over
   19,674 quiet-stance frames of the session). Per-episode estimates had

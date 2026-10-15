@@ -10,10 +10,14 @@ import numpy as np
 from .cup_lab import el, decoration
 
 FACES = ("R", "L", "B", "F", "U", "D")
+GRIP_POSITION_KP = 2.0  # Effort stays capped at 0.35 Nm.
+GRIP_CLOSURE_LIMIT = .8  # Cap target curl while preserving physical contact.
+EDGE_M = .085  # 85 mm: reduced by 15 mm for the G1 hands.
+SCALE = EDGE_M / .0628
 AXES = np.array([(1,0,0),(-1,0,0),(0,1,0),(0,-1,0),(0,0,1),(0,0,-1)],dtype=float)
-CENTERS = np.array([(x,y,z) for x in (-.016,.016) for y in (-.016,.016) for z in (-.016,.016)])
+CENTERS = SCALE * np.array([(x,y,z) for x in (-.016,.016) for y in (-.016,.016) for z in (-.016,.016)])
 SCRAMBLE = ((0,1),(4,-1),(3,1),(0,-1))
-STATE_SIZE = 64
+STATE_SIZE = 67
 
 
 def rotate_state(positions,quaternions,face,sign):
@@ -32,6 +36,27 @@ def initial_state(scramble=SCRAMBLE):
 
 def add_puzzle(root):
     world=root.findall("worldbody")[-1];asset=root.find("asset")
+    # A full fist can push the cube out along the distal finger pads.
+    # Bound commanded curl, not the physical joints: ordinary position motors
+    # and the existing 0.35 Nm effort limit provide the grasp and release.
+    # Values up to Grip=.8 keep their original meaning; the last 20% saturates.
+    for actuator in root.findall("actuator/position"):
+        name=actuator.get("name", "")
+        if "hand_" not in name:
+            continue
+        actuator.set("kp", str(GRIP_POSITION_KP))
+        if "thumb_0" in name:
+            continue
+        sign=1 if name.startswith("left") else -1
+        target=(sign*(1. if "thumb_1" in name else 1.74) if "thumb" in name
+                else -sign*(1.57 if "_0_" in name else 1.74))
+        limit=target*GRIP_CLOSURE_LIMIT
+        actuator.set("ctrllimited", "true")
+        actuator.set("ctrlrange", f"{min(0.,limit):.8g} {max(0.,limit):.8g}")
+    el(root.find("custom"), "numeric", name="rubik_grip_limit", data=(GRIP_CLOSURE_LIMIT,))
+    el(root.find("custom"), "numeric", name="rubik_rotation_intent", data=(1,))
+    el(root.find("custom"), "numeric", name="rubik_grip_guard_v2", data=(.5,.25,.015,.35))
+
     # Reuse the cup workcell, then replace its object and placement inlay.
     world.remove(root.find(".//body[@name='cup']"))
     table=root.find(".//body[@name='table']")
@@ -49,31 +74,31 @@ def add_puzzle(root):
     colors=((.82,.065,.04,1),(.98,.34,.035,1),(.04,.20,.78,1),(.045,.62,.20,1),(.94,.94,.85,1),(.98,.77,.025,1))
     for name,color in zip(FACES,colors):el(asset,"material",name="rubik_"+name,rgba=color,specular=.3,shininess=.35)
     # A dark rubber starting zone. It is a flush visual inlay, not an obstacle.
-    decoration(table,"rubik_start_zone",pos=(-.25,0,.8255),size=(.075,.085,.0004),material="lab_metal")
-    # A narrow presentation stand leaves clearance for G1's long fingertips.
-    # The cube simply rests on it; there is no constraint or grasp attachment.
-    el(table,"geom",name="rubik_stand",type="cylinder",pos=(-.25,0,.8625),size=(.014,.0375),
-       material="lab_metal",friction="1 .005 .0001")
-    pos=np.array([.25,0,.934]);p,q=initial_state()
+    # Leave room for the wrists behind the cube. At x=.25 the target wrists
+    # fold against the torso and the symmetric approach becomes a one-hand grip.
+    decoration(table,"rubik_start_zone",pos=(-.10,0,.8255),size=(.075,.085,.0004),material="lab_metal")
+    # The cube starts directly on the tabletop, with a small settling gap.
+    pos=np.array([.40,0,.825+EDGE_M/2+.0026]);p,q=initial_state()
     core=el(world,"body",name="rubik_core",pos=pos.tolist())
     el(core,"freejoint",name="rubik_free")
-    el(core,"inertial",pos=(0,0,0),mass=.032,diaginertia=(.000009,.000009,.000009))
+    # Keep total mass at 122 g; inertia follows the cube dimensions.
+    el(core,"inertial",pos=(0,0,0),mass=.032,diaginertia=(.000009*SCALE**2,)*3)
     for face,axis in zip(FACES,AXES):
         layer=el(core,"body",name="rubik_layer_"+face)
-        el(layer,"inertial",pos=(0,0,0),mass=.001,diaginertia=(.0000002,)*3)
+        el(layer,"inertial",pos=(0,0,0),mass=.001,diaginertia=(.0000002*SCALE**2,)*3)
         el(layer,"joint",name="rubik_hinge_"+face,type="hinge",axis=axis.tolist(),limited="false",actuatorfrclimited="false",actuatorfrcrange="-1 1",armature=.00001,damping=.0008,frictionloss=0)
     equality=root.find("equality")
     if equality is None:equality=el(root,"equality")
     for i,(cp,cq) in enumerate(zip(p,q)):
         cubie=el(world,"body",name=f"rubik_cubie_{i}",pos=(pos+cp).tolist(),quat=cq.tolist())
         el(cubie,"freejoint",name=f"rubik_cubie_free_{i}")
-        el(cubie,"geom",name=f"rubik_block_{i}",type="box",size=(.0154,)*3,mass=.0105,
+        el(cubie,"geom",name=f"rubik_block_{i}",type="box",size=(.0154*SCALE,)*3,mass=.0105,
            material="rubik_plastic",friction="1.1 .005 .0001",condim=4,contype=16,conaffinity=15,
            solref=".004 1",solimp=".98 .995 .001")
         for axis in range(3):
             sign=1 if CENTERS[i,axis]>0 else -1
-            s=[.0127,.0127,.0127];s[axis]=.00045
-            location=[0.,0.,0.];location[axis]=sign*.01585
+            s=[.0127*SCALE]*3;s[axis]=.00045*SCALE
+            location=[0.,0.,0.];location[axis]=sign*.01585*SCALE
             color=FACES[axis*2+(sign<0)]
             decoration(cubie,f"rubik_sticker_{i}_{axis}",pos=location,size=s,material="rubik_"+color)
         el(equality,"weld",name=f"rubik_core_weld_{i}",body1="rubik_core",body2=f"rubik_cubie_{i}",
@@ -88,4 +113,4 @@ def add_puzzle(root):
     el(custom,"numeric",name="rubik_initial",data=np.c_[p,q].ravel().tolist())
     el(custom,"numeric",name="rubik_magnet",data=(.24,15*math.pi/180,.00012))
     el(custom,"text",name="rubik_scramble",data="R U' F R'")
-    el(custom,"text",name="rubik_model",data="2x2-magnetic-contact-v1")
+    el(custom,"text",name="rubik_model",data="2x2-magnetic-grip-guard-v2")

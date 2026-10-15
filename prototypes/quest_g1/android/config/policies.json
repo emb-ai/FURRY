@@ -88,5 +88,41 @@
     "path": "../../policies/quest-111586/checkpoint_000500-50hz.onnx",
     "sha256": "57d6ac4b2461ac8884afeac86d32bcc9a7b4b72f376e15b898af7ac3d8a5241d",
     "input_patch": "virtual_leg_lift10_v1"
+  },
+  {
+    "id": "homie-standing",
+    "title": "HOMIE: стоять и работать руками",
+    "note": "Баланс на месте · без шагов по команде",
+    "backend": "groot_decoupled_v1",
+    "path": "../../policies/homie-v2/GR00T-WholeBodyControl-Balance.onnx",
+    "sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+    "secondary_path": "../../policies/homie-v2/GR00T-WholeBodyControl-Walk.onnx",
+    "secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+    "input_patch": "homie_stand_v1"
+  },
+  {
+    "id": "quest-stance12-B-s11",
+    "title": "TWIST2: узкая стойка −12 см",
+    "note": "B · дообучение +1000 · 50 Гц",
+    "path": "../../policies/quest-stance12-B-s11/B-s11-1500.onnx",
+    "sha256": "f24be7b0ef36b9bfef61672aa54dbd7f494c6527a0cc66f64b449d2f7da15745",
+    "input_patch": "stance_narrow12_v1"
+  },
+  {
+    "id": "dexweave-wide-2977",
+    "title": "DexWeave: широкая 2977",
+    "note": "Исходная · эксперимент · 50 Гц",
+    "backend": "dexweave_body_v1",
+    "path": "../../policies/dexweave-wide-2977/policy-final.onnx",
+    "sha256": "9a24da67253426a779209e2f18f52259bfbef1b7bee146645cb81ba5858d54d2"
+  },
+  {
+    "id": "dexweave-B-4174",
+    "title": "DexWeave B: узкая стойка",
+    "note": "4174 · эксперимент · 50 Гц",
+    "backend": "dexweave_body_v1",
+    "input_patch": "stance_narrow12_v1",
+    "path": "../../policies/dexweave-B-4174/B-final.onnx",
+    "sha256": "7bf8d82997c152c6c425ed0c715d0fc782905e9cb273bba764052eb48cc25761"
   }
 ]

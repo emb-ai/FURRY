@@ -31,7 +31,7 @@ Simulation::Simulation(const std::string& assets,int physicsWorkers,const std::s
     if(policyHzOverride!=0 && policyHzOverride!=50 && policyHzOverride!=100)
         throw std::runtime_error("Unsupported explicit policy frequency");
     if(physicsWorkers<0 || physicsWorkers>4)throw std::runtime_error("Invalid MuJoCo worker count");
-    if(sceneName!="lab" && sceneName!="stand" && sceneName!="cup" && sceneName!="push_t" && sceneName!="tennis" && sceneName!="rubik")
+    if(sceneName!="lab" && sceneName!="stand" && sceneName!="cup" && sceneName!="push_t" && sceneName!="tennis" && sceneName!="rubik" && sceneName!="wb_dex" && sceneName!="bimanual" && sceneName!="basket")
         throw std::runtime_error("Unknown Quest scene: "+sceneName);
     options.SetIntraOpNumThreads(1);
     options.SetInterOpNumThreads(1);
@@ -62,10 +62,12 @@ Simulation::Simulation(const std::string& assets,int physicsWorkers,const std::s
     reference_data=mj_makeData(model);
     torso_body=mj_name2id(model,mjOBJ_BODY,"torso_link");
     if(!reference_data||torso_body<0)throw std::runtime_error("Missing decoupled torso kinematics");
-    if(backend!=questpolicy::Twist2){
+    if(backend==questpolicy::GrootDecoupled || backend==questpolicy::Sonic){
         bodymotors::Apply(model,decoupled_body_motors);
         mj_setConst(model,data);
     }
+    standing_arms.Initialize(model);
+    collection.Initialize(model);
     tennis.Initialize(model);
     rubik.Initialize(model);
     Reset();
@@ -82,13 +84,14 @@ void Simulation::SelectPolicy(const questpolicy::RuntimePolicy& policy) {
         if(model)bodymotors::ValidateMapping(model,motors);
         auto candidate=std::make_unique<sonic::Controller>(env,policy);
         sonic_controller=std::move(candidate);session.reset();secondary_session.reset();
-        backend=policy.backend;policy_hz=50;decoupled_body_motors=std::move(motors);
+        backend=policy.backend;standing=false;policy_hz=50;decoupled_body_motors=std::move(motors);
         if(model&&data){bodymotors::Apply(model,decoupled_body_motors);mj_setConst(model,data);Reset();}return;
     }
+    const bool dex=policy.backend==questpolicy::DexWeave;
     const bool decoupled=policy.backend==questpolicy::GrootDecoupled;
-    if(decoupled && policy_hz_override!=0 && policy_hz_override!=50)
+    if((decoupled||dex) && policy_hz_override!=0 && policy_hz_override!=50)
         throw std::runtime_error("GR00T decoupled requires 50 Hz");
-    const int inputWidth=decoupled?516:1432, outputWidth=decoupled?15:29;
+    const int inputWidth=dex?157:(decoupled?516:1432), outputWidth=decoupled?15:29;
     Ort::AllocatorWithDefaultOptions alloc;
     auto load=[&](const std::string& path,std::string& inputName,std::string& outputName){
         auto candidate=std::make_unique<Ort::Session>(env,path.c_str(),options);
@@ -126,7 +129,7 @@ void Simulation::SelectPolicy(const questpolicy::RuntimePolicy& policy) {
         if(model)bodymotors::ValidateMapping(model,nextMotors);
     }
     int nextHz=50;
-    if(!decoupled){
+    if(!decoupled&&!dex){
         // Historical metadata-free TWIST2 episodes used 100 Hz; live overrides 50.
         auto rate=candidate->GetModelMetadata().LookupCustomMetadataMapAllocated("g1_policy_hz",alloc);
         std::string rateText=rate?rate.get():"100";
@@ -138,7 +141,7 @@ void Simulation::SelectPolicy(const questpolicy::RuntimePolicy& policy) {
     session=std::move(candidate);secondary_session=std::move(secondaryCandidate);
     input_name=std::move(nextInput);output_name=std::move(nextOutput);
     secondary_input_name=std::move(nextSecondaryInput);secondary_output_name=std::move(nextSecondaryOutput);
-    backend=policy.backend;policy_hz=nextHz;
+    backend=policy.backend;standing=policy.standing;policy_hz=nextHz;
     if(decoupled)decoupled_body_motors=std::move(nextMotors);
     if(model&&data){
         bodymotors::Apply(model,decoupled?decoupled_body_motors:original_body_motors);
@@ -150,18 +153,33 @@ void Simulation::Reset() {
     mj_resetData(model,data);
     data->qpos[2]=.793; data->qpos[3]=1;
     const bool decoupled=backend==questpolicy::GrootDecoupled;
-    const auto& defaults=backend==questpolicy::Sonic?sonic::home:(decoupled?grootdecoupled::Home:home);
+    const auto& defaults=backend==questpolicy::DexWeave?dexweave::Home:(backend==questpolicy::Sonic?sonic::home:(decoupled?grootdecoupled::Home:home));
     for(int i=0;i<29;i++){data->qpos[qadr[i]]=defaults[i]; target[i]=defaults[i];}
-    if(backend!=questpolicy::Twist2){data->qpos[qadr[18]]=data->qpos[qadr[25]]=1.2;}
+    if(backend==questpolicy::GrootDecoupled || backend==questpolicy::Sonic){data->qpos[qadr[18]]=data->qpos[qadr[25]]=1.2;}
     data->qpos[qadr[16]]=.2; data->qpos[qadr[23]]=-.2;
+    if(standing&&(scene_name=="cup"||scene_name=="bimanual"||scene_name=="rubik")){
+        data->qpos[0]=scene_name=="rubik"?.05:.18;
+    }
+    if(standing){
+        // Start with relaxed arms beside the body in every scene. Operator
+        // references take over normally after calibration; this is only rest.
+        for(int h=0;h<2;h++){
+            for(int j=0;j<7;j++)data->qpos[qadr[15+7*h+j]]=0;
+            data->qpos[qadr[16+7*h]]=h?-.2:.2;
+            data->qpos[qadr[18+7*h]]=1.4;
+        }
+    }
     if(backend!=questpolicy::Twist2)for(int i=0;i<29;i++)target[i]=data->qpos[qadr[i]];
     if(sonic_controller)sonic_controller->Reset();
-    history.fill(0); last_action.fill(0); steps=0; hand_grip.fill(0);
+    dex_has_reference=dex_has_previous=false;dex_velocity.fill(0);
+    history.fill(0); last_action.fill(0); steps=0; hand_grip.fill(0);standing_arms.Reset();arm_gravity.fill(0);
     decoupled_history.fill(0);decoupled_last_action.fill(0);decoupled_command={};
     for(int i=0;i<14;i++)decoupled_command.arms[i]=data->qpos[qadr[15+i]];
     has_reference=false;has_whole_reference=false;whole_reference.fill(0);
     mj_forward(model,data);
+    collection.Reset(model,data,scene_seed);
     tennis.Reset(model,data);
+    tennis.SetSeed(model,data,scene_seed);
     rubik.Reset(model,data);
 }
 void Simulation::SetArmReference(const std::array<float,29>& joints){
@@ -175,15 +193,28 @@ void Simulation::SetArmReference(const std::array<float,29>& joints){
 void Simulation::SetWholeBodyReference(const std::array<float,35>& reference){
     for(double v:reference)if(!std::isfinite(v))throw std::runtime_error("Nonfinite GMR reference");
     whole_reference=reference;has_whole_reference=true;
+
 }
 void Simulation::PauseWholeBodyReference(){
+    SetRubikRotationIntent(false);rubik.intentHistory.clear();rubik.rotationIntent=false;
+    standing_arms.Reset();
+    dex_has_previous=false;dex_velocity.fill(0);
     if(has_whole_reference)whole_reference[0]=whole_reference[1]=whole_reference[5]=0;
 }
-void Simulation::Step(bool demo,double grip,double right_grip) {
+std::array<float,35> Simulation::SonicCommand()const{
+    auto command=whole_reference;
+    if(!has_whole_reference){command.fill(0);command[2]=.793f;for(int k=0;k<29;k++)command[6+k]=sonic::home[k];command[24]=command[31]=1.2f;
+        if(has_reference)std::copy(arm_reference.begin(),arm_reference.end(),command.begin()+21);}
+    return command;
+}
+bool Simulation::PrepareStep(){
+    return !sonic_controller||steps%20!=0||sonic_controller->Prepare(data,qadr,SonicCommand());
+}
+bool Simulation::Step(bool demo,double grip,double right_grip) {
+    if(!PrepareStep())return false;
+    if(steps%20==0 && backend==questpolicy::DexWeave)StepDexWeave();
     if(steps%20==0 && sonic_controller){
-        auto command=whole_reference;
-        if(!has_whole_reference){command.fill(0);command[2]=.793f;for(int k=0;k<29;k++)command[6+k]=sonic::home[k];command[24]=command[31]=1.2f;
-            if(has_reference)std::copy(arm_reference.begin(),arm_reference.end(),command.begin()+21);}
+        auto command=SonicCommand();
         auto start=std::chrono::steady_clock::now();
         target=sonic_controller->Update(model,data,reference_data,qadr,vadr,command);
         inference_ms=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-start).count();
@@ -228,9 +259,11 @@ void Simulation::Step(bool demo,double grip,double right_grip) {
         }
     }
     for(int i=0;i<29;i++) {
-        if(backend==questpolicy::GrootDecoupled){
+        if(backend==questpolicy::DexWeave){
+            data->ctrl[aids[i]]=std::clamp((target[i]-data->qpos[qadr[i]])*dexweave::Kp(i)-data->qvel[vadr[i]]*dexweave::Kd(i),-dexweave::Effort[i],dexweave::Effort[i]);
+        }else if(backend==questpolicy::GrootDecoupled){
             // Author motor PD; MuJoCo applies the model's actuator force limits.
-            data->ctrl[aids[i]]=(target[i]-data->qpos[qadr[i]])*grootdecoupled::Kp[i]-data->qvel[vadr[i]]*grootdecoupled::Kd[i];
+            data->ctrl[aids[i]]=(target[i]-data->qpos[qadr[i]])*grootdecoupled::Kp[i]-data->qvel[vadr[i]]*grootdecoupled::Kd[i]+(standing&&i>=15?arm_gravity[i-15]:0);
         }else if(sonic_controller)data->ctrl[aids[i]]=(target[i]-data->qpos[qadr[i]])*sonic::kp[i]-data->qvel[vadr[i]]*sonic::kd[i];
         else data->ctrl[aids[i]]=std::clamp((target[i]-data->qpos[qadr[i]])*kp[i]-data->qvel[vadr[i]]*kd[i],-kp[i],kp[i]);
     }
@@ -255,7 +288,8 @@ void Simulation::Step(bool demo,double grip,double right_grip) {
             else target=-sign*(name.find("_0_")!=std::string::npos ? 1.57 : 1.74);
         }
         int j=model->actuator_trnid[aid*2];
-        double control=tennis.HandControl(data,name,target*hand_grip[sign>0?0:1]);
+        double desired=target*hand_grip[sign>0?0:1];
+        double control=tennis.HandControl(data,name,desired);
         data->ctrl[aid]=std::clamp(control,model->jnt_range[2*j],model->jnt_range[2*j+1]);
     }
     tennis.Begin(data);
@@ -263,8 +297,13 @@ void Simulation::Step(bool demo,double grip,double right_grip) {
     mj_step(model,data);
     tennis.Finish(model,data);
     rubik.Finish(model,data);
+    collection.Finish(model,data);
     steps++;
-    if(!std::isfinite(data->qpos[2]) || data->qpos[2]<.35) throw std::runtime_error("G1 fell: reset required");
+    // Floor-placement models explicitly permit a deeper squat. Keep the
+    // historical physics guard for legacy models and other scenes.
+    const double minimumHeight=std::min(.35,collection.fallHeight);
+    if(!std::isfinite(data->qpos[2]) || data->qpos[2]<minimumHeight) throw std::runtime_error("G1 fell: reset required");
+    return true;
 }
 
 grootdecoupled::Command Simulation::MakeDecoupledCommand() {
@@ -291,6 +330,9 @@ grootdecoupled::Command Simulation::MakeDecoupledCommand() {
 }
 void Simulation::StepDecoupled() {
     decoupled_command=MakeDecoupledCommand();
+    // Explicit manipulation mode: the Balance actor receives zero navigation.
+    // Height, torso and both arms remain controlled by the operator.
+    if(standing)decoupled_command.velocity.fill(0);
     std::array<double,29> q{},dq{};std::array<double,3> omega{};std::array<double,4> quat{};
     for(int i=0;i<29;i++){q[i]=data->qpos[qadr[i]];dq[i]=data->qvel[vadr[i]];}
     std::copy_n(data->qvel+3,3,omega.begin());std::copy_n(data->qpos+3,4,quat.begin());
@@ -311,4 +353,44 @@ void Simulation::StepDecoupled() {
         decoupled_last_action[i]=action[i];target[i]=grootdecoupled::Home[i]+.25f*action[i];
     }
     std::copy(decoupled_command.arms.begin(),decoupled_command.arms.end(),target.begin()+15);
+    if(standing){
+        // Recompute gravity at the 50 Hz control boundary from current qpos.
+        // Never consume mj_step's stale pre-integration bias cache: rendering
+        // and calibration may refresh that cache at different times in replay.
+        std::copy_n(data->qpos,model->nq,reference_data->qpos);
+        mju_zero(reference_data->qvel,model->nv);
+        mj_kinematics(model,reference_data);mj_comPos(model,reference_data);mj_comVel(model,reference_data);
+        mj_rne(model,reference_data,0,reference_data->qfrc_bias);
+        for(int i=0;i<14;i++)arm_gravity[i]=reference_data->qfrc_bias[vadr[15+i]];
+    }
+}
+
+void Simulation::SetDexWeaveReference(const double* qpos){
+    for(int i=0;i<36;i++)if(!std::isfinite(qpos[i]))throw std::runtime_error("Invalid DexWeave reference");
+    const double norm=mju_norm(qpos+3,4);
+    if(std::abs(norm-1)>1e-4)throw std::runtime_error("Invalid DexWeave reference quaternion");
+    std::copy_n(qpos,36,dex_reference.begin());dex_has_reference=true;
+}
+void Simulation::StepDexWeave(){
+    if(!dex_has_reference){
+        std::copy_n(data->qpos,7,dex_reference.begin());
+        for(int i=0;i<29;i++)dex_reference[7+i]=data->qpos[qadr[i]];
+        dex_has_reference=true;
+    }
+    for(int i=0;i<29;i++)dex_velocity[i]=dex_has_previous?(dex_reference[7+i]-dex_previous[7+i])/.02:0.;
+    dex_previous=dex_reference;dex_has_previous=true;
+    std::copy_n(data->qpos,model->nq,reference_data->qpos);
+    std::copy_n(dex_reference.data(),7,reference_data->qpos);
+    for(int i=0;i<29;i++)reference_data->qpos[qadr[i]]=dex_reference[7+i];
+    mj_kinematics(model,reference_data);
+    // mj_step's cached body transforms precede integration; refresh at the control boundary.
+    mj_kinematics(model,data);
+    auto obs=dexweave::Observe(data,reference_data,torso_body,qadr,vadr,dex_velocity,last_action);
+    std::array<int64_t,2> shape{1,157};auto mem=Ort::MemoryInfo::CreateCpu(OrtArenaAllocator,OrtMemTypeDefault);
+    auto input=Ort::Value::CreateTensor<float>(mem,obs.data(),obs.size(),shape.data(),2);
+    const char* ins[]={input_name.c_str()};const char* outs[]={output_name.c_str()};
+    auto start=std::chrono::steady_clock::now();
+    auto output=session->Run(Ort::RunOptions{nullptr},ins,&input,1,outs,1);
+    inference_ms=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-start).count();
+    dexweave::Action(output[0].GetTensorData<float>(),target,last_action);
 }

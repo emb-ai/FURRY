@@ -26,8 +26,9 @@ static void CheckGeometry(const State& state) {
         Check(w.rect.h >= .05f, "Menu target too short for a controller ray");
         for (const auto& other : layout) {
             if (&other == &w || other.action == Action::None) continue;
-            const float ix = std::min(w.rect.x + w.rect.w, other.rect.x + other.rect.w) - std::max(w.rect.x, other.rect.x);
-            const float iy = std::min(w.rect.y + w.rect.h, other.rect.y + other.rect.h) - std::max(w.rect.y, other.rect.y);
+            const auto a=HitRect(w),b=HitRect(other);
+            const float ix = std::min(a.x + a.w, b.x + b.w) - std::max(a.x, b.x);
+            const float iy = std::min(a.y + a.h, b.y + b.h) - std::max(a.y, b.y);
             Check(ix < 1e-6f || iy < 1e-6f, "Overlapping menu targets");
         }
     }
@@ -53,6 +54,26 @@ int main() {
     Check(!trigger.Update(false, false), "Focus loss generated a click");
     Check(!trigger.Update(true, true), "Focus recovery retained a previously armed press");
     Check(!trigger.Update(true, false) && trigger.Update(true, true), "Fresh press after recovery cannot click");
+
+    MenuPressLatch press;
+    Check(!press.Update(true,1,Action::PolicySelect0,0,.12f,0).pressed,"Held trigger clicked on menu activation");
+    press.Update(true,0,Action::PolicySelect0,0,.12f,0);
+    press.Update(true,.25f,Action::PolicySelect0,0,.12f,0);
+    auto clicked=press.Update(true,.9f,Action::None,0,.14f,0);
+    Check(clicked.pressed&&clicked.action==Action::PolicySelect0,"Finger-induced ray drift cancelled policy press");
+    Check(!press.Update(true,1,Action::PolicySelect1,0,.05f,0).pressed,"Held trigger clicked twice");
+    press.Update(true,0,Action::PolicySelect0,0,.12f,0);press.Update(true,.25f,Action::PolicySelect0,0,.12f,0);
+    Check(press.Update(true,1,Action::PolicySelect1,0,-.08f,0).action==Action::None,"Large drag selected stale policy");
+    press.Update(true,0,Action::PolicySelect0,0,.12f,0);press.Update(true,.25f,Action::PolicySelect0,0,.12f,0);
+    Check(!press.Update(true,1,Action::PolicySelect0,0,.12f,1).pressed,"Page change clicked a different catalogue entry");
+    press.Update(true,0,Action::PolicySelect0,0,.12f,1);press.Update(false,.1f,Action::PolicySelect0,0,.12f,1);
+    Check(!press.Update(true,1,Action::PolicySelect0,0,.12f,1).pressed,"Focus recovery clicked held trigger");
+    press.Update(true,0,Action::PolicySelect0,0,.12f,1);
+    clicked=press.Update(true,1,Action::None,0,.14f,1);
+    Check(clicked.action==Action::PolicySelect0,"One-frame trigger press lost recent pointed row");
+    press.Update(true,.4f,Action::PolicySelect1,0,.04f,1);
+    clicked=press.Update(true,.9f,Action::PolicySelect1,0,.04f,1);
+    Check(clicked.pressed&&clicked.action==Action::PolicySelect1,"Partial deliberate trigger release lost second policy click");
 
     State state;
     Check(state.open && state.paused && !state.debugEnabled && !state.recording, "Initial menu state");
@@ -126,7 +147,14 @@ int main() {
     Check(Find(layout,Action::PolicySelect0).text=="Candidate 4","Wrong policy page");
     Check(CentreHit(layout,Action::PolicySelect0)==Action::PolicySelect0,"Candidate cannot be selected");
     Check(CentreHit(layout,Action::PolicyNext)==Action::PolicyNext,"Next policy page missing");
+    state.policyLoading=true;
+    Check(CentreHit(BuildLayout(state),Action::PolicySelect0)==Action::None,"Loading policy permits overlapping selection");
+    Check(std::string(StatusText(state))=="Загрузка режима","Policy load has no explicit status");
+    state.policyLoading=false;
+    const auto row=Find(layout,Action::PolicySelect0).rect;
+    Check(HitTest(layout,row.x+.2f,row.y-.01f)==Action::PolicySelect0,"Policy subtitle misses its row target");
     state.recording=true;layout=BuildLayout(state);
+    Check(ClickAction(layout,row.x+.2f,row.y+.02f)==Action::PolicySelect0,"Disabled policy row cannot explain recording lock");
     Check(CentreHit(layout,Action::PolicySelect0)==Action::None,"Policy can change during recording");
     Check(CentreHit(layout,Action::CatchUp)==Action::None,"Catch-up can change during recording");
     state.recording=false;state.mode=Mode::Trajectories;state.capture=Capture::Human;

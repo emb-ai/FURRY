@@ -2,6 +2,7 @@
 #include <cstdint>
 #include "retarget.h"
 struct android_app;
+void G1GraphicsContextCreated();
 void G1Initialize(android_app* app);
 void G1Shutdown(bool interrupted=false);
 void G1SetActive(bool active);

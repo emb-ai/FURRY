@@ -11,6 +11,11 @@ def apply_hybrid(root, visuals=True):
     description = json.loads((ASSETS/'collision.json').read_text())
     pelvis = root.find(".//body[@name='pelvis']")
     bodies = {b.get('name'): b for b in pelvis.iter('body')}
+    # The author trims the proximal thumb collision around its two-axis hinge.
+    # A convex envelope of the rendered joint housing overlaps the palm by
+    # 8 mm even with an open hand and creates a fictitious internal force.
+    thumb_boxes = {name: dict(body.find("geom[@type='box']").attrib)
+                   for name, body in bodies.items() if name.endswith('_hand_thumb_1_link')}
     for body in bodies.values():
         for geom in list(body.findall('geom')):
             if geom.get('contype', '1') != '0' or geom.get('conaffinity', '1') != '0':
@@ -32,9 +37,12 @@ def apply_hybrid(root, visuals=True):
         ET.SubElement(asset, 'mesh', name=name,
                       vertex=' '.join(format(x, '.9g') for v in hand['vertices'] for x in v),
                       face=' '.join(str(x) for f in hand['faces'] for x in f))
-        ET.SubElement(bodies[hand['body']], 'geom', common | dict(
-            name=name, type='mesh', mesh=name, pos=hand['pos'], quat=hand['quat'],
-            contype=str(HAND), conaffinity=str(FLOOR | BODY | HAND | PROP)))
+        shape = dict(type='mesh', mesh=name, pos=hand['pos'], quat=hand['quat'])
+        if hand['body'] in thumb_boxes:
+            shape = {k: v for k, v in thumb_boxes[hand['body']].items()
+                     if k in ('type', 'size', 'pos', 'quat', 'euler')}
+        ET.SubElement(bodies[hand['body']], 'geom', common | shape | dict(
+            name=name, contype=str(HAND), conaffinity=str(FLOOR | BODY | HAND | PROP)))
     contact = root.find('contact')
     if contact is None:
         contact = ET.SubElement(root, 'contact')
@@ -46,7 +54,7 @@ def configure_props(world):
     # Floor remains category 1; foot boxes contact props, not the floor. The
     # four TWIST2 sole spheres provide floor contacts without duplicate boxes.
     for body in world.findall('body'):
-        if body.get('name') not in ('table', 'cup', 't_box', 'tennis_table', 'tennis_racket', 'tennis_feeder'):
+        if body.get('name') not in ('table', 'cup', 't_box', 'tennis_table', 'tennis_racket', 'tennis_feeder', 'low_shelf', 'floor_box', 'sorting_table', 'sort_tray_0', 'sort_tray_1', 'basket_pickup', 'basket_destination', 'basket_door_frame', 'basket_door', 'task_object_0', 'task_object_1'):
             continue
         for geom in body.iter('geom'):
             if geom.get('contype') == '0' and geom.get('conaffinity') == '0':

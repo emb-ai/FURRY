@@ -48,9 +48,37 @@ int main(int argc,char** argv){try{
     // Android scheduling: separate planner, reset with in-flight work, fresh startup.
     policy.asyncPlanner=true;sim.SelectPolicy(policy);
     for(int frame=0;frame<65;frame++){
-        cmd[0]=frame<25?0:.3;sim.SetWholeBodyReference(cmd);for(int i=0;i<20;i++)sim.Step(false);
+        cmd[0]=frame<25?0:.3;sim.SetWholeBodyReference(cmd);for(int i=0;i<20;i++)while(!sim.Step(false))std::this_thread::sleep_for(std::chrono::milliseconds(1));
         std::this_thread::sleep_for(std::chrono::milliseconds(20));
         if(frame==31)sim.Reset();
     }
+    // Run physics deliberately faster than planner compute. Backpressure must
+    // preserve every state value, then resume actual integration after readiness.
+    sim.Reset();int waits=0;
+    for(int i=0;i<1200;i++){
+        auto q=std::vector<mjtNum>(sim.data->qpos,sim.data->qpos+sim.model->nq),v=std::vector<mjtNum>(sim.data->qvel,sim.data->qvel+sim.model->nv);int step=sim.steps;
+        auto deadline=std::chrono::steady_clock::now()+std::chrono::seconds(10);
+        while(!sim.Step(false)){
+            Check(sim.steps==step,"Planner wait advanced step counter");
+            for(int k=0;k<sim.model->nq;k++)Check(sim.data->qpos[k]==q[k],"Planner wait changed qpos");
+            for(int k=0;k<sim.model->nv;k++)Check(sim.data->qvel[k]==v[k],"Planner wait changed qvel");
+            Check(std::chrono::steady_clock::now()<deadline,"Planner never resumed");waits++;std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
+    }
+    for(int i=0;i<40;i++){
+        while(!sim.PrepareStep())std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        if(sim.steps%20==0)std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        Check(sim.Step(false),"Planner completion between prepare and commit invalidated recorded policy tick");
+    }
+    Check(waits>0&&sim.steps==1240&&std::abs(sim.data->time-1.24)<1e-9,"Slow planner test did not exercise real backpressure");
+    {
+        Ort::Env probeEnv{ORT_LOGGING_LEVEL_WARNING,"SonicDelayCheck"};sonic::Controller probe(probeEnv,policy);
+        sonic::Pose state{};state[2]=.793;state[3]=1;for(int k=0;k<29;k++)state[7+k]=sonic::home[k];
+        while(!probe.PlanFor(state,cmd,0))std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        Check(!probe.PlanFor(state,cmd,1000),"Exhausted asynchronous plan did not yield to pending inference");
+        while(!probe.PlanFor(state,cmd,1000))std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        std::cout<<"SONIC forced exhausted-plan deadline yielded and resumed without exception\n";
+    }
+    std::cout<<"SONIC real-model backpressure waits="<<waits<<" preserved qpos/qvel and resumed without fault\n";
     std::cout<<"SONIC 2s rollout, transactional load, reset, mode switches, recording hashes and async planner passed; planner_ms="<<sim.PlannerMs()<<"\n";
 }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}}

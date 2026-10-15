@@ -48,6 +48,14 @@ int main() {
         Check(!legacy.catchUp&&!legacy.firstPerson,"Legacy episode acquired catch-up");
         Check(!legacy.catchUpV2&&!legacy.neutralWrists&&!legacy.wristFrameV2&&legacy.policyHz==0&&legacy.travelGainPercent==100,
               "Legacy episode acquired new retarget settings");
+        Check(!legacy.controllerStageTargets&&!legacy.controllerAnatomicalFrame,"Legacy episode acquired controller frames");
+        write("{\"controller_stage_targets\":true,\"controller_anatomical_frame\":true}");
+        auto controllers=load();Check(controllers.controllerStageTargets&&controllers.controllerAnatomicalFrame,"Controller frame flags lost");
+        write("{\"controller_stage_targets\":false,\"controller_anatomical_frame\":false}");
+        Check(!load().controllerStageTargets&&!load().controllerAnatomicalFrame,"False controller frame flags lost");
+        write("{\"sha256\":{\"controller_anatomical_frame\":true},\"controller_stage_targets\":true}");
+        Check(load().controllerStageTargets&&!load().controllerAnatomicalFrame,"Nested controller frame enabled new calibration");
+        for(const auto* bad:{"{\"controller_stage_targets\":1}","{\"controller_anatomical_frame\":null}","{\"controller_anatomical_frame\":false,\"controller_anatomical_frame\":true}"}){write(bad);Reject([&]{load();});}
         write("{\"catch_up_v2\":true,\"neutral_wrists\":true,\"travel_gain_percent\":90}");
         auto updated=load();
         Check(updated.catchUpV2&&updated.neutralWrists&&updated.travelGainPercent==90,

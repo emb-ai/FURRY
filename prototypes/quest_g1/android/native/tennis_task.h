@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include "collection_task.h"
 
 // Spin-free 40 mm/2.7 g ball. MuJoCo owns the articulated robot and the free
 // racket (optionally held by a wrist weld); this task owns ball integration and
@@ -18,13 +19,15 @@ public:
   enum State {
     Armed,
     NextServe,
-    Active,
+    Active, // 0: hidden; 1: live rally; 2: missed, still physical; 3: scored, still physical
     Hit,
     OwnBounces,
     Serves,
     Returns,
     Misses,
     Holder, // 0: free; 1: left hand; 2: right hand
+    LegacyStateSize,
+    Seed=9, PreparedServe, LaunchX, LaunchY, LaunchZ, BounceX, BounceY,
     StateSize
   };
   static constexpr double Radius = .02, Mass = .0027;
@@ -43,7 +46,8 @@ public:
   std::vector<int> obstacles;
   int stateSize = 8, racketQa = -1, racketVa = -1;
   std::array<int, 2> wrist{-1, -1}, palm{-1, -1}, weld{-1, -1};
-  bool assisted = false, shapedGrip = false;
+  bool assisted = false, shapedGrip = false, varied = false;
+  int aimMocap=-1;
   std::array<double, 7> fingerPose{};
   double delay = 7, interval = 4, speed = 5.5, cd = .5, rho = 1.204,
          tableRestitution = .9;
@@ -102,7 +106,7 @@ public:
         q[2] = p[2] < 0 ? -half : half;
       } else {
         double scale = radius / std::max(r, 1e-12);
-        q[0] = p[0] * scale;
+        q[0] = r < 1e-12 ? radius : p[0] * scale;
         q[1] = p[1] * scale;
       }
       delta = Add(q, p, -1);
@@ -154,7 +158,7 @@ public:
     int joint = mj_name2id(m, mjOBJ_JOINT, "tennis_ball_free"),
         config = mj_name2id(m, mjOBJ_NUMERIC, "tennis_config");
     if (racket < 0 || face < 0 || handle < 0 || joint < 0 || config < 0 ||
-        (m->nuserdata != 8 && m->nuserdata != StateSize) ||
+        (m->nuserdata != 8 && m->nuserdata != LegacyStateSize && m->nuserdata != StateSize) ||
         m->numeric_size[config] != 6)
       throw std::runtime_error("Invalid tennis scene");
     qa = m->jnt_qposadr[joint];
@@ -175,13 +179,21 @@ public:
     ballGeom = mj_name2id(m, mjOBJ_GEOM, "tennis_ball_geom");
     int top = mj_name2id(m, mjOBJ_GEOM, "tennis_top"),
         net = mj_name2id(m, mjOBJ_GEOM, "tennis_net");
+    (void)net;
+    obstacles.clear();
     for (int g = 0; g < m->ngeom; g++) {
-      if (m->geom_contype[g] && m->geom_type[g] != mjGEOM_PLANE &&
-          m->geom_bodyid[g] != racket && g != top && g != net)
+      if ((m->geom_contype[g] || m->geom_conaffinity[g]) &&
+          m->geom_bodyid[g] != racket && g != ballGeom && g != top)
         obstacles.push_back(g);
     }
     stateSize = m->nuserdata;
-    assisted = stateSize == StateSize;
+    assisted = stateSize >= LegacyStateSize;
+    varied = stateSize == StateSize;
+    if(varied){
+      int b=mj_name2id(m,mjOBJ_BODY,"tennis_aim_head");
+      if(b<0 || m->body_mocapid[b]<0)throw std::runtime_error("Missing feeder head");
+      aimMocap=m->body_mocapid[b];
+    }
     if (assisted) {
       int rj = mj_name2id(m, mjOBJ_JOINT, "tennis_racket_free");
       if (rj < 0)
@@ -213,7 +225,7 @@ public:
           throw std::runtime_error("Invalid tennis finger angle");
       shapedGrip = true;
     }
-    launch = LaunchVelocity();
+    launch = varied ? LaunchTo(1.15,0) : LaunchVelocity();
   }
   bool Enabled() const { return ball >= 0; }
   Pose RacketPose(const mjData *d) const {
@@ -241,6 +253,7 @@ public:
     position = {3.05, 0, -1};
     velocity = {};
     Write(m, d);
+    if(varied)SetSeed(m,d,0);
   }
   Pose WristPose(const mjData *d, int hand) const {
     Pose p;
@@ -345,12 +358,51 @@ public:
     }
   }
   void Miss(mjData *d) {
-    if (!d->userdata[Active])
-      return;
-    d->userdata[Misses]++;
+    // Scoring must never teleport a physical ball out of the scene.
+    if (d->userdata[Active] == 1) {
+      d->userdata[Misses]++;
+      d->userdata[Active] = 2;
+    }
+  }
+  void Retire(mjData *d) {
+    Miss(d);
     d->userdata[Active] = 0;
     position = {3.05, 0, -1};
     velocity = {};
+  }
+  Surface ObstacleSurface(const mjModel* m, mjData* d, int g) const {
+    Pose pose;
+    std::copy_n(d->geom_xpos+3*g,3,pose.p.begin());
+    mju_mat2Quat(pose.q.data(),d->geom_xmat+9*g);
+    Vec local=Rotate(pose,Add(position,pose.p,-1),true);
+    const auto* size=m->geom_size+3*g;
+    Surface surface;
+    switch(m->geom_type[g]) {
+      case mjGEOM_PLANE: surface={{0,0,1},{local[0],local[1],0},local[2]};break;
+      case mjGEOM_BOX: surface=Box(local,{size[0],size[1],size[2]});break;
+      case mjGEOM_CYLINDER: surface=Cylinder(local,size[0],size[1]);break;
+      case mjGEOM_SPHERE: {
+        Vec n=Unit(local);surface={n,Add({},n,size[0]),Norm(local)-size[0]};break;
+      }
+      case mjGEOM_CAPSULE: {
+        Vec centre{0,0,std::clamp(local[2],-size[1],size[1])};
+        Vec delta=Add(local,centre,-1),n=Unit(delta);
+        surface={n,Add(centre,n,size[0]),Norm(delta)-size[0]};break;
+      }
+      default: {
+        // MuJoCo signed distance includes the ball radius. Its witness vector
+        // reverses under penetration, so divide by signed distance.
+        std::copy(position.begin(),position.end(),d->geom_xpos+3*ballGeom);
+        double segment[6]{};
+        double gap=mj_geomDistance(m,d,ballGeom,g,.01,segment);
+        if(gap>=.01 || std::abs(gap)<1e-10)return {{},{},Radius+1};
+        Vec n{};for(int k=0;k<3;k++)n[k]=(segment[k]-segment[k+3])/gap;
+        return {Unit(n),{segment[3],segment[4],segment[5]},gap+Radius};
+      }
+    }
+    surface.normal=Rotate(pose,surface.normal);
+    surface.point=Add(pose.p,Rotate(pose,surface.point));
+    return surface;
   }
   // Solve vertical launch velocity so flight under drag first reaches z=.78
   // on our half at x=.95. The speed setting is total muzzle speed, not vx.
@@ -375,13 +427,56 @@ public:
     double a = (lo + hi) * .5;
     return {-speed * std::cos(a), 0, speed * std::sin(a)};
   }
+  Vec LaunchTo(double x,double y)const{
+    // Fixed muzzle centre; solve pitch at the configured total speed under
+    // the same drag integrator used in flight. Only choose the low branch.
+    const double dx=x-3., distance=std::hypot(dx,y);
+    auto height=[&](double angle){
+      Vec p{3.,0,1.32},v{speed*std::cos(angle)*dx/distance,speed*std::cos(angle)*y/distance,speed*std::sin(angle)};
+      for(int i=0;i<30000&&p[0]>x;i++)Fly(p,v,.0001,cd,rho);
+      return p[2];
+    };
+    double lo=-.25,hi=.72;
+    if(height(lo)>.78||height(hi)<.78)throw std::runtime_error("Unreachable tennis bounce");
+    for(int i=0;i<30;i++){double a=(lo+hi)/2;if(height(a)>.78)hi=a;else lo=a;}
+    double a=(lo+hi)/2;
+    return {speed*std::cos(a)*dx/distance,speed*std::cos(a)*y/distance,speed*std::sin(a)};
+  }
+  void Aim(const mjModel* m,mjData* d){
+    if(!varied)return;
+    Vec dir=Unit({d->userdata[LaunchX],d->userdata[LaunchY],d->userdata[LaunchZ]});
+    mju_quatZ2Vec(d->mocap_quat+4*aimMocap,dir.data());
+    double p[3]={3.,0,1.32};std::copy_n(p,3,d->mocap_pos+3*aimMocap);
+    mj_kinematics(m,d);mj_comPos(m,d);
+  }
+  void PrepareServe(const mjModel* m,mjData* d){
+    if(!varied)return;
+    auto* s=d->userdata;
+    uint32_t rng=uint32_t(s[Seed])^(uint32_t(s[Serves]+1)*0x9e3779b9u);
+    // Moderate spread, fully inside the table, announced >=1.5 s beforehand.
+    double x=CollectionTask::Uniform(rng,1.02,1.30),y=CollectionTask::Uniform(rng,-.38,.38);
+    Vec v=LaunchTo(x,y);std::copy(v.begin(),v.end(),s+LaunchX);
+    s[BounceX]=x;s[BounceY]=y;s[PreparedServe]=s[Serves]+1;Aim(m,d);
+  }
+  void SetSeed(const mjModel* m,mjData* d,uint32_t seed){
+    if(!varied)return;
+    d->userdata[Seed]=seed;PrepareServe(m,d);
+  }
   // e=1 with finite articulated racket mass, equal/opposite impulse, no
   // tangential impulse or ball rotation. An active assisted grip shares recoil
   // with G1 through its weld constraint.
   void RacketImpulse(const mjModel *m, mjData *d, Vec n, Vec point) {
+    Impact(m,d,n,point,racket,1);
+  }
+  void Impact(const mjModel *m, mjData *d, Vec n, Vec point, int body, double restitution) {
+    if(m->body_weldid[body]==0) {
+      double relative=Dot(velocity,n);
+      if(relative<0)velocity=Reflect(velocity,{},n,-relative<.2?0:restitution);
+      return;
+    }
     mj_fwdPosition(m, d);
     std::vector<double> jac(3 * m->nv), normalJac(m->nv), response(m->nv);
-    mj_jac(m, d, jac.data(), nullptr, point.data(), racket);
+    mj_jac(m, d, jac.data(), nullptr, point.data(), body);
     double vn = 0;
     for (int j = 0; j < m->nv; j++) {
       for (int k = 0; k < 3; k++)
@@ -395,7 +490,7 @@ public:
     // During assisted holding, project inverse inertia through the active
     // six-dimensional weld, so recoil is shared with G1 rather than breaking
     // the grasp on every ball impact.
-    if (assisted && d->userdata[Holder] > 0) {
+    if (body == racket && assisted && d->userdata[Holder] > 0) {
       int hand = int(d->userdata[Holder]) - 1;
       std::vector<double> hp(3 * m->nv), hr(3 * m->nv), rp(3 * m->nv),
           rr(3 * m->nv), constraint(6 * m->nv), inverse(6 * m->nv);
@@ -424,7 +519,8 @@ public:
     }
     double inverseMass =
         std::max(0., mju_dot(normalJac.data(), response.data(), m->nv));
-    double impulse = -2 * relative / (1 / Mass + inverseMass);
+    double e = -relative < .2 ? 0 : restitution;
+    double impulse = -(1+e) * relative / (1 / Mass + inverseMass);
     velocity = Add(velocity, n, impulse / Mass);
     for (int j = 0; j < m->nv; j++)
       d->qvel[j] -= impulse * response[j];
@@ -465,11 +561,12 @@ public:
           }
         }
     }
+    if(varied && s[PreparedServe]<=s[Serves] && (!s[Active] || d->time>=s[NextServe]-1.5))PrepareServe(m,d);
     if (s[Armed] && d->time + 1e-9 >= s[NextServe]) {
       if (s[Active])
         Miss(d);
-      position = {3.0, 0, 1.15};
-      velocity = launch;
+      position = varied ? Vec{3.,0,1.32} : Vec{3.0,0,1.15};
+      velocity = varied ? Vec{s[LaunchX],s[LaunchY],s[LaunchZ]} : launch;
       s[Active] = 1;
       s[Hit] = 0;
       s[OwnBounces] = 0;
@@ -519,57 +616,42 @@ public:
         }
         position = Add(point, n, Radius + 1e-7);
       }
-      // Net catches the ball; it is a miss, including after racket hit.
-      Surface net =
-          Box(Add(position, {Mid, 0, Top + .07625}, -1), {.006, .915, .07625});
-      if (net.distance < Radius) {
-        Miss(d);
-        break;
-      }
       Surface top =
           Box(Add(position, {Mid, 0, Top - .015}, -1), {1.37, HalfWidth, .015});
-      if (top.distance < Radius && Dot(velocity, top.normal) < 0) {
+      if (top.distance < Radius) {
+        bool approaching=Dot(velocity,top.normal)<0;
         bool landing = top.normal[2] > .99 && position[0] >= Near &&
                        position[0] <= Far && std::abs(position[1]) <= HalfWidth;
-        if (landing) {
-          if (s[Hit]) {
-            if (position[0] > Mid) {
-              s[Returns]++;
-              s[Active] = 0;
-              position = {3.05, 0, -1};
-              velocity = {};
-              break;
-            }
+        if (approaching && s[Active]==1) {
+          if (landing && s[Hit] && position[0]>Mid) {
+            s[Returns]++;
+            s[Active]=3;
+          } else if (!landing || s[Hit] || position[0]>Mid || ++s[OwnBounces]>1) {
             Miss(d);
-            break;
           }
-          if (position[0] > Mid || ++s[OwnBounces] > 1) {
-            Miss(d);
-            break;
-          }
-        } else {
-          Miss(d);
-          break;
         }
-        position = Add(Add(Vec{Mid, 0, Top - .015}, top.point), top.normal,
-                       Radius + 1e-7);
-        velocity = Reflect(velocity, {}, top.normal, tableRestitution);
+        position=Add(Add(Vec{Mid,0,Top-.015},top.point),top.normal,Radius+1e-7);
+        if(approaching)velocity=Reflect(velocity,{},top.normal,
+                                      -Dot(velocity,top.normal)<.2?0:tableRestitution);
       }
-      // Other robot links, table legs and feeder terminate the shot.
-      // Broad phase avoids narrow-phase mesh queries away from the ball.
-      std::copy(position.begin(), position.end(), d->geom_xpos + 3 * ballGeom);
+      // Net, floor, G1, table legs and feeder all have collision response.
+      // Contact geometry comes from the scene, including convex mesh hulls.
       for (int g : obstacles) {
-        Vec centre{};
-        std::copy_n(d->geom_xpos + 3 * g, 3, centre.begin());
-        if (Norm(Add(position, centre, -1)) < m->geom_rbound[g] + Radius &&
-            mj_geomDistance(m, d, ballGeom, g, .001, nullptr) <= 0) {
-          Miss(d);
-          break;
-        }
-      }
-      if (position[2] < Radius || position[0] < -1 || position[0] > Far + 1 ||
-          std::abs(position[1]) > 2 || position[2] > 4)
+        Vec centre{};std::copy_n(d->geom_xpos+3*g,3,centre.begin());
+        if(m->geom_type[g]!=mjGEOM_PLANE &&
+           Norm(Add(position,centre,-1))>m->geom_rbound[g]+Radius)continue;
+        Surface surface=ObstacleSurface(m,d,g);
+        if(surface.distance>=Radius)continue;
+        const char* name=mj_id2name(m,mjOBJ_GEOM,g);
+        double e=name && std::string(name)=="tennis_net" ? .15 : .7;
+        Impact(m,d,surface.normal,surface.point,m->geom_bodyid[g],e);
+        position=Add(surface.point,surface.normal,Radius+1e-7);
         Miss(d);
+      }
+      // Only retire far outside the playable room or on the next serve.
+      if (position[2] < -1 || position[0] < -6 || position[0] > Far + 6 ||
+          std::abs(position[1]) > 6 || position[2] > 8)
+        Retire(d);
     }
     Write(m, d);
   }

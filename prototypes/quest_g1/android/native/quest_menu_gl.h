@@ -1,4 +1,5 @@
 #pragma once
+#include "graphics_epoch.h"
 
 #include "quest_menu.h"
 #include <GLES3/gl32.h>
@@ -100,11 +101,13 @@ inline int Cell(unsigned c) {
 
 class Renderer {
     GLuint program = 0, texture = 0, vao = 0, vbo = 0;
+    uint64_t generation=0;
     GLint matrixUniform = -1;
     std::array<uint8_t, 162> widths {};
 public:
     std::vector<Vertex> vertices;
     void Initialize(const std::string& assets) {
+        g1graphics::ForgetStale(generation,program,texture,vao,vbo);
         if (program) return;
         // Verify the assets before creating GL objects: a missing atlas should
         // leave initialization retryable and the enclosing render state intact.
@@ -264,7 +267,7 @@ inline int DrawQuestMenu(const float* vp, const float* menuWorld, const std::str
     for (const auto& w : layout) {
         bool hovered = false;
         for (const auto& p : pointers)
-            if (p.valid && w.enabled && w.action != Action::None && w.rect.Contains(p.x, p.y)) hovered = true;
+            if (p.valid && w.enabled && w.action != Action::None && HitRect(w).Contains(p.x, p.y)) hovered = true;
         glmenu::Color text = w.kind == Kind::MutedText ? glmenu::Muted : glmenu::Text;
         if (!w.enabled) { text[0] *= .52f; text[1] *= .52f; text[2] *= .52f; }
         if (w.kind == Kind::Divider) { draw.Quad(w.rect, glmenu::Border); continue; }
@@ -279,7 +282,7 @@ inline int DrawQuestMenu(const float* vp, const float* menuWorld, const std::str
             draw.RoundRect({w.rect.x + .001f, w.rect.y + .001f, w.rect.w - .002f, w.rect.h - .002f}, .002f, fill);
             draw.Label(w.rect, w.text, text, .032f, true, .008f);
         } else if (w.kind == Kind::Radio) {
-            if (w.selected || hovered) draw.Quad(w.rect, w.selected ? glmenu::Selected : glmenu::Control);
+            if (w.selected || hovered) draw.Quad(HitRect(w), w.selected ? glmenu::Selected : glmenu::Control);
             float cx = w.rect.x + .024f, cy = w.rect.y + w.rect.h / 2;
             draw.Circle(cx, cy, .009f, w.enabled ? glmenu::Muted : glmenu::Border);
             draw.Circle(cx, cy, .007f, w.selected || hovered ? glmenu::Selected : glmenu::Background);
@@ -338,7 +341,7 @@ inline int DrawMinimalStatus(const float* headVP, const std::string& assetsPath,
         state.exportStatus == 2 ? "Архив сохранён в Download/G1Quest" :
         state.exportStatus == 3 ? "Ошибка экспорта. Исходники в очках" : "Menu: меню     B: пауза";
     draw.Label({-.35f, bottom + .005f, .70f, .034f},
-               !HumanCapture(state)&&state.scene==Scene::Tennis?state.tennisInfo:
+               !HumanCapture(state)&&!state.tennisInfo.empty()?state.tennisInfo:
                !HumanCapture(state)&&state.scene==Scene::Rubik?state.rubikInfo:std::string(exportText),
                state.exportStatus == 3 ? glmenu::Warning : glmenu::Muted, .027f);
     const float local[16] = {1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,-1.3f,1};

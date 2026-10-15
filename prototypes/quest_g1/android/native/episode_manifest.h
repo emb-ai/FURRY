@@ -126,7 +126,7 @@ class JsonFields {
                 Space();
                 size_t start = pos;
                 Value();
-                if (collect && (key == "scene" || key == "nq" || key == "nv" || key == "nu" || key == "policy_file" || key == "policy_sha256" || key == "policy_backend" || key == "input_patch" || key == "policy_secondary_file" || key == "policy_secondary_sha256" || key == "policy_planner_file" || key == "policy_planner_sha256" || key == "body_motor_profile" || key == "body_motor_profile_sha256" || key == "catch_up" || key == "first_person" || key == "catch_up_v2" || key == "neutral_wrists" || key == "wrist_frame_v2" || key == "policy_hz" || key == "travel_gain_percent")) {
+                if (collect && (key == "scene" || key == "nq" || key == "nv" || key == "nu" || key == "policy_file" || key == "policy_sha256" || key == "policy_backend" || key == "input_patch" || key == "policy_secondary_file" || key == "policy_secondary_sha256" || key == "policy_planner_file" || key == "policy_planner_sha256" || key == "body_motor_profile" || key == "body_motor_profile_sha256" || key == "catch_up" || key == "first_person" || key == "catch_up_v2" || key == "neutral_wrists" || key == "wrist_frame_v2" || key == "controller_stage_targets" || key == "controller_anatomical_frame" || key == "policy_hz" || key == "travel_gain_percent")) {
                     if (!out.emplace(key, text.substr(start, pos - start)).second)
                         throw std::runtime_error("Duplicate episode manifest field: " + key);
                 }
@@ -229,7 +229,7 @@ struct Manifest {
     std::string bodyMotorProfile,bodyMotorProfileSha256;
     std::string inputPatch;
     bool catchUp=false,firstPerson=false;
-    bool catchUpV2=false,neutralWrists=false,wristFrameV2=false;
+    bool catchUpV2=false,neutralWrists=false,wristFrameV2=false,controllerStageTargets=false,controllerAnatomicalFrame=false;
     int policyHz=0; // Missing field: retain archived ONNX metadata/default cadence.
     int travelGainPercent=100;
     std::string PolicyPath(const std::string& assets,const std::string& folder) const {
@@ -239,6 +239,7 @@ struct Manifest {
     }
     questpolicy::RuntimePolicy Policy(const std::string& assets,const std::string& folder) const {
         questpolicy::RuntimePolicy out{policyBackend,PolicyPath(assets,folder),""};
+        out.standing=inputPatch=="homie_stand_v1";
         if(!policySecondaryFile.empty()){
             out.secondaryPath=std::filesystem::exists(folder+"/policy-secondary.onnx")?
                 folder+"/policy-secondary.onnx":assets+"/"+policySecondaryFile;
@@ -281,7 +282,7 @@ inline Manifest LoadManifest(const std::string &folder) {
         out.scene = reader.String();
         reader.End();
     }
-    if (out.scene != "lab" && out.scene != "stand" && out.scene != "cup" && out.scene != "push_t" && out.scene != "tennis" && out.scene != "rubik")
+    if (out.scene != "lab" && out.scene != "stand" && out.scene != "cup" && out.scene != "push_t" && out.scene != "tennis" && out.scene != "rubik" && out.scene != "wb_dex" && out.scene != "bimanual" && out.scene != "basket")
         throw std::runtime_error("Unknown episode scene: " + out.scene);
     auto readString=[&](const std::string& key){detail::JsonFields reader(fields.at(key));auto value=reader.String();reader.End();return value;};
     auto readBool=[&](const std::string& key){
@@ -290,7 +291,7 @@ inline Manifest LoadManifest(const std::string &folder) {
         return fields.at(key)=="true";
     };
     out.catchUp=readBool("catch_up");out.firstPerson=readBool("first_person");
-    out.catchUpV2=readBool("catch_up_v2");out.neutralWrists=readBool("neutral_wrists");out.wristFrameV2=readBool("wrist_frame_v2");
+    out.catchUpV2=readBool("catch_up_v2");out.neutralWrists=readBool("neutral_wrists");out.wristFrameV2=readBool("wrist_frame_v2");out.controllerStageTargets=readBool("controller_stage_targets");out.controllerAnatomicalFrame=readBool("controller_anatomical_frame");
     if(fields.count("policy_hz")){
         out.policyHz=detail::Dimension(fields.at("policy_hz"));
         if(out.policyHz!=50 && out.policyHz!=100)throw std::runtime_error("Unsupported episode policy frequency");
@@ -306,7 +307,7 @@ inline Manifest LoadManifest(const std::string &folder) {
     if(fields.count("policy_backend"))out.policyBackend=readString("policy_backend");
     if(fields.count("input_patch")){
         out.inputPatch=readString("input_patch");
-        if(out.inputPatch!="virtual_leg_lift10_v1"||out.policyBackend!=questpolicy::Twist2)throw std::runtime_error("Unknown input patch");
+        if(!((out.policyBackend==questpolicy::Twist2 && (out.inputPatch=="virtual_leg_lift10_v1"||out.inputPatch=="stance_narrow12_v1")) || (out.policyBackend==questpolicy::DexWeave && out.inputPatch=="stance_narrow12_v1") || (out.policyBackend==questpolicy::GrootDecoupled && out.inputPatch=="homie_stand_v1")))throw std::runtime_error("Unknown input patch");
     }
     if(!questpolicy::KnownBackend(out.policyBackend))throw std::runtime_error("Unknown episode policy backend");
     if(fields.count("policy_secondary_file")!=fields.count("policy_secondary_sha256"))
@@ -317,10 +318,11 @@ inline Manifest LoadManifest(const std::string &folder) {
         if(!questpolicy::ModelFile(out.policySecondaryFile)||!questpolicy::Digest(out.policySecondarySha256))
             throw std::runtime_error("Invalid episode secondary policy identity");
     }
-    if(out.policyBackend!=questpolicy::Twist2){
+    if(out.policyBackend==questpolicy::GrootDecoupled || out.policyBackend==questpolicy::Sonic){
         if(out.policyFile.empty()||out.policySecondaryFile.empty()||out.policyFile==out.policySecondaryFile||out.policyHz!=50)
             throw std::runtime_error("Incomplete decoupled backend contract");
     }else if(!out.policySecondaryFile.empty())throw std::runtime_error("Unexpected secondary policy for TWIST2");
+    if(out.policyBackend==questpolicy::DexWeave && (out.policyFile.empty()||out.policyHz!=50))throw std::runtime_error("Invalid DexWeave contract");
     if(out.policyBackend==questpolicy::Sonic){
         if(!fields.count("policy_planner_file")||!fields.count("policy_planner_sha256"))throw std::runtime_error("Missing SONIC planner identity");
         out.policyPlannerFile=readString("policy_planner_file");out.policyPlannerSha256=readString("policy_planner_sha256");

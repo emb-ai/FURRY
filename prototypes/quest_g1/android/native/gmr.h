@@ -13,6 +13,7 @@ struct GmrTask {
 class GmrRetargeter {
     mjModel* model_=nullptr; mjData* data_=nullptr;
     std::vector<GmrTask> tasks_;
+    std::vector<std::array<double,4>> sourceCosts;
     double assumedHeight=1.8,ground=0;
     bool cameraEnabled=false;
     int cameraBody=-1;
@@ -44,6 +45,7 @@ public:
     TrackedPose CameraPose()const;
     const TrackedPose& CameraTarget()const{return cameraTarget;}
     bool HasCameraTarget()const{return cameraEnabled;}
+    void EnableControllerHands(bool value);
     void Solve();
     double error=0,positionRms=0,orientationRms=0;
     int iterations=0;

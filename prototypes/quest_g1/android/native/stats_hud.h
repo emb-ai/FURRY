@@ -1,4 +1,5 @@
 #pragma once
+#include "graphics_epoch.h"
 #include "runtime_stats.h"
 #include "retarget.h"
 #include <cmath>
@@ -15,6 +16,7 @@ inline int DrawStatsHud(const float* headViewProjection,const std::string& asset
                          double fps,double drawMs,uint64_t skipped,double now,int status,bool active,int exportStatus,
                          const TrackingFrame& raw,double rawAgeMs,bool firstPerson,float visualScale,int recording,double recordingStarted,bool showSkeletonInset=true){
     static GLuint program=0,texture=0,vao=0,vbo=0;
+    static uint64_t generation=0;g1graphics::ForgetStale(generation,program,texture,vao,vbo);
     if(!program){
         auto shader=[](GLenum type,const char* source){GLuint h=glCreateShader(type);glShaderSource(h,1,&source,nullptr);glCompileShader(h);GLint ok;glGetShaderiv(h,GL_COMPILE_STATUS,&ok);if(!ok)throw std::runtime_error("Stats shader failed");return h;};
         GLuint v=shader(GL_VERTEX_SHADER,R"(#version 320 es

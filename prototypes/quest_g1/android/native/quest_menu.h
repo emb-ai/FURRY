@@ -12,13 +12,13 @@ namespace questmenu {
 
 enum class Page { Session, View, Debug, Policy };
 enum class Mode { Simulation, Trajectories };
-enum class Scene { Empty, Cup, PushT, Tennis, Rubik };
+enum class Scene { Empty, Cup, PushT, Tennis, Rubik, WBDex, Bimanual, Basket };
 enum class Capture { Robot, Human };
 enum class Plan { Train, Test };
 enum class Action {
     None, Close, Start, Save, Reset, QuickReset, ToggleRecording, Calibrate, Place,
     ModeSimulation, ModeTrajectories, CaptureRobot, CaptureHuman, PlanTrain, PlanTest,
-    SceneEmpty, SceneCup, ScenePushT, SceneTennis, SceneRubik, ViewObserver, ViewFirstPerson, Passthrough,
+    SceneEmpty, SceneCup, ScenePushT, SceneTennis, SceneRubik, SceneWBDex, SceneBimanual, SceneBasket, ViewObserver, ViewFirstPerson, Passthrough,
     DebugEnabled, DebugStats, DebugMeta, DebugCamera, DebugTargets, DebugContacts,
     PageSession, PageView, PageDebug, PagePolicy, CatchUp, PolicyPrevious, PolicyNext,
     PolicySelect0, PolicySelect1, PolicySelect2, PolicySelect3, LegsMeta, LegsCamera,
@@ -33,6 +33,7 @@ struct State {
     Capture capture = Capture::Robot;
     Plan plan = Plan::Train;
     bool open = true, paused = true, recording = false;
+    bool plannerWaiting = false,policyLoading=false;
     bool calibrated = false, trackingValid = false, faulted = false;
     bool firstPerson = false, passthrough = true;
     bool debugEnabled = false, debugStats = true, debugMeta = false;
@@ -67,6 +68,11 @@ struct Widget {
     bool enabled = true, selected = false;
     Kind kind = Kind::Text;
 };
+inline Rect HitRect(const Widget& w){
+    auto r=w.rect;
+    if(PolicyRow(w.action)>=0){r.y-=.020f;r.h+=.020f;}
+    return r;
+}
 struct Pointer {
     float x = 0, y = 0;
     bool valid = false, hover = false;
@@ -87,6 +93,39 @@ public:
     }
 };
 
+// Capture the pointed row when the trigger starts moving, before the user's
+// finger pulls the aim ray away. A small motion tolerance cancels large drags;
+// focus/menu/layout changes require a new neutral trigger before clicking.
+class MenuPressLatch {
+    bool armed=false,captured=false;
+    Action target=Action::None,hover=Action::None;
+    float originX=0,originY=0,hoverX=0,hoverY=0,neutralTrigger=0;
+    int context=-1;
+public:
+    struct Click {bool pressed=false;Action action=Action::None;};
+    Click Update(bool active,float trigger,Action action,float x,float y,int revision){
+        if(!active||!std::isfinite(trigger)||!std::isfinite(x)||!std::isfinite(y)){
+            armed=false;captured=false;hover=Action::None;context=revision;return {};
+        }
+        if(revision!=context){armed=false;captured=false;hover=Action::None;context=revision;}
+        if(!armed){
+            if(trigger<=.55f){armed=true;captured=false;neutralTrigger=trigger;hover=action;hoverX=x;hoverY=y;}
+            return {};
+        }
+        if(trigger<.15f){captured=false;neutralTrigger=trigger;hover=action;hoverX=x;hoverY=y;return {};}
+        if(!captured){
+            neutralTrigger=std::min(neutralTrigger,trigger);
+            if(trigger<=.55f&&trigger-neutralTrigger<.10f){hover=action;hoverX=x;hoverY=y;return {};}
+            captured=true;target=action;originX=x;originY=y;
+            if(target==Action::None&&hover!=Action::None&&std::hypot(x-hoverX,y-hoverY)<.03f){target=hover;originX=hoverX;originY=hoverY;}
+        }
+        if(target==Action::None&&action!=Action::None){target=action;originX=x;originY=y;}
+        if(trigger<=.55f)return {};
+        armed=false;captured=false;
+        return {true,std::hypot(x-originX,y-originY)<=.03f?target:Action::None};
+    }
+};
+
 inline constexpr float PanelWidth = .76f;
 inline constexpr float PanelHeight = .86f;
 inline constexpr Rect PanelRect { -PanelWidth / 2, -PanelHeight / 2, PanelWidth, PanelHeight };
@@ -98,6 +137,9 @@ inline const char* SceneName(Scene scene) {
     case Scene::PushT: return "push_t";
     case Scene::Tennis: return "tennis";
     case Scene::Rubik: return "rubik";
+    case Scene::WBDex: return "wb_dex";
+    case Scene::Bimanual: return "bimanual";
+    case Scene::Basket: return "basket";
     }
     return "stand";
 }
@@ -106,8 +148,11 @@ inline const char* SceneTitle(Scene scene) {
     case Scene::Empty: return "Пустая";
     case Scene::Cup: return "Стол и чашка";
     case Scene::PushT: return "Push-T";
-    case Scene::Tennis: return "Настольный теннис";
-    case Scene::Rubik: return "Кубик Рубика 2×2";
+    case Scene::Tennis: return "Теннис";
+    case Scene::Rubik: return "Кубик 2×2";
+    case Scene::WBDex: return "WB-Dex: чашка";
+    case Scene::Bimanual: return "Два предмета";
+    case Scene::Basket: return "Корзина через дверь";
     }
     return "Пустая";
 }
@@ -116,6 +161,8 @@ inline bool HumanCapture(const State& s) {
 }
 inline std::string StatusText(const State& s) {
     if (s.faulted) return "Ошибка симуляции";
+    if(s.policyLoading)return "Загрузка режима";
+    if(s.plannerWaiting)return "Ожидание плана SONIC";
     if (s.recording) return s.paused ? "Запись на паузе" : "Идёт запись";
     if (!s.trackingValid) return "Нет трекинга";
     if (!s.calibrated) return "Нужна калибровка";
@@ -176,13 +223,14 @@ inline std::vector<Widget> BuildLayout(const State& s) {
             y -= .069f;
         } else {
             label(y, "Сцена");
-            const Scene scenes[] = {Scene::Empty, Scene::Cup, Scene::PushT, Scene::Tennis, Scene::Rubik};
-            const Action actions[] = {Action::SceneEmpty, Action::SceneCup, Action::ScenePushT, Action::SceneTennis, Action::SceneRubik};
-            for (int i = 0; i != 5; ++i) {
-                add({-.192f, y, .544f, .055f}, SceneTitle(scenes[i]), actions[i],
+            const Scene scenes[] = {Scene::Empty, Scene::Cup, Scene::PushT, Scene::Tennis, Scene::Rubik, Scene::WBDex, Scene::Bimanual, Scene::Basket};
+            const Action actions[] = {Action::SceneEmpty, Action::SceneCup, Action::ScenePushT, Action::SceneTennis, Action::SceneRubik, Action::SceneWBDex, Action::SceneBimanual, Action::SceneBasket};
+            // Two columns keep every scene reachable in capture mode.
+            for (int i = 0; i != 8; ++i) {
+                add({-.192f+(i%2)*.278f, y-(i/2)*.056f, .266f, .055f}, SceneTitle(scenes[i]), actions[i],
                     !s.recording, s.scene == scenes[i], Kind::Radio);
-                y -= .056f;
             }
+            y -= 4*.056f;
             y -= .013f;
         }
         label(y, "Калибровка");
@@ -217,13 +265,15 @@ inline std::vector<Widget> BuildLayout(const State& s) {
         const int count=int(s.policies.size());
         const int pages=std::max(1,(count+PoliciesPerPage-1)/PoliciesPerPage);
         const int page=std::clamp(s.policyPage,0,pages-1);
-        check(.211f,"Догоняние позиции и поворота",Action::CatchUp,s.catchUp,!s.recording&&!human);
-        add({-.352f,.160f,.704f,.032f}, "Изменение сбросит робота и калибровку", Action::None,true,false,Kind::MutedText);
+        const bool dex=s.policyIndex>=0 && s.policyIndex<int(s.policies.size()) && s.policies[s.policyIndex].backend==questpolicy::DexWeave;
+        const bool standing=s.policyIndex>=0 && s.policyIndex<int(s.policies.size()) && s.policies[s.policyIndex].inputPatch=="homie_stand_v1";
+        check(.211f,standing?"HOMIE: баланс без команд шага":(dex?"DexWeave: абсолютная GMR-цель":"Догоняние позиции и поворота"),Action::CatchUp,(dex||standing)?false:s.catchUp,!dex&&!standing&&!s.recording&&!human&&!s.policyLoading);
+        add({-.352f,.160f,.704f,.032f}, s.policyLoading?"Дождитесь завершения загрузки":s.recording?"Сохраните запись, чтобы сменить режим":human?"Выберите симуляцию или запись робота":"Изменение сбросит робота и калибровку", Action::None,true,false,Kind::MutedText);
         for(int row=0;row<PoliciesPerPage;row++){
             int index=page*PoliciesPerPage+row;if(index>=count)break;
             float y=.100f-row*.072f;const auto& policy=s.policies[index];
             add({-.352f,y,.704f,.052f},policy.title,Action(int(Action::PolicySelect0)+row),
-                !s.recording&&!human,s.policyIndex==index,Kind::Radio);
+                !s.recording&&!human&&!s.policyLoading,s.policyIndex==index,Kind::Radio);
             add({-.312f,y-.020f,.664f,.018f},policy.note,Action::None,true,false,Kind::MutedText);
         }
         if(pages>1){
@@ -263,10 +313,18 @@ inline std::vector<Widget> BuildLayout(const State& s) {
 inline Action HitTest(const std::vector<Widget>& layout, float x, float y) {
     // Last drawn widget wins, if a future page adds an overlapping popover.
     for (auto i = layout.rbegin(); i != layout.rend(); ++i)
-        if (i->enabled && i->action != Action::None && i->rect.Contains(x, y)) return i->action;
+        if (i->enabled && i->action != Action::None && HitRect(*i).Contains(x, y)) return i->action;
     return Action::None;
 }
 
+// Disabled policy rows still explain the lock on a deliberate click. The
+// worker enforces it; HitTest remains the enabled-action/hover predicate.
+inline Action ClickAction(const std::vector<Widget>& layout,float x,float y){
+    auto action=HitTest(layout,x,y);if(action!=Action::None)return action;
+    for(auto i=layout.rbegin();i!=layout.rend();++i)
+        if(!i->enabled&&(PolicyRow(i->action)>=0||i->action==Action::CatchUp)&&HitRect(*i).Contains(x,y))return i->action;
+    return Action::None;
+}
 inline bool RayHit(const float* menuWorld, const float origin[3], const float dir[3],
                    float& x, float& y, float& distance) {
     // A rigid column-major transform permits transpose inversion without an

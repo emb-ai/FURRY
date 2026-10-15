@@ -156,6 +156,7 @@ the headset); the reward target is the offline-cleaned camera legs
    quest-g1-motion-v1 clips (one stage per episode, from 101) and
    `command_bank.npz` (quest-camera-command-bank-v1, mirrors included).
 Published inputs (Git LFS; `git lfs pull --include="datasets/**"`):
+
 - `datasets/quest-camera-legs/2026-10-13/dataset-v1`: step 1 output with its
   camera command bank.
 - `datasets/quest-camera-legs/2026-10-14/dataset-v2`: supersedes v1 (v1
@@ -167,15 +168,15 @@ Published inputs (Git LFS; `git lfs pull --include="datasets/**"`):
   command bank for the night-v3 Meta TRAIN clips (camera tracking OFF, as in
   the observer-view camera episodes), rebuilt on Linux (2026-10-14).
 
-2. `camera_mixture.py combine QUEST night-v3 dataset-v1` merges the camera
+1. `camera_mixture.py combine QUEST night-v3 dataset-v1` merges the camera
    clips with the Meta Quest clips. Files are byte copies; stages must not collide.
-3. `author_dataset.py --quest QUEST ...` builds the mixture as before.
+2. `author_dataset.py --quest QUEST ...` builds the mixture as before.
    Run `build_phase.py` on the new mixture; Quest phase stays masked.
    For the lifted-foot penalty also run `build_lift.py --dataset MIXTURE
    --assets ASSETS --output lift.npz` (reference sole clearance of Quest TRAIN
    clips) and pass `--lift-table lift.npz --lift-penalty W`, pinned by the
    experiment keys `lift_penalty_weight` and `lift_table_sha256` (0 = off).
-4. `camera_mixture.py bank --dataset MIXTURE --banks native-bank-camera-off/bank.npz
+3. `camera_mixture.py bank --dataset MIXTURE --banks native-bank-camera-off/bank.npz
    dataset-v1/command_bank.npz --output BANK.npz` writes one
    quest-native-command-bank-v1 covering every Quest TRAIN clip. Both banks
    match by original NPZ hash, so no old mixture is needed. It is loaded by the

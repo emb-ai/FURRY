@@ -45,6 +45,7 @@ inline RuntimePolicy VerifiedPolicy(const std::string& assets,const Entry& entry
         out.asyncPlanner=true;
 #endif
     }
+    out.standing=entry.inputPatch=="homie_stand_v1";
     out.Validate();return out;
 }
 inline std::vector<Entry> Load(const std::string& assets) {
@@ -67,11 +68,11 @@ inline std::vector<Entry> Load(const std::string& assets) {
             row>>std::ws;
         }
         if(!row.eof()){
-            if(!(row>>std::quoted(e.inputPatch))||e.inputPatch!="virtual_leg_lift10_v1"||e.backend!=Twist2)throw std::runtime_error("Invalid source patch mode");
+            if(!(row>>std::quoted(e.inputPatch))||!((e.backend==Twist2 && (e.inputPatch=="virtual_leg_lift10_v1"||e.inputPatch=="stance_narrow12_v1")) || (e.backend==DexWeave && e.inputPatch=="stance_narrow12_v1") || (e.backend==GrootDecoupled && e.inputPatch=="homie_stand_v1")))throw std::runtime_error("Invalid source patch mode");
             row>>std::ws;
         }
         if(!KnownBackend(e.backend) ||
-           (e.backend!=Twist2 ? (!ModelFile(e.secondaryFile)||!Digest(e.secondarySha256)||!files.insert(e.secondaryFile).second)
+           ((e.backend==GrootDecoupled || e.backend==Sonic) ? (!ModelFile(e.secondaryFile)||!Digest(e.secondarySha256)||!files.insert(e.secondaryFile).second)
                                      : (!e.secondaryFile.empty()||!e.secondarySha256.empty())))
             throw std::runtime_error("Invalid policy backend identity");
         if(!row.eof()||!Token(e.id)||!ModelFile(e.file)||!Digest(e.sha256)||e.title.empty()||

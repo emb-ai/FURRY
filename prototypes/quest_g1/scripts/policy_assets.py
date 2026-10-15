@@ -21,7 +21,7 @@ def checked_model(source, ident, backend, expected_digest, opts):
     if expected_digest and expected_digest != digest:
         raise ValueError(f'Policy hash mismatch: {ident}')
     session = ort.InferenceSession(str(source), sess_options=opts, providers=['CPUExecutionProvider'])
-    input_width, output_width = {'twist2': (1432,29), 'groot_decoupled_v1': (516,15), 'sonic_encoder': (1762,64), 'sonic_decoder': (994,29)}[backend]
+    input_width, output_width = {'dexweave_body_v1': (157,29), 'twist2': (1432,29), 'groot_decoupled_v1': (516,15), 'sonic_encoder': (1762,64), 'sonic_decoder': (994,29)}[backend]
     rate = session.get_modelmeta().custom_metadata_map.get('g1_policy_hz', '100' if backend == 'twist2' else '50')
     if rate not in ('50', '100') or (backend != 'twist2' and rate != '50'):
         raise ValueError(f'Unsupported policy frequency: {ident}: {rate}')
@@ -70,13 +70,13 @@ def export_policies(assets, upstream, config=None):
             if not row.get(key) or len(row[key].encode()) > limit or any(ord(c) < 32 for c in row[key]):
                 raise ValueError(f'Invalid policy {key}')
         backend = row.get('backend', 'twist2')
-        if backend not in ('twist2', 'groot_decoupled_v1', 'sonic_vr3_v1'):
+        if backend not in ('twist2', 'groot_decoupled_v1', 'sonic_vr3_v1', 'dexweave_body_v1'):
             raise ValueError(f'Unsupported policy backend: {backend}')
-        if (backend != 'twist2') != bool(row.get('secondary_path')):
+        if (backend in ('groot_decoupled_v1','sonic_vr3_v1')) != bool(row.get('secondary_path')):
             raise ValueError(f'Policy secondary model does not match backend: {ident}')
         if (backend == 'sonic_vr3_v1') != bool(row.get('planner_path')):
             raise ValueError('Planner does not match backend')
-        if row.get('input_patch') not in (None,'virtual_leg_lift10_v1') or (row.get('input_patch') and backend!='twist2'):
+        if row.get('input_patch') and not ((backend=='twist2' and row['input_patch'] in ('virtual_leg_lift10_v1','stance_narrow12_v1')) or (backend=='dexweave_body_v1' and row['input_patch']=='stance_narrow12_v1') or (backend=='groot_decoupled_v1' and row['input_patch']=='homie_stand_v1')):
             raise ValueError('Invalid source patch mode')
         if backend == 'sonic_vr3_v1':
             from scripts.sonic_assets import package
@@ -85,7 +85,7 @@ def export_policies(assets, upstream, config=None):
             entry.update(package(row,assets,opts,checked_model));catalog.append(entry);continue
         source = Path(row['path'])
         digest, rate = checked_model(source, ident, backend, row.get('sha256'), opts)
-        filename = ('policy.onnx' if i == 0 else f'policy-{ident}.onnx') if backend == 'twist2' else f'policy-{ident}-balance.onnx'
+        filename = ('policy.onnx' if i == 0 else f'policy-{ident}.onnx') if backend in ('twist2','dexweave_body_v1') else f'policy-{ident}-balance.onnx'
         shutil.copy2(source, assets / filename)
         entry = {key: row[key] for key in ('id', 'title', 'note')}
         entry.update(file=filename, sha256=digest, policy_hz=50, legacy_policy_hz=rate, backend=backend)
@@ -96,7 +96,7 @@ def export_policies(assets, upstream, config=None):
             entry.update(secondary_file=secondary_file, secondary_sha256=secondary_digest)
         if row.get('input_patch'):entry['input_patch']=row['input_patch']
         catalog.append(entry)
-    for scene in ('lab', 'stand', 'cup', 'push_t', 'tennis', 'rubik'):
+    for scene in ('lab', 'stand', 'cup', 'push_t', 'tennis', 'rubik', 'wb_dex', 'bimanual', 'basket'):
         base = assets / ('recording_metadata.json' if scene == 'lab' else f'recording_metadata-{scene}.json')
         metadata = json.loads(base.read_text())
         for entry in catalog:
@@ -114,6 +114,9 @@ def export_policies(assets, upstream, config=None):
             if 'secondary_file' in entry:
                 item.update(policy_secondary_file=entry['secondary_file'], policy_secondary_sha256=entry['secondary_sha256'])
                 item['sha256'][entry['secondary_file']] = entry['secondary_sha256']
+            if entry['backend']=='dexweave_body_v1':
+                item['dexweave_live_reference']='absolute GMR pose; causal 50Hz backward joint velocity; no offline support projection'
+                item.setdefault('limitations',[]).append('Experimental live source differs from offline support-projected evaluation; exact dynamic replay requires dexweave-reference.csv')
             if entry['backend']=='groot_decoupled_v1':
                 profile_root = Path(__file__).resolve().parents[1] / 'policies/homie-v2'
                 profile = json.loads((profile_root / 'provenance.json').read_text())['body_motor_profile']

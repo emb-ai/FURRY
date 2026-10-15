@@ -46,8 +46,10 @@ class GeometryTests(unittest.TestCase):
         self.assertEqual(len(hands), 16)
         self.assertEqual(len(set(m.geom_bodyid[hands])), 16)
         self.assertTrue(np.all(m.geom_group[np.r_[body, hands]] == 3))
-        self.assertTrue(all(m.mesh_facenum[m.geom_dataid[i]] <= 384 for i in hands))
-        self.assertLessEqual(sum(m.mesh_facenum[m.geom_dataid[i]] for i in hands), 6144)
+        mesh_hands = [i for i in hands if m.geom_type[i] == mujoco.mjtGeom.mjGEOM_MESH]
+        self.assertEqual(len(mesh_hands), 14)
+        self.assertTrue(all(m.mesh_facenum[m.geom_dataid[i]] <= 384 for i in mesh_hands))
+        self.assertLessEqual(sum(m.mesh_facenum[m.geom_dataid[i]] for i in mesh_hands), 6144)
         self.assertEqual(sum('_hand_' in m.joint(i).name for i in range(m.njnt)), 14)
 
     def test_hand_hulls_are_closed_convex_and_small(self):
@@ -85,16 +87,37 @@ class GeometryTests(unittest.TestCase):
             with self.subTest(geom=m.geom(int(i)).name):
                 mujoco.mj_resetData(m, d)
                 mujoco.mj_forward(m, d)
-                mid = m.geom_dataid[i]
-                va, fa = m.mesh_vertadr[mid], m.mesh_faceadr[mid]
-                points = m.mesh_vert[va + m.mesh_face[fa]].astype(float)
-                normal = np.cross(points[1]-points[0], points[2]-points[0])
-                normal /= np.linalg.norm(normal)
-                point = points.mean(axis=0) + normal*.001
+                if m.geom_type[i] == mujoco.mjtGeom.mjGEOM_BOX:
+                    point = np.array([0., 0., m.geom_size[i, 2]+.001])
+                else:
+                    mid = m.geom_dataid[i]
+                    va, fa = m.mesh_vertadr[mid], m.mesh_faceadr[mid]
+                    points = m.mesh_vert[va + m.mesh_face[fa]].astype(float)
+                    normal = np.cross(points[1]-points[0], points[2]-points[0])
+                    normal /= np.linalg.norm(normal)
+                    point = points.mean(axis=0) + normal*.001
                 d.qpos[qadr:qadr+3] = d.geom_xpos[i] + d.geom_xmat[i].reshape(3, 3) @ point
                 mujoco.mj_forward(m, d)
                 pairs = {frozenset((c.geom1, c.geom2)) for c in d.contact}
                 self.assertIn(frozenset((int(i), probe_id)), pairs)
+
+    def test_open_thumbs_have_no_false_palm_collision(self):
+        m = self.model
+        d = mujoco.MjData(m)
+        mujoco.mj_forward(m, d)
+        for side in ('left', 'right'):
+            name = side+'_hand_thumb_1_link'
+            gid = m.geom(name+'_collision').id
+            source_body = self.source.body(name).id
+            source_gid = next(i for i in range(self.source.ngeom)
+                              if self.source.geom_bodyid[i] == source_body
+                              and self.source.geom_type[i] == mujoco.mjtGeom.mjGEOM_BOX)
+            for field in ('geom_size', 'geom_pos', 'geom_quat'):
+                np.testing.assert_array_equal(getattr(m, field)[gid], getattr(self.source, field)[source_gid])
+            palm = m.body(side+'_wrist_yaw_link').id
+            thumb = m.body(name).id
+            self.assertFalse(any({int(m.geom_bodyid[c.geom1]), int(m.geom_bodyid[c.geom2])} == {palm, thumb}
+                                 and c.dist < 0 for c in d.contact))
 
     def test_four_source_sole_spheres_per_foot_contact_floor(self):
         m, d = self.model, mujoco.MjData(self.model)

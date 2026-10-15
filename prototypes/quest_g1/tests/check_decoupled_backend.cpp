@@ -41,7 +41,7 @@ int main(int argc,char**argv){if(argc!=2)return 2;try{
     command.velocity={.05f,0,0};Check(Walking(command),"Walk threshold");
 
     const std::string assets=argv[1];questpolicy::RuntimePolicy policy;
-    bool found=false;for(const auto& e:questpolicy::Load(assets))if(e.backend==questpolicy::GrootDecoupled){policy=questpolicy::VerifiedPolicy(assets,e);found=true;}
+    bool found=false;for(const auto& e:questpolicy::Load(assets))if(e.backend==questpolicy::GrootDecoupled&&e.inputPatch.empty()){policy=questpolicy::VerifiedPolicy(assets,e);found=true;}
     Check(found,"Missing official decoupled policies");
     Simulation a(assets,0,"stand",policy,50),b(assets,0,"stand",policy,50);
     const auto motors=bodymotors::Load(assets+"/"+bodymotors::File);

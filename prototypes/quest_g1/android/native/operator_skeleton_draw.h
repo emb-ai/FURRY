@@ -1,4 +1,5 @@
 #pragma once
+#include "graphics_epoch.h"
 #include "operator_skeleton.h"
 #include <GLES3/gl32.h>
 #include <stdexcept>
@@ -50,6 +51,7 @@ inline int DrawOperatorSkeleton(const float* vp, const TrackingFrame& raw, doubl
         throw std::runtime_error("Operator skeleton exceeds triangle budget");
     operatorskeleton_detail::StateGuard guard;
     static GLuint program = 0, vao = 0, vbo = 0;
+    static uint64_t generation=0;g1graphics::ForgetStale(generation,program,vao,vbo);
     if (!program) {
         auto compile = [](GLenum type, const char* source) {
             GLuint shader = glCreateShader(type);

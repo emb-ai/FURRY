@@ -13,7 +13,7 @@ int main(int argc,char**argv){
     if(argc!=3)return 2;
     try{
         std::string folder=argv[2];auto manifest=episodereplay::LoadManifest(folder);
-        Simulation sim(argv[1],2,manifest.scene,manifest.Policy(argv[1],folder),manifest.policyHz);manifest.ValidateDimensions(sim.model->nq,sim.model->nv,sim.model->nu);MetaRetargeter meta(argv[1]);meta.EnableVirtualLegLift(manifest.inputPatch=="virtual_leg_lift10_v1");meta.EnableNeutralWrists(manifest.neutralWrists);meta.EnableWristFrameV2(manifest.wristFrameV2);meta.EnableControllerWrists(manifest.scene=="rubik");meta.SetTravelGain(manifest.travelGainPercent/100.);
+        Simulation sim(argv[1],2,manifest.scene,manifest.Policy(argv[1],folder),manifest.policyHz);manifest.ValidateDimensions(sim.model->nq,sim.model->nv,sim.model->nu);MetaRetargeter meta(argv[1]);meta.EnableVirtualLegLift(manifest.inputPatch=="virtual_leg_lift10_v1");meta.EnableNarrowStance(manifest.inputPatch=="stance_narrow12_v1");meta.EnableNeutralWrists(manifest.neutralWrists);meta.EnableWristFrameV2(manifest.wristFrameV2);meta.EnableControllerWrists(manifest.scene=="rubik");meta.EnableControllerStageTargets(manifest.controllerStageTargets);meta.EnableControllerAnatomicalFrame(manifest.controllerAnatomicalFrame);meta.SetTravelGain(manifest.travelGainPercent/100.);
         std::ifstream inputs(folder+"/input.csv"),bodies(folder+"/body.csv"),frames(folder+"/frames.csv"),commands(folder+"/mimic.csv");
         if(!inputs||!bodies||!frames||!commands)throw std::runtime_error("GMR replay requires input/body/frames/mimic streams");
         std::map<uint64_t,TrackingFrame> poses;std::string line;
@@ -36,17 +36,17 @@ int main(int argc,char**argv){
         while(std::getline(frames,line)){
             if(!std::getline(commands,command))throw std::runtime_error("Missing mimic frame");auto r=Row(line),c=Row(command);
             if(r.size()!=size_t(42+sim.model->nq+sim.model->nv+sim.model->nu)||c.size()!=38 || c[0]!=r[1]||c[1]!=r[2]||c[2]!=r[3])throw std::runtime_error("Mismatched frame/mimic streams");
-            while(pauseIndex<focusPauses.size() && focusPauses[pauseIndex]<=r[0]){wasApplying=false;meta.Pause();pauseIndex++;}
+            while(pauseIndex<focusPauses.size() && focusPauses[pauseIndex]<=r[0]){wasApplying=false;meta.Pause();sim.PauseWholeBodyReference();pauseIndex++;}
             while(viewIndex<viewChanges.size()&&viewChanges[viewIndex].first<=r[0])cameraTracking=viewChanges[viewIndex++].second;
             meta.EnableCameraTracking(cameraTracking);
             auto it=poses.find(r[1]);if(it==poses.end())throw std::runtime_error("Missing raw frame");const auto&f=it->second;
-            std::copy_n(r.begin()+42,sim.model->nq,sim.data->qpos);mj_forward(sim.model,sim.data);
-            if(r[4]){meta.calibrated=false;wasApplying=false;}
-            if(r[5])meta.Calibrate(sim.model,sim.data,f);
-            if(!r[6]){wasApplying=false;meta.Pause();continue;}
+            std::copy_n(r.begin()+42,sim.model->nq,sim.data->qpos);sim.data->time=r[3];mj_forward(sim.model,sim.data);
+            if(r[4]){meta.calibrated=false;wasApplying=false;sim.PauseWholeBodyReference();}
+            if(r[5]){meta.Calibrate(sim.model,sim.data,f);sim.ResetArmCompensation();}
+            if(!r[6]){wasApplying=false;meta.Pause();sim.PauseWholeBodyReference();continue;}
             if(!meta.calibrated){skipped++;continue;}
             if(r[5]||!wasApplying){origin.fill(0);origin[2]=sim.data->qpos[2];blendStart=r[3];auto*gm=meta.solver().model();for(int j=1;j<gm->njnt;j++){int source=mj_name2id(sim.model,mjOBJ_JOINT,mj_id2name(gm,mjOBJ_JOINT,j));origin[gm->jnt_qposadr[j]-1]=sim.data->qpos[sim.model->jnt_qposadr[source]];}}
-            auto result=meta.Solve(f);
+            auto result=meta.Solve(f);result=sim.CorrectStandingArms(result,meta.solver().Targets());
             if(manifest.catchUp){auto& solver=meta.solver();result=ApplyCameraCatchUp(result,solver.HasCameraTarget()?solver.CameraTarget():solver.CameraPose(),sim.model,sim.data,egoCamera,true,manifest.catchUpV2?solver.data()->qpos+3:nullptr);}
             double u=std::clamp((r[3]-blendStart)/.5,0.,1.);
             for(int i=0;i<35;i++){result[i]=origin[i]+u*(result[i]-origin[i]);maxError=std::max(maxError,std::abs(result[i]-c[3+i]));}

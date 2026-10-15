@@ -36,7 +36,7 @@ static void CheckedStep(Simulation& sim,double leftGrip,double rightGrip) {
  CheckPhysicsNumerics(sim,previousTime);
 }
 int Run(int argc,char**argv){
- if(argc!=5){std::cerr<<"Usage: replay_gmr_dynamics assets episode saved|retarget output.csv\n";return 2;}std::string folder=argv[2],mode=argv[3];if(mode!="saved"&&mode!="retarget")throw std::runtime_error("Unknown replay mode");auto manifest=episodereplay::LoadManifest(folder);Simulation sim(argv[1],2,manifest.scene,manifest.Policy(argv[1],folder),manifest.policyHz);manifest.ValidateDimensions(sim.model->nq,sim.model->nv,sim.model->nu);MetaRetargeter meta(argv[1]);meta.EnableVirtualLegLift(manifest.inputPatch=="virtual_leg_lift10_v1");meta.EnableNeutralWrists(manifest.neutralWrists);meta.EnableWristFrameV2(manifest.wristFrameV2);meta.EnableControllerWrists(manifest.scene=="rubik");meta.SetTravelGain(manifest.travelGainPercent/100.);std::string line;
+ if(argc!=5){std::cerr<<"Usage: replay_gmr_dynamics assets episode saved|retarget output.csv\n";return 2;}std::string folder=argv[2],mode=argv[3];if(mode!="saved"&&mode!="retarget")throw std::runtime_error("Unknown replay mode");auto manifest=episodereplay::LoadManifest(folder);if(manifest.policyBackend==questpolicy::DexWeave)throw std::runtime_error("DexWeave dynamic replay requires the recorded absolute reference stream; legacy TWIST replay is incompatible");Simulation sim(argv[1],2,manifest.scene,manifest.Policy(argv[1],folder),manifest.policyHz);manifest.ValidateDimensions(sim.model->nq,sim.model->nv,sim.model->nu);MetaRetargeter meta(argv[1]);meta.EnableVirtualLegLift(manifest.inputPatch=="virtual_leg_lift10_v1");meta.EnableNarrowStance(manifest.inputPatch=="stance_narrow12_v1");meta.EnableNeutralWrists(manifest.neutralWrists);meta.EnableWristFrameV2(manifest.wristFrameV2);meta.EnableControllerWrists(manifest.scene=="rubik");meta.EnableControllerStageTargets(manifest.controllerStageTargets);meta.EnableControllerAnatomicalFrame(manifest.controllerAnatomicalFrame);meta.SetTravelGain(manifest.travelGainPercent/100.);std::string line;
  std::map<uint64_t,TrackingFrame> poses;std::ifstream inputs(folder+"/input.csv"),bodies(folder+"/body.csv"),frames(folder+"/frames.csv"),commands(folder+"/mimic.csv");
  if(!inputs||!bodies||!frames||!commands)throw std::runtime_error("Missing episode streams");
  auto pauses=episodereplay::PauseTimes(folder);size_t pauseIndex=0;
@@ -47,8 +47,17 @@ int Run(int argc,char**argv){
  std::getline(bodies,line);while(std::getline(bodies,line)){auto r=Row(line);if(r.size()!=216)throw std::runtime_error("Invalid body row");auto& b=poses.at(r[0]).body;b.time_ns=r[1];b.supported=r[2];b.valid=r[3];b.confidence=r[4];b.skeleton_version=r[5];for(int j=0;j<14;j++){int a=6+15*j;b.flags[j]=r[a];for(int k=0;k<2;k++){auto&p=k?b.rest[j]:b.joints[j];std::copy_n(r.begin()+a+1+7*k,3,p.position.begin());std::copy_n(r.begin()+a+4+7*k,4,p.quaternion.begin());}}}
  std::ofstream out(argv[4]);if(!out)throw std::runtime_error("Cannot create output");out<<std::setprecision(17)<<"wall_s,sim_s,height,tilt,q_error,cmd_error";for(int k=0;k<35;k++)out<<",cmd_"<<k;AblationHeader(out);out<<"\n";
  bool started=false,fell=false,wasApplying=false;std::array<float,35> origin{};double blendStart=0,firstWall=0,minz=1,maxError=0;int segment=0;
+ std::ifstream sceneState(folder+"/scene_state.csv");std::string sceneRow;
+ const bool seededScene=mj_name2id(sim.model,mjOBJ_NUMERIC,"collection_task")>=0||sim.model->nuserdata==16;
+ if(seededScene&&!sceneState)throw std::runtime_error("Missing randomized scene state stream");
+ if(sceneState)std::getline(sceneState,sceneRow);
  std::getline(frames,line);std::string command;std::getline(commands,command);
  while(std::getline(frames,line)){if(!std::getline(commands,command))throw std::runtime_error("Missing mimic row");auto r=Row(line),c=Row(command);if(r.size()!=size_t(42+sim.model->nq+sim.model->nv+sim.model->nu)||c.size()!=38||c[0]!=r[1]||c[1]!=r[2]||c[2]!=r[3])throw std::runtime_error("Mismatched frame streams");if(!firstWall)firstWall=r[0];
+  std::vector<double> taskState;
+  if(sceneState.is_open()){
+    if(!std::getline(sceneState,sceneRow))throw std::runtime_error("Truncated scene state");taskState=Row(sceneRow);
+    if(taskState.size()!=size_t(3+sim.model->nuserdata+7*sim.model->nmocap)||taskState[0]!=r[1]||taskState[1]!=r[2]||taskState[2]!=r[3])throw std::runtime_error("Mismatched scene state");
+  }
   while(pauseIndex<pauses.size()&&pauses[pauseIndex]<=r[0]){wasApplying=false;meta.Pause();sim.PauseWholeBodyReference();pauseIndex++;}
   while(viewIndex<viewChanges.size()&&viewChanges[viewIndex].first<=r[0])cameraTracking=viewChanges[viewIndex++].second;
   meta.EnableCameraTracking(cameraTracking);
@@ -56,15 +65,16 @@ int Run(int argc,char**argv){
   // row at the same step/time. A snapshot cannot advance the policy history.
   bool calibrationSnapshot=false;
   if(r[5]&&!r[6]){auto nextPosition=frames.tellg();std::string nextLine;if(std::getline(frames,nextLine)){auto nextRow=Row(nextLine);calibrationSnapshot=nextRow.size()>3&&nextRow[2]==r[2]&&nextRow[3]==r[3];}frames.clear();frames.seekg(nextPosition);}
-  if(r[4]){if(started)std::cout<<"segment="<<segment<<" fell="<<fell<<" minz="<<minz<<" max_q_error="<<maxError<<"\n";sim.Reset();meta.calibrated=false;started=true;fell=false;wasApplying=false;minz=1;maxError=0;segment++;}
+  if(r[4]){if(started)std::cout<<"segment="<<segment<<" fell="<<fell<<" minz="<<minz<<" max_q_error="<<maxError<<"\n";if(seededScene)sim.NewSceneTrial(uint32_t(taskState[3+(sim.model->nuserdata==16?9:0)]));else sim.Reset();meta.calibrated=false;started=true;fell=false;wasApplying=false;minz=1;maxError=0;segment++;}
   if(!started||fell)continue;
   auto& f=poses.at(r[1]);std::array<float,35> cmd{};std::copy_n(c.begin()+3,35,cmd.begin());
   if(mode!="saved"){
-   if(r[5])meta.Calibrate(sim.model,sim.data,f);
-   if(r[6]&&meta.calibrated){if(r[5]||!wasApplying){origin.fill(0);origin[2]=sim.data->qpos[2];blendStart=r[3];auto*gm=meta.solver().model();for(int j=1;j<gm->njnt;j++){int s=mj_name2id(sim.model,mjOBJ_JOINT,mj_id2name(gm,mjOBJ_JOINT,j));origin[gm->jnt_qposadr[j]-1]=sim.data->qpos[sim.model->jnt_qposadr[s]];}}cmd=meta.Solve(f);if(manifest.catchUp){auto& solver=meta.solver();cmd=ApplyCameraCatchUp(cmd,solver.HasCameraTarget()?solver.CameraTarget():solver.CameraPose(),sim.model,sim.data,egoCamera,true,manifest.catchUpV2?solver.data()->qpos+3:nullptr);}double u=std::clamp((r[3]-blendStart)/.5,0.,1.);for(int k=0;k<35;k++)cmd[k]=origin[k]+u*(cmd[k]-origin[k]);wasApplying=true;}
+   if(r[5]){meta.Calibrate(sim.model,sim.data,f);sim.ResetArmCompensation();}
+   if(r[6]&&meta.calibrated){if(r[5]||!wasApplying){origin.fill(0);origin[2]=sim.data->qpos[2];blendStart=r[3];auto*gm=meta.solver().model();for(int j=1;j<gm->njnt;j++){int s=mj_name2id(sim.model,mjOBJ_JOINT,mj_id2name(gm,mjOBJ_JOINT,j));origin[gm->jnt_qposadr[j]-1]=sim.data->qpos[sim.model->jnt_qposadr[s]];}}cmd=meta.Solve(f);cmd=sim.CorrectStandingArms(cmd,meta.solver().Targets());if(manifest.catchUp){auto& solver=meta.solver();cmd=ApplyCameraCatchUp(cmd,solver.HasCameraTarget()?solver.CameraTarget():solver.CameraPose(),sim.model,sim.data,egoCamera,true,manifest.catchUpV2?solver.data()->qpos+3:nullptr);}double u=std::clamp((r[3]-blendStart)/.5,0.,1.);for(int k=0;k<35;k++)cmd[k]=origin[k]+u*(cmd[k]-origin[k]);wasApplying=true;}
    else{meta.Pause();wasApplying=false;}
   }
   double err=0,cmdErr=0;for(int k=0;k<sim.model->nq;k++)err=std::max(err,std::abs(sim.data->qpos[k]-r[42+k]));for(int k=0;k<35;k++)cmdErr=std::max(cmdErr,std::abs(double(cmd[k])-c[k+3]));maxError=std::max(maxError,err);
+  if(mode=="saved"&&sim.scene_name=="rubik"&&!taskState.empty())sim.SetRubikRotationIntent(taskState[3+RubikTask::RotationIntent]>.5);
   if(r[6])sim.SetWholeBodyReference(cmd);else sim.PauseWholeBodyReference();
   double tilt=std::acos(std::clamp(1-2*(std::pow(sim.data->qpos[4],2)+std::pow(sim.data->qpos[5],2)),-1.,1.))*180/3.141592653589793;
   out<<(r[0]-firstWall)*1e-9<<','<<sim.data->time<<','<<sim.data->qpos[2]<<','<<tilt<<','<<err<<','<<cmdErr;for(auto v:cmd)out<<','<<v;std::array<double,2> toe{std::nan(""),std::nan("")};if(mode!="saved"&&r[6]&&meta.calibrated)toe=ToeTargetClearance(meta);AblationRow(out,sim,meta.solver(),segment,r[6],mode!="saved",toe);out<<'\n';
