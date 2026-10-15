@@ -48,7 +48,9 @@ class PiHigh:
         from .diffusion import cosine_alpha_bar
         self.torch = torch; self.device = device
         c = torch.load(checkpoint, map_location='cpu', weights_only=False)
-        self.model = VisualDenoiser(c['metadata']['width'], c['metadata'].get('arch', 'film')); self.model.load_state_dict(c['model'])
+        meta = c['metadata']
+        self.model = VisualDenoiser(meta['width'], meta.get('arch', 'film'), meta.get('pretrained', False), meta.get('crop', 1.))
+        self.model.load_state_dict(c['model'])
         self.model.to(device).eval()
         self.mean = c['action_mean'].numpy().astype(np.float32); self.std = c['action_std'].numpy().astype(np.float32)
         lo, hi = bounds
@@ -64,7 +66,7 @@ class PiHigh:
         with torch.no_grad():
             image = torch.tensor(rgb, device=self.device).permute(0, 3, 1, 2).float().div(255).unsqueeze(0)
             cmd = torch.tensor((command-self.mean)/self.std, device=self.device).unsqueeze(0)
-            features = self.model.encoder(image.reshape(2, 3, 224, 224)).reshape(1, 2, -1)
+            features = self.model.encode(image.reshape(2, 3, 224, 224)).reshape(1, 2, -1)
             condition = torch.cat((features, cmd), dim=-1)
             x = torch.randn((1, self.horizon, len(self.mean)), generator=self.generator, device=self.device)
             for i, t in enumerate(self.times):

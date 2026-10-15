@@ -101,18 +101,38 @@ class ConditionalUnet1D(nn.Module):
 
 
 class VisualDenoiser(nn.Module):
-    def __init__(self,width=64,arch='film'):
-        super().__init__();self.encoder=resnet18(weights=None);self.encoder.fc=nn.Identity()
+    """pretrained: ImageNet ResNet18 with frozen BatchNorm statistics and ImageNet input normalization
+    (load_weights fetches them; checkpoints restore without it). crop<1: evaluation uses the centre
+    crop of that fraction resized back, matching random crops in training."""
+    def __init__(self,width=64,arch='film',pretrained=False,crop=1.,load_weights=False):
+        super().__init__();self.pretrained=pretrained;self.crop=crop
+        from torchvision.models import ResNet18_Weights
+        from torchvision.ops import FrozenBatchNorm2d
+        self.encoder=resnet18(weights=ResNet18_Weights.IMAGENET1K_V1 if pretrained and load_weights else None);self.encoder.fc=nn.Identity()
         # Small batches/temporally correlated frames: avoid batch-stat dependence.
         def replace(module):
             for name,child in module.named_children():
-                if isinstance(child,nn.BatchNorm2d): setattr(module,name,nn.GroupNorm(8,child.num_features))
+                if isinstance(child,nn.BatchNorm2d):
+                    if pretrained:
+                        frozen=FrozenBatchNorm2d(child.num_features,eps=child.eps)
+                        for key in ('weight','bias','running_mean','running_var'): getattr(frozen,key).copy_(getattr(child,key).detach())
+                        setattr(module,name,frozen)
+                    else: setattr(module,name,nn.GroupNorm(8,child.num_features))
                 else: replace(child)
         replace(self.encoder)
+        self.register_buffer('pixel_mean',torch.tensor([.485,.456,.406]).view(1,3,1,1),persistent=False)
+        self.register_buffer('pixel_std',torch.tensor([.229,.224,.225]).view(1,3,1,1),persistent=False)
         self.denoiser=(ConditionalUnet1D(ACTION_DIM,512+ACTION_DIM,2) if arch=='unet' else
                        Denoiser(ACTION_DIM,512+ACTION_DIM,2,width=width))
+    def encode(self,images):
+        """images (N,3,H,W) in [0,1]; training-time crops are applied by the caller."""
+        if not self.training and self.crop<1:
+            h,w=images.shape[-2:];ch,cw=round(h*self.crop),round(w*self.crop);y,x=(h-ch)//2,(w-cw)//2
+            images=nn.functional.interpolate(images[...,y:y+ch,x:x+cw],size=(h,w),mode='bilinear',align_corners=False)
+        if self.pretrained: images=(images-self.pixel_mean)/self.pixel_std
+        return self.encoder(images)
     def forward(self,action,timestep,rgb,command):
-        b,t=rgb.shape[:2];features=self.encoder(rgb.reshape(b*t,*rgb.shape[2:])).reshape(b,t,-1)
+        b,t=rgb.shape[:2];features=self.encode(rgb.reshape(b*t,*rgb.shape[2:])).reshape(b,t,-1)
         return self.denoiser(action,timestep,torch.cat((features,command),dim=-1))
 
 
@@ -122,6 +142,26 @@ def random_shift(rgb, pad):
     b,t,c,h,w=rgb.shape;x=nn.functional.pad(rgb.reshape(b,t*c,h,w),(pad,)*4,mode='replicate')
     offset=torch.randint(0,2*pad+1,(b,2)).tolist()
     return torch.stack([x[i,:,y:y+h,z:z+w] for i,(y,z) in enumerate(offset)]).reshape(b,t,c,h,w)
+
+
+def augment(rgb, crop, color):
+    """Random crop of a ``crop`` fraction resized back and brightness/contrast/saturation jitter of
+    +-``color``; the same draw for both frames of a sample. rgb (B,T,3,H,W) in [0,1]."""
+    b,t,c,h,w=rgb.shape;x=rgb.reshape(b,t*c,h,w)
+    if crop<1:
+        ch,cw=round(h*crop),round(w*crop)
+        offset=zip(torch.randint(0,h-ch+1,(b,)).tolist(),torch.randint(0,w-cw+1,(b,)).tolist())
+        x=nn.functional.interpolate(torch.stack([x[i,:,y:y+ch,z:z+cw] for i,(y,z) in enumerate(offset)]),
+                                    size=(h,w),mode='bilinear',align_corners=False)
+    x=x.reshape(b,t,c,h,w)
+    if color>0:
+        draw=lambda:(1+(torch.rand(b,1,1,1,1,device=x.device)*2-1)*color)
+        gray=lambda v:(v*torch.tensor([.299,.587,.114],device=v.device).view(1,1,3,1,1)).sum(2,keepdim=True)
+        x=x*draw()
+        m=gray(x).mean((-1,-2),keepdim=True);x=(x-m)*draw()+m
+        g=gray(x);x=(x-g)*draw()+g
+        x=x.clamp(0,1)
+    return x
 
 
 @torch.no_grad()
@@ -134,7 +174,7 @@ def conditioning_check(model, batches, schedule, device, times=(20,50,80)):
             action=batch['action'].to(device);noise=torch.randn(action.shape,generator=generator).to(device)
             a=schedule[t];noisy=a.sqrt()*action+(1-a).sqrt()*noise
             with torch.autocast('cuda',torch.bfloat16,enabled=device.startswith('cuda')):
-                features=model.encoder(batch['rgb'].to(device).flatten(0,1)).float().reshape(len(action),2,-1)
+                features=model.encode(batch['rgb'].to(device).flatten(0,1)).float().reshape(len(action),2,-1)
             prediction=model.denoiser(noisy,torch.full((len(action),),t,device=device),torch.cat((features,batch['command'].to(device)),-1))
             mask=batch['mask'].to(device)[...,None]
             total+=float(((prediction-noise).square()*mask).sum());count+=float(mask.sum())*ACTION_DIM
@@ -143,7 +183,8 @@ def conditioning_check(model, batches, schedule, device, times=(20,50,80)):
 
 
 def train(path, output, steps=10000, batch_size=8, width=64, seed=0, device='cpu', workers=0, in_memory=False,
-          lr=1e-4, warmup=0, cosine=False, ema=0., shift=0, save_every=0, arch='film', weight_decay=.01, horizon=64, beta1=.9):
+          lr=1e-4, warmup=0, cosine=False, ema=0., shift=0, save_every=0, arch='film', weight_decay=.01, horizon=64, beta1=.9,
+          pretrained=False, crop=1., color=0.):
     if steps<1: raise ValueError('Positive steps required')
     output=Path(output)
     if output.exists(): raise FileExistsError(output)
@@ -153,7 +194,7 @@ def train(path, output, steps=10000, batch_size=8, width=64, seed=0, device='cpu
     valid_batches=list(DataLoader(torch.utils.data.Subset(valid,range(0,len(valid),8)),batch_size=64))
     loader=DataLoader(dataset,batch_size=batch_size,shuffle=True,num_workers=workers,drop_last=True,
                       persistent_workers=workers>0,pin_memory=device.startswith('cuda'))
-    model=VisualDenoiser(width,arch).to(device);optimizer=torch.optim.AdamW(model.parameters(),lr=lr,betas=(beta1,.999),weight_decay=weight_decay)
+    model=VisualDenoiser(width,arch,pretrained,crop,load_weights=True).to(device);optimizer=torch.optim.AdamW(model.parameters(),lr=lr,betas=(beta1,.999),weight_decay=weight_decay)
     average=copy.deepcopy(model).requires_grad_(False) if ema>0 else model
     def factor(step):
         f=min(1.,(step+1)/warmup) if warmup else 1.
@@ -164,7 +205,8 @@ def train(path, output, steps=10000, batch_size=8, width=64, seed=0, device='cpu
     def save(target,step):
         report={'schema':'furry-visual-dp-baseline-v1','dataset_sha256':digest(path),'steps':step,
                 'train_episodes':dataset.names,'samples':len(dataset),'action_dim':ACTION_DIM,'obs_horizon':2,'prediction_horizon':horizon,
-                'encoder':'ResNet18 from scratch (not R3M)','arch':arch,'width':width,'weight_decay':weight_decay,'beta1':beta1,'seed':seed,'batch_size':batch_size,
+                'encoder':'ResNet18 ImageNet, frozen BatchNorm' if pretrained else 'ResNet18 from scratch (not R3M)',
+                'pretrained':pretrained,'crop':crop,'color':color,'arch':arch,'width':width,'weight_decay':weight_decay,'beta1':beta1,'seed':seed,'batch_size':batch_size,
                 'lr':lr,'warmup':warmup,'cosine':cosine,'ema':ema,'shift':shift,
                 'model_weights':'EMA' if ema>0 else 'raw','loss_first':losses[0],'loss_last':losses[-1],
                 'loss_last_1000':float(np.mean(losses[-1000:])),'valid_conditioning':checks,
@@ -180,10 +222,10 @@ def train(path, output, steps=10000, batch_size=8, width=64, seed=0, device='cpu
         noise=torch.randn_like(action);times=torch.randint(0,len(schedule),(len(action),),device=device)
         alpha=schedule[times,None,None]
         noisy=alpha.sqrt()*action+(1-alpha).sqrt()*noise
-        rgb=random_shift(batch['rgb'],shift)
+        rgb=augment(random_shift(batch['rgb'],shift),crop,color)
         # bf16 only for the image encoder; the action denoiser stays in float32.
         with torch.autocast('cuda',torch.bfloat16,enabled=device.startswith('cuda')):
-            features=model.encoder(rgb.flatten(0,1)).float().reshape(len(action),rgb.shape[1],-1)
+            features=model.encode(rgb.flatten(0,1)).float().reshape(len(action),rgb.shape[1],-1)
         prediction=model.denoiser(noisy,times,torch.cat((features,batch['command']),dim=-1))
         loss=((prediction-noise).square()*batch['mask'][...,None]).sum()/(batch['mask'].sum()*ACTION_DIM)
         if not torch.isfinite(loss): raise RuntimeError('Nonfinite training loss')
@@ -215,10 +257,14 @@ def main():
     p.add_argument('--arch',choices=('film','unet'),default='film',help='film: small FURRY denoiser; unet: Diffusion Policy ConditionalUnet1D')
     p.add_argument('--weight-decay',type=float,default=.01);p.add_argument('--beta1',type=float,default=.9)
     p.add_argument('--horizon',type=int,default=64,help='predicted chunk length (unet needs a multiple of 4)')
+    p.add_argument('--pretrained',action='store_true',help='ImageNet ResNet18 (frozen BatchNorm) instead of from scratch')
+    p.add_argument('--crop',type=float,default=1.,help='random crop fraction in training, centre crop in evaluation')
+    p.add_argument('--color',type=float,default=0.,help='brightness/contrast/saturation jitter amplitude')
     a=p.parse_args();torch.set_num_threads(a.threads)
     print(json.dumps(train(a.dataset,a.output,a.steps,a.batch_size,a.width,device=a.device,workers=a.workers,in_memory=a.in_memory,
                            lr=a.lr,warmup=a.warmup,cosine=a.cosine,ema=a.ema,shift=a.shift,save_every=a.save_every,
-                           arch=a.arch,weight_decay=a.weight_decay,horizon=a.horizon,beta1=a.beta1),indent=2))
+                           arch=a.arch,weight_decay=a.weight_decay,horizon=a.horizon,beta1=a.beta1,
+                           pretrained=a.pretrained,crop=a.crop,color=a.color),indent=2))
 
 
 if __name__=='__main__': main()
