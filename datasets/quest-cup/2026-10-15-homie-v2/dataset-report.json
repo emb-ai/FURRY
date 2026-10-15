@@ -1,0 +1,1013 @@
+{
+  "episodes": [
+    {
+      "episode": "episode-1792058834151648",
+      "demo": "demo_0",
+      "samples": 287,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "6fa0bb1d4cf707e435c1d947a823183a133b83a6c840b62ac0e628d7bfbaad99"
+    },
+    {
+      "episode": "episode-1792058853043058",
+      "demo": "demo_1",
+      "samples": 361,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "afe3de39b04acdb42a9a1773e9a6a524d168caeeb917abc7a054568894506140"
+    },
+    {
+      "episode": "episode-1792058872252501",
+      "demo": "demo_2",
+      "samples": 386,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "4d9edfc752f0ffa02bb662272e618d99546464ddf77b608c9282e36ff6f54fcc"
+    },
+    {
+      "episode": "episode-1792058891268205",
+      "demo": "demo_3",
+      "samples": 270,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "1c495ad18ae214d16521dc10f90f15d0594d68d0460836b7dee1091333c5dcf9"
+    },
+    {
+      "episode": "episode-1792058905480017",
+      "demo": "demo_4",
+      "samples": 307,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "b5ae8536b466925f17d832ae79fb590a099f96272c667a85e964b0e68b59ed46"
+    },
+    {
+      "episode": "episode-1792058922652455",
+      "demo": "demo_5",
+      "samples": 287,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "265e0c38d95a739df2e2986b92ac1738d968e8b39c0ff3d6e758006961f32c71"
+    },
+    {
+      "episode": "episode-1792058939435029",
+      "demo": "demo_6",
+      "samples": 300,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "828022dd0bfaaced701a748bb9e309032a459b71a0ea407b9cdf4a30112e05ca"
+    },
+    {
+      "episode": "episode-1792058958764795",
+      "demo": "demo_7",
+      "samples": 300,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "d5573e09ac7fda323310aaced78358f819a0fb4bc21606c3e55f5e695e006822"
+    },
+    {
+      "episode": "episode-1792058974761240",
+      "demo": "demo_8",
+      "samples": 240,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "9210ee5a2bbf5b84067e3e67e41c0c9eef91326fa37242cbd33d6c95c5462105"
+    },
+    {
+      "episode": "episode-1792058989334921",
+      "demo": "demo_9",
+      "samples": 259,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "257deae24d7b493ee28889a52c3da8f3163be17858e8813abca4104da9c1a8fe"
+    },
+    {
+      "episode": "episode-1792059002004670",
+      "demo": "demo_10",
+      "samples": 243,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "0bb6c886494b19f6415122924aaafb737fc51c776f2a7748b5359ef4a25cb56b"
+    },
+    {
+      "episode": "episode-1792059014728941",
+      "demo": "demo_11",
+      "samples": 247,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "8c7c460f10732e3b47e0647242195acd8d5f39f8502b7b5d64b62fa45b8a35dd"
+    },
+    {
+      "episode": "episode-1792059026156239",
+      "demo": "demo_12",
+      "samples": 217,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "d6ab811d2d4fd73fd4b49d834044578a4117a5235e75dbb9beea243552800fd0"
+    },
+    {
+      "episode": "episode-1792059051056344",
+      "demo": "demo_13",
+      "samples": 285,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "71a50b659025306b53ff10c4be8a7d30f884073b6d706bcd573e6fd95dffd72e"
+    },
+    {
+      "episode": "episode-1792059068945238",
+      "demo": "demo_14",
+      "samples": 191,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "8292a0d118f6c560bf6d5be8bcfc905f08d37bac05c4bc02aa7c732de2f0b2f4"
+    },
+    {
+      "episode": "episode-1792059080082046",
+      "demo": "demo_15",
+      "samples": 206,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "d983eb3fc60e45f722e403ff1f6f6fde427e22ff08b4a1db500fbf3d2f8f66af"
+    },
+    {
+      "episode": "episode-1792059112053736",
+      "demo": "demo_16",
+      "samples": 238,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "e30afbe219f93845c7f49611295fc2ccdb14d3285a1ea4b70a97d1a61ea22dc2"
+    },
+    {
+      "episode": "episode-1792059125165932",
+      "demo": "demo_17",
+      "samples": 246,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "27f28a6567bb800aeb5caf2743997ca8d1c5bfa957e15c44649763c2a41d0bbe"
+    },
+    {
+      "episode": "episode-1792059146292467",
+      "demo": "demo_18",
+      "samples": 265,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "9ffeb702f8b301b07fc9108e8feee2b0c6a3beb12e04695b9066eca2bb175763"
+    },
+    {
+      "episode": "episode-1792059159294932",
+      "demo": "demo_19",
+      "samples": 273,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "fa7e2d44210ba033f27c04762a496e11e732c83ac2f67c0beca606cfb0934053"
+    },
+    {
+      "episode": "episode-1792059175076709",
+      "demo": "demo_20",
+      "samples": 293,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "a2c1c5cf182a73b3bbd5b9ec7f352b4a78b5b4e02d5872cf917c5379bb8560ce"
+    },
+    {
+      "episode": "episode-1792059205826193",
+      "demo": "demo_21",
+      "samples": 315,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "4e3973ac6c7ec3062c1d084301b781cea943d4b8c5e76ba4e462efbabc77291c"
+    },
+    {
+      "episode": "episode-1792059222732246",
+      "demo": "demo_22",
+      "samples": 237,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "ff55d26c1dff710156640619f506d05d8da750f1747becce846a4d6bbd1dd921"
+    },
+    {
+      "episode": "episode-1792059237505575",
+      "demo": "demo_23",
+      "samples": 296,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "c16046d5ba444bdad6e9dd89547cc987310f7f35febd9c6e9973fb6ccc31e2c2"
+    },
+    {
+      "episode": "episode-1792059256525492",
+      "demo": "demo_24",
+      "samples": 302,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "a29a95307c3443b93181ddecef37308909b52e469b7cf0fefcaf78540d83b57a"
+    },
+    {
+      "episode": "episode-1792059271003370",
+      "demo": "demo_25",
+      "samples": 233,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "b70786fc0aea3ebb5607265d5d7facb2039c037c2ce2af63fe94a528f0147f7f"
+    },
+    {
+      "episode": "episode-1792059281946188",
+      "demo": "demo_26",
+      "samples": 311,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "1488a2097295ca09bd7a1a8fbf1246b94ecc69651eeb2c8c89dcce76c1076058"
+    },
+    {
+      "episode": "episode-1792059298697703",
+      "demo": "demo_27",
+      "samples": 254,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "5c2b2f00dc2cf9e7e87697e7bee7b00a0799e5559c113e539727e1a1cae0e83a"
+    },
+    {
+      "episode": "episode-1792059316831054",
+      "demo": "demo_28",
+      "samples": 294,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "95c6a64142952ec69ca39eb62640f7143ee43fecd68208e68fe8adf7ae0055d2"
+    },
+    {
+      "episode": "episode-1792059351364041",
+      "demo": "demo_29",
+      "samples": 296,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "4e0f40d96bb25ac17096cfd868ace62c1de902b2e413eee84fff5ca8494f5d17"
+    },
+    {
+      "episode": "episode-1792059364849329",
+      "demo": "demo_30",
+      "samples": 318,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "7e20d2243a70e4c9d27942ccaf8a8edba275d840eaaad8d347df7baa38f306c7"
+    },
+    {
+      "episode": "episode-1792059380002841",
+      "demo": "demo_31",
+      "samples": 281,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "a4b0c6faf2ff70c0f0c48b1321d5c884f82431fc9c1754f74e8e891a7968785d"
+    },
+    {
+      "episode": "episode-1792059400651712",
+      "demo": "demo_32",
+      "samples": 334,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "6d6aeabbf3f66ef0e864ad24204dc9adc155cf207e79318f7fea5e1008772d5a"
+    },
+    {
+      "episode": "episode-1792059418003475",
+      "demo": "demo_33",
+      "samples": 276,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "f4c867d7f842ad83a8028b3fa051f51a48914d4655c7aab221c39ef88e8430bd"
+    },
+    {
+      "episode": "episode-1792059456042831",
+      "demo": "demo_34",
+      "samples": 373,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "0adf37b41361ad69241dcc92a382d5ed7e64f3de80b7d7bceca79a680e928bf7"
+    },
+    {
+      "episode": "episode-1792059472765904",
+      "demo": "demo_35",
+      "samples": 403,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "8f275fe9548a64d6090b34c22cba4b535ca647f2299baeb8d25eea5b7d7c2bff"
+    },
+    {
+      "episode": "episode-1792059504367237",
+      "demo": "demo_36",
+      "samples": 247,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "faeb5b70dcc704f4a47ac5e8f2759c20ebcff43aad9f31de4931862c7817ac28"
+    },
+    {
+      "episode": "episode-1792059515750954",
+      "demo": "demo_37",
+      "samples": 230,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "565722ca7b34ac11e6ea1c4d4d5781ee9a0be49aaa28154aca15a68ce279ec5a"
+    },
+    {
+      "episode": "episode-1792059540875476",
+      "demo": "demo_38",
+      "samples": 293,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "d4e182164c7bddd3e4063876eb231b44b41a19002106b53e978843394d908840"
+    },
+    {
+      "episode": "episode-1792059566297064",
+      "demo": "demo_39",
+      "samples": 245,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "035f809972503c1755ebbf8bd81a4ef2c0bbc0126567aa47347102c267b6ee38"
+    },
+    {
+      "episode": "episode-1792059578611258",
+      "demo": "demo_40",
+      "samples": 260,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "5a7bd6b94417f1d0f3ced07045cdeca19f8cc46bcf39267992829fc37033c82f"
+    },
+    {
+      "episode": "episode-1792059590200464",
+      "demo": "demo_41",
+      "samples": 199,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "9b8e1a5e9cb79cbd9e6e01adeb903853af2e2e084be308843a52780056a003c9"
+    },
+    {
+      "episode": "episode-1792059602613266",
+      "demo": "demo_42",
+      "samples": 217,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "1796e127ba162799993bac4a269b7ed62a1526e2e63383db4948c500ea518407"
+    },
+    {
+      "episode": "episode-1792059614094080",
+      "demo": "demo_43",
+      "samples": 251,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "d1f09400872dc3058e95cb8ecce7b1808120c2670662bc57205eb8e81a1fc294"
+    },
+    {
+      "episode": "episode-1792059637639898",
+      "demo": "demo_44",
+      "samples": 255,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "cbb928c38a9e66b89bdd06120316b28fd3677e7a757e98e5d99146b1a2a51127"
+    },
+    {
+      "episode": "episode-1792059649817034",
+      "demo": "demo_45",
+      "samples": 272,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "9b536579c2715195c5795ae264b75045722f8b0313aea8fd96f4e14fac464c90"
+    },
+    {
+      "episode": "episode-1792059662719648",
+      "demo": "demo_46",
+      "samples": 237,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "ef206885270de2a16801ac46503bc1cc503afb30b9b8f9bb3df4aed04decbfba"
+    },
+    {
+      "episode": "episode-1792059674649611",
+      "demo": "demo_47",
+      "samples": 175,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "7e96483eb94df7c69cac75e06a33eb5823f998f68eab45831ccc6f6732ebd392"
+    },
+    {
+      "episode": "episode-1792059683146607",
+      "demo": "demo_48",
+      "samples": 250,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "a3cf3c12a0b959d0ab02f751faddace53477f0cc5834dd788a507d21df9a537f"
+    },
+    {
+      "episode": "episode-1792059694167464",
+      "demo": "demo_49",
+      "samples": 221,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "fd340751acbc30bdc89e463434a0e245c273db1f5634746bccc7d7bcd6a651ac"
+    },
+    {
+      "episode": "episode-1792059704931688",
+      "demo": "demo_50",
+      "samples": 268,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "eff5652dc05b3b00831c9db4885c9c0b75cbe71f2ac28aed17b66bde4a5a8ecb"
+    },
+    {
+      "episode": "episode-1792059729109709",
+      "demo": "demo_51",
+      "samples": 256,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "61ebf78aa74eb8819826cb0aad0832503a557bcc19646a40f1dbbb98e42d6d32"
+    },
+    {
+      "episode": "episode-1792059755567594",
+      "demo": "demo_52",
+      "samples": 263,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "b6beb8223885a9b1effa60b587663030c15198c142f56b3f53d79369a1b22680"
+    },
+    {
+      "episode": "episode-1792059766900933",
+      "demo": "demo_53",
+      "samples": 375,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "f971ce7def10e26a66856298ea85179b5ad64863cacefb9f8b403d91bd70af31"
+    },
+    {
+      "episode": "episode-1792059782700516",
+      "demo": "demo_54",
+      "samples": 253,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "f547301b309be7290e91a19759c340f724f49c64a234ce1499b87bae013f0bb8"
+    },
+    {
+      "episode": "episode-1792059793964908",
+      "demo": "demo_55",
+      "samples": 269,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "4cf807cf92cb08b0b2ab7b081114bff09b8ca1779aa95c58c9575ddb7055cd49"
+    },
+    {
+      "episode": "episode-1792059807644358",
+      "demo": "demo_56",
+      "samples": 241,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "e339f97bf07a1a380334818827a459e565974bf7ce2c6a623b3791761ba1e424"
+    },
+    {
+      "episode": "episode-1792059833869279",
+      "demo": "demo_57",
+      "samples": 329,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "0bd4a8283147cbfe2e1716aab1111414fb3460fb3b2928efbc1bb93e31673b62"
+    },
+    {
+      "episode": "episode-1792059849292471",
+      "demo": "demo_58",
+      "samples": 212,
+      "family": {
+        "policy_id": "homie-v2",
+        "policy_backend": "groot_decoupled_v1",
+        "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+        "input_patch": null,
+        "catch_up": true,
+        "scene": "cup",
+        "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+        "camera_mode": "robot_head_pan_tilt_v1"
+      },
+      "identity": "cf0728efdfa0b9ae5b83c8aa582b1757d1c534840ee0eae62a6051f04cc64aae"
+    }
+  ],
+  "all_accepted_in_train": true,
+  "validation": "10 independently sampled native scenes, fixed seeds; no held-out demonstrations",
+  "fps": 30,
+  "sha256": "05376522259b4eb9091a80d41a31b0a768b3933349a231d69de5580fdb32b9cd",
+  "seconds": 315.8253071308136,
+  "frames": 16042
+}

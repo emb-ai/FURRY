@@ -16,3 +16,5 @@ datasets/quest-bimanual/**/raw/**/*.mjb filter=lfs diff=lfs merge=lfs -text
 datasets/quest-bimanual/**/raw/**/*.onnx filter=lfs diff=lfs merge=lfs -text
 datasets/quest-bimanual/**/raw/**/*.jsonl filter=lfs diff=lfs merge=lfs -text
 datasets/quest-bimanual/**/rendered/*.hdf5 filter=lfs diff=lfs merge=lfs -text
+
+datasets/quest-cup/**/rendered/*.hdf5.part* filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,8 @@
+{
+  "episodes": 59,
+  "frames": 16042,
+  "all_train": true,
+  "actions_finite": true,
+  "previous_commands_exact": true,
+  "sha256": "05376522259b4eb9091a80d41a31b0a768b3933349a231d69de5580fdb32b9cd"
+}
