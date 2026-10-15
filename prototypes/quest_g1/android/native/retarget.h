@@ -46,6 +46,11 @@ struct TrackingFrame {
     std::array<bool,2> hand_active{};
 };
 
+inline bool ControllerPosesValid(const TrackingFrame& frame){
+    return frame.hand_active[0]&&frame.hand_active[1]&&
+        (frame.location_flags[1]&3)==3&&(frame.location_flags[2]&3)==3;
+}
+
 // Quest adaptation of TWIST2's tracked-pose -> robot reference -> policy path.
 // This is bounded native wrist IK, not the upstream full-body GMR/PICO solver.
 class ArmRetargeter {

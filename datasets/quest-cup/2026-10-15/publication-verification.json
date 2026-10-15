@@ -1,0 +1,21 @@
+{
+  "rebuilt_episode": "episode-1792014836827567",
+  "rebuilt_frames": 246,
+  "all_rgb_actions_timestamps_exact": true,
+  "device_hashes_matched": 1180,
+  "device_hashes_missing": [],
+  "device_hashes_mismatched": [],
+  "raw_files": 1180,
+  "raw_episodes": 59,
+  "published_rgb_episodes": 44,
+  "published_rgb_frames": 12982,
+  "train_episodes": 40,
+  "validation_episodes": 4,
+  "control_render_frames_exact": 12,
+  "full_video_decode_passed": [
+    "training-camera.mp4",
+    "recorded-camera-failure.mp4"
+  ],
+  "render_platform": "macOS, MuJoCo 3.3.7, numpy 2.2.6, Pillow 12.3.0",
+  "device_sha_receipt": "Read from Quest 3 before installation on 2026-10-15; all raw file SHA256 matched"
+}

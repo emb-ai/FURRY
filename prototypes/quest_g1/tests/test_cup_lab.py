@@ -1,4 +1,5 @@
 """Physical mug cavity/handle, supported placement and native cue checks."""
+import copy
 import os
 from pathlib import Path
 import shutil
@@ -12,6 +13,7 @@ import mujoco
 import numpy as np
 
 from g1_sim.controller import Controller
+from g1_sim.cup_lab import CUP_XY_SCALE, CUP_MASS_KG
 from g1_sim.scene import make_model
 
 
@@ -26,10 +28,10 @@ class CupLabTests(unittest.TestCase):
         cup=m.body("cup").id;origin=d.xpos[cup].copy();q=int(m.joint("probe_joint").qposadr[0]);probe=m.geom("probe").id
         for point,touch in [((0,0,.05),False),((.064,0,.05),False),((.0395,0,.05),True),((.091,0,.05),True)]:
             with self.subTest(point=point):
-                d.qpos[q:q+3]=origin+point;d.qpos[q+3:q+7]=[1,0,0,0];mujoco.mj_forward(m,d)
+                d.qpos[q:q+3]=origin+np.array(point)*[CUP_XY_SCALE,CUP_XY_SCALE,1];d.qpos[q+3:q+7]=[1,0,0,0];mujoco.mj_forward(m,d)
                 contacts=[c for c in d.contact if probe in (c.geom1,c.geom2) and cup in (m.geom_bodyid[c.geom1],m.geom_bodyid[c.geom2])]
                 self.assertEqual(bool(contacts),touch)
-        self.assertAlmostEqual(float(m.body_mass[cup]),.24,places=12)
+        self.assertAlmostEqual(float(m.body_mass[cup]),CUP_MASS_KG,places=12)
 
     def test_new_mug_settles_on_bench_at_multiple_yaws(self):
         m,_=make_model("cup");d=mujoco.MjData(m);controller=Controller(m)
@@ -44,6 +46,33 @@ class CupLabTests(unittest.TestCase):
                 self.assertLess(abs(d.xpos[m.body("cup").id,2]-.75),.006)
                 self.assertGreater(d.xmat[m.body("cup").id,8],.98)
                 self.assertEqual(sum(w.number for w in d.warning),0)
+
+    def test_flat_bottom_stays_settled_without_relaxing_success_threshold(self):
+        # Isolate only the physical mug and its real bench; no pose constraints.
+        _, xml = make_model("cup")
+        source = ET.fromstring(xml)
+        root = ET.Element("mujoco")
+        for name in ("compiler", "option", "asset"):
+            root.append(copy.deepcopy(source.find(name)))
+        world = ET.SubElement(root, "worldbody")
+        for name in ("table", "cup"):
+            world.append(copy.deepcopy(source.find(f".//body[@name='{name}']")))
+        m = mujoco.MjModel.from_xml_string(ET.tostring(root, encoding="unicode"))
+        d = mujoco.MjData(m)
+        self.assertTrue(m.opt.enableflags & int(mujoco.mjtEnableBit.mjENBL_MULTICCD))
+        for tilt in (-.07, 0., .07):
+            mujoco.mj_resetData(m, d)
+            d.qpos[:3] = [.43, 0., .77]
+            d.qpos[3:7] = [np.cos(tilt/2), np.sin(tilt/2), 0., 0.]
+            mujoco.mj_forward(m, d)
+            settled = 0.
+            for step in range(6000):
+                mujoco.mj_step(m, d)
+                if step >= 5000:
+                    stable = np.linalg.norm(d.qvel[:3]) < .06 and np.linalg.norm(d.qvel[3:]) < .25
+                    settled = settled + m.opt.timestep if stable else 0.
+            self.assertGreater(settled, .9)
+            self.assertGreaterEqual(d.ncon, 3)
 
     def test_room_decorations_do_not_add_physical_obstacles(self):
         m,_=make_model("cup")

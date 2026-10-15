@@ -51,4 +51,13 @@ class Yaw(G1MimicFuture):pass
 install(Yaw,1.,True)
 b=make(G1MimicFuture)._reward_feet_air_time();c=make(Yaw)._reward_feet_air_time()
 assert torch.equal(b[:2],c[:2]) and torch.equal(b[2:],torch.zeros(2)) and (c[2:]<0).all()
-print({'passed':True,'source_reward_methods':checked,'checks':['coefficient1 source identity','idle unchanged','upper-body unchanged','lower pose termination relaxed only during movement','upper/safety termination preserved','yaw both signs airtime active']})
+class Hip(G1MimicFuture):pass
+install(Hip,1.,False,hip_weight=3.)
+assert Hip.check_termination is G1MimicFuture.check_termination and Hip._error_tracking_joint_dof is G1MimicFuture._error_tracking_joint_dof
+h=make(Hip);w=h._leg_joint_reward_weights()
+assert w[:,[1,2,7,8]].eq(3).all() and w[:,[0,3,4,5,6,9,10,11]].eq(1).all() and w[:,12:].eq(1).all()
+assert torch.all(h._reward_tracking_joint_dof()<make(G1MimicFuture)._reward_tracking_joint_dof()),'hip roll/yaw errors not up-weighted'
+class RelaxHip(G1MimicFuture):pass
+install(RelaxHip,.25,False,hip_weight=2.)
+w=make(RelaxHip)._leg_joint_reward_weights();assert w[0,1]==2 and w[1,1]==.5 and w[1,0]==.25
+print({'passed':True,'source_reward_methods':checked,'checks':['coefficient1 source identity','idle unchanged','upper-body unchanged','lower pose termination relaxed only during movement','upper/safety termination preserved','yaw both signs airtime active','hip roll/yaw reward weight only']})

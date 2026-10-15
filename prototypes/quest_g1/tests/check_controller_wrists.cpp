@@ -53,6 +53,59 @@ int main(int argc,char** argv){
         Check(RotationError(expected,solver.Targets()[12].quaternion.data())<1e-9,"Controller rotation axis changed");
         changed.hand_active[0]=false;changed.xr_time_ns+=10000000;bool rejected=false;
         try{meta.Solve(changed);}catch(const std::exception&){rejected=true;}
-        Check(rejected,"Lost controller treated as a pose");mj_deleteData(d);std::cout<<"Controller wrist position, rotation, independence and loss checks passed\n";
+        Check(rejected,"Lost controller treated as a pose");
+        meta.EnableControllerStageTargets(true);meta.EnableCameraTracking(true);meta.Calibrate(sim.model,sim.data,input);
+        changed=input;changed.xr_time_ns+=100000000;changed.hands[0].position[0]+=.07;changed.hands[0].position[1]+=.09;meta.Solve(changed);
+        auto absolute=solver.Targets();
+        const auto& cam=meta.CameraCalibrationPose();const auto& head=meta.HeadCalibrationPose();const auto* basis=meta.StageToRobotRotation();
+        for(int h=0;h<2;h++){
+            double rel[3],projected[3],palm[3];mju_rotVecQuat(palm,meta.ControllerGripOffset(h).data(),absolute[12+h].quaternion.data());
+            for(int k=0;k<3;k++)rel[k]=absolute[12+h].position[k]+palm[k]-cam.position[k];mju_mulMatTVec(projected,basis,rel,3,3);
+            for(int k=0;k<3;k++)Check(std::abs(head.position[k]+meta.VisualScale()*projected[k]-changed.hands[h].position[k])<1e-9,"Absolute controller target does not match rendered STAGE frame");
+        }
+        auto distorted=changed;distorted.xr_time_ns+=10000000;
+        distorted.body.joints[0].position[0]+=.1;
+        distorted.body.joints[12].position[1]-=.3;distorted.body.joints[12].quaternion={0,1,0,0};meta.Pause();meta.Solve(distorted);
+        for(int h=0;h<2;h++){
+            Check(PositionError(absolute[12+h],solver.Targets()[12+h])<1e-9,"Body/pause changed absolute controller positions");
+            Check(RotationError(absolute[12+h].quaternion.data(),solver.Targets()[12+h].quaternion.data())<1e-9,"Body/pause changed controller rotation calibration");
+        }
+        Check(ControllerPosesValid(distorted),"Valid controllers gated off runtime reference");
+        auto lost=distorted;lost.xr_time_ns+=10000000;lost.hand_active[0]=false;
+        Check(!ControllerPosesValid(lost),"Inactive controller passed runtime gate");rejected=false;try{meta.Solve(lost);}catch(...){rejected=true;}Check(rejected,"Stage controller tracking loss accepted");
+        Check(meta.calibrated,"Controller loss erased rigid calibration");
+        auto invalidPose=distorted;invalidPose.location_flags[1]=1;
+        Check(!ControllerPosesValid(invalidPose),"Missing controller position passed runtime gate");
+        meta.Pause();distorted.xr_time_ns+=20000000;meta.Solve(distorted);
+        Check(RotationError(absolute[12].quaternion.data(),solver.Targets()[12].quaternion.data())<1e-9,"Controller recovery changed wrist orientation");
+        // Calibrating in a raised source pose and then assuming the same pose
+        // as a down-arm calibration must produce the same hand orientation.
+        MetaRetargeter down(argv[1]),up(argv[1]),physicalVariant(argv[1]),oldDown(argv[1]),oldUp(argv[1]);
+        for(auto* candidate:{&down,&up,&physicalVariant,&oldDown,&oldUp}){
+            candidate->EnableControllerStageTargets(true);candidate->EnableCameraTracking(true);
+        }
+        for(auto* candidate:{&down,&up,&physicalVariant})candidate->EnableControllerAnatomicalFrame(true);
+        auto raised=input;double raise[4]={std::cos(.8),std::sin(.8),0,0};
+        for(int h=0;h<2;h++){
+            double q[4];mju_mulQuat(q,raise,input.hands[h].quaternion.data());mju_copy(raised.hands[h].quaternion.data(),q,4);
+            mju_mulQuat(q,raise,input.body.joints[10+h].quaternion.data());mju_copy(raised.body.joints[10+h].quaternion.data(),q,4);
+            raised.hands[h].position[1]+=.6;raised.body.joints[12+h].position[1]+=.6;
+        }
+        down.Calibrate(sim.model,sim.data,input);up.Calibrate(sim.model,sim.data,raised);
+        oldDown.Calibrate(sim.model,sim.data,input);oldUp.Calibrate(sim.model,sim.data,raised);
+        sim.data->qpos[sim.model->jnt_qposadr[rollJoint]]+=.8;
+        physicalVariant.Calibrate(sim.model,sim.data,input);
+        auto common=input;common.xr_time_ns=common.body.time_ns=5000000000LL;
+        for(auto* candidate:{&down,&up,&physicalVariant,&oldDown,&oldUp})candidate->Solve(common);
+        double oldPoseError=0;
+        for(int h=0;h<2;h++){
+            const auto* expected=down.solver().Targets()[12+h].quaternion.data();
+            Check(RotationError(expected,up.solver().Targets()[12+h].quaternion.data())<1e-9,"Raised-arm calibration changes subsequent hand frame");
+            Check(RotationError(expected,physicalVariant.solver().Targets()[12+h].quaternion.data())<1e-9,"Physical wrist pose leaked into anatomical calibration");
+            oldPoseError=std::max(oldPoseError,RotationError(oldDown.solver().Targets()[12+h].quaternion.data(),oldUp.solver().Targets()[12+h].quaternion.data()));
+        }
+        Check(oldPoseError>1,"Fixture did not reproduce legacy raised-arm bug");
+        std::cout<<"Raised/down calibration invariant; legacy discrepancy_rad="<<oldPoseError<<"\n";
+        mj_deleteData(d);std::cout<<"Controller wrist position, rotation, independence and loss checks passed\n";
     }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}
 }

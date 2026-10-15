@@ -3,7 +3,10 @@
 Explicit finetune changes: pretrained/frozen actor normalization, new critic
 normalization and requested critic-only warmup. PPO/std settings come from source.
 Optional window reward and sole URDF are explicit experiment overrides.
-No teacher, catch-up, whole-run KL stop, or custom simulator approximation.
+No teacher, whole-run KL stop, or custom simulator approximation. Optional
+actor-side catch-up (catch_up.py, the headset servo) and lower-body/hip reward
+weights are pinned by the experiment config, as is the optional lifted-foot
+penalty (lift_follow, build_lift.py table).
 """
 import argparse
 import hashlib
@@ -29,6 +32,10 @@ def main():
     p.add_argument('--resume', action='store_true', help='Restore full actor/critic/std/Adam from init checkpoint; total iterations target')
     p.add_argument('--init-checkpoint', type=Path, help='Initialize actor, frozen normalization and exploration std from this checkpoint')
     p.add_argument('--init-manifest', type=Path, help='Exact training manifest recorded in the initialization checkpoint')
+    p.add_argument('--catch-up', type=float, default=0., help='Fraction of envs (per reset) whose actor command gets the headset catch-up servo; 0 = off')
+    p.add_argument('--hip-yaw-roll-weight', type=float, default=1., help='Hip roll/yaw multiplier in joint pose/velocity rewards')
+    p.add_argument('--lift-table', type=Path, help='build_lift.py reference sole clearance (Quest TRAIN clips)')
+    p.add_argument('--lift-penalty', type=float, default=0., help='Weight of lift_follow: contact/shortfall while the reference foot is up; 0 = off')
     p.add_argument('--window-reward', action='store_true', help='One-second displacement/turn penalty; 9 extra critic features; no catch-up')
     p.add_argument('--sole-urdf', type=Path, help='Derived URDF with main sole spheres and unchanged dynamics')
     p.add_argument('--smoke', action='store_true', help='Only 2 critic updates + 1 actor update in disposable output; not critic readiness')
@@ -45,8 +52,16 @@ def main():
     root = a.root.resolve(); out = a.output.resolve()
     experiment = json.loads(a.experiment_config.read_text())
     experiment_sha = hashlib.sha256(a.experiment_config.read_bytes()).hexdigest()
-    if a.lower_body_coefficient != .25 or a.yaw_airtime or a.leg_faults or not (a.nonlooping and a.window_reward):
-        raise ValueError('ABC common contract requires relax .25, nonlooping/window, no yaw hook or leg faults')
+    if a.lower_body_coefficient != experiment.get('lower_body_coefficient', .25) or a.yaw_airtime or a.leg_faults or not (a.nonlooping and a.window_reward):
+        raise ValueError('Common contract: lower-body relax as pinned (default .25), nonlooping/window, no yaw hook or leg faults')
+    if a.catch_up != experiment.get('catch_up_fraction', 0.) or a.hip_yaw_roll_weight != experiment.get('hip_yaw_roll_weight', 1.):
+        raise ValueError('Catch-up fraction or hip roll/yaw weight differ from frozen experiment')
+    if a.lift_penalty != experiment.get('lift_penalty_weight', 0.) or bool(a.lift_penalty) != bool(a.lift_table):
+        raise ValueError('Lift penalty differs from frozen experiment, or lift table and weight disagree')
+    if a.lift_table and hashlib.sha256(a.lift_table.read_bytes()).hexdigest() != experiment.get('lift_table_sha256'):
+        raise ValueError('Lift table differs from frozen experiment')
+    if a.catch_up and not a.actor_command_bank:
+        raise ValueError('Catch-up is applied in the native actor-input adapter; it needs --actor-command-bank')
     # A/B/C contract: 5000 actor updates from 111260/1000. A camera-leg experiment
     # config may pin another length and initial actor; the experiment hash freezes both.
     if not a.smoke and (a.iterations != experiment.get('actor_updates', 5000) or not experiment.get('pilot_passed')):
@@ -88,7 +103,7 @@ def main():
     if a.sole_urdf:
         cfg.asset.file = str(a.sole_urdf.resolve())
     from locomotion_ablation import install as install_locomotion, validate_contract
-    install_locomotion(G1MimicFuture, a.lower_body_coefficient, a.yaw_airtime)
+    install_locomotion(G1MimicFuture, a.lower_body_coefficient, a.yaw_airtime, hip_weight=a.hip_yaw_roll_weight)
     env, cfg = task_registry.make_env('g1_stu_future', args=args, env_cfg=cfg)
     locomotion_contract = validate_contract(env)
     locomotion_counts = torch.zeros(3, dtype=torch.long, device=env.device)
@@ -100,11 +115,14 @@ def main():
         from window_reward import install
         window_state = install(env)
     from contact_clearance import ContactClearance
-    contact_state = ContactClearance(env, experiment, a.sole_urdf, a.phase_table, root/'dataset')
-    input_state = None
+    contact_state = ContactClearance(env, experiment, a.sole_urdf, a.phase_table, root/'dataset', a.lift_table)
+    input_state = None; catch_state = None; transform = None
+    if a.catch_up:
+        from catch_up import install as install_catch_up
+        catch_state, transform = install_catch_up(env, a.catch_up, seed=args.seed+900)
     if a.actor_command_bank:
         from native_command_bank import install as install_native_commands
-        input_state = install_native_commands(env, a.actor_command_bank, root/'dataset')
+        input_state = install_native_commands(env, a.actor_command_bank, root/'dataset', transform=transform)
     critic_dim = env.num_privileged_obs + (window_state.feature_dim if window_state else 0) + contact_state.feature_dim
     def augment_priv(x):
         return torch.cat((x, window_state.features, contact_state.features), -1)
@@ -186,7 +204,11 @@ def main():
     config['locomotion_ablation']={'lower_body_coefficient':a.lower_body_coefficient,'yaw_airtime':a.yaw_airtime,'yaw_threshold_rad_s':.15,'linear_threshold_m_s':.05,'contract':locomotion_contract,'changed_reward_new_critic':not a.resume,'kick_t_intent_not_tested':True}
     config['performance']={'batched_rollout_metrics':not a.legacy_rollout_metrics,'critic_value_only_update':a.fast_critic,'actor_ppo_unchanged':True,'critic_rng_stream_matches_upstream':not a.fast_critic}
     config['initialization'] = {'checkpoint':str(a.init_checkpoint) if a.init_checkpoint else None, 'sha256':hashlib.sha256(a.init_checkpoint.read_bytes()).hexdigest() if a.init_checkpoint else None, 'actor_and_normalization_restored':bool(a.init_checkpoint), 'std_restored':bool(a.init_checkpoint), 'critic_restored':a.resume, 'optimizer_restored':a.resume, 'resume_report':resume_report, 'dataset_audit':lineage}
-    config['window_reward'] = {'enabled':a.window_reward, 'seconds':1., 'type':'dense Huber on progress since start of consecutive windows; separate initial heading frames', 'position_scale_m':.25, 'yaw_scale_rad':.5, 'position_weight':.25, 'yaw_weight':.25, 'critic_extra_features':critic_dim-env.num_privileged_obs, 'catch_up':False}
+    config['window_reward'] = {'enabled':a.window_reward, 'seconds':1., 'type':'dense Huber on progress since start of consecutive windows; separate initial heading frames', 'position_scale_m':.25, 'yaw_scale_rad':.5, 'position_weight':.25, 'yaw_weight':.25, 'critic_extra_features':critic_dim-env.num_privileged_obs, 'catch_up':bool(a.catch_up)}
+    config['catch_up'] = {'fraction':a.catch_up, 'servo':'camera_pose_servo.h v2: ref velocity in robot frame, +xy error (gain 1, cap .4, total .8 m/s), +3*yaw error (cap 1, total 1.2 rad/s)', 'goal':'reference root (headset: operator head)', 'actual':'robot root (headset: ego camera)', 'reset_frame':'no correction', 'reward_targets_changed':False} if a.catch_up else None
+    config['hip_yaw_roll_reward_weight'] = a.hip_yaw_roll_weight
+    config['lift_follow'] = {'weight': a.lift_penalty, 'table_sha256': experiment.get('lift_table_sha256'),
+                             'term': 'per foot while reference sole > 3 cm: contact (>5 N) + ((ref-robot)+/5 cm)^2 capped at 4; Quest TRAIN clips, all frames'}
     config['sole_urdf_sha256'] = hashlib.sha256(a.sole_urdf.read_bytes()).hexdigest() if a.sole_urdf else None
     (out/'config.json').write_text(json.dumps(config,indent=2,default=str))
     counts=torch.zeros(len(rows),device=env.device,dtype=torch.long)
@@ -249,6 +271,9 @@ def main():
         if input_state:
             n, total = input_state['counters'].tolist()
             record['native_command_fraction_cumulative'] = n/max(1, total)
+        if catch_state is not None:
+            n, dv, sat = catch_state.stats.tolist(); catch_state.stats.zero_()
+            record['catch_up'] = {'frames': int(n), 'mean_correction_m_s': dv/max(1, n), 'saturated_fraction': sat/max(1, n)}
         record['locomotion_samples'] = dict(zip(('moving','yaw_only','total'), map(int,locomotion_counts)))
         record['reward_components'] = contact_state.report()
         record['action_delay_distribution_steps'] = list(map(int,delay_counts))

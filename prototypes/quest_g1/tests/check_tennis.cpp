@@ -83,8 +83,8 @@ int main(int argc, char **argv) {
     task.Begin(d);
     task.Finish(m, d);
     Check(d->userdata[T::Serves] == 1 && d->userdata[T::Active], "First serve");
-    Near(T::Norm(task.velocity), 5.5, 1e-10, "Muzzle speed");
-    Near(d->userdata[T::NextServe], 111, 1e-12, "Serve interval");
+    Near(T::Norm(task.velocity), 4.6, 1e-10, "Muzzle speed");
+    Near(d->userdata[T::NextServe], 112, 1e-12, "Serve interval");
     bool bounce = false;
     double crossHeight = 0;
     for (int i = 0; i < 1200 && d->userdata[T::Active]; i++) {
@@ -111,8 +111,8 @@ int main(int argc, char **argv) {
           "Unhit ball counted");
     Ball(m, d, task, {2.2, 0, .7801}, {0, 0, -2}, true);
     Step(m, d, task);
-    Check(d->userdata[T::Returns] == 1 && !d->userdata[T::Active],
-          "Opponent landing not scored");
+    Check(d->userdata[T::Returns] == 1 && d->userdata[T::Active] == 3 && task.velocity[2]>0,
+          "Opponent landing must score AND bounce");
     Step(m, d, task);
     Check(d->userdata[T::Returns] == 1, "Duplicate score");
     Ball(m, d, task, {.95, 0, .7801}, {0, 0, -2}, true);
@@ -120,11 +120,13 @@ int main(int argc, char **argv) {
     Check(d->userdata[T::Misses] == 2, "Own-half return counted");
     Ball(m, d, task, {T::Mid + .028, 0, .85}, {-20, 0, 0}, true);
     Step(m, d, task);
-    Check(d->userdata[T::Misses] == 3, "Net miss");
+    Check(d->userdata[T::Misses] == 3 && task.velocity[0]>0 && d->userdata[T::Active]==2, "Net must reflect without hiding ball");
     Ball(m, d, task, {2.2, 1, .021}, {0, 0, -4}, true);
     Step(m, d, task);
-    Check(d->userdata[T::Misses] == 4, "Floor miss");
-    // A ball colliding with G1's physical collider is a miss.
+    Check(d->userdata[T::Misses] == 4 && task.velocity[2]>0 && d->userdata[T::Active]==2, "Floor must bounce without hiding ball");
+    for(int i=0;i<300;i++)Step(m,d,task);
+    Check(d->userdata[T::Misses]==4 && task.position[2]>=T::Radius-1e-5,"Post-miss flight/ground contact and score stability");
+    // G1 collision records a miss but leaves the ball physical.
     int robotGeom = -1;
     for (int g = 0; g < m->ngeom; g++)
       if (m->geom_contype[g] == 2) {
@@ -137,8 +139,37 @@ int main(int argc, char **argv) {
     double missed = d->userdata[T::Misses];
     Ball(m, d, task, robotPos, {0, 0, 0}, true);
     Step(m, d, task);
-    Check(d->userdata[T::Misses] == missed + 1,
-          "Robot-body hit did not end shot");
+    Check(d->userdata[T::Misses] == missed + 1 && d->userdata[T::Active]==2 && task.position[2]>0,
+          "Robot-body hit must retain physical ball");
+    // Contacts away from the tabletop must reflect, not despawn or tunnel.
+    struct WallCase { T::Vec pos, vel; int axis; const char* label; };
+    for(const auto& c : {
+        WallCase{{.344,.61,.4},{4,0,0},0,"table leg"},
+        WallCase{{3.129,0,.12},{4,0,0},0,"feeder chassis"},
+        WallCase{{.379,.3,.75},{4,0,0},0,"table edge"},
+        WallCase{{1.,.3,.709},{0,0,4},2,"table underside"}}) {
+      mj_resetData(m,d);mj_forward(m,d);task.Reset(m,d);
+      Ball(m,d,task,c.pos,c.vel,false);
+      bool reflected=false;
+      for(int i=0;i<80;i++) {
+        Step(m,d,task);
+        if(task.velocity[c.axis]<0){reflected=true;break;}
+      }
+      Check(reflected,c.label);
+      Check(d->userdata[T::Active]==2 && d->userdata[T::Misses]==1,"Obstacle must score once and keep ball");
+      std::cout << "reflected=" << c.label << "\n";
+    }
+    mj_resetData(m,d);mj_forward(m,d);task.Reset(m,d);
+    Ball(m,d,task,{1.,.3,.7801},{0,0,-2},false);
+    d->userdata[T::OwnBounces]=1;
+    Step(m,d,task);
+    Check(d->userdata[T::Misses]==1 && task.velocity[2]>0 && d->userdata[T::Active]==2,"Second bounce remains physical");
+    // A post-score snapshot retains physical ball and does not duplicate score.
+    auto* snapshot=mj_copyData(nullptr,m,d);T restored;restored.Initialize(m);
+    for(int i=0;i<30;i++){Step(m,d,task);Step(m,snapshot,restored);}
+    for(int k=0;k<m->nq;k++)Near(d->qpos[k],snapshot->qpos[k],1e-12,"Post-score snapshot state");
+    Check(snapshot->userdata[T::Misses]==1,"Snapshot duplicated result");
+    mj_deleteData(snapshot);
     // Isolated freely moving racket: check momentum and finite-mass energy.
     mj_resetData(m, d);
     int rj = mj_name2id(m, mjOBJ_JOINT, "tennis_racket_free");

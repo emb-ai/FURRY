@@ -99,7 +99,37 @@ void MetaRetargeter::Calibrate(const mjModel* model,const mjData* data,const Tra
         mju_sub3(controllerRobotOffset[h].data(),controllerData->xpos+3*body,data->qpos);
         double aligned[4],inverse[4],robotQuat[4];mju_mulQuat(aligned,basisQuat,input.hands[h].quaternion.data());
         mju_negQuat(inverse,aligned);mju_mat2Quat(robotQuat,controllerData->xmat+9*body);
+        if(controllerAnatomicalFrame){
+            // A registers controller->anatomical hand axes, not controller->
+            // the lagging physical wrist. In particular an elevated human arm
+            // must not acquire the standing robot's downward hand direction.
+            // The forearm frame already carries the Meta lower-arm rotation;
+            // wristRest is the neutral G1 forearm->hand frame from bind FK.
+            double source[4],forearm[4];
+            mju_mulQuat(source,basisQuat,input.body.joints[10+h].quaternion.data());
+            mju_mulQuat(forearm,source,offsets[10+h].quaternion.data());
+            mju_mulQuat(robotQuat,forearm,wristRest[h].data());
+        }
         mju_mulQuat(controllerRotationOffset[h].data(),inverse,robotQuat);
+    }
+    // Match the tracked controller grip to the centre of the rendered palm,
+    // rather than the wrist joint pivot several centimetres behind it.
+    for(int h=0;h<2;h++){
+        controllerGripOffset[h]={};
+        const std::string side=h==0?"left":"right";
+        int wrist=mj_name2id(model,mjOBJ_BODY,(side+"_wrist_yaw_link").c_str());
+        int palm=mj_name2id(model,mjOBJ_MESH,(side+"_hand_palm_link").c_str());
+        if(palm<0)continue;
+        for(int g=0;g<model->ngeom;g++)if(model->geom_bodyid[g]==wrist&&model->geom_type[g]==mjGEOM_MESH&&model->geom_dataid[g]==palm){
+            double low[3]={mjMAXVAL,mjMAXVAL,mjMAXVAL},high[3]={-mjMAXVAL,-mjMAXVAL,-mjMAXVAL},centre[3],rotated[3];
+            for(int v=0;v<model->mesh_vertnum[palm];v++)for(int k=0;k<3;k++){
+                double value=model->mesh_vert[3*(model->mesh_vertadr[palm]+v)+k];low[k]=std::min(low[k],value);high[k]=std::max(high[k],value);
+            }
+            for(int k=0;k<3;k++)centre[k]=(low[k]+high[k])*.5;
+            mju_rotVecQuat(rotated,centre,model->geom_quat+4*g);
+            for(int k=0;k<3;k++)controllerGripOffset[h][k]=model->geom_pos[3*g+k]+rotated[k];
+            break;
+        }
     }
     cameraOrigin=gmr.CameraPose();cameraHeadOrigin=input.head;
     double eyeHeight=input.head.position[1];
@@ -150,9 +180,17 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& source){
         double relative[3],delta[3],mapped[3],aligned[4];
         mju_sub3(relative,input.hands[h].position.data(),input.body.joints[0].position.data());
         mju_sub3(delta,relative,controllerRelativeOrigin[h].data());mju_mulMatVec(mapped,basis,delta,3,3);
-        for(int k=0;k<3;k++)targets[12+h].position[k]=root[k]+controllerRobotOffset[h][k]+scales[12+h]*mapped[k];
+        if(controllerStageTargets&&cameraTracking){
+            mju_sub3(delta,input.hands[h].position.data(),cameraHeadOrigin.position.data());
+            mju_mulMatVec(mapped,basis,delta,3,3);
+            for(int k=0;k<3;k++)targets[12+h].position[k]=cameraOrigin.position[k]+cameraScale*mapped[k];
+        }else for(int k=0;k<3;k++)targets[12+h].position[k]=root[k]+controllerRobotOffset[h][k]+scales[12+h]*mapped[k];
         mju_mulQuat(aligned,basisQuat,input.hands[h].quaternion.data());
         mju_mulQuat(targets[12+h].quaternion.data(),aligned,controllerRotationOffset[h].data());
+        if(controllerStageTargets&&cameraTracking){
+            double palm[3];mju_rotVecQuat(palm,controllerGripOffset[h].data(),targets[12+h].quaternion.data());
+            for(int k=0;k<3;k++)targets[12+h].position[k]-=palm[k];
+        }
     }
     if(neutralWrists&&!controllerWrists)for(int h=0;h<2;h++){
         double inverse[4],relative[4],delta[4],corrected[4];
@@ -188,6 +226,14 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& source){
         toeClearance[side]=z-flatToeHeight[side];
         if(toeClamp)z=std::max(z,flatToeHeight[side]);
     }
+    // Versioned policy input: identical to the stance-width training ablation.
+    // Targets are already adapted to robot metres. Change only foot XY.
+    if(narrowStance){
+        double R[9];mju_quat2Mat(R,targets[0].quaternion.data());
+        double yaw=std::atan2(R[3],R[0]),lateral[2]={-std::sin(yaw),std::cos(yaw)};
+        for(int side=0;side<2;side++)for(int k=0;k<2;k++)
+            targets[6+side].position[k]+=(side?1:-1)*.06*lateral[k];
+    }
     gmr.SetTargets(targets);
     if(cameraTracking && (input.location_flags[0]&3)==3){
         TrackedPose camera;double aligned[4];
@@ -203,7 +249,12 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& source){
         // Use the achieved reference camera, not the lagging physical robot:
         // adding its tracking error here would count world travel twice.
         gmr.ClearCameraTarget();gmr.Solve();
-        gmr.AlignTargetsToCameraXY(camera);gmr.SetCameraTarget(camera);
+        gmr.AlignTargetsToCameraXY(camera);
+        if(controllerStageTargets){
+            auto alignedTargets=gmr.Targets();
+            alignedTargets[12]=targets[12];alignedTargets[13]=targets[13];gmr.SetTargets(alignedTargets);
+        }
+        gmr.SetCameraTarget(camera);
     }else gmr.ClearCameraTarget();
     gmr.Solve();error=gmr.error;
     if(neutralWrists&&!wristFrameV2&&!controllerWrists){

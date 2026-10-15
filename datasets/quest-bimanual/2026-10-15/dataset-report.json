@@ -1,0 +1,980 @@
+{
+ "schema": "furry-bimanual-export-v1",
+ "family": {
+  "policy_id": "homie-v2",
+  "policy_backend": "groot_decoupled_v1",
+  "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+  "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+  "input_patch": null,
+  "catch_up": true,
+  "scene": "bimanual",
+  "model_sha256": "14b2533accdb28476d0529b80de805cec3cd7d0bce24af059320eac959347e62",
+  "camera_mode": "robot_head_pan_tilt_v1"
+ },
+ "renderer": {
+  "shadows": false,
+  "resolution": [
+   224,
+   224
+  ],
+  "source_resolution": [
+   640,
+   360
+  ],
+  "mujoco": "3.3.7",
+  "camera": "current physical head + previous sampled gaze; archived first gaze for initial state"
+ },
+ "episodes_raw": 105,
+ "episodes_accepted": 69,
+ "train": 62,
+ "valid": 7,
+ "independent_test_session": false,
+ "total_frames": 23192,
+ "seconds": 145.8,
+ "output": "bimanual69-no-shadow-causal.hdf5",
+ "sha256": "abbb4efae95946f9a3889894f53076e590a4154eb88993123b36f9cc5d2c505b",
+ "episodes": [
+  {
+   "episode": "episode-1792051536968601",
+   "outcome": 1,
+   "seed": 1093469924,
+   "accepted": true,
+   "identity": "77ba810808f618d8a67d58d4318ef971714c26aabb1c7356501ed7f7948edd12",
+   "samples": 376,
+   "demo": "demo_0",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792051569207627",
+   "outcome": 1,
+   "seed": 3727850131,
+   "accepted": true,
+   "identity": "0f3b08f3e1c62cd0e33deff1cfe3b341563531604c366bffffa9f2ee6bfd795c",
+   "samples": 265,
+   "demo": "demo_1",
+   "split": "valid"
+  },
+  {
+   "episode": "episode-1792051583414322",
+   "outcome": 1,
+   "seed": 3839662090,
+   "accepted": true,
+   "identity": "b2996940c5068b18f5aaa3eb6be4c95680dc24b512268a13f1ce5bfc1a0ad1f8",
+   "samples": 247,
+   "demo": "demo_2",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792051595429520",
+   "outcome": 1,
+   "seed": 3839662090,
+   "accepted": false,
+   "reason": "Recording starts after the task ended"
+  },
+  {
+   "episode": "episode-1792051621702471",
+   "outcome": 1,
+   "seed": 528581776,
+   "accepted": true,
+   "identity": "437202f3580342f92619116d3dad11486f87e7a697ac38f053e4093d2f41b370",
+   "samples": 308,
+   "demo": "demo_3",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792051635291345",
+   "outcome": 1,
+   "seed": 1252099056,
+   "accepted": true,
+   "identity": "ea339b7f727fe82a7940c25e72375af53abc480a2da5283eb4d7d5246463b221",
+   "samples": 379,
+   "demo": "demo_4",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792052501638067",
+   "outcome": 1,
+   "seed": 1670325841,
+   "accepted": true,
+   "identity": "5254df379a8a61bd7ae80da948dd6c919fd9d2d772863cf07a53fafcd8b081f3",
+   "samples": 402,
+   "demo": "demo_5",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792052522857989",
+   "outcome": 1,
+   "seed": 1796470784,
+   "accepted": true,
+   "identity": "2bc9f0a2dc2fda9f7f89d6503c1485ea3bb855a2e93ef6aa410e06b6d95410c9",
+   "samples": 410,
+   "demo": "demo_6",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792052544400802",
+   "outcome": 1,
+   "seed": 1613274758,
+   "accepted": true,
+   "identity": "e5d8351c5927956ed20459d4448fc725de15cb5b4f5ac36d60200a42d03c869b",
+   "samples": 418,
+   "demo": "demo_7",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792052564076277",
+   "outcome": 1,
+   "seed": 794419138,
+   "accepted": true,
+   "identity": "85c029e13ba65c011d23cbdb02deba4bd0a57f3826f0f6a965643909756c9472",
+   "samples": 407,
+   "demo": "demo_8",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792052583352154",
+   "outcome": 1,
+   "seed": 3129581117,
+   "accepted": true,
+   "identity": "7c62a6016f02805851cc65774f19d95d67cd869d347b6f48256cffea098cd107",
+   "samples": 374,
+   "demo": "demo_9",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792052605677640",
+   "outcome": 1,
+   "seed": 263595918,
+   "accepted": true,
+   "identity": "5d7a0f33ae678958e13b44c4d7f2bf8102513251e2df17d3bcd0cac41d5b6ef2",
+   "samples": 337,
+   "demo": "demo_10",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792052624060896",
+   "outcome": 1,
+   "seed": 3924987768,
+   "accepted": true,
+   "identity": "062c5eb143ab65b0536e3723ec07c2a00b90df466fef3156185edc10e5112b6c",
+   "samples": 321,
+   "demo": "demo_11",
+   "split": "valid"
+  },
+  {
+   "episode": "episode-1792052640190801",
+   "outcome": 1,
+   "seed": 3565429062,
+   "accepted": true,
+   "identity": "ccd2273d1c3a420adf40ddd6964f1359b00180069ab1b7b741970bf6fe6d28fa",
+   "samples": 443,
+   "demo": "demo_12",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792052662338150",
+   "outcome": 0,
+   "seed": 270956900,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792052697327032",
+   "outcome": 1,
+   "seed": 990736193,
+   "accepted": true,
+   "identity": "2b1ab09ce6c2697a5d51b73308a44401ab82be4a66b6d382babc9723bdd34c1f",
+   "samples": 321,
+   "demo": "demo_13",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792052713984299",
+   "outcome": 1,
+   "seed": 351371938,
+   "accepted": true,
+   "identity": "a30be919e3b171e50dd6378b47531aae0f1a69f59416c182d8b48f6d8fbeb186",
+   "samples": 357,
+   "demo": "demo_14",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792052732015454",
+   "outcome": 0,
+   "seed": 1143350430,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792052759873706",
+   "outcome": 0,
+   "seed": 3457894452,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792052778230495",
+   "outcome": 1,
+   "seed": 249803958,
+   "accepted": true,
+   "identity": "3be96c415fcc0a02490a328eb0b620db93f2385794e60f940f20621074b34857",
+   "samples": 326,
+   "demo": "demo_15",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792052796741618",
+   "outcome": 0,
+   "seed": 1651116833,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792052819957720",
+   "outcome": 1,
+   "seed": 2441686634,
+   "accepted": true,
+   "identity": "e8af57fe84be12c140ceecf1bfe8022cc684481bcb89a17765079c40535e39b6",
+   "samples": 316,
+   "demo": "demo_16",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792052839607961",
+   "outcome": 1,
+   "seed": 3394004621,
+   "accepted": true,
+   "identity": "356d313cda1fe4c220d068cbdd5f8e242e96814e0e4d909a013560d58ee71cfd",
+   "samples": 294,
+   "demo": "demo_17",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792052856033558",
+   "outcome": 1,
+   "seed": 766148820,
+   "accepted": true,
+   "identity": "a6971f537fd0ab1b8ede37dcf593ec2020625bff90c6772ad5ec01489ffa778b",
+   "samples": 376,
+   "demo": "demo_18",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792052874700141",
+   "outcome": 1,
+   "seed": 1929902870,
+   "accepted": true,
+   "identity": "afd35c89a203520d7e216fd30da2c7fb7399d16856d383a29116222da0f53835",
+   "samples": 360,
+   "demo": "demo_19",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792052891672143",
+   "outcome": 1,
+   "seed": 2095270726,
+   "accepted": true,
+   "identity": "9178a9c2d4f7fd64f2bdb66dc00c16f6470021dfdfa29412587d984a087a2750",
+   "samples": 393,
+   "demo": "demo_20",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792052910678919",
+   "outcome": 1,
+   "seed": 4064728502,
+   "accepted": true,
+   "identity": "af6a42d97b5373fe652703f3bebee25339e0261c3105c30dded26b48d5e90d94",
+   "samples": 399,
+   "demo": "demo_21",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792052929576105",
+   "outcome": 1,
+   "seed": 1851531910,
+   "accepted": true,
+   "identity": "214df8d3aa72468120c1192bd1ceb2154f5ba1b04c268481f6264554fdbda7bc",
+   "samples": 331,
+   "demo": "demo_22",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792052946148060",
+   "outcome": 0,
+   "seed": 263817300,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792052965741982",
+   "outcome": 0,
+   "seed": 1365228114,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792052980815348",
+   "outcome": 0,
+   "seed": 1291269696,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053000145047",
+   "outcome": 1,
+   "seed": 3421064051,
+   "accepted": true,
+   "identity": "4ba473a2545774818ea66128186910e7669b2e2fb3c7cafe4723a8eda6c06788",
+   "samples": 384,
+   "demo": "demo_23",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053017956277",
+   "outcome": 1,
+   "seed": 4052412787,
+   "accepted": true,
+   "identity": "e89020407427260efadbdd377bdd9469a707605b7f975598441fc9ab77c67dce",
+   "samples": 348,
+   "demo": "demo_24",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053034032780",
+   "outcome": 1,
+   "seed": 3217127731,
+   "accepted": true,
+   "identity": "9794e41d7431393c45d7cf2ae1079dda7856aa6e418fa6e23385c2a289cb918d",
+   "samples": 370,
+   "demo": "demo_25",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053055507168",
+   "outcome": 0,
+   "seed": 2792987202,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053060651026",
+   "outcome": 1,
+   "seed": 3241419337,
+   "accepted": true,
+   "identity": "4bd41c5aef8420989170ddd1968d98aaf0ae6201b7f6b6d7755a842142792847",
+   "samples": 334,
+   "demo": "demo_26",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053076648624",
+   "outcome": 0,
+   "seed": 3173027951,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053087220352",
+   "outcome": 0,
+   "seed": 731972312,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053099232613",
+   "outcome": 1,
+   "seed": 217111136,
+   "accepted": true,
+   "identity": "f39ae703d2f1817bd1bcca86262e8fe7a09cfbafd7737922147958582a525009",
+   "samples": 381,
+   "demo": "demo_27",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053115924014",
+   "outcome": 1,
+   "seed": 4054408726,
+   "accepted": true,
+   "identity": "2fdec752f41cc32c2b0d776096eb656133c8c05677db3281d480150e924169d9",
+   "samples": 381,
+   "demo": "demo_28",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053135008666",
+   "outcome": 0,
+   "seed": 4090273965,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053153300324",
+   "outcome": 0,
+   "seed": 2495116757,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053169955871",
+   "outcome": 1,
+   "seed": 1510244603,
+   "accepted": true,
+   "identity": "3b47acf2ae20b076610188c682f0776773d8aaaf2b8b9931f1fe7530913e1318",
+   "samples": 376,
+   "demo": "demo_29",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053196411848",
+   "outcome": 1,
+   "seed": 2309359412,
+   "accepted": true,
+   "identity": "7d21c7d8a086adbc2ae53afdad507ce59fdc2bb315d5f57ce081a3ae5b452424",
+   "samples": 337,
+   "demo": "demo_30",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053216512297",
+   "outcome": 0,
+   "seed": 4170002385,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053235355578",
+   "outcome": 1,
+   "seed": 2668847270,
+   "accepted": true,
+   "identity": "a255dd6e353aec80bad4ad26f3fc4c7dba626bda478612080229505d64ebce64",
+   "samples": 352,
+   "demo": "demo_31",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053251730248",
+   "outcome": 1,
+   "seed": 2263905798,
+   "accepted": true,
+   "identity": "666826153349b3179e69517020b14e60c2edc0f775f4a5009c0cccadb457cb2c",
+   "samples": 288,
+   "demo": "demo_32",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053266089284",
+   "outcome": 1,
+   "seed": 3848210560,
+   "accepted": true,
+   "identity": "c3b2f1bbcebfded90a047857e4d6712dbfb45985194d9581101e2df201abb183",
+   "samples": 345,
+   "demo": "demo_33",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053281827183",
+   "outcome": 0,
+   "seed": 2043854679,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053299966028",
+   "outcome": 0,
+   "seed": 2766470351,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053316220540",
+   "outcome": 0,
+   "seed": 1724578504,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053337173775",
+   "outcome": 0,
+   "seed": 2306527086,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053359621700",
+   "outcome": 1,
+   "seed": 2768830812,
+   "accepted": true,
+   "identity": "cf03ff0a55cf6f38233991cda53396cff0faabff3d638e28e1869121e79a2a78",
+   "samples": 421,
+   "demo": "demo_34",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053378715378",
+   "outcome": 1,
+   "seed": 920988058,
+   "accepted": true,
+   "identity": "d6539df42a87796cc11d97c52ca117e0a9c96315b4c6f564032c717638825f38",
+   "samples": 339,
+   "demo": "demo_35",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053395227401",
+   "outcome": 1,
+   "seed": 3941286661,
+   "accepted": true,
+   "identity": "efb6f2e11687fd186ebc29238fbedf1dbd0a7a512001bedbc031609aaf4de3e4",
+   "samples": 411,
+   "demo": "demo_36",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053413199885",
+   "outcome": 0,
+   "seed": 234241951,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053429701524",
+   "outcome": 0,
+   "seed": 4168484759,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053444310904",
+   "outcome": 1,
+   "seed": 1333274035,
+   "accepted": true,
+   "identity": "0a914cca977c74be710ad76133f91d4f2ba76306f52451986e9ff7101d7725d9",
+   "samples": 339,
+   "demo": "demo_37",
+   "split": "valid"
+  },
+  {
+   "episode": "episode-1792053459995529",
+   "outcome": 1,
+   "seed": 301062762,
+   "accepted": true,
+   "identity": "7e0ecc6574656ec2b02124113051895601524d89c9bf8a8a9ac803186354636f",
+   "samples": 323,
+   "demo": "demo_38",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053475079258",
+   "outcome": 1,
+   "seed": 2589924052,
+   "accepted": true,
+   "identity": "897baa347d2fa9dca157c2a0621f8335bf7d90073cebe37a5a3f010febe1a2c4",
+   "samples": 326,
+   "demo": "demo_39",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053489651154",
+   "outcome": 1,
+   "seed": 4100989796,
+   "accepted": true,
+   "identity": "ed6fd075b03f1f9ada088974453276b66917017d113a4a77928d49972fb052e3",
+   "samples": 306,
+   "demo": "demo_40",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053502809079",
+   "outcome": 0,
+   "seed": 16899625,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053517797172",
+   "outcome": 1,
+   "seed": 1917688220,
+   "accepted": true,
+   "identity": "444a274654a5d7e1f47d81dd0450d837ba859951d3781d6bdaa866ff9830a1c0",
+   "samples": 423,
+   "demo": "demo_41",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053536315115",
+   "outcome": 0,
+   "seed": 3215473794,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053551673697",
+   "outcome": 1,
+   "seed": 1566607303,
+   "accepted": true,
+   "identity": "d1166f2e8359d29a6a2965b201bfa5e3321c11029538e4f2737be627d3062a93",
+   "samples": 322,
+   "demo": "demo_42",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053566634341",
+   "outcome": 1,
+   "seed": 2995486528,
+   "accepted": true,
+   "identity": "09e90297daadedbf1ec3369718765a2c2071d3ce9fe5dba1f2032766f359871f",
+   "samples": 318,
+   "demo": "demo_43",
+   "split": "valid"
+  },
+  {
+   "episode": "episode-1792053582481609",
+   "outcome": 0,
+   "seed": 2463018638,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053600675200",
+   "outcome": 0,
+   "seed": 3221013949,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053616131275",
+   "outcome": 1,
+   "seed": 1295543368,
+   "accepted": true,
+   "identity": "10817821185aa1bb5316010aa81f4cae0eaf7dd4e8df483a212d48124d787724",
+   "samples": 370,
+   "demo": "demo_44",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053632084837",
+   "outcome": 1,
+   "seed": 411335912,
+   "accepted": true,
+   "identity": "51d8e376f690bd1c903f0e43a11bdbaf83ba709ab6034856f80858ef0453d63c",
+   "samples": 345,
+   "demo": "demo_45",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053647672857",
+   "outcome": 0,
+   "seed": 2907326962,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053662606964",
+   "outcome": 1,
+   "seed": 708166875,
+   "accepted": true,
+   "identity": "c109eefb288f68ba5b270ec449a727521be1d023064622a2cc68385a5223b935",
+   "samples": 333,
+   "demo": "demo_46",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053677831434",
+   "outcome": 1,
+   "seed": 2852724140,
+   "accepted": true,
+   "identity": "b67abe4c82f0b4defdbf319087e55fad4823e480824f29385250b3bf42f36e7b",
+   "samples": 313,
+   "demo": "demo_47",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053691773730",
+   "outcome": 1,
+   "seed": 197879997,
+   "accepted": true,
+   "identity": "b9a9e5b4f300f12061f24c30e311bdebf25354a26302fcd3f31b7fcdddbaccae",
+   "samples": 283,
+   "demo": "demo_48",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053704236769",
+   "outcome": 1,
+   "seed": 3777340471,
+   "accepted": true,
+   "identity": "875de93841f4e7318b6736b32aacec8af85df7c7281e884c76db58b3386d908e",
+   "samples": 299,
+   "demo": "demo_49",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053718091036",
+   "outcome": 1,
+   "seed": 539995697,
+   "accepted": true,
+   "identity": "dd4fe5810060832a2ddb8c49d40d98bdb9e7b15420679f3ef1f25454d5aae8d8",
+   "samples": 290,
+   "demo": "demo_50",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053731479903",
+   "outcome": 1,
+   "seed": 1173683437,
+   "accepted": true,
+   "identity": "8973ef6b06da7e5fad358a0638b78d5359f9eb52cfe417636907f0ba65ee5df4",
+   "samples": 328,
+   "demo": "demo_51",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053745827271",
+   "outcome": 0,
+   "seed": 2539416042,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053757543342",
+   "outcome": 1,
+   "seed": 1320233284,
+   "accepted": true,
+   "identity": "a2280be2a71d2bd8cd9d85633cf6ad1ce0e7761b057354ae29a8070b23e85e7a",
+   "samples": 336,
+   "demo": "demo_52",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053772510817",
+   "outcome": 1,
+   "seed": 3225658807,
+   "accepted": true,
+   "identity": "0d8572e60c61cc8f78aab31bbbb788670e4ba649d6689ed9e1c3c7bc61f72fc8",
+   "samples": 311,
+   "demo": "demo_53",
+   "split": "valid"
+  },
+  {
+   "episode": "episode-1792053786895674",
+   "outcome": 0,
+   "seed": 538262317,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053795742467",
+   "outcome": 1,
+   "seed": 874304135,
+   "accepted": true,
+   "identity": "8161a1c18ee71c161e64e3e36c32b91df6a269c3ba83d7dc9cbdd567bfc0e42a",
+   "samples": 354,
+   "demo": "demo_54",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053810595813",
+   "outcome": 1,
+   "seed": 2942878372,
+   "accepted": true,
+   "identity": "261d947ecbf69f5d53e4d122f5ecfd6c3e15b47a635a9401b2af683eb8f4e1a7",
+   "samples": 339,
+   "demo": "demo_55",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053825590846",
+   "outcome": 1,
+   "seed": 974399297,
+   "accepted": true,
+   "identity": "fc66bd1c42001f3ddca676e5b4048943bdc7595753b5d1dd3e23174186aa8965",
+   "samples": 267,
+   "demo": "demo_56",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053838107376",
+   "outcome": 1,
+   "seed": 395794312,
+   "accepted": true,
+   "identity": "c7a98f0f2dd907424406059d29a98673cfcc06ea8fe77082ea6cacde0177e0dc",
+   "samples": 314,
+   "demo": "demo_57",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053858482257",
+   "outcome": 1,
+   "seed": 2877684899,
+   "accepted": true,
+   "identity": "07b754bf847e6f380884b355a62f9b2141fb9a822e90f2ca896365eeb0965e29",
+   "samples": 258,
+   "demo": "demo_58",
+   "split": "valid"
+  },
+  {
+   "episode": "episode-1792053871105177",
+   "outcome": 1,
+   "seed": 3108467078,
+   "accepted": true,
+   "identity": "9094acde7817ab37889a3b911a5a9dc8d5db7e5a540e852ffe6eb87ca1f4d635",
+   "samples": 297,
+   "demo": "demo_59",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053884450357",
+   "outcome": 0,
+   "seed": 3580373552,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053896961581",
+   "outcome": 0,
+   "seed": 3752317340,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053900555043",
+   "outcome": 1,
+   "seed": 2976708572,
+   "accepted": true,
+   "identity": "dc4fd9981ee51389e7ede70b62113df20e18312519f482da1be11ae5c7023db0",
+   "samples": 303,
+   "demo": "demo_60",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053913937339",
+   "outcome": 0,
+   "seed": 3245542734,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053929304531",
+   "outcome": 1,
+   "seed": 1352665125,
+   "accepted": true,
+   "identity": "466dd4437599d115f753ee153bed97f97309dbcbe7014f5e144d4e6432a6f5c0",
+   "samples": 287,
+   "demo": "demo_61",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053943407731",
+   "outcome": 1,
+   "seed": 1853613789,
+   "accepted": true,
+   "identity": "42d13911adda2c9b41ee778db9321d2d6e64c933e5954125e240b3d1874f3a48",
+   "samples": 318,
+   "demo": "demo_62",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792053959343114",
+   "outcome": 0,
+   "seed": 981869719,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053975098291",
+   "outcome": 0,
+   "seed": 4151404586,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792053989717532",
+   "outcome": 1,
+   "seed": 1764429064,
+   "accepted": true,
+   "identity": "9005bd7f4b3fb70f3e7987571edf62a4e2981ebd43b09f0aca70ba445a8715f7",
+   "samples": 302,
+   "demo": "demo_63",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792054004924876",
+   "outcome": 1,
+   "seed": 4183802450,
+   "accepted": true,
+   "identity": "539ec597a5a1edd112ca76622000d7b0536b7c4cd8b214cf31d48ef350b7576d",
+   "samples": 249,
+   "demo": "demo_64",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792054017945590",
+   "outcome": 1,
+   "seed": 4257663103,
+   "accepted": true,
+   "identity": "9fc9737cbfbb10864d84e8838a0ad63dbfe2d12b84bdecac8156c3dbaad5fe26",
+   "samples": 311,
+   "demo": "demo_65",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792054032359322",
+   "outcome": 0,
+   "seed": 918188319,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792054037192479",
+   "outcome": 1,
+   "seed": 2006336194,
+   "accepted": true,
+   "identity": "a631631781452579676f3f4e59bc85fe3ad473573d9e337a11bd8c35c784c04a",
+   "samples": 287,
+   "demo": "demo_66",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792054051026273",
+   "outcome": 0,
+   "seed": 3120226118,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792054064646779",
+   "outcome": 1,
+   "seed": 3847889023,
+   "accepted": true,
+   "identity": "96049c2c7561cdf776ddd629a76188a44c151747c6a535d7b18a1d52bdb279b7",
+   "samples": 253,
+   "demo": "demo_67",
+   "split": "train"
+  },
+  {
+   "episode": "episode-1792054077316808",
+   "outcome": 1,
+   "seed": 3688337257,
+   "accepted": true,
+   "identity": "09268ed1f440bf76f1d29c4a6d71644fc6507be478cabadbc4f38d0b68b51c3e",
+   "samples": 261,
+   "demo": "demo_68",
+   "split": "valid"
+  },
+  {
+   "episode": "episode-1792054090313323",
+   "outcome": 0,
+   "seed": 3285933852,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  },
+  {
+   "episode": "episode-1792054121671371",
+   "outcome": 0,
+   "seed": 3580970336,
+   "accepted": false,
+   "reason": "Task did not succeed (outcome=0)"
+  }
+ ]
+}

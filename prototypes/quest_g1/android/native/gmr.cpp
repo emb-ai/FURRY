@@ -49,6 +49,7 @@ GmrRetargeter::GmrRetargeter(const std::string& assets){
     cameraLocal.position={.08,0,.43};
     double cameraRotation[9]={0,0,-1,-1,0,0,0,1,0};
     mju_mat2Quat(cameraLocal.quaternion.data(),cameraRotation);
+    for(const auto& task:tasks_)sourceCosts.push_back(task.costs);
     targets.resize(count);Reset();
 }
 GmrRetargeter::~GmrRetargeter(){mj_deleteData(data_);mj_deleteModel(model_);}
@@ -152,6 +153,15 @@ void GmrRetargeter::Step(int stage){
     }
     if(mju_boxQP(dq,factor,index,H,g,n,lower,upper)<0)throw std::runtime_error("GMR QP failed");
     mj_integratePos(model_,data_->qpos,dq,1.);mj_kinematics(model_,data_);mj_comPos(model_,data_);iterations++;
+}
+void GmrRetargeter::EnableControllerHands(bool value){
+    for(size_t i=0;i<tasks_.size();i++)tasks_[i].costs=sourceCosts[i];
+    if(!value)return;
+    // Controller end effectors need position objectives: the author body-pose
+    // configuration has zero wrist position cost. Use the same position weight
+    // as its feet; SDK shoulder/elbow orientations remain soft posture hints.
+    for(size_t i=8;i<12&&i<tasks_.size();i++)for(int stage=0;stage<2;stage++)tasks_[i].costs[2*stage+1]*=.2;
+    for(size_t i=12;i<14&&i<tasks_.size();i++)for(int stage=0;stage<2;stage++)tasks_[i].costs[2*stage]=100;
 }
 void GmrRetargeter::Solve(){
     iterations=0;

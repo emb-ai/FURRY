@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "id": "dexweave-B-4174",
+  "file": "B-final.onnx",
+  "sha256": "7bf8d82997c152c6c425ed0c715d0fc782905e9cb273bba764052eb48cc25761",
+  "bytes": 2382464,
+  "backend": "dexweave_body_v1",
+  "input_patch": "stance_narrow12_v1",
+  "source": "Existing verified Quest deployment snapshot, 2026-10-13; preserved in rubik-grip-guard APK 2026-10-15",
+  "live_quality_accepted": false,
+  "limitations": [
+    "Experimental policy. Offline metrics do not establish improved live walking.",
+    "DexWeave runtime uses causal GMR references without offline support projection."
+  ]
+}

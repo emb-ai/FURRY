@@ -14,30 +14,27 @@ class PolicyAssetsTests(unittest.TestCase):
     def test_default_catalog_contains_published_candidates(self):
         with tempfile.TemporaryDirectory() as directory, patch.dict('os.environ', {}, clear=True):
             root = Path(directory)
-            for scene in ('lab', 'stand', 'cup', 'push_t', 'tennis', 'rubik'):
+            for scene in ('lab', 'stand', 'cup', 'push_t', 'tennis', 'rubik', 'wb_dex', 'bimanual', 'basket'):
                 name = 'recording_metadata.json' if scene == 'lab' else f'recording_metadata-{scene}.json'
                 (root / name).write_text(json.dumps({'sha256': {}, 'scene': scene}))
             catalog = export_policies(root, UPSTREAM)
-            self.assertEqual([row['id'] for row in catalog],
-                             ['twist2-20k', 'twist2-25k', 'quest-111260-500', 'quest-111260-1000',
-                              'quest-111586-200', 'quest-111586-300', 'quest-111586-500', 'quest-camv2-250', 'quest-camv2-500',
-                              'homie-v2', 'sonic-vr3', 'quest-111586-500-lift10'])
+            self.assertEqual([row['id'] for row in catalog], ['twist2-20k', 'twist2-25k', 'quest-111260-500', 'quest-111260-1000', 'quest-111586-200', 'quest-111586-300', 'quest-111586-500', 'quest-camv2-250', 'quest-camv2-500', 'quest-camv3-b7-250', 'quest-camv3-a-500', 'homie-v2', 'sonic-vr3', 'quest-111586-500-lift10', 'homie-standing', 'quest-stance12-B-s11', 'dexweave-wide-2977', 'dexweave-B-4174'])
             artifacts = {}
-            for run in ('quest-111260', 'quest-111586', 'quest-camv2'):
+            for run in ('quest-111260', 'quest-111586', 'quest-camv2', 'quest-camv3'):
                 provenance = json.loads((Path(__file__).resolve().parents[1] /
                                          f'policies/{run}/provenance.json').read_text())
                 artifacts.update({item['id']: item for item in provenance['artifacts']})
-            for row in catalog[2:9]:
+            for row in catalog[2:11]:
                 artifact = artifacts[row['id']]
                 self.assertEqual(row['sha256'], artifact['sha256'])
                 self.assertEqual(hashlib.sha256((root / row['file']).read_bytes()).hexdigest(), artifact['sha256'])
-                expected_hz = 50 if row['id'].startswith(('quest-111586-', 'quest-camv2-')) else 100
+                expected_hz = 50 if row['id'].startswith(('quest-111586-', 'quest-camv2-', 'quest-camv3-')) else 100
                 self.assertEqual(row['policy_hz'], 50)
                 self.assertEqual(row['legacy_policy_hz'], expected_hz)
                 metadata = json.loads((root / f'recording_metadata-stand-policy-{row["id"]}.json').read_text())
                 self.assertEqual(metadata['policy_hz'], 50)
                 self.assertEqual(metadata['legacy_policy_hz'], expected_hz)
-            homie = catalog[-3]
+            homie = next(row for row in catalog if row['id']=='homie-v2')
             self.assertEqual(homie['backend'], 'groot_decoupled_v1')
             self.assertEqual(homie['policy_hz'], 50)
             self.assertEqual(homie['legacy_policy_hz'], 50)
@@ -53,13 +50,13 @@ class PolicyAssetsTests(unittest.TestCase):
                 self.assertEqual(metadata['policy_'+prefix+'file'], filename)
                 self.assertEqual(metadata['policy_'+prefix+'sha256'], digest)
                 self.assertEqual(metadata['sha256'][filename], digest)
-            sonic=catalog[-2]
+            sonic=next(row for row in catalog if row['id']=='sonic-vr3')
             self.assertEqual(sonic['backend'],'sonic_vr3_v1')
             sm=json.loads((root/'recording_metadata-stand-policy-sonic-vr3.json').read_text())
             self.assertEqual(sm['sonic_planner_seed'],11)
             for prefix in ('','secondary_','planner_'):
                 self.assertEqual(sm['policy_'+prefix+'sha256'],sonic[prefix+'sha256'])
-            patch_entry=catalog[-1]
+            patch_entry=next(row for row in catalog if row['id']=='quest-111586-500-lift10')
             self.assertEqual(patch_entry['input_patch'],'virtual_leg_lift10_v1')
             self.assertEqual(patch_entry['sha256'],catalog[6]['sha256'])
             pm=json.loads((root/'recording_metadata-stand-policy-quest-111586-500-lift10.json').read_text())
@@ -105,7 +102,7 @@ class PolicyAssetsTests(unittest.TestCase):
     def test_candidate_metadata_and_stale_asset_cleanup(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            for scene in ('lab', 'stand', 'cup', 'push_t', 'tennis', 'rubik'):
+            for scene in ('lab', 'stand', 'cup', 'push_t', 'tennis', 'rubik', 'wb_dex', 'bimanual', 'basket'):
                 name = 'recording_metadata.json' if scene == 'lab' else f'recording_metadata-{scene}.json'
                 (root / name).write_text(json.dumps({'sha256': {'policy.onnx': 'baseline', 'scene.xml': 'geometry'},
                                                     'scene': scene, 'nq': 50}))
@@ -116,7 +113,7 @@ class PolicyAssetsTests(unittest.TestCase):
                                                title='Candidate', note='Experimental')]))
             catalog = export_policies(root, UPSTREAM, config)
             self.assertEqual([row['id'] for row in catalog], ['twist2-20k', 'twist2-25k', 'test-candidate'])
-            for scene in ('lab', 'stand', 'cup', 'push_t', 'tennis', 'rubik'):
+            for scene in ('lab', 'stand', 'cup', 'push_t', 'tennis', 'rubik', 'wb_dex', 'bimanual', 'basket'):
                 metadata = json.loads((root / f'recording_metadata-{scene}-policy-test-candidate.json').read_text())
                 self.assertEqual(metadata['policy_sha256'], digest)
                 self.assertEqual(metadata['sha256']['policy-test-candidate.onnx'], digest)

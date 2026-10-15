@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "id": "quest-stance12-B-s11",
+  "file": "B-s11-1500.onnx",
+  "sha256": "f24be7b0ef36b9bfef61672aa54dbd7f494c6527a0cc66f64b449d2f7da15745",
+  "bytes": 3183314,
+  "backend": "twist2",
+  "input_patch": "stance_narrow12_v1",
+  "source": "Existing verified Quest deployment snapshot, 2026-10-13; preserved in rubik-grip-guard APK 2026-10-15",
+  "live_quality_accepted": false,
+  "limitations": [
+    "Experimental policy. Offline metrics do not establish improved live walking.",
+    "DexWeave runtime uses causal GMR references without offline support projection."
+  ]
+}

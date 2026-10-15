@@ -6,6 +6,7 @@ from .controller import UPSTREAM
 from .geometry import apply_hybrid, configure_props
 from .cup_lab import add_workcell
 from .rubik import add_puzzle
+from .collection_scenes import add_collection_scene, add_feeder
 
 
 def add(parent, tag, **attrs):
@@ -31,6 +32,33 @@ def make_model(scene="lab", hands=True, geometry="hybrid"):
     # PGS saturates 50 sweeps on dense finger/cup contacts. Newton solves the
     # same contact model to the existing tolerance without changing timestep.
     root.find("option").set("solver", "Newton")
+    if scene in ("cup", "bimanual", "rubik", "wb_dex"):
+        # A cylinder bottom against a box needs a contact patch. Single-point
+        # CCD makes a stationary cup rock and repeatedly fail the settle gate.
+        # The sorting blocks also need patches against the flat finger pads.
+        flag = root.find("option/flag")
+        if flag is None:
+            flag = ET.SubElement(root.find("option"), "flag")
+        flag.set("multiccd", "enable")
+        # Soft friction otherwise creeps under a static power grasp and drops
+        # the cup during a one-minute hold. Standard friction-only NoSlip
+        # sweeps suppress that regularization drift without attaching objects
+        # or raising motor force/friction coefficients.
+        if scene != "wb_dex":
+            root.find("option").set("noslip_iterations", "2")
+    if hands and scene in ("cup", "rubik", "wb_dex", "bimanual", "basket"):
+        # Grip is an angle target: a blocked finger must not keep squeezing
+        # toward a closed fist with the upstream 2.45 Nm joint limit.
+        # Cap motor effort independently of closure angle. Joint damping is
+        # implicit under Euler; explicit actuator velocity feedback is unstable
+        # for the tiny distal inertias at the production 1 ms timestep.
+        for actuator in root.findall("actuator/position"):
+            if "hand_" in actuator.get("name", ""):
+                actuator.set("forcelimited", "true")
+                actuator.set("forcerange", "-.35 .35")
+        for joint in root.iter("joint"):
+            if "hand_" in joint.get("name", ""):
+                joint.set("damping", ".03")
     root.find("compiler").set("meshdir", str(source.parent / "meshes"))
     if hands and geometry != "source":
         apply_hybrid(root, visuals=geometry == "hybrid")
@@ -97,11 +125,7 @@ def make_model(scene="lab", hands=True, geometry="hybrid"):
         add(table, "geom", type="box", size="1.37 .0015 .001", pos="0 0 .761", rgba="1 1 1 1", contype="0", conaffinity="0")
         add(table, "geom", name="tennis_net", type="box", size=".006 .915 .07625", pos="0 0 .83625", rgba=".7 .75 .8 .65")
         add(table, "geom", type="box", size=".007 .915 .004", pos="0 0 .9125", rgba="1 1 1 1", contype="0", conaffinity="0")
-        # Ball-feeding robot: hopper, motor housing and nozzle (static machine).
-        feeder = add(world, "body", name="tennis_feeder", pos="3.34 0 0")
-        add(feeder, "geom", type="box", size=".15 .16 .40", pos="0 0 .40", rgba=".22 .25 .3 1")
-        add(feeder, "geom", type="cylinder", size=".16 .10", pos="0 0 .90", rgba=".7 .4 .12 1")
-        add(feeder, "geom", type="cylinder", size=".045 .15", pos="-.16 0 1.15", euler="0 1.57079632679 0", rgba=".16 .18 .2 1")
+        add_feeder(root, world)
         racket = add(world, "body", name="tennis_racket", pos=".57 -.22 .770")
         add(racket, "freejoint", name="tennis_racket_free")
         add(racket, "geom", name="tennis_racket_face", type="cylinder", size=".085 .006", mass=".14", rgba=".8 .07 .055 1", friction="1 .005 .0001")
@@ -113,12 +137,12 @@ def make_model(scene="lab", hands=True, geometry="hybrid"):
         size = root.find("size")
         if size is None:
             size = add(root, "size")
-        size.set("nuserdata", "9")
+        size.set("nuserdata", "16")
         custom = root.find("custom")
         if custom is None:
             custom = add(root, "custom")
         # delay, interval, launch speed, Cd, air density, table restitution
-        add(custom, "numeric", name="tennis_config", data="7 4 5.5 .5 1.204 .9")
+        add(custom, "numeric", name="tennis_config", data="7 5 4.6 .5 1.204 .9")
         equality = root.find("equality")
         if equality is None:
             equality = add(root, "equality")
@@ -161,6 +185,7 @@ def make_model(scene="lab", hands=True, geometry="hybrid"):
         add_workcell(root)
     if scene == "rubik":
         add_puzzle(root)
+    add_collection_scene(root, scene)
     if hands and geometry != "source":
         configure_props(world)
     xml = ET.tostring(root, encoding="unicode")

@@ -40,6 +40,7 @@ public:
         const EGLint surfaceAttributes[]={EGL_WIDTH,16,EGL_HEIGHT,16,EGL_NONE};
         surface=eglCreatePbufferSurface(display,config,surfaceAttributes);
         if(context==EGL_NO_CONTEXT||surface==EGL_NO_SURFACE||!eglMakeCurrent(display,surface,surface,context))throw std::runtime_error("EGL context failed");
+        G1GraphicsContextCreated();
         binding.display=display;binding.config=config;binding.context=context;
         glGenFramebuffers(1,&framebuffer);
     }

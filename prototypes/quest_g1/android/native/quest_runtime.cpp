@@ -54,7 +54,7 @@ struct MenuCommand { questmenu::Action action; int policyIndex=-1; };
 std::deque<MenuCommand> pendingMenuActions;
 questmenu::State menuState;
 std::vector<questpolicy::Entry> policyCatalog;
-std::atomic<int> selectedPolicy{0};
+std::atomic<int> selectedPolicy{0},loadingPolicy{-1};
 std::atomic<bool> catchUpEnabled{true};
 // Leg source chosen in the menu: camera skeleton when available, or Meta.
 std::atomic<bool> cameraLegsEnabled{true};
@@ -67,7 +67,7 @@ std::atomic<double> recordedSeconds{0};
 XrMatrix4x4f menuWorld{};
 struct MenuRay {TrackedPose pose;bool valid=false,active=false;float trigger=0;};
 std::array<MenuRay,2> menuRays;
-std::array<questmenu::TriggerLatch,2> menuTrigger;
+std::array<questmenu::MenuPressLatch,2> menuTrigger;
 std::vector<questmenu::Pointer> framePointers;
 std::string menuNotice;
 bool SessionPaused(){return menuOpen.load()||userPaused.load();}
@@ -146,7 +146,7 @@ bool recordingShortcut=false,restartAfterCalibration=false;
 std::chrono::steady_clock::time_point trackingTime;
 std::atomic<bool> calibrate{false};
 bool trackingEnabled=false;
-std::atomic<bool> faulted{false};
+std::atomic<bool> faulted{false},plannerWaiting{false};
 std::ofstream trace;
 size_t traceRows=0;
 std::array<float,29> lastReference{};
@@ -178,7 +178,7 @@ std::atomic<bool> refreshEgoAnchor{true};
 int egoCamera=-1;
 std::string publishedTennis;
 std::string publishedRubik;
-std::array<float,4> publishedCupShade{},frameCupShade{};
+std::array<float,4> publishedCupShade{},frameCupShade{},publishedCupGoal{},frameCupGoal{};
 std::array<float,2> publishedRobotPosition{},frameRobotPosition{};
 void PublishGeometry(){
     mjvOption option;mjv_defaultOption(&option);option.geomgroup[3]=debugEnabled&&debugContacts;
@@ -198,6 +198,8 @@ void PublishGeometry(){
     publishedGeometry.assign(workerScene.geoms,workerScene.geoms+workerScene.ngeom);
     publishedRobotPosition={float(sim->data->qpos[0]),float(sim->data->qpos[1])};
     publishedCupShade=CupPlacementCue(sim->model,sim->data);
+    auto cupGoal=CupGoal(sim->model,sim->data);
+    for(int k=0;k<4;k++)publishedCupGoal[k]=float(cupGoal[k]);
     if(sim->scene_name=="rubik"){
         int core=mj_name2id(sim->model,mjOBJ_BODY,"rubik_core");
         const auto* p=sim->data->xpos+core*3;float bottom=1e6f;
@@ -211,6 +213,7 @@ void PublishGeometry(){
         publishedCupShade={float(p[0]),float(p[1]),bottom,sim->RubikSolved()?1.f:0.f};
     }
     publishedTennis=sim->TennisStatus();
+    if(publishedTennis.empty())publishedTennis=sim->CollectionStatus();
     publishedRubik=sim->RubikStatus();
     publishedTargets={};
     if(retarget->calibrated&&debugEnabled&&debugTargets){
@@ -260,7 +263,7 @@ void FinishRecording(uint64_t sequence,const char* reason="user_stop"){
     summary<<std::setprecision(17)<<"{\"schema_version\":1,\"recorded_seconds\":"<<recordedSeconds.load()
            <<",\"accepted_seconds\":"<<acceptedRecordingSeconds.load()<<",\"pause_intervals_excluded\":true}\n";summary.close();
     if(cameraRecording.is_open())cameraRecording.close();
-    recorder.Stop(reason);if(exporter)exporter->Queue(recorder.path());
+    recorder.LearningFinalState(sim->model,sim->data);recorder.Stop(reason);if(exporter)exporter->Queue(recorder.path());
     userPaused=true;menuOpen=true;anchorMenu=true;Notice("Запись сохранена.");
 }
 template<class F> void Record(F work){
@@ -381,7 +384,7 @@ void LoadPreferences(){
     selectedPolicy=0;catchUpEnabled=true;cameraLegsEnabled=true;
     std::ifstream input(assetsPath+"/menu_settings.txt");
     int version,mode,sc,kind,plan,view,pass,enabled,ds,dm,dc,dt,dcontacts;
-    if(input>>version>>mode>>sc>>kind>>plan>>view>>pass>>enabled>>ds>>dm>>dc>>dt>>dcontacts && version==1 && mode>=0&&mode<2 && sc>=0&&sc<5 && kind>=0&&kind<2 && plan>=0&&plan<2){
+    if(input>>version>>mode>>sc>>kind>>plan>>view>>pass>>enabled>>ds>>dm>>dc>>dt>>dcontacts && version==1 && mode>=0&&mode<2 && sc>=0&&sc<8 && kind>=0&&kind<2 && plan>=0&&plan<2){
         sessionMode=mode;sessionScene=sc;sessionCapture=kind;sessionPlan=plan;firstPerson=view!=0;passthroughVisible=pass!=0;
         debugEnabled=enabled!=0;debugStats=ds!=0;debugMeta=dm!=0;debugCamera=dc!=0;debugTargets=dt!=0;debugContacts=dcontacts!=0;
     }
@@ -407,7 +410,7 @@ void ChangeConfiguration(questmenu::Action action){
     if(action==A::PlanTrain)sessionPlan=0;
     if(action==A::PlanTest)sessionPlan=1;
     capture.mode=HumanCapture()?sessionPlan.load()+1:0;capture.Invalidate();
-    if(HumanCapture()){firstPerson=false;refreshEgoAnchor=true;sim->Reset();faulted=false;lastReference={};}
+    if(HumanCapture()){firstPerson=false;refreshEgoAnchor=true;sim->NewSceneTrial(uint32_t(std::chrono::steady_clock::now().time_since_epoch().count()));faulted=false;lastReference={};}
     retarget->calibrated=false;calibrationReady=false;trackingEnabled=false;wasApplying=false;
     retarget->Pause();sim->PauseWholeBodyReference();userPaused=true;menuOpen=true;
     settingsDirty=true;refreshGeometry=true;Notice("");
@@ -415,8 +418,9 @@ void ChangeConfiguration(questmenu::Action action){
 void ApplyMenuAction(questmenu::Action action,bool fresh,uint64_t sequence,int policyIndex=-1){
     using A=questmenu::Action;
     if(action==A::CatchUp){
+        if(sim->Standing()||sim->Backend()==questpolicy::DexWeave)return;
         if(recorder.active){Notice("Сначала сохраните запись.");return;}
-        if(HumanCapture())return;
+        if(HumanCapture()){Notice("Выберите симуляцию или запись робота.");return;}
         catchUpEnabled=!catchUpEnabled.load();settingsDirty=true;restartAfterCalibration=false;
         reset=true;userPaused=true;menuOpen=true;return;
     }
@@ -440,16 +444,19 @@ void ApplyMenuAction(questmenu::Action action,bool fresh,uint64_t sequence,int p
     }
     int policyRow=questmenu::PolicyRow(action);
     if(policyRow>=0){
+        struct LoadingComplete {~LoadingComplete(){loadingPolicy=-1;}} loadingComplete;
         if(recorder.active){Notice("Сначала сохраните запись.");return;}
-        if(HumanCapture())return;
+        if(HumanCapture()){Notice("Выберите симуляцию или запись робота.");return;}
         // Selection carries the catalog index from the UI, including page.
         int index=policyIndex;
-        if(index<0||index>=int(policyCatalog.size())||index==selectedPolicy.load())return;
+        __android_log_print(ANDROID_LOG_INFO,"G1Quest","Policy request index=%d selected=%d count=%zu recording=%d human=%d",index,selectedPolicy.load(),policyCatalog.size(),int(recorder.active),int(HumanCapture()));
+        if(index<0||index>=int(policyCatalog.size())){Notice("Режим недоступен. Откройте вкладку заново.");return;}
+        if(index==selectedPolicy.load()){Notice("Этот режим уже выбран.");return;}
         userPaused=true;menuOpen=true;restartAfterCalibration=false;
         try{
             sim->SelectPolicy(questpolicy::VerifiedPolicy(assetsPath,policyCatalog[index]));
-            retarget->EnableVirtualLegLift(policyCatalog[index].inputPatch=="virtual_leg_lift10_v1");
-            selectedPolicy=index;settingsDirty=true;
+            retarget->EnableVirtualLegLift(policyCatalog[index].inputPatch=="virtual_leg_lift10_v1");retarget->EnableNarrowStance(policyCatalog[index].inputPatch=="stance_narrow12_v1");
+            selectedPolicy=index;plannerWaiting=false;settingsDirty=true;
             calibrationSnapshot.reset();retarget->calibrated=false;retarget->Pause();calibrationReady=false;
             trackingEnabled=false;wasApplying=false;faulted=false;lastReference={};grip[0]=0;grip[1]=0;
             calibrate=false;toggleRecording=false;cameraFusion.Reset();capture.Invalidate();trackingStatus=0;pauseReason=0;
@@ -461,9 +468,9 @@ void ApplyMenuAction(questmenu::Action action,bool fresh,uint64_t sequence,int p
         return;
     }
     if(action==A::ModeSimulation||action==A::ModeTrajectories||action==A::CaptureRobot||action==A::CaptureHuman||action==A::PlanTrain||action==A::PlanTest){ChangeConfiguration(action);return;}
-    if(action==A::SceneEmpty||action==A::SceneCup||action==A::ScenePushT||action==A::SceneTennis||action==A::SceneRubik){
+    if(action==A::SceneEmpty||action==A::SceneCup||action==A::ScenePushT||action==A::SceneTennis||action==A::SceneRubik||action==A::SceneWBDex||action==A::SceneBimanual||action==A::SceneBasket){
         if(recorder.active){Notice("Сначала сохраните запись.");return;}
-        int selected=action==A::SceneEmpty?0:action==A::SceneCup?1:action==A::ScenePushT?2:action==A::SceneTennis?3:4;
+        int selected=action==A::SceneEmpty?0:action==A::SceneCup?1:action==A::ScenePushT?2:action==A::SceneTennis?3:action==A::SceneRubik?4:action==A::SceneWBDex?5:action==A::SceneBimanual?6:7;
         if(selected!=sessionScene.load()){restartAfterCalibration=false;requestedScene=selected;userPaused=true;menuOpen=true;Notice("Загрузка сцены...");}
         return;
     }
@@ -520,8 +527,9 @@ void ReloadScene(){
         floorGuard=std::make_unique<FootFloorGuard>(sim->model,retarget->solver().model());
 #endif
         retarget->calibrated=false;retarget->Pause();trackingEnabled=false;wasApplying=false;calibrationReady=false;faulted=false;
-        retarget->EnableControllerWrists(name=="rubik");
+        retarget->EnableControllerStageTargets(true);retarget->EnableControllerAnatomicalFrame(true);
         cameraFusion.Reset();lastReference={};grip[0]=0;grip[1]=0;trackingStatus=0;pauseReason=0;calibrate=false;
+        sim->NewSceneTrial(uint32_t(std::chrono::steady_clock::now().time_since_epoch().count()));
         sessionScene=selected;settingsDirty=true;placeScene=true;refreshEgoAnchor=true;PublishGeometry();
         {std::lock_guard<std::mutex> statsGuard(statsMutex);stats={};stats.physicsWorkers=sim->physics_workers;}
         Notice("");__android_log_print(ANDROID_LOG_INFO,"G1Quest","Selected scene %s nq=%d nv=%d",name.c_str(),sim->model->nq,sim->model->nv);
@@ -529,7 +537,18 @@ void ReloadScene(){
 }
 }
 
+void G1GraphicsContextCreated(){
+    const auto generation=g1graphics::NewContext();
+    program=0;meshes.clear();
+    __android_log_print(ANDROID_LOG_INFO,"G1Quest","Created graphics context generation %llu",static_cast<unsigned long long>(generation));
+}
 void G1Initialize(android_app* app){
+    // The native library can survive NativeActivity/context recreation.
+    // Never carry old pending clicks, focus, calibration or controller input.
+    {std::lock_guard<std::mutex> guard(inputMutex);pendingInputs.clear();pendingEvents.clear();pendingMenuActions.clear();latestTracking={};menuNotice.clear();}
+    menuState={};menuRays={};menuTrigger={};menuOpen=true;userPaused=true;active=false;calibrationReady=false;faulted=false;plannerWaiting=false;loadingPolicy=-1;
+    reset=false;calibrate=false;toggleRecording=false;recordingShortcut=false;restartAfterCalibration=false;settingsDirty=false;refreshGeometry=false;
+    anchorMenu=true;placeScene=true;requestedScene=-1;refreshEgoAnchor=true;grip[0]=grip[1]=0;recordingStatus=0;recordingStarted=0;
     std::string assets=std::string(app->activity->internalDataPath)+"/g1";
     assetsPath=assets;
     CopyAssets(app->activity->assetManager,"",assets);
@@ -551,10 +570,10 @@ void G1Initialize(android_app* app){
     }
     __android_log_print(ANDROID_LOG_INFO,"G1Quest","Loaded policy %s sha256=%s hz=%d",policyCatalog.at(selectedPolicy.load()).id.c_str(),policyCatalog.at(selectedPolicy.load()).sha256.c_str(),sim->PolicyHz());
     retarget=std::make_unique<MetaRetargeter>(assets);
-    retarget->EnableVirtualLegLift(policyCatalog.at(selectedPolicy.load()).inputPatch=="virtual_leg_lift10_v1");
+    retarget->EnableVirtualLegLift(policyCatalog.at(selectedPolicy.load()).inputPatch=="virtual_leg_lift10_v1");retarget->EnableNarrowStance(policyCatalog.at(selectedPolicy.load()).inputPatch=="stance_narrow12_v1");
     retarget->EnableNeutralWrists(true);
     retarget->EnableWristFrameV2(true);
-    retarget->EnableControllerWrists(sim->scene_name=="rubik");
+    retarget->EnableControllerStageTargets(true);retarget->EnableControllerAnatomicalFrame(true);
 #ifdef G1_ENABLE_TWIST_GROUNDING
     retarget->EnableTwistGrounding(true);
 #endif
@@ -576,6 +595,7 @@ void G1Initialize(android_app* app){
     for(int i=0;i<29;i++)trace<<",actual_"<<i;
     for(int h=0;h<2;h++)for(auto kind:{"target_wrist","actual_wrist"})for(int k=0;k<4;k++)trace<<","<<kind<<"_"<<h<<"_"<<k;
     trace<<"\n"<<std::setprecision(9);
+    sim->NewSceneTrial(uint32_t(std::chrono::steady_clock::now().time_since_epoch().count()));
     visualMeshes=LoadVisualMeshes(sim->scene_name,sim->model);
     mjv_defaultScene(&scene);mjv_makeScene(sim->model,&scene,2048);
     mjv_defaultScene(&workerScene);mjv_makeScene(sim->model,&workerScene,2048);
@@ -619,7 +639,7 @@ void G1Initialize(android_app* app){
                 }
                 for(const auto& command:actions)ApplyMenuAction(command.action,fresh,input.sequence,command.policyIndex);
                 if(reset.exchange(false)){
-                    cameraFusion.Reset();pauseReason=0;sim->Reset();wasApplying=false;trackingEnabled=false;retarget->calibrated=false;
+                    cameraFusion.Reset();pauseReason=0;plannerWaiting=false;sim->NewSceneTrial(uint32_t(std::chrono::steady_clock::now().time_since_epoch().count()));wasApplying=false;trackingEnabled=false;retarget->calibrated=false;
                     trackingStatus=0;calibrate=restartAfterCalibration;faulted=false;lastReference={};grip[0]=0;grip[1]=0;capture.Invalidate();refreshGeometry=true;
                     Record([&]{recorder.Event("reset",input.sequence);});Notice("");
                 }
@@ -629,10 +649,12 @@ void G1Initialize(android_app* app){
                 }
                 // Calibration must work while the menu freezes physics, also
                 // after recenter in the middle of a paused recording.
-                if(calibrate.load()&&fresh&&active){
+                // A model load or scene replacement can outlive the input
+                // snapshot. Keep A pending until a new controller frame arrives.
+                if(calibrate.load()&&fresh&&active&&(!retarget->UsesControllerWrists()||ControllerPosesValid(input))&&std::chrono::steady_clock::now()-receivedAt<std::chrono::milliseconds(50)){
                     calibrate=false;
                     try{
-                        retarget->Calibrate(sim->model,sim->data,input);
+                        retarget->Calibrate(sim->model,sim->data,input);sim->ResetArmCompensation();
                         StoreCalibration(input,std::chrono::duration_cast<std::chrono::nanoseconds>(receivedAt.time_since_epoch()).count());
                         cameraFusion.Reset();trackingEnabled=true;
                         calibratedThisCycle=true;pauseReason=0;wasApplying=false;if(capture.mode)capture.Calibrate();refreshGeometry=true;
@@ -666,7 +688,7 @@ void G1Initialize(android_app* app){
                             if(capture.mode){
                                 firstPerson=false;retarget->EnableCameraTracking(false);capture.Start(ClockSeconds());capture.Calibrate();
                             }
-                            recorder.Start(assetsPath,sim->model,questpolicy::Metadata(sim->scene_name,policyCatalog.at(selectedPolicy.load())),policyCatalog.at(selectedPolicy.load()).file,catchUpEnabled.load(),firstPerson.load(),policyCatalog.at(selectedPolicy.load()).secondaryFile);recordingStarted=ClockSeconds();acceptedRecordingSeconds=0;
+                            recorder.Start(assetsPath,sim->model,questpolicy::Metadata(sim->scene_name,policyCatalog.at(selectedPolicy.load())),policyCatalog.at(selectedPolicy.load()).file,catchUpEnabled.load()&&!sim->Standing()&&sim->Backend()!=questpolicy::DexWeave,firstPerson.load(),policyCatalog.at(selectedPolicy.load()).secondaryFile,!capture.mode);recordingStarted=ClockSeconds();acceptedRecordingSeconds=0;
                             std::ofstream config;config.exceptions(std::ios::badbit|std::ios::failbit);config.open(recorder.path()+"/session_config.json");
                             config<<"{\"schema_version\":1,\"mode\":\"trajectories\",\"scene\":\""<<sim->scene_name
                                 <<"\",\"capture\":\""<<(capture.mode?"human_skeleton_only":"human_and_robot")
@@ -757,6 +779,9 @@ void G1Initialize(android_app* app){
                 // The render thread can open the menu or replace a scene while
                 // this worker waits for the lock. Recheck before any Step.
                 if(!active||SessionPaused()||faulted||requestedScene>=0)continue;
+                // Wait before solving/recording a new GMR frame. Hidden solves
+                // during a stalled planner would make recorded replay diverge.
+                if(!sim->PrepareStep())throw sonic::PlannerPending{};
                 const bool resetNow=false;
                 bool valid=input.body.valid && (input.location_flags[0]&3)==3 && std::abs(input.xr_time_ns-input.body.time_ns)<200000000LL && std::chrono::steady_clock::now()-receivedAt<std::chrono::milliseconds(200);
                 bool calibratedNow=calibratedThisCycle;
@@ -764,7 +789,8 @@ void G1Initialize(android_app* app){
                     trackingEnabled=false;retarget->calibrated=false;pauseReason=2;
                     Record([&]{recorder.Event("body_skeleton_changed",input.sequence);});
                 }
-                bool applyReference=trackingEnabled && valid && retarget->calibrated;
+                const bool handsValid=!retarget->UsesControllerWrists()||ControllerPosesValid(input);
+                bool applyReference=trackingEnabled && valid && handsValid && retarget->calibrated;
                 retarget->EnableCameraTracking(firstPerson.load());
                 float leftGrip=grip[0].load(),rightGrip=grip[1].load();
                 // Camera registration belongs to Quest STAGE, not to robot
@@ -794,7 +820,8 @@ void G1Initialize(android_app* app){
                     }
                     double gmrStart=ClockSeconds();
                     auto whole=retarget->Solve(fused);
-                    if(catchUpEnabled){
+                    whole=sim->CorrectStandingArms(whole,retarget->solver().Targets());
+                    if(catchUpEnabled && !sim->Standing() && sim->Backend()!=questpolicy::DexWeave){
                         auto& solver=retarget->solver();
                         const auto goal=solver.HasCameraTarget()?solver.CameraTarget():solver.CameraPose();
                         whole=ApplyCameraCatchUp(whole,goal,sim->model,sim->data,egoCamera,true,solver.data()->qpos+3);
@@ -805,11 +832,21 @@ void G1Initialize(android_app* app){
 #ifdef G1_ENABLE_FOOT_FLOOR_GUARD
                     whole=floorGuard->Correct(whole);
 #endif
+                    if(sim->Backend()==questpolicy::DexWeave)sim->SetDexWeaveReference(retarget->solver().data()->qpos);
                     sim->SetWholeBodyReference(whole);std::copy_n(whole.begin()+6,29,lastReference.begin());
                 }else{sample.gmrMs=0;sim->PauseWholeBodyReference();retarget->Pause();}
                 wasApplying=applyReference;
                 bool poseMismatch=retarget->solver().positionRms>.10 || retarget->solver().orientationRms>.78539816339;
-                trackingStatus=!valid?3:retarget->calibrated?(trackingEnabled?(valid?(poseMismatch?5:1):3):2):0;
+                trackingStatus=(!valid||!handsValid)?3:retarget->calibrated?(trackingEnabled?(valid?(poseMismatch?5:1):3):2):0;
+                if(plannerWaiting.exchange(false))__android_log_print(ANDROID_LOG_INFO,"G1Quest","SONIC planner ready; simulation resumed at %.3fs",sim->data->time);
+                // Training camera: physical robot head origin, operator-controlled yaw/pitch.
+                // Roll and operator translation are not used as extra camera actions.
+                if(recorder.active){
+                    double headRotation[9],stageForward[3],look[3];mju_quat2Mat(headRotation,input.head.quaternion.data());
+                    for(int k=0;k<3;k++)stageForward[k]=-headRotation[3*k+2];
+                    mju_mulMatVec(look,retarget->StageToRobotRotation(),stageForward,3,3);
+                    recorder.LearningGazeWorld(look,firstPerson.load()&&applyReference);
+                }
                 Record([&]{recorder.Frame(sim->model,sim->data,sim->steps,input,resetNow,calibratedNow,applyReference,valid,
                     leftGrip,rightGrip,trackingStatus,retarget->error,(poseMismatch),lastReference);});
                 Record([&]{recorder.Mimic(input,sim->steps,sim->data->time,sim->WholeBodyReference());});
@@ -835,7 +872,7 @@ void G1Initialize(android_app* app){
                     trace<<"\n";if(sim->steps%1000==0)trace.flush();
                 }
                 double physicsStart=ClockSeconds();
-                for(int i=0;i<10;i++)sim->Step(false,leftGrip,rightGrip);
+                for(int i=0;i<10;i++){if(!sim->Step(false,leftGrip,rightGrip))throw sonic::PlannerPending{};if(sim->Backend()==questpolicy::DexWeave && sim->steps%20==1)Record([&]{recorder.DexReference(sim->steps-1,sim->data->time-.001,sim->DexReference(),sim->DexVelocity());});}
                 if(recorder.active&&applyReference)acceptedRecordingSeconds=acceptedRecordingSeconds.load()+.01;
                 PublishGeometry();
                 sample.physicsMs=std::max(0.,(ClockSeconds()-physicsStart)*1000-sim->inference_ms);
@@ -900,7 +937,15 @@ void G1Initialize(android_app* app){
                 }
                 if(sim->steps%5000==0)__android_log_print(ANDROID_LOG_INFO,"G1Quest","sim=%.2fs height=%.3f inference=%.3fms",sim->data->time,sim->data->qpos[2],sim->inference_ms);
                 if(sim->steps%5000==0)__android_log_print(ANDROID_LOG_INFO,"G1Quest","tracking state=%d GMR task residual=%.3f",trackingStatus.load(),retarget->error);
+            }catch(const sonic::PlannerPending&){
+                std::lock_guard<std::mutex> guard(mutex);
+                if(!plannerWaiting.exchange(true))__android_log_print(ANDROID_LOG_INFO,"G1Quest","SONIC waiting without advancing physics at %.3fs, plan_age=%.3f",sim->data->time,sim->PlanAge());
+                sample.published=ClockSeconds();sample.simTime=sim->data->time;sample.cycleMs=(sample.published-cycleStart)*1000;sample.realTimeFactor=0;
+                {std::lock_guard<std::mutex> statsGuard(statsMutex);stats=sample;}
             }catch(const std::exception& e){
+                plannerWaiting=false;
+                Notice(std::string("Симуляция остановлена: ")+e.what());
+                std::ofstream(assetsPath+"/last_simulation_error.txt")<<e.what()<<'\n';
                 __android_log_print(ANDROID_LOG_ERROR,"G1Quest","Simulation paused at %.3fs: %s; trace saved",sim->data->time,e.what());
                 std::lock_guard<std::mutex> guard(mutex);trace.flush();Record([&]{recorder.Event("simulation_fault",input.sequence);recorder.Flush();});faulted=true;trackingEnabled=false;calibrate=false;trackingStatus=4;pauseReason=3;
                 {std::lock_guard<std::mutex> statsGuard(statsMutex);stats.status=4;stats.reason=3;}
@@ -919,6 +964,10 @@ void G1Shutdown(bool interrupted){
         else FinishRecording(latestTracking.sequence,"app_shutdown");
     });
     exporter.reset();cameraStream.reset();
+    // RuntimeGuard is destroyed before the owning Graphics/EGL context. Drop
+    // scene resources also when a runtime restarts inside that same context.
+    for(auto& entry:meshes){glDeleteBuffers(1,&entry.second.vbo);glDeleteVertexArrays(1,&entry.second.vao);}meshes.clear();
+    if(program)glDeleteProgram(program);program=0;
     CloseFailedRecordingStreams();telemetry.close();trace.close();mjv_freeScene(&scene);mjv_freeScene(&workerScene);calibrationSnapshot.reset();retarget.reset();sim.reset();
 }
 void G1SetActive(bool value){
@@ -1000,11 +1049,12 @@ void G1PrepareFrame(){
     frameOperatorCamera=operatorCameraSmoother.Smooth(optical,now);
     menuState.policyIndex=selectedPolicy;menuState.catchUp=catchUpEnabled;
     menuState.cameraConfigured=cameraConfigured;menuState.cameraLegs=cameraLegsEnabled;
+    menuState.policyLoading=loadingPolicy.load()>=0;
     menuState.mode=questmenu::Mode(sessionMode.load());menuState.scene=questmenu::Scene(sessionScene.load());
     menuState.capture=questmenu::Capture(sessionCapture.load());menuState.plan=questmenu::Plan(sessionPlan.load());
-    menuState.open=menuOpen;menuState.paused=SessionPaused()||!active;menuState.recording=recordingStatus==1;
+    menuState.plannerWaiting=plannerWaiting;menuState.open=menuOpen;menuState.paused=SessionPaused()||!active;menuState.recording=recordingStatus==1;
     menuState.calibrated=calibrationReady;menuState.faulted=faulted;menuState.firstPerson=firstPerson;menuState.passthrough=G1PassthroughVisible();
-    menuState.trackingValid=frameTracking.body.valid&&(frameTracking.location_flags[0]&3)==3&&frameAgeMs<200&&std::abs(frameTracking.xr_time_ns-frameTracking.body.time_ns)<200000000LL;
+    menuState.trackingValid=frameTracking.body.valid&&ControllerPosesValid(frameTracking)&&(frameTracking.location_flags[0]&3)==3&&frameAgeMs<200&&std::abs(frameTracking.xr_time_ns-frameTracking.body.time_ns)<200000000LL;
     menuState.debugEnabled=debugEnabled;menuState.debugStats=debugStats;menuState.debugMeta=debugMeta;menuState.debugCamera=debugCamera;
     menuState.debugTargets=debugTargets;menuState.debugContacts=debugContacts;menuState.exportStatus=frameExportStatus;
     menuState.cameraLevel=0;menuState.cameraStatus.clear();menuState.cameraInfo="Не подключена";
@@ -1028,13 +1078,22 @@ void G1PrepareFrame(){
         double rotation[9];mju_quat2Mat(rotation,ray.pose.quaternion.data());
         float origin[3],direction[3];for(int a=0;a<3;a++){origin[a]=float(ray.pose.position[a]);direction[a]=float(-rotation[a*3+2]);}
         float x=0,y=0,distance=1.4f;bool hit=valid&&menuState.open&&questmenu::RayHit(menuWorld.m,origin,direction,x,y,distance);
-        auto action=hit?questmenu::HitTest(layout,x,y):questmenu::Action::None;
+        auto action=hit?questmenu::ClickAction(layout,x,y):questmenu::Action::None;
         framePointers.push_back({x,y,hit,action!=questmenu::Action::None});
         if(menuState.open&&valid){
             std::array<double,3> end;for(int a=0;a<3;a++)end[a]=origin[a]+(hit?distance:1.4f)*direction[a];
             frameMenuRays.bones.push_back({ray.pose.position,end,.001f,{.8f,.85f,.75f,.85f}});
         }
-        if(menuTrigger[hand].Update(valid,ray.trigger>.55f)&&hit){
+        const bool pressed=ray.trigger>.55f;
+        static std::array<bool,2> previousPressed{};
+        if(menuState.open&&pressed!=previousPressed[hand])
+            __android_log_print(ANDROID_LOG_INFO,"G1Quest","Menu trigger hand=%d value=%.3f valid=%d focus=%d aim=%d input=%d hit=%d action=%d page=%d policy_page=%d x=%.3f y=%.3f",hand,ray.trigger,int(valid),int(active.load()),int(ray.valid),int(ray.active),int(hit),int(action),int(menuState.page),menuState.policyPage,x,y);
+        previousPressed[hand]=pressed;
+        const int menuRevision=int(menuState.page)*256+menuState.policyPage*8+int(menuState.recording)*4+int(questmenu::HumanCapture(menuState))*2+int(menuState.policyLoading);
+        const auto click=menuTrigger[hand].Update(menuState.open&&valid,ray.trigger,action,x,y,menuRevision);
+        if(click.pressed&&hit){
+            action=click.action;
+            __android_log_print(ANDROID_LOG_INFO,"G1Quest","Menu click hand=%d action=%d policy_row=%d page=%d",hand,int(action),questmenu::PolicyRow(action),menuState.policyPage);
             using A=questmenu::Action;
             if(action==A::PageSession)menuState.page=questmenu::Page::Session;
             else if(action==A::PageView)menuState.page=questmenu::Page::View;
@@ -1043,7 +1102,15 @@ void G1PrepareFrame(){
             else if(action==A::PolicyPrevious)menuState.policyPage=std::max(0,menuState.policyPage-1);
             else if(action==A::PolicyNext)menuState.policyPage=std::min((int(policyCatalog.size())-1)/questmenu::PoliciesPerPage,menuState.policyPage+1);
             else if(action==A::Close)G1ToggleMenu();
-            else if(action!=A::None)QueueMenuAction(action,questmenu::PolicyRow(action)<0?-1:menuState.policyPage*questmenu::PoliciesPerPage+questmenu::PolicyRow(action));
+            else if(action!=A::None){
+                int row=questmenu::PolicyRow(action);
+                if((row>=0||action==A::CatchUp)&&loadingPolicy.load()>=0){Notice("Дождитесь завершения загрузки.");continue;}
+                const int index=row<0?-1:menuState.policyPage*questmenu::PoliciesPerPage+row;
+                if(row>=0&&!menuState.recording&&!questmenu::HumanCapture(menuState)){
+                    loadingPolicy=index;Notice("Загрузка режима...");
+                }
+                QueueMenuAction(action,index);
+            }
         }
     }
 
@@ -1051,7 +1118,7 @@ void G1PrepareFrame(){
     if(!guard.owns_lock()){skippedSceneUpdates++;return;}
     scene.ngeom=std::min(int(publishedGeometry.size()),scene.maxgeom);
     std::copy_n(publishedGeometry.begin(),scene.ngeom,scene.geoms);frameCamera=publishedCamera;
-    frameTargets=publishedTargets;menuState.tennisInfo=publishedTennis;frameCupShade=publishedCupShade;frameRobotPosition=publishedRobotPosition;
+    frameTargets=publishedTargets;menuState.tennisInfo=publishedTennis;frameCupShade=publishedCupShade;frameCupGoal=publishedCupGoal;frameRobotPosition=publishedRobotPosition;
     menuState.rubikInfo=publishedRubik;
     if(publishedEgoCalibrated){frameEgoRotation=publishedEgoRotation;frameEgoScale=publishedEgoScale;frameEgoWorld=publishedEgoWorld;refreshEgoAnchor=false;}
     else if(refreshEgoAnchor && (frameTracking.location_flags[0]&3)==3){
@@ -1090,9 +1157,7 @@ void G1Render(const float* vp,const float* projection){
     glUniform3fv(keyLocation,1,key);glUniform3fv(upLocation,1,up);
     glUniform4fv(cupShadeLocation,1,frameCupShade.data());
     glUniform2fv(robotPositionLocation,1,frameRobotPosition.data());
-    int goalId=mj_name2id(sim->model,mjOBJ_NUMERIC,"cup_lab_goal");
-    float goal[4]={};if(goalId>=0&&sim->model->numeric_size[goalId]==4)for(int j=0;j<4;j++)goal[j]=float(sim->model->numeric_data[sim->model->numeric_adr[goalId]+j]);
-    glUniform4fv(cupGoalLocation,1,goal);
+    glUniform4fv(cupGoalLocation,1,frameCupGoal.data());
     int room=mj_name2id(sim->model,mjOBJ_BODY,"cup_lab_room"),storage=mj_name2id(sim->model,mjOBJ_BODY,"cup_lab_storage");
     struct DrawItem {const mjvGeom* geom;Mesh* mesh;XrMatrix4x4f local,model;int body;float alpha,distance;};
     std::vector<DrawItem> draws;draws.reserve(scene.ngeom);

@@ -4,9 +4,13 @@ import textwrap
 import torch
 
 
-def install(cls, coefficient=1.0, yaw_airtime=False, yaw_threshold=.15):
+def install(cls, coefficient=1.0, yaw_airtime=False, yaw_threshold=.15, hip_weight=1.):
+    """hip_weight scales hip roll/yaw in the joint pose/velocity REWARDS only;
+    error metrics and termination keep the coefficient-only weights."""
     if not 0 < coefficient <= 1:
         raise ValueError('lower-body coefficient must be in (0,1]')
+    if hip_weight < 1:
+        raise ValueError('hip roll/yaw weight must be >= 1')
     originals = {}
 
     def moving(self):
@@ -15,6 +19,11 @@ def install(cls, coefficient=1.0, yaw_airtime=False, yaw_threshold=.15):
     def joint_weights(self):
         w = torch.ones((self.num_envs, self.num_dof), device=self.device)
         w[:, :12] = torch.where(moving(self), coefficient, 1.)[:, None]
+        return w
+
+    def joint_reward_weights(self):
+        w = joint_weights(self)
+        w[:, [1, 2, 7, 8]] *= hip_weight  # left/right hip roll, hip yaw (validate_contract order)
         return w
 
     def body_weights(self):
@@ -27,6 +36,7 @@ def install(cls, coefficient=1.0, yaw_airtime=False, yaw_threshold=.15):
 
     cls._locomotion_mask = moving
     cls._leg_joint_weights = joint_weights
+    cls._leg_joint_reward_weights = joint_reward_weights
     cls._leg_body_weights = body_weights
 
     def patch(name, old, new):
@@ -43,9 +53,10 @@ def install(cls, coefficient=1.0, yaw_airtime=False, yaw_threshold=.15):
         originals[name] = fn
         setattr(cls, name, namespace[name])
 
+    if coefficient != 1. or hip_weight != 1.:
+        patch('_reward_tracking_joint_dof', 'dof_diff * dof_diff', 'dof_diff * dof_diff * self._leg_joint_reward_weights()')
+        patch('_reward_tracking_joint_vel', 'vel_diff * vel_diff', 'vel_diff * vel_diff * self._leg_joint_reward_weights()')
     if coefficient != 1.:
-        patch('_reward_tracking_joint_dof', 'dof_diff * dof_diff', 'dof_diff * dof_diff * self._leg_joint_weights()')
-        patch('_reward_tracking_joint_vel', 'vel_diff * vel_diff', 'vel_diff * vel_diff * self._leg_joint_weights()')
         for name in ('_reward_tracking_keybody_pos', '_reward_tracking_keybody_pos_global'):
             patch(name, 'torch.sum(key_body_pos_diff * key_body_pos_diff, dim=-1)', 'torch.sum(key_body_pos_diff * key_body_pos_diff, dim=-1) * self._leg_body_weights()')
         patch('_error_tracking_joint_dof', 'torch.abs(dof_diff)', 'torch.abs(dof_diff) * self._leg_joint_weights()')

@@ -88,7 +88,9 @@ class QuestActorHistory:
         return out
 
 
-def install(env, path, dataset):
+def install(env, path, dataset, transform=None):
+    """transform(command[N,35]) -> command: optional actor-only correction after
+    the bank (catch_up.install), applied to bank and source commands alike."""
     if abs(env.dt-.02) > 1e-8 or env.num_obs != 1432 or env.obs_type != 'student_future':
         raise ValueError('Expected pinned 50 Hz / 1432-observation student actor')
     bank = NativeCommandBank(path, env._motion_lib._motion_files, dataset, env.device)
@@ -102,6 +104,8 @@ def install(env, path, dataset):
         original_obs()
         current = env.obs_buf[:, :127].clone()
         current[:, :35] = bank.sample(env._motion_ids, env._get_motion_times(), current[:, :35])
+        if transform is not None:
+            current[:, :35] = transform(current[:, :35])
         env.obs_buf = history.observe(current)
         env.obs_history_buf.copy_(history.history)
         counters[0] += bank.active[env._motion_ids].sum()

@@ -44,7 +44,7 @@ class SceneAssetsTests(unittest.TestCase):
     def test_scene_objects_are_physically_separate(self):
         expected = {"stand": set(), "cup": {"table", "cup"},
                     "push_t": {"t_box", "t_target"}, "tennis": {"tennis_table", "tennis_racket", "tennis_feeder", "tennis_ball"},
-                    "rubik": {"table", "rubik_core"}}
+                    "rubik": {"table", "rubik_core"}, "wb_dex": set(), "bimanual": set(), "basket": set()}
         all_props = {"table", "cup", "t_box", "t_target", "tennis_table", "tennis_racket", "tennis_feeder", "tennis_ball", "rubik_core"}
         for name, model in self.models.items():
             with self.subTest(scene=name):
@@ -54,7 +54,7 @@ class SceneAssetsTests(unittest.TestCase):
                 self.assertEqual(model.opt.timestep, .001)
                 self.assertEqual(model.opt.solver, mujoco.mjtSolver.mjSOL_NEWTON)
                 dynamic_prop = "cup" if name == "cup" else "t_box" if name == "push_t" else None
-                self.assertEqual((model.nq, model.nv), (119, 109) if name == "rubik" else (64, 61) if name == "tennis" else (57, 55) if dynamic_prop else (50, 49))
+                self.assertEqual((model.nq, model.nv), (119, 109) if name == "rubik" else (58, 56) if name == "basket" else (64, 61) if name in ("tennis", "bimanual") else (57, 55) if dynamic_prop or name in ("wb_dex", "basket") else (50, 49))
                 if dynamic_prop:
                     body = model.body(dynamic_prop)
                     self.assertGreater(body.mass[0], 0)
@@ -168,7 +168,7 @@ class SceneAssetsTests(unittest.TestCase):
         self.assertEqual(json.loads((self.assets / "recording_metadata.json").read_text()), self.shared)
         self.assertEqual(json.loads((self.assets / "scene_manifest.json").read_text()), self.manifest)
         self.assertEqual(self.manifest["default_scene"], "stand")
-        self.assertEqual(set(self.manifest["scenes"]), {"stand", "cup", "push_t", "tennis", "rubik"})
+        self.assertEqual(set(self.manifest["scenes"]), {"stand", "cup", "push_t", "tennis", "rubik", "wb_dex", "bimanual", "basket"})
 
 
 if __name__ == "__main__":

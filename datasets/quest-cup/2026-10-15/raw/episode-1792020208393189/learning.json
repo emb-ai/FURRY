@@ -1,0 +1,1 @@
+{"schema":"furry-visual-capture-v1","mujoco_version":"3.3.7","model_sha256":"3f9b75cebff22faf63ca02071c0f8479d565d7fd9ed167159e886a8154594faf","camera":"ego","camera_mode":"robot_head_pan_tilt_v1","camera_fovy_degrees":80,"image_width":640,"image_height":360,"sample_timing":"pre_action","action_schema":"body35_grip2_gaze2","export_hz":30}

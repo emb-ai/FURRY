@@ -8,8 +8,11 @@ from pathlib import Path
 import re
 import xml.etree.ElementTree as ET
 
-STYLE = "cup-lab-v1"
-GOAL = (.65, -.25, .75, .055)
+STYLE = "cup-lab-v2"
+GOAL = (.43, 0., .75, .055)
+CUP_XY_SCALE = .75
+CUP_DIAMETER_M = .086 * CUP_XY_SCALE
+CUP_MASS_KG = .240 * CUP_XY_SCALE**2
 
 # Compact geometric lettering survives the native untextured mesh stream.
 GLYPHS = {
@@ -225,11 +228,11 @@ def add_workcell(root):
         decoration(table, f"lab_bench_cross_{x}", pos=(x, 0, .18), size=(.015, .39, .015), material="lab_metal")
     # Inlaid goal is flat, with no new collision step on the tabletop.
     ring = lathe(asset, "lab_goal_ring", [(.062, 0), (.065, .0004), (.062, .0008), (.059, .0004), (.062, 0)])
-    decoration(table, "cup_place_ring", kind="mesh", mesh=ring, pos=(0, -.25, .7503), material="lab_goal")
+    decoration(table, "cup_place_ring", kind="mesh", mesh=ring, pos=(GOAL[0]-.65, GOAL[1], .7503), material="lab_goal")
     for dy in (-.010, .010):
-        decoration(table, f"cup_place_tick_{dy}", pos=(0, -.25+dy, .7506), size=(.018, .0012, .00015), material="lab_goal")
+        decoration(table, f"cup_place_tick_{dy}", pos=(GOAL[0]-.65, GOAL[1]+dy, .7506), size=(.018, .0012, .00015), material="lab_goal")
     label = lettering(asset, "lab_place_label", "PLACE", .004)
-    decoration(table, "cup_place_label", kind="mesh", mesh=label, pos=(-.08, -.295, .7505),
+    decoration(table, "cup_place_label", kind="mesh", mesh=label, pos=(GOAL[0]-.65-.08, GOAL[1]-.045, .7505),
                euler=(0,0,-math.pi/2), material="lab_goal")
 
     for geom in list(cup.findall("geom")):
@@ -254,6 +257,27 @@ def add_workcell(root):
     decoration(cup, "cup_ceramic_shell", kind="mesh", mesh=shell, material="lab_ceramic", group=1)
     grip = handle(asset, "lab_mug_handle")
     decoration(cup, "cup_ceramic_handle", kind="mesh", mesh=grip, material="lab_ceramic", group=1)
+    # Compact mug: 64.5 mm body diameter, 96 mm tall, 135 g. Scale both
+    # rendered surfaces and collisions; preserve the open cavity/handle.
+    # These are FURRY dimensions, not claimed TWIST2 prop measurements.
+    for geom in cup.findall("geom"):
+        for field in ("pos", "fromto"):
+            if geom.get(field):
+                values=list(map(float,geom.get(field).split()))
+                values=[v*CUP_XY_SCALE if i%3<2 else v for i,v in enumerate(values)]
+                geom.set(field," ".join(map(str,values)))
+        if geom.get("size"):
+            values=list(map(float,geom.get("size").split()))
+            axes=2 if geom.get("type")=="box" else 1
+            values=[v*CUP_XY_SCALE if i<axes else v for i,v in enumerate(values)]
+            geom.set("size"," ".join(map(str,values)))
+        if geom.get("mass"):geom.set("mass",str(float(geom.get("mass"))*CUP_XY_SCALE**2))
+        if geom.get("type")=="mesh":
+            asset.find("mesh[@name='%s']"%geom.get("mesh")).set("scale",f"{CUP_XY_SCALE} {CUP_XY_SCALE} 1")
+        elif geom.get("contype")!="0":
+            # Rigid ceramic contact; the old soft contact allowed continuing
+            # closure to roll the cup out. Same formulation as the puzzle.
+            geom.set("solref",".004 1");geom.set("solimp",".98 .995 .001");geom.set("condim","4")
     custom = root.find("custom")
     if custom is None:
         custom = el(root, "custom")

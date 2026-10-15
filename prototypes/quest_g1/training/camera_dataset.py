@@ -184,6 +184,7 @@ def main():
     p.add_argument('--target', default='clean3')
     p.add_argument('--stage-base', type=int, default=101, help='first episode stage; keep clear of other Quest stages')
     p.add_argument('--mirror', action='store_true', help='add sagittal reflections of TRAIN clips')
+    p.add_argument('--source', default='quest-camera', help='input_source tag; a separate tag gets its own --quest-shares mass')
     a = p.parse_args()
     out = a.output.resolve()
     if out.exists():
@@ -192,7 +193,7 @@ def main():
     stages = {Path(pair.split(':', 1)[0]).name.replace('episode-', ''): a.stage_base + i for i, pair in enumerate(a.pair)}
     if set(a.validation) - set(stages):
         raise ValueError('Validation episode not among --pair')
-    manifest = {'schema': 'quest-g1-motion-v1', 'fps': 100, 'source': 'quest-camera',
+    manifest = {'schema': 'quest-g1-motion-v1', 'fps': 100, 'source': a.source,
                 'split_unit': 'whole episode (one stage per episode)', 'validation_episodes': a.validation,
                 'validation_stages': sorted(stages[e] for e in a.validation), 'episode_stages': stages,
                 'reward_target': f'camera legs cleaned by camera_targets.py ({a.target}), native GMR via camera_commands body override',
@@ -205,7 +206,7 @@ def main():
 
     def bank(clip, cmd):
         key = 'motion_%04d' % len(arrays); arrays[key] = cmd
-        files[clip['file']] = {'key': key, 'target_sha256': clip['sha256'], 'split': 'train', 'source': 'quest-camera',
+        files[clip['file']] = {'key': key, 'target_sha256': clip['sha256'], 'split': 'train', 'source': a.source,
                                'frames': len(cmd), 'seconds': clip['seconds'], 'parent_id': clip.get('parent_id'),
                                'augmentation': clip.get('augmentation'), 'stage': clip['stage']}
 
@@ -232,7 +233,7 @@ def main():
                     clipq = q[start:stop].copy(); clipq[:, :2] -= clipq[0, :2]
                     cid = f'{eid}-run{run:02d}-part{part:02d}-{start:06d}'
                     t0 = grid[keep[start]]; seconds = (stop - start - 1) / 100
-                    clip = {'id': cid, 'split': split, 'source': 'quest-camera', 'episode': eid,
+                    clip = {'id': cid, 'split': split, 'source': a.source, 'episode': eid,
                             'stage': stages[eid], 'source_start_sim_s': float(t0), 'seconds': float(seconds),
                             'camera_share': float((cam[keep[start]:keep[start] + stop - start] > .5).mean()),
                             'max_floor_lift_m': float(lifts[start:stop].max()),

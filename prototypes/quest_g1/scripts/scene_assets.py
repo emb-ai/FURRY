@@ -15,9 +15,10 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from g1_sim.scene import make_model
+from g1_sim.rubik import EDGE_M as RUBIK_EDGE_M
 from g1_sim.visuals import export_visual_meshes
 
-SCENES = ("stand", "cup", "push_t", "tennis", "rubik")
+SCENES = ("stand", "cup", "push_t", "tennis", "rubik", "wb_dex", "bimanual", "basket")
 HUD_MAX_TRIANGLES = 8192
 OPERATOR_SKELETON_MAX_TRIANGLES = 2048  # 1024 unique triangles, two depth passes
 MAX_TRIANGLES_PER_EYE = 100000
@@ -185,32 +186,51 @@ def export_scenes(assets: Path) -> dict:
         metadata.update(scene=scene_name, scene_name=scene_name, model_file=files["model"],
                         visual_meshes_file=files["visual_meshes"], nq=model.nq, nv=model.nv,
                         nu=model.nu, joints=[model.joint(i).name for i in range(model.njnt)])
+        if scene_name in ("cup", "rubik", "wb_dex", "bimanual", "basket"):
+            metadata["hand_control"] = dict(mode="position_with_motor_effort_limit",
+                motor_torque_limit_nm=.35, joint_damping_nm_s_rad=.03,
+                contact_force_limit=False)
         if scene_name == "cup":
             from g1_sim.cup_lab import STYLE, GOAL
             metadata["appearance"] = dict(style=STYLE, room="visual-only; hidden in passthrough",
-                mug_mass_kg=.240, mug_handle="12 physical capsules; 32-step visual loop",
-                placement_cue=dict(goal_xyz_m=list(GOAL[:3]),radius_m=GOAL[3],
+                mug_mass_kg=.135, mug_handle="12 physical capsules; 32-step visual loop",
+                placement_cue=dict(default_goal_xyz_m=list(GOAL[:3]),goal_state="cup_goal_marker mocap position in scene_state.csv",radius_m=GOAL[3],
                     height_tolerance_m=.012,upright_cosine_min=.966,
                     linear_speed_max_m_s=.05,angular_speed_max_rad_s=.2,
                     affects_task_score=False),lighting="hemisphere + directional + analytic contact cues")
         if scene_name == "tennis":
-            metadata["tennis"] = dict(schema_version=4, ball_mass_kg=.0027, ball_diameter_m=.04,
+            metadata["tennis"] = dict(schema_version=6, ball_mass_kg=.0027, ball_diameter_m=.04,
                 gravity_m_s2=9.81, air_density_kg_m3=1.204, drag_coefficient=.5,
-                first_touch_delay_s=7, serve_interval_s=4, muzzle_speed_m_s=5.5,
-                racket_restitution=1, table_restitution=.9, spin=False, magnus=False,
+                first_touch_delay_s=7, serve_interval_s=5, muzzle_speed_m_s=4.6, muzzle_height_m=1.32,
+                bounce_x_m=[1.02,1.30], bounce_y_m=[-.38,.38], aim_preview_min_s=1.5,
+                sampling="seeded per serve; state in scene_state.csv", aiming="mocap head +Z equals launch velocity direction",
+                racket_restitution=1, table_restitution=.9, obstacle_restitution=.7, net_restitution=.15,
+                spin=False, magnus=False, low_speed_normal_restitution=0,
+                collision_scope="physical scene colliders; visual-only overlays and passthrough pixels excluded",
+                active_states={"0":"hidden","1":"rally","2":"missed but physical","3":"scored but physical"},
+                lifetime="continue bouncing after result; replace at next serve or retire outside room bounds",
                 grip_assist=True, grip_style="shakehand_g1_three_fingers", grab_radius_m=.12, grip_acquire=.65, grip_release=.25,
-                impact="frictionless normal impulse with finite generalized racket effective mass (active grip weld included)",
+                impact="frictionless normal impulses; finite dynamic body mass; racket grip weld included",
                 state_file="tennis.csv", success="first table landing after racket hit on opponent half",
                 table_length_m=2.74, table_width_m=1.525, table_height_m=.76, net_height_m=.1525)
+        from g1_sim.collection_scenes import TASKS, PAPER
+        if scene_name in TASKS:
+            metadata["collection_task"] = dict(schema_version=3 if scene_name in ("cup","wb_dex") else 2, task=TASKS[scene_name][1],
+                source=PAPER, reproduction="task-level adaptation; dimensions, mass and tolerances authored for FURRY",
+                seed_state="scene_state.csv", reset="new seeded start on scene load or reset; never on pause/calibration",
+                success="lift, release inside goal, settle .5s; bimanual requires assigned hands; basket requires carrying through hinged door", timeout_s=90,
+                parameters={model.numeric(i).name: model.numeric(i).data.tolist() for i in range(model.nnumeric) if model.numeric(i).name.startswith("collection_")})
         if scene_name == "rubik":
-            metadata["rubik"] = dict(schema_version=1,model="2x2-magnetic-contact-v1",edge_m=.0628,
+            metadata["rubik"] = dict(schema_version=2,model="2x2-magnetic-grip-guard-v2",edge_m=RUBIK_EDGE_M,
                 total_mass_kg=.122,cubies=8,faces=["R","L","B","F","U","D"],
                 scramble="R U' F R'",grip_assist=False,face_motor=False,
-                state_file="rubik.csv",state_values=64,success="six uniform color faces at a completed detent",
+                rotation_intent="operator relative wrist goals; userdata[7] is recorded task input",grip_closure_limit=.8,hand_position_kp=2.,hand_max_effort_nm=.35,
+                state_file="rubik.csv",state_values=67,success="six uniform color faces at a completed detent",
+                grip_guard=dict(internal_brake_friction_nm=.5,settled_grip_s=.25,grip_deadband=.015,minimum_grip=.35,state_indices=[64,65,66],instantaneous_stop_rate_rad_s=.1,detent_clutch=dict(window_rad=0.2617993877991494,engage_error_rad=.002,outward_speed_rad_s=.0001)),
                 magnetic_window_deg=15,magnetic_stiffness_nm_rad=.24,hinge_armature_kg_m2=.00001,
-                controller_wrists=True,table_height_m=.825,stand_top_m=.900,
+                controller_wrists=True,table_height_m=.825,support_surface="table",
                 retaining_mechanism="idealized switchable internal layer bindings",direct_arm_pd=True,
-                control="controller wrist poses and ordinary per-hand Grip; two loaded hands and relative wrist rotation select the free internal layer")
+                control="controller wrist poses and ordinary per-hand Grip; established two-hand hold and relative wrist rotation release internal friction; closing/regripping resists layer rotation")
         # A legacy model hash with the wrong state dimensions would make an
         # episode ambiguous. Preserve policy, GMR and source-code provenance.
         metadata["sha256"] = {
