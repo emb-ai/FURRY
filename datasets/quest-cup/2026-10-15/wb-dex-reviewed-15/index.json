@@ -1,7 +1,7 @@
 {
   "scene": "wb_dex",
-  "count": 15,
-  "criterion": "Object origin remains within x=0.58 +/-0.15m, y=-0.64 +/-0.17m, z=(0,0.16)m throughout final 0.5s; object translational speed <0.03m/s throughout final 0.5s; grip released; no simulation_fault; input.valid never zero. Final replay images inspected. Upright placement is NOT required. Source outcome labels remain unchanged.",
+  "count": 29,
+  "criterion": "Object origin remains within x=0.58 +/-0.15m, y=-0.64 +/-0.17m, z=(0,0.16)m throughout final 0.5s; object translational speed <0.03m/s throughout final 0.5s; grip released; no simulation_fault; input.valid never zero. Final replay images inspected for the initial 15 episodes; the 14 additional episodes use recorded-state and input checks. Upright placement is NOT required. Source outcome labels remain unchanged.",
   "episodes": [
     {
       "episode_id": "1792055048009737",
@@ -152,6 +152,160 @@
       "accepted_seconds": 15.819999999999707,
       "tail_max_speed_mps": 7.924509115944985e-06,
       "final_tilt_degrees": 0.0010881297391937
+    },
+    {
+      "episode_id": "1792061438143079",
+      "archive": "g1-episode-1792061438143079.zip",
+      "sha256": "8b1e00c9a414693f8b23871dde4fdbbe2ae7e0a4abfe47545f962c1061b065ed",
+      "original_outcome": 0,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 18.94000000000016,
+      "tail_max_speed_mps": 1.1269467875625408e-07,
+      "final_tilt_degrees": 89.96835600470976,
+      "review_method": "recorded_state_and_input_checks"
+    },
+    {
+      "episode_id": "1792061459321950",
+      "archive": "g1-episode-1792061459321950.zip",
+      "sha256": "719885bed69b0d07f15639bff4bf9daf62097ca3844c08fc076339a92f324fbb",
+      "original_outcome": 1,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 16.10999999999972,
+      "tail_max_speed_mps": 0.0001104346102201,
+      "final_tilt_degrees": 0.0004890207960037379,
+      "review_method": "recorded_state_and_input_checks"
+    },
+    {
+      "episode_id": "1792061495696685",
+      "archive": "g1-episode-1792061495696685.zip",
+      "sha256": "f44d003b14b723d69d586e76e4a8007df9981a107862a89c6caf8ed8ece6d280",
+      "original_outcome": 0,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 12.45999999999978,
+      "tail_max_speed_mps": 0.0214415117938478,
+      "final_tilt_degrees": 0.0011382557513012746,
+      "review_method": "recorded_state_and_input_checks"
+    },
+    {
+      "episode_id": "1792061537795128",
+      "archive": "g1-episode-1792061537795128.zip",
+      "sha256": "f8ae68ef141292b5613b22829a3a81ec580e0e567f3f212ab46f5491f0c2deee",
+      "original_outcome": 1,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 16.37999999999976,
+      "tail_max_speed_mps": 0.0172170289149896,
+      "final_tilt_degrees": 0.0010976371798989738,
+      "review_method": "recorded_state_and_input_checks"
+    },
+    {
+      "episode_id": "1792061558739657",
+      "archive": "g1-episode-1792061558739657.zip",
+      "sha256": "f2221cf81f7c2516194cd05a22deb3c33ffae0ee944d65bf3feb3d8e02d88d80",
+      "original_outcome": 0,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 14.23999999999974,
+      "tail_max_speed_mps": 0.0024657219315395,
+      "final_tilt_degrees": 89.96855571470498,
+      "review_method": "recorded_state_and_input_checks"
+    },
+    {
+      "episode_id": "1792061661976478",
+      "archive": "g1-episode-1792061661976478.zip",
+      "sha256": "f7c688998b9aef76a781fc2cd63071715f2b81db3b084cb144980be88ce5431c",
+      "original_outcome": 0,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 14.019999999999746,
+      "tail_max_speed_mps": 3.829195032208014e-05,
+      "final_tilt_degrees": 89.96835934953882,
+      "review_method": "recorded_state_and_input_checks"
+    },
+    {
+      "episode_id": "1792061682045370",
+      "archive": "g1-episode-1792061682045370.zip",
+      "sha256": "aa7aa58f11c2fec9968ddfe0257804a7f4fb3734fdaaf27384592fb8b728cc69",
+      "original_outcome": 0,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 28.85000000000171,
+      "tail_max_speed_mps": 5.046685449455234e-10,
+      "final_tilt_degrees": 89.96835598872065,
+      "review_method": "recorded_state_and_input_checks"
+    },
+    {
+      "episode_id": "1792061714425227",
+      "archive": "g1-episode-1792061714425227.zip",
+      "sha256": "854d0c7bb1b88d19f1d1ed6456fc43b592282e7b1010eb626fa981b950301ef2",
+      "original_outcome": 0,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 17.419999999999924,
+      "tail_max_speed_mps": 0.0014964740271174,
+      "final_tilt_degrees": 89.96855262333223,
+      "review_method": "recorded_state_and_input_checks"
+    },
+    {
+      "episode_id": "1792061776367050",
+      "archive": "g1-episode-1792061776367050.zip",
+      "sha256": "1fe04795e5a365d1b46a38d765918618ddeb8728a3deedca9bd99a98319f5bec",
+      "original_outcome": 1,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 22.32000000000069,
+      "tail_max_speed_mps": 2.2282315003871364e-06,
+      "final_tilt_degrees": 94.3716491086185,
+      "review_method": "recorded_state_and_input_checks"
+    },
+    {
+      "episode_id": "1792061804580887",
+      "archive": "g1-episode-1792061804580887.zip",
+      "sha256": "25bb6ec7d80773c60fb1494cca620cdbc6b893787e7c28e52709ec5109db8348",
+      "original_outcome": 1,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 14.519999999999737,
+      "tail_max_speed_mps": 4.499294297259269e-06,
+      "final_tilt_degrees": 0.0011382019571344372,
+      "review_method": "recorded_state_and_input_checks"
+    },
+    {
+      "episode_id": "1792061961279963",
+      "archive": "g1-episode-1792061961279963.zip",
+      "sha256": "8e2f4d27acafb1adbca41d03f7b67851328e8c2ced3d04f9f0976d84ef649f6a",
+      "original_outcome": 0,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 19.990000000000325,
+      "tail_max_speed_mps": 0.0224561753654275,
+      "final_tilt_degrees": 0.0010563895580215446,
+      "review_method": "recorded_state_and_input_checks"
+    },
+    {
+      "episode_id": "1792062055337782",
+      "archive": "g1-episode-1792062055337782.zip",
+      "sha256": "f5469d865b91d79d5e1f73433c89b4fa6db786d0c62d47050fbda1f53cd942ca",
+      "original_outcome": 0,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 26.720000000001377,
+      "tail_max_speed_mps": 0.0005806789083425,
+      "final_tilt_degrees": 89.96838998910205,
+      "review_method": "recorded_state_and_input_checks"
+    },
+    {
+      "episode_id": "1792062135068526",
+      "archive": "g1-episode-1792062135068526.zip",
+      "sha256": "1e416b10e348bcba65b60f162cfcfa24d43df5fdc1721f77dd6cc3acda22c939",
+      "original_outcome": 1,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 24.850000000001085,
+      "tail_max_speed_mps": 0.0242059100869844,
+      "final_tilt_degrees": 0.00074645308315151,
+      "review_method": "recorded_state_and_input_checks"
+    },
+    {
+      "episode_id": "1792062216706637",
+      "archive": "g1-episode-1792062216706637.zip",
+      "sha256": "efd4e2313daea05b0a99a2ae02c03c71b33d07d4f85ddbae6493298e938d261e",
+      "original_outcome": 1,
+      "reviewed_inside_and_settled": true,
+      "accepted_seconds": 20.500000000000405,
+      "tail_max_speed_mps": 0.011166225929993,
+      "final_tilt_degrees": 0.0008575793978316166,
+      "review_method": "recorded_state_and_input_checks"
     }
   ]
 }
