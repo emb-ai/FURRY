@@ -48,7 +48,7 @@ class PiHigh:
         from .diffusion import cosine_alpha_bar
         self.torch = torch; self.device = device
         c = torch.load(checkpoint, map_location='cpu', weights_only=False)
-        self.model = VisualDenoiser(c['metadata']['width']); self.model.load_state_dict(c['model'])
+        self.model = VisualDenoiser(c['metadata']['width'], c['metadata'].get('arch', 'film')); self.model.load_state_dict(c['model'])
         self.model.to(device).eval()
         self.mean = c['action_mean'].numpy().astype(np.float32); self.std = c['action_std'].numpy().astype(np.float32)
         lo, hi = bounds

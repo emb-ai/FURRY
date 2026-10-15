@@ -61,8 +61,47 @@ class VisualSequences(Dataset):
                 'mask':torch.from_numpy((np.arange(t,t+self.horizon)<n).astype('float32'))}
 
 
+class UnetBlock(nn.Module):
+    """Conv1d-GroupNorm-Mish x2 with FiLM (scale and bias) from the condition, as in Diffusion Policy."""
+    def __init__(self,inputs,outputs,condition_dim,kernel=5,groups=8):
+        super().__init__()
+        conv=lambda i:nn.Sequential(nn.Conv1d(i,outputs,kernel,padding=kernel//2),nn.GroupNorm(groups,outputs),nn.Mish())
+        self.blocks=nn.ModuleList((conv(inputs),conv(outputs)))
+        self.condition=nn.Sequential(nn.Mish(),nn.Linear(condition_dim,outputs*2))
+        self.skip=nn.Conv1d(inputs,outputs,1) if inputs!=outputs else nn.Identity()
+    def forward(self,x,condition):
+        scale,bias=self.condition(condition).unsqueeze(-1).chunk(2,dim=1)
+        return self.blocks[1](scale*self.blocks[0](x)+bias)+self.skip(x)
+
+
+class ConditionalUnet1D(nn.Module):
+    """Diffusion Policy's 1D temporal U-Net (Chi et al. 2023): (batch, time, action) -> noise."""
+    def __init__(self,action_dim,obs_dim,obs_horizon,dims=(256,512,1024),step_dim=256,kernel=5):
+        super().__init__()
+        self.step_dim=step_dim
+        self.step_mlp=nn.Sequential(nn.Linear(step_dim,step_dim*4),nn.Mish(),nn.Linear(step_dim*4,step_dim))
+        c=step_dim+obs_dim*obs_horizon;pairs=list(zip((action_dim,)+dims[:-1],dims))
+        self.down=nn.ModuleList(nn.ModuleList((UnetBlock(i,o,c,kernel),UnetBlock(o,o,c,kernel),
+            nn.Conv1d(o,o,3,2,1) if k<len(pairs)-1 else nn.Identity())) for k,(i,o) in enumerate(pairs))
+        self.mid=nn.ModuleList((UnetBlock(dims[-1],dims[-1],c,kernel),UnetBlock(dims[-1],dims[-1],c,kernel)))
+        self.up=nn.ModuleList(nn.ModuleList((UnetBlock(o*2,i,c,kernel),UnetBlock(i,i,c,kernel),
+            nn.ConvTranspose1d(i,i,4,2,1))) for i,o in reversed(pairs[1:]))
+        self.head=nn.Sequential(nn.Conv1d(dims[0],dims[0],kernel,padding=kernel//2),nn.GroupNorm(8,dims[0]),nn.Mish(),
+                                nn.Conv1d(dims[0],action_dim,1))
+    def forward(self,noisy,steps,observation):
+        half=self.step_dim//2
+        frequencies=torch.exp(-math.log(10000)*torch.arange(half,device=noisy.device)/(half-1))
+        angles=steps.float()[:,None]*frequencies[None]
+        condition=torch.cat((self.step_mlp(torch.cat((angles.sin(),angles.cos()),-1)),observation.flatten(1)),-1)
+        x=noisy.transpose(1,2);skips=[]
+        for a,b,down in self.down: x=b(a(x,condition),condition);skips.append(x);x=down(x)
+        for block in self.mid: x=block(x,condition)
+        for a,b,up in self.up: x=up(b(a(torch.cat((x,skips.pop()),1),condition),condition))
+        return self.head(x).transpose(1,2)
+
+
 class VisualDenoiser(nn.Module):
-    def __init__(self,width=64):
+    def __init__(self,width=64,arch='film'):
         super().__init__();self.encoder=resnet18(weights=None);self.encoder.fc=nn.Identity()
         # Small batches/temporally correlated frames: avoid batch-stat dependence.
         def replace(module):
@@ -70,7 +109,8 @@ class VisualDenoiser(nn.Module):
                 if isinstance(child,nn.BatchNorm2d): setattr(module,name,nn.GroupNorm(8,child.num_features))
                 else: replace(child)
         replace(self.encoder)
-        self.denoiser=Denoiser(ACTION_DIM,512+ACTION_DIM,2,width=width)
+        self.denoiser=(ConditionalUnet1D(ACTION_DIM,512+ACTION_DIM,2) if arch=='unet' else
+                       Denoiser(ACTION_DIM,512+ACTION_DIM,2,width=width))
     def forward(self,action,timestep,rgb,command):
         b,t=rgb.shape[:2];features=self.encoder(rgb.reshape(b*t,*rgb.shape[2:])).reshape(b,t,-1)
         return self.denoiser(action,timestep,torch.cat((features,command),dim=-1))
@@ -103,7 +143,7 @@ def conditioning_check(model, batches, schedule, device, times=(20,50,80)):
 
 
 def train(path, output, steps=10000, batch_size=8, width=64, seed=0, device='cpu', workers=0, in_memory=False,
-          lr=1e-4, warmup=0, cosine=False, ema=0., shift=0, save_every=0):
+          lr=1e-4, warmup=0, cosine=False, ema=0., shift=0, save_every=0, arch='film', weight_decay=.01):
     if steps<1: raise ValueError('Positive steps required')
     output=Path(output)
     if output.exists(): raise FileExistsError(output)
@@ -113,7 +153,7 @@ def train(path, output, steps=10000, batch_size=8, width=64, seed=0, device='cpu
     valid_batches=list(DataLoader(torch.utils.data.Subset(valid,range(0,len(valid),8)),batch_size=64))
     loader=DataLoader(dataset,batch_size=batch_size,shuffle=True,num_workers=workers,drop_last=True,
                       persistent_workers=workers>0,pin_memory=device.startswith('cuda'))
-    model=VisualDenoiser(width).to(device);optimizer=torch.optim.AdamW(model.parameters(),lr=lr)
+    model=VisualDenoiser(width,arch).to(device);optimizer=torch.optim.AdamW(model.parameters(),lr=lr,weight_decay=weight_decay)
     average=copy.deepcopy(model).requires_grad_(False) if ema>0 else model
     def factor(step):
         f=min(1.,(step+1)/warmup) if warmup else 1.
@@ -124,7 +164,7 @@ def train(path, output, steps=10000, batch_size=8, width=64, seed=0, device='cpu
     def save(target,step):
         report={'schema':'furry-visual-dp-baseline-v1','dataset_sha256':digest(path),'steps':step,
                 'train_episodes':dataset.names,'samples':len(dataset),'action_dim':ACTION_DIM,'obs_horizon':2,'prediction_horizon':64,
-                'encoder':'ResNet18 from scratch (not R3M)','width':width,'seed':seed,'batch_size':batch_size,
+                'encoder':'ResNet18 from scratch (not R3M)','arch':arch,'width':width,'weight_decay':weight_decay,'seed':seed,'batch_size':batch_size,
                 'lr':lr,'warmup':warmup,'cosine':cosine,'ema':ema,'shift':shift,
                 'model_weights':'EMA' if ema>0 else 'raw','loss_first':losses[0],'loss_last':losses[-1],
                 'loss_last_1000':float(np.mean(losses[-1000:])),'valid_conditioning':checks,
@@ -172,9 +212,12 @@ def main():
     p.add_argument('--lr',type=float,default=1e-4);p.add_argument('--warmup',type=int,default=0);p.add_argument('--cosine',action='store_true')
     p.add_argument('--ema',type=float,default=0.,help='EMA decay of saved weights (0 = raw weights)')
     p.add_argument('--shift',type=int,default=0,help='random image shift in pixels');p.add_argument('--save-every',type=int,default=0)
+    p.add_argument('--arch',choices=('film','unet'),default='film',help='film: small FURRY denoiser; unet: Diffusion Policy ConditionalUnet1D')
+    p.add_argument('--weight-decay',type=float,default=.01)
     a=p.parse_args();torch.set_num_threads(a.threads)
     print(json.dumps(train(a.dataset,a.output,a.steps,a.batch_size,a.width,device=a.device,workers=a.workers,in_memory=a.in_memory,
-                           lr=a.lr,warmup=a.warmup,cosine=a.cosine,ema=a.ema,shift=a.shift,save_every=a.save_every),indent=2))
+                           lr=a.lr,warmup=a.warmup,cosine=a.cosine,ema=a.ema,shift=a.shift,save_every=a.save_every,
+                           arch=a.arch,weight_decay=a.weight_decay),indent=2))
 
 
 if __name__=='__main__': main()
