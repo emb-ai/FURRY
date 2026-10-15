@@ -56,10 +56,10 @@ class PiHigh:
         self.alpha = cosine_alpha_bar(100).to(device)
         self.times = np.unique(np.linspace(len(self.alpha)-1, 0, ddim_steps).round().astype(int))[::-1]
         self.generator = torch.Generator(device=device).manual_seed(seed)
-        self.horizon = 64
+        self.horizon = c['metadata'].get('prediction_horizon', 64)
 
     def __call__(self, rgb, command):
-        """rgb (2,224,224,3) uint8 [t-1,t]; command (2,39) previous commands. Returns (64,39)."""
+        """rgb (2,224,224,3) uint8 [t-1,t]; command (2,39) previous commands. Returns (horizon,39)."""
         torch = self.torch
         with torch.no_grad():
             image = torch.tensor(rgb, device=self.device).permute(0, 3, 1, 2).float().div(255).unsqueeze(0)

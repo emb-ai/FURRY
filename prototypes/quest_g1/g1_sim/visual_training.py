@@ -143,17 +143,17 @@ def conditioning_check(model, batches, schedule, device, times=(20,50,80)):
 
 
 def train(path, output, steps=10000, batch_size=8, width=64, seed=0, device='cpu', workers=0, in_memory=False,
-          lr=1e-4, warmup=0, cosine=False, ema=0., shift=0, save_every=0, arch='film', weight_decay=.01):
+          lr=1e-4, warmup=0, cosine=False, ema=0., shift=0, save_every=0, arch='film', weight_decay=.01, horizon=64, beta1=.9):
     if steps<1: raise ValueError('Positive steps required')
     output=Path(output)
     if output.exists(): raise FileExistsError(output)
     torch.manual_seed(seed);np.random.seed(seed)
-    dataset=VisualSequences(path,in_memory=in_memory)
-    valid=VisualSequences(path,'valid',in_memory=in_memory);valid.mean,valid.std=dataset.mean,dataset.std
+    dataset=VisualSequences(path,horizon=horizon,in_memory=in_memory)
+    valid=VisualSequences(path,'valid',horizon=horizon,in_memory=in_memory);valid.mean,valid.std=dataset.mean,dataset.std
     valid_batches=list(DataLoader(torch.utils.data.Subset(valid,range(0,len(valid),8)),batch_size=64))
     loader=DataLoader(dataset,batch_size=batch_size,shuffle=True,num_workers=workers,drop_last=True,
                       persistent_workers=workers>0,pin_memory=device.startswith('cuda'))
-    model=VisualDenoiser(width,arch).to(device);optimizer=torch.optim.AdamW(model.parameters(),lr=lr,weight_decay=weight_decay)
+    model=VisualDenoiser(width,arch).to(device);optimizer=torch.optim.AdamW(model.parameters(),lr=lr,betas=(beta1,.999),weight_decay=weight_decay)
     average=copy.deepcopy(model).requires_grad_(False) if ema>0 else model
     def factor(step):
         f=min(1.,(step+1)/warmup) if warmup else 1.
@@ -163,8 +163,8 @@ def train(path, output, steps=10000, batch_size=8, width=64, seed=0, device='cpu
     output.parent.mkdir(parents=True,exist_ok=True)
     def save(target,step):
         report={'schema':'furry-visual-dp-baseline-v1','dataset_sha256':digest(path),'steps':step,
-                'train_episodes':dataset.names,'samples':len(dataset),'action_dim':ACTION_DIM,'obs_horizon':2,'prediction_horizon':64,
-                'encoder':'ResNet18 from scratch (not R3M)','arch':arch,'width':width,'weight_decay':weight_decay,'seed':seed,'batch_size':batch_size,
+                'train_episodes':dataset.names,'samples':len(dataset),'action_dim':ACTION_DIM,'obs_horizon':2,'prediction_horizon':horizon,
+                'encoder':'ResNet18 from scratch (not R3M)','arch':arch,'width':width,'weight_decay':weight_decay,'beta1':beta1,'seed':seed,'batch_size':batch_size,
                 'lr':lr,'warmup':warmup,'cosine':cosine,'ema':ema,'shift':shift,
                 'model_weights':'EMA' if ema>0 else 'raw','loss_first':losses[0],'loss_last':losses[-1],
                 'loss_last_1000':float(np.mean(losses[-1000:])),'valid_conditioning':checks,
@@ -213,11 +213,12 @@ def main():
     p.add_argument('--ema',type=float,default=0.,help='EMA decay of saved weights (0 = raw weights)')
     p.add_argument('--shift',type=int,default=0,help='random image shift in pixels');p.add_argument('--save-every',type=int,default=0)
     p.add_argument('--arch',choices=('film','unet'),default='film',help='film: small FURRY denoiser; unet: Diffusion Policy ConditionalUnet1D')
-    p.add_argument('--weight-decay',type=float,default=.01)
+    p.add_argument('--weight-decay',type=float,default=.01);p.add_argument('--beta1',type=float,default=.9)
+    p.add_argument('--horizon',type=int,default=64,help='predicted chunk length (unet needs a multiple of 4)')
     a=p.parse_args();torch.set_num_threads(a.threads)
     print(json.dumps(train(a.dataset,a.output,a.steps,a.batch_size,a.width,device=a.device,workers=a.workers,in_memory=a.in_memory,
                            lr=a.lr,warmup=a.warmup,cosine=a.cosine,ema=a.ema,shift=a.shift,save_every=a.save_every,
-                           arch=a.arch,weight_decay=a.weight_decay),indent=2))
+                           arch=a.arch,weight_decay=a.weight_decay,horizon=a.horizon,beta1=a.beta1),indent=2))
 
 
 if __name__=='__main__': main()
