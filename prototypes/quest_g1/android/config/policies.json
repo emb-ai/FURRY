@@ -49,6 +49,20 @@
     "sha256": "5ef828087cc1ad5d9dcab3b6d1656eae4ae5e0cee01dd51f6792eb61a49dfab1"
   },
   {
+    "id": "quest-camv3-b7-250",
+    "title": "Quest: камера-ноги v3, подъём стопы / 50 Гц",
+    "note": "От 111586-500 · dataset-v3 + удары · lift 7 · +250 · 15.10",
+    "path": "../../policies/quest-camv3/B7-checkpoint_000250-50hz.onnx",
+    "sha256": "a8b5d1839ee01e2dc4ecc0c4bd4a2f93fa35183bfa3af6a0ddb3526615d62484"
+  },
+  {
+    "id": "quest-camv3-a-500",
+    "title": "Quest: камера-ноги v3, устойчивая / 50 Гц",
+    "note": "От 111586-500 · dataset-v3 + удары · +500 · 15.10",
+    "path": "../../policies/quest-camv3/A-checkpoint_000500-50hz.onnx",
+    "sha256": "8eae38c55bddf661b519fe6d55b1f3ff5350c80c14023177396ad5bfd3493c76"
+  },
+  {
     "id": "homie-v2",
     "title": "HOMIE v2: автономная ходьба",
     "note": "Эксперимент · руки оператора, шаги робота",

@@ -10,10 +10,12 @@ evaluate: roll a 50 Hz ONNX policy over the validation clips from frame 0.
   The lift metric compares sole clearance (floor-colliding spheres) of the robot
   with the reference while the reference foot is up: contact, shortfall, peak
   ratio and retention 1 s into held lifts, split by training's moving mask.
+  --catch-up adds the headset catch-up loop (catch_up.servo: reference root as
+  goal, robot root as actual) to the actor command, as on the headset.
 Usage:
   camera_validation.py commands --dataset DATASET --episodes EPISODE_DIR ... --output CMD.npz
   camera_validation.py evaluate --assets ASSETS --dataset DATASET --policy P.onnx
-      [--commands CMD.npz --mode live] --output REPORT.json
+      [--commands CMD.npz --mode live] [--catch-up] --output REPORT.json
 """
 import argparse
 import hashlib
@@ -112,11 +114,14 @@ def lift_summary(events, ref, robot, contact, dt, moving=None):
                 if (lifted & mask[:, None]).any() else None for name, mask in (('moving', moving), ('still', ~moving))})}
 
 
-def evaluate(assets, dataset, policy, output, commands=None, mode='target', seeds=(0,)):
+def evaluate(assets, dataset, policy, output, commands=None, mode='target', seeds=(0,), catch_up=False):
     import onnxruntime as ort
     import env as mj
     from gait_evaluation import runtime_env_class
     from sole_geometry import sole_clearance
+    if catch_up:
+        import torch
+        from catch_up import servo
     motions = mj.Motions(dataset, 'validation')
     live = None
     if mode == 'live':
@@ -135,14 +140,20 @@ def evaluate(assets, dataset, policy, output, commands=None, mode='target', seed
 
     class Env(runtime_env_class(mj.Env, 50)):
         def observation(self):
-            if live is None or self.steps % self.policy_stride:
+            if (live is None and not catch_up) or self.steps % self.policy_stride:
                 return super().observation()
             # Same assembly as env.Env.observation with only the actor command replaced.
-            table = live[self.motion['meta']['id']]
-            t = (self.k - self.first) * mj.DT
-            cmd = table[max(0, np.searchsorted(table[:, 0], t + 1e-9, side='right') - 1), 1:].astype(np.float32)
-            if t > self.motion['meta']['seconds']:
-                cmd[[0, 1, 5]] = 0
+            if live is None:
+                cmd = self.motion['cmd'][self.k].astype(np.float32)
+            else:
+                table = live[self.motion['meta']['id']]
+                t = (self.k - self.first) * mj.DT
+                cmd = table[max(0, np.searchsorted(table[:, 0], t + 1e-9, side='right') - 1), 1:].astype(np.float32)
+                if t > self.motion['meta']['seconds']:
+                    cmd[[0, 1, 5]] = 0
+            if catch_up:
+                pose = lambda q: (torch.from_numpy(q[None, :3]), torch.from_numpy(q[None, [4, 5, 6, 3]]))  # wxyz -> xyzw
+                cmd = servo(torch.from_numpy(cmd[None]), *pose(self.ref.qpos[:7]), *pose(self.data.qpos[:7]))[0].numpy()
             saved = self.motion['cmd'][self.k].copy()
             self.motion['cmd'][self.k] = cmd
             try:
@@ -219,7 +230,7 @@ def evaluate(assets, dataset, policy, output, commands=None, mode='target', seed
     summary['lift'] = lift_summary([e for f in frames for e in f[0]], ref_h, robot_h, loaded, mj.DT, moving)
     summary['falls'] = sum(t['fell'] for t in trials)
     summary['pelvis_z_min_m'] = min(t['pelvis_z_min_m'] for t in trials)
-    report = {'policy': str(policy), 'policy_sha256': sha(policy), 'mode': mode,
+    report = {'policy': str(policy), 'policy_sha256': sha(policy), 'mode': mode, 'catch_up': catch_up,
               'commands_sha256': sha(commands) if live is not None else None,
               'dataset_manifest_sha256': sha(Path(dataset)/'manifest.json'),
               'scene_sha256': sha(Path(assets)/'scene.xml'), 'control_hz': 50, 'seeds': list(seeds),
@@ -239,11 +250,12 @@ def main():
         e.add_argument('--' + k, type=Path, required=True)
     e.add_argument('--commands', type=Path); e.add_argument('--mode', default='target')
     e.add_argument('--seeds', nargs='+', type=int, default=[0])
+    e.add_argument('--catch-up', action='store_true', help='headset catch-up loop on the actor command')
     a = p.parse_args()
     if a.command == 'commands':
         build_commands(a.dataset, a.episodes, a.output)
     else:
-        evaluate(a.assets, a.dataset, a.policy, a.output, a.commands, a.mode, a.seeds)
+        evaluate(a.assets, a.dataset, a.policy, a.output, a.commands, a.mode, a.seeds, a.catch_up)
 
 
 if __name__ == '__main__':

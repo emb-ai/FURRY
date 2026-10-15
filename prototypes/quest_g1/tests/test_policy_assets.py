@@ -21,17 +21,18 @@ class PolicyAssetsTests(unittest.TestCase):
             self.assertEqual([row['id'] for row in catalog],
                              ['twist2-20k', 'twist2-25k', 'quest-111260-500', 'quest-111260-1000',
                               'quest-111586-200', 'quest-111586-300', 'quest-111586-500', 'quest-camv2-250', 'quest-camv2-500',
+                              'quest-camv3-b7-250', 'quest-camv3-a-500',
                               'homie-v2', 'sonic-vr3', 'quest-111586-500-lift10'])
             artifacts = {}
-            for run in ('quest-111260', 'quest-111586', 'quest-camv2'):
+            for run in ('quest-111260', 'quest-111586', 'quest-camv2', 'quest-camv3'):
                 provenance = json.loads((Path(__file__).resolve().parents[1] /
                                          f'policies/{run}/provenance.json').read_text())
                 artifacts.update({item['id']: item for item in provenance['artifacts']})
-            for row in catalog[2:9]:
+            for row in catalog[2:11]:
                 artifact = artifacts[row['id']]
                 self.assertEqual(row['sha256'], artifact['sha256'])
                 self.assertEqual(hashlib.sha256((root / row['file']).read_bytes()).hexdigest(), artifact['sha256'])
-                expected_hz = 50 if row['id'].startswith(('quest-111586-', 'quest-camv2-')) else 100
+                expected_hz = 50 if row['id'].startswith(('quest-111586-', 'quest-camv2-', 'quest-camv3-')) else 100
                 self.assertEqual(row['policy_hz'], 50)
                 self.assertEqual(row['legacy_policy_hz'], expected_hz)
                 metadata = json.loads((root / f'recording_metadata-stand-policy-{row["id"]}.json').read_text())

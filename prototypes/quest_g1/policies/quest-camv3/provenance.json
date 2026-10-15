@@ -1,0 +1,458 @@
+{
+  "schema_version": 1,
+  "training_date": "2026-10-14",
+  "runs": [
+    "camv3-A-111586-s11",
+    "camv3-B7-111586-s11"
+  ],
+  "trainer_commit": "c5c9eb4ba5d9481767f9433ce20e6b1223f6076e",
+  "upstream_twist2_commit": "b06178f19a22f2138cbd31f60c6d494bc263f67d",
+  "parent_checkpoint": "111586/checkpoint_000500.pt",
+  "parent_checkpoint_sha256": "13e93d837b014317ca1179303bc2b580c1a7940f2a5d868dae20bd36774d3a21",
+  "initialization": "actor, frozen normalization and std restored; new critic (550 warmup iterations) and optimizer",
+  "recipe": "lower-body tracking coefficient 1.0, hip yaw/roll tracking weight x2, actor-side catch-up on 75% of envs, nonlooping, 1 s window reward, contact_points 0.1; arm A no lift_follow, arm B7 lift_follow weight 7.0; seed 11; 4096 envs; 500 actor updates",
+  "data": {
+    "camera_datasets": [
+      "datasets/quest-camera-legs/2026-10-14/dataset-v3",
+      "datasets/quest-camera-legs/2026-10-14/dataset-v3-kicks"
+    ],
+    "camera_manifest_sha256": "e88eff68e44dc5021568a0e813cc3b5227b59cc27bc4a616057af272be172cd6",
+    "kicks_manifest_sha256": "ac0aadee7862e40c6742141a5c8ba2e0b46ee2f798e90144030639ed6460bf92",
+    "meta_base": "clamp-mirrored (as 111586)",
+    "meta_manifest_sha256": "cfb130e6bb4d97bc4df5572883c1bc9a45dcf450147ce432a909587f76a549ff",
+    "mixture_manifest_sha256": "f169623adfdf1f4221a16423722f5ab6741645320c078720e0cb8d2f2cacd7a6",
+    "quest_sampling": "Quest x2 (7.0% of draws before curriculum), quest-meta/quest-camera/quest-camera-kicks 0.40/0.35/0.25",
+    "actor_command_bank_sha256": "043fd2ee89910a8d1e44dac06d7de20826f76a92b37e050c3e6a57e5ca6afa58",
+    "phase_table_sha256": "ae2c300be83d6bf0270070f5b2edc005ad890abf54da9187a5650a44d12eee54",
+    "lift_table_sha256": "bae205818762ff439a60eac362f9195428056b4209c47499daf3aac4eb8d52c3"
+  },
+  "runtime_policy_hz": 50,
+  "runtime_physics_hz": 1000,
+  "metadata_key": "g1_policy_hz",
+  "input_float32_shape": [
+    1,
+    1432
+  ],
+  "output_float32_shape": [
+    1,
+    29
+  ],
+  "default_actor_remains": "twist2-20k",
+  "status": "experimental menu candidates; b7-250 keeps the foot up after the operator (lifted-foot contact 24% vs 36% for 111586-300), a-500 tracks legs near 111586-300 with camv2-level stance; both 0 falls on validation and kicks",
+  "evaluation": {
+    "tool": "training/quest_contact_clearance/camera_validation.py evaluate --mode live [--catch-up]",
+    "validation_stages": [
+      103,
+      116
+    ],
+    "kick_stages": [
+      201,
+      217
+    ],
+    "validation_commands_sha256": "e8d549d619b5f3ea62034dfc9e2c05a05c8b6658ba196e311661e41c9a95b787",
+    "kick_commands_sha256": "9a1cf2877a749c5113430a93a9d12d0641bee2f8ec81c464e187258492cb0172",
+    "scene_sha256": "9c3e2385f4e0a4e30287d1d20a741cccabd9bb298d11bce077970496ac1b624a",
+    "baselines": {
+      "quest-111586-300": {
+        "mujoco_seeds_0_3": {
+          "live/103": {
+            "falls": 0,
+            "trials": 64,
+            "leg_joint_error_deg": 4.73,
+            "support_slip_m_s": 0.047,
+            "root_xy_error_m_final": 0.22,
+            "root_xy_error_m_max": 1.16
+          },
+          "live/116": {
+            "falls": 1,
+            "trials": 12,
+            "leg_joint_error_deg": 6.22,
+            "support_slip_m_s": 0.075,
+            "root_xy_error_m_final": 3.24,
+            "root_xy_error_m_max": 17.78
+          },
+          "lift": {
+            "lifted_contact_fraction": 0.361,
+            "held_peak_ratio_median": 0.718,
+            "lifted_shortfall_cm_mean": 3.71
+          },
+          "kicks/live/201": {
+            "falls": 4,
+            "trials": 8,
+            "leg_joint_error_deg": 6.88,
+            "support_slip_m_s": 0.075,
+            "root_xy_error_m_final": 3.87,
+            "root_xy_error_m_max": 8.45
+          },
+          "kicks/live/217": {
+            "falls": 0,
+            "trials": 8,
+            "leg_joint_error_deg": 5.91,
+            "support_slip_m_s": 0.069,
+            "root_xy_error_m_final": 1.79,
+            "root_xy_error_m_max": 3.0
+          },
+          "kicks/lift": {
+            "lifted_contact_fraction": 0.602,
+            "held_peak_ratio_median": 0.528,
+            "lifted_shortfall_cm_mean": 6.71
+          }
+        },
+        "mujoco_seeds_0_3_catch_up": {
+          "live/103": {
+            "falls": 0,
+            "trials": 64,
+            "leg_joint_error_deg": 4.9,
+            "support_slip_m_s": 0.05,
+            "root_xy_error_m_final": 0.14,
+            "root_xy_error_m_max": 1.05
+          },
+          "live/116": {
+            "falls": 0,
+            "trials": 12,
+            "leg_joint_error_deg": 6.0,
+            "support_slip_m_s": 0.059,
+            "root_xy_error_m_final": 0.44,
+            "root_xy_error_m_max": 3.16
+          },
+          "lift": {
+            "lifted_contact_fraction": 0.351,
+            "held_peak_ratio_median": 0.689,
+            "lifted_shortfall_cm_mean": 3.56
+          },
+          "kicks/live/201": {
+            "falls": 4,
+            "trials": 8,
+            "leg_joint_error_deg": 8.3,
+            "support_slip_m_s": 0.105,
+            "root_xy_error_m_final": 7.52,
+            "root_xy_error_m_max": 13.22
+          },
+          "kicks/live/217": {
+            "falls": 0,
+            "trials": 8,
+            "leg_joint_error_deg": 6.32,
+            "support_slip_m_s": 0.074,
+            "root_xy_error_m_final": 0.8,
+            "root_xy_error_m_max": 1.51
+          },
+          "kicks/lift": {
+            "lifted_contact_fraction": 0.529,
+            "held_peak_ratio_median": 0.602,
+            "lifted_shortfall_cm_mean": 6.35
+          }
+        }
+      },
+      "quest-camv2-500": {
+        "mujoco_seeds_0_3": {
+          "live/103": {
+            "falls": 0,
+            "trials": 64,
+            "leg_joint_error_deg": 6.56,
+            "support_slip_m_s": 0.03,
+            "root_xy_error_m_final": 0.17,
+            "root_xy_error_m_max": 0.79
+          },
+          "live/116": {
+            "falls": 0,
+            "trials": 12,
+            "leg_joint_error_deg": 7.5,
+            "support_slip_m_s": 0.037,
+            "root_xy_error_m_final": 0.72,
+            "root_xy_error_m_max": 1.43
+          },
+          "lift": {
+            "lifted_contact_fraction": 0.507,
+            "held_peak_ratio_median": 0.537,
+            "lifted_shortfall_cm_mean": 4.69
+          },
+          "kicks/live/201": {
+            "falls": 0,
+            "trials": 8,
+            "leg_joint_error_deg": 7.67,
+            "support_slip_m_s": 0.04,
+            "root_xy_error_m_final": 2.48,
+            "root_xy_error_m_max": 7.04
+          },
+          "kicks/live/217": {
+            "falls": 0,
+            "trials": 8,
+            "leg_joint_error_deg": 8.2,
+            "support_slip_m_s": 0.056,
+            "root_xy_error_m_final": 1.13,
+            "root_xy_error_m_max": 2.24
+          },
+          "kicks/lift": {
+            "lifted_contact_fraction": 0.701,
+            "held_peak_ratio_median": 0.37,
+            "lifted_shortfall_cm_mean": 7.45
+          }
+        },
+        "mujoco_seeds_0_3_catch_up": {
+          "live/103": {
+            "falls": 0,
+            "trials": 64,
+            "leg_joint_error_deg": 6.58,
+            "support_slip_m_s": 0.031,
+            "root_xy_error_m_final": 0.09,
+            "root_xy_error_m_max": 0.4
+          },
+          "live/116": {
+            "falls": 0,
+            "trials": 12,
+            "leg_joint_error_deg": 7.59,
+            "support_slip_m_s": 0.041,
+            "root_xy_error_m_final": 0.36,
+            "root_xy_error_m_max": 3.68
+          },
+          "lift": {
+            "lifted_contact_fraction": 0.483,
+            "held_peak_ratio_median": 0.575,
+            "lifted_shortfall_cm_mean": 4.46
+          },
+          "kicks/live/201": {
+            "falls": 0,
+            "trials": 8,
+            "leg_joint_error_deg": 7.87,
+            "support_slip_m_s": 0.037,
+            "root_xy_error_m_final": 1.42,
+            "root_xy_error_m_max": 5.03
+          },
+          "kicks/live/217": {
+            "falls": 0,
+            "trials": 8,
+            "leg_joint_error_deg": 8.58,
+            "support_slip_m_s": 0.063,
+            "root_xy_error_m_final": 0.45,
+            "root_xy_error_m_max": 1.08
+          },
+          "kicks/lift": {
+            "lifted_contact_fraction": 0.716,
+            "held_peak_ratio_median": 0.361,
+            "lifted_shortfall_cm_mean": 7.42
+          }
+        }
+      }
+    }
+  },
+  "artifacts": [
+    {
+      "file": "B7-checkpoint_000250-50hz.onnx",
+      "id": "quest-camv3-b7-250",
+      "run": "camv3-B7-111586-s11",
+      "additional_actor_updates": 250,
+      "experiment_config_sha256": "e6b5603fac515cdcf6a46ec6fa4b4312a9f3a82b62c995305a5da251533f616c",
+      "lift_penalty_weight": 7.0,
+      "bytes": 3183334,
+      "sha256": "a8b5d1839ee01e2dc4ecc0c4bd4a2f93fa35183bfa3af6a0ddb3526615d62484",
+      "checkpoint_sha256": "eadd56d35249e508254d592bc0d6e1429bd16f3a9097b9f76c802c94c83edb7c",
+      "export": {
+        "sha256": "a8b5d1839ee01e2dc4ecc0c4bd4a2f93fa35183bfa3af6a0ddb3526615d62484",
+        "metadata_parity_max_error": 0.0,
+        "torch_parity": {
+          "max_absolute_error": 2.384185791015625e-06,
+          "samples": 128
+        }
+      },
+      "validation": {
+        "mujoco_seeds_0_3": {
+          "live/103": {
+            "falls": 0,
+            "trials": 64,
+            "leg_joint_error_deg": 4.98,
+            "support_slip_m_s": 0.037,
+            "root_xy_error_m_final": 0.31,
+            "root_xy_error_m_max": 1.63
+          },
+          "live/116": {
+            "falls": 0,
+            "trials": 12,
+            "leg_joint_error_deg": 6.82,
+            "support_slip_m_s": 0.072,
+            "root_xy_error_m_final": 3.45,
+            "root_xy_error_m_max": 7.44
+          },
+          "lift": {
+            "lifted_contact_fraction": 0.235,
+            "held_peak_ratio_median": 0.879,
+            "lifted_shortfall_cm_mean": 2.55
+          },
+          "kicks/live/201": {
+            "falls": 0,
+            "trials": 8,
+            "leg_joint_error_deg": 6.25,
+            "support_slip_m_s": 0.042,
+            "root_xy_error_m_final": 1.41,
+            "root_xy_error_m_max": 1.57
+          },
+          "kicks/live/217": {
+            "falls": 0,
+            "trials": 8,
+            "leg_joint_error_deg": 6.28,
+            "support_slip_m_s": 0.06,
+            "root_xy_error_m_final": 1.65,
+            "root_xy_error_m_max": 3.27
+          },
+          "kicks/lift": {
+            "lifted_contact_fraction": 0.587,
+            "held_peak_ratio_median": 0.696,
+            "lifted_shortfall_cm_mean": 6.03
+          }
+        },
+        "mujoco_seeds_0_3_catch_up": {
+          "live/103": {
+            "falls": 0,
+            "trials": 64,
+            "leg_joint_error_deg": 5.03,
+            "support_slip_m_s": 0.04,
+            "root_xy_error_m_final": 0.15,
+            "root_xy_error_m_max": 0.62
+          },
+          "live/116": {
+            "falls": 0,
+            "trials": 12,
+            "leg_joint_error_deg": 6.92,
+            "support_slip_m_s": 0.074,
+            "root_xy_error_m_final": 0.56,
+            "root_xy_error_m_max": 4.0
+          },
+          "lift": {
+            "lifted_contact_fraction": 0.27,
+            "held_peak_ratio_median": 0.824,
+            "lifted_shortfall_cm_mean": 2.74
+          },
+          "kicks/live/201": {
+            "falls": 0,
+            "trials": 8,
+            "leg_joint_error_deg": 6.62,
+            "support_slip_m_s": 0.041,
+            "root_xy_error_m_final": 0.74,
+            "root_xy_error_m_max": 0.95
+          },
+          "kicks/live/217": {
+            "falls": 0,
+            "trials": 8,
+            "leg_joint_error_deg": 6.74,
+            "support_slip_m_s": 0.063,
+            "root_xy_error_m_final": 0.47,
+            "root_xy_error_m_max": 1.05
+          },
+          "kicks/lift": {
+            "lifted_contact_fraction": 0.569,
+            "held_peak_ratio_median": 0.664,
+            "lifted_shortfall_cm_mean": 6.24
+          }
+        }
+      }
+    },
+    {
+      "file": "A-checkpoint_000500-50hz.onnx",
+      "id": "quest-camv3-a-500",
+      "run": "camv3-A-111586-s11",
+      "additional_actor_updates": 500,
+      "experiment_config_sha256": "bb49ca13bd06ee08d1b8e7eba04ad0d7149a759e07506ca91f5bdaf33df262f2",
+      "lift_penalty_weight": 0.0,
+      "bytes": 3183334,
+      "sha256": "8eae38c55bddf661b519fe6d55b1f3ff5350c80c14023177396ad5bfd3493c76",
+      "checkpoint_sha256": "f3f4c273798f0d7b56a21cbc05dda0213be9c72aa85ae28b25186cdc5a980ab7",
+      "export": {
+        "sha256": "8eae38c55bddf661b519fe6d55b1f3ff5350c80c14023177396ad5bfd3493c76",
+        "metadata_parity_max_error": 0.0,
+        "torch_parity": {
+          "max_absolute_error": 2.384185791015625e-06,
+          "samples": 128
+        }
+      },
+      "validation": {
+        "mujoco_seeds_0_3": {
+          "live/103": {
+            "falls": 0,
+            "trials": 64,
+            "leg_joint_error_deg": 4.97,
+            "support_slip_m_s": 0.035,
+            "root_xy_error_m_final": 0.37,
+            "root_xy_error_m_max": 1.78
+          },
+          "live/116": {
+            "falls": 0,
+            "trials": 12,
+            "leg_joint_error_deg": 6.28,
+            "support_slip_m_s": 0.033,
+            "root_xy_error_m_final": 0.7,
+            "root_xy_error_m_max": 3.35
+          },
+          "lift": {
+            "lifted_contact_fraction": 0.432,
+            "held_peak_ratio_median": 0.621,
+            "lifted_shortfall_cm_mean": 4.3
+          },
+          "kicks/live/201": {
+            "falls": 0,
+            "trials": 8,
+            "leg_joint_error_deg": 5.87,
+            "support_slip_m_s": 0.03,
+            "root_xy_error_m_final": 1.41,
+            "root_xy_error_m_max": 2.1
+          },
+          "kicks/live/217": {
+            "falls": 0,
+            "trials": 8,
+            "leg_joint_error_deg": 6.47,
+            "support_slip_m_s": 0.051,
+            "root_xy_error_m_final": 1.03,
+            "root_xy_error_m_max": 1.35
+          },
+          "kicks/lift": {
+            "lifted_contact_fraction": 0.721,
+            "held_peak_ratio_median": 0.401,
+            "lifted_shortfall_cm_mean": 7.47
+          }
+        },
+        "mujoco_seeds_0_3_catch_up": {
+          "live/103": {
+            "falls": 0,
+            "trials": 64,
+            "leg_joint_error_deg": 4.96,
+            "support_slip_m_s": 0.031,
+            "root_xy_error_m_final": 0.12,
+            "root_xy_error_m_max": 0.42
+          },
+          "live/116": {
+            "falls": 0,
+            "trials": 12,
+            "leg_joint_error_deg": 6.36,
+            "support_slip_m_s": 0.039,
+            "root_xy_error_m_final": 0.1,
+            "root_xy_error_m_max": 0.85
+          },
+          "lift": {
+            "lifted_contact_fraction": 0.442,
+            "held_peak_ratio_median": 0.566,
+            "lifted_shortfall_cm_mean": 4.45
+          },
+          "kicks/live/201": {
+            "falls": 0,
+            "trials": 8,
+            "leg_joint_error_deg": 6.11,
+            "support_slip_m_s": 0.023,
+            "root_xy_error_m_final": 0.5,
+            "root_xy_error_m_max": 1.15
+          },
+          "kicks/live/217": {
+            "falls": 0,
+            "trials": 8,
+            "leg_joint_error_deg": 6.74,
+            "support_slip_m_s": 0.057,
+            "root_xy_error_m_final": 0.34,
+            "root_xy_error_m_max": 0.93
+          },
+          "kicks/lift": {
+            "lifted_contact_fraction": 0.75,
+            "held_peak_ratio_median": 0.444,
+            "lifted_shortfall_cm_mean": 7.4
+          }
+        }
+      }
+    }
+  ]
+}
