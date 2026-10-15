@@ -1,11 +1,14 @@
-"""Closed-loop evaluation of a visual_training checkpoint in the Quest bimanual scene.
+"""Closed-loop evaluation of a visual_training checkpoint in a Quest collection scene.
 
 π_high sees the training camera (current physical ego camera, previous 30 Hz gaze,
 640x360 without shadows -> 224x224) and the two previous 39-d commands. Its body35
-output is the whole-body reference the Quest runtime would send after catch-up
-(QuestSim, HOMIE v2); grips drive the hands; gaze only turns the camera. A chunk
-is predicted with deterministic DDIM and its first ``execute`` actions are applied
-at 30 Hz before replanning. Success is the native collection criterion.
+output is the whole-body reference the Quest runtime would send (after catch-up for
+HOMIE v2; HOMIE Standing ignores navigation); QuestSim takes the locomotion mode and
+task (bimanual or cup) from the episode. Grips drive the hands; gaze only turns the
+camera. A chunk is predicted with deterministic DDIM and its first ``execute`` actions
+are applied at 30 Hz before replanning. Success is the native collection criterion.
+Validation starts run on their own episode model; fresh layouts on ``--fresh-episode``.
+lift_left/lift_right are the task's Lift0/Lift1 flags (cup: lift_left = cup lifted).
 """
 import argparse
 import json
@@ -86,7 +89,7 @@ def run_trial(sim, camera, policy, start, execute=8, seconds=40., record=False):
     else:
         sim.reset(int(start['seed']))
         for _ in range(100): sim.cycle(None, 0, 0)  # 1 s standing before the operator takes over
-    gaze = np.asarray(start.get('gaze', (0.0056, -0.823)), float)
+    gaze = np.asarray(start['gaze'], float)
     t0 = sim.data.time; frames, actions, video = [], [], []; chunk, base = None, 0
     status, tick, wall = 'timeout', 0, time.time()
     try:
@@ -132,7 +135,7 @@ def recorded_starts(dataset, raw):
         sc = table(Path(raw)/name/'scene_state.csv')
         state = (columns(f, 'qpos', m.nq)[r], columns(f, 'qvel', m.nv)[r], columns(sc, 'userdata', 8)[r],
                  columns(f, 'ctrl', m.nu)[r], f['step'][r])
-        starts.append(dict(seed=int(sc['userdata_0'][0]), episode=name, state=state,
+        starts.append(dict(seed=int(sc['userdata_0'][0]), episode=name, model=str(Path(raw)/name), state=state,
                            gaze=(float(e['camera']['gaze_yaw'][r]), float(e['camera']['gaze_pitch'][r]))))
     return starts
 
@@ -149,17 +152,20 @@ def worker(args):
     from .quest_sim import QuestSim
     (index, starts, o) = args
     torch.set_num_threads(o['threads'])
-    sim = QuestSim(o['model_episode']); camera = Camera(sim.model)
+    sims = {}
     policy = PiHigh(o['checkpoint'], o['bounds'], o['device'], o['ddim_steps'], seed=1000+index)
     out = []
     for k, start in enumerate(starts):
+        if start['model'] not in sims:
+            sim = QuestSim(start['model']); sims[start['model']] = (sim, Camera(sim.model))
+        sim, camera = sims[start['model']]
         record = o['videos'] and start.get('record', False)
         result, video = run_trial(sim, camera, policy, start, o['execute'], o['seconds'], record)
         if video is not None:
             path = Path(o['output']).with_name(f"{Path(o['output']).stem}-{result['source'] or result['seed']}.npz")
             np.savez_compressed(path, video=video)
         print(json.dumps(result), flush=True); out.append(result)
-    camera.close()
+    for _, camera in sims.values(): camera.close()
     return out
 
 
@@ -171,17 +177,20 @@ def main():
     p.add_argument('--seconds', type=float, default=40.); p.add_argument('--workers', type=int, default=8)
     p.add_argument('--threads', type=int, default=2); p.add_argument('--device', default='cpu')
     p.add_argument('--videos', type=int, default=3, help='record this many fresh and valid trials')
+    p.add_argument('--fresh-episode', help='raw episode whose model runs fresh layouts (default: first validation episode)')
+    p.add_argument('--gaze', type=float, nargs=2, default=(0.0056, -0.823), metavar=('YAW', 'PITCH'),
+                   help='initial camera gaze for fresh layouts')
     a = p.parse_args()
     import multiprocessing as mp
     output = Path(a.output)
     if output.exists(): raise FileExistsError(output)
-    starts = recorded_starts(a.dataset, a.raw) + [dict(seed=s) for s in range(1, a.fresh+1)]
+    recorded = recorded_starts(a.dataset, a.raw)
+    model_episode = str(Path(a.raw)/a.fresh_episode) if a.fresh_episode else recorded[0]['model'] if recorded else str(next(Path(a.raw).glob('episode-*')))
+    starts = recorded + [dict(seed=s, model=model_episode, gaze=tuple(a.gaze)) for s in range(1, a.fresh+1)]
     for k, s in enumerate(starts):
         s['record'] = k < a.videos or (len(starts)-a.fresh <= k < len(starts)-a.fresh+a.videos)
-    model_episode = str(Path(a.raw)/starts[0]['episode']) if 'episode' in starts[0] else str(next(Path(a.raw).glob('episode-*')))
     o = dict(checkpoint=a.checkpoint, bounds=action_bounds(a.dataset), device=a.device, ddim_steps=a.ddim_steps,
-             execute=a.execute, seconds=a.seconds, threads=a.threads, videos=a.videos > 0, output=str(output),
-             model_episode=model_episode)
+             execute=a.execute, seconds=a.seconds, threads=a.threads, videos=a.videos > 0, output=str(output))
     jobs = [(i, starts[i::a.workers], o) for i in range(a.workers)]
     t = time.time()
     with mp.get_context('spawn').Pool(a.workers) as pool:
@@ -196,6 +205,7 @@ def main():
     report = dict(schema='furry-visual-closed-loop-v1', checkpoint=a.checkpoint, dataset=a.dataset,
                   settings=dict(execute=a.execute, ddim_steps=a.ddim_steps, seconds=a.seconds, fps=FPS,
                                 initial='validation: recorded first demo frame; fresh: reset(seed 1..N) + 1 s standing',
+                                fresh_model=model_episode, fresh_gaze=list(a.gaze),
                                 note='HOMIE history at recorded starts is filled with the current observation'),
                   validation=summary([r for r in results if r['source']]), fresh=summary([r for r in results if not r['source']]),
                   wall_seconds=round(time.time()-t, 1), trials=results)
