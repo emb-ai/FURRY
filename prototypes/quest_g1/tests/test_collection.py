@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 import os, subprocess, tempfile, unittest, json
 import mujoco
@@ -8,9 +9,9 @@ class CollectionTests(unittest.TestCase):
         root=Path(__file__).resolve().parents[1];mj=Path(mujoco.__file__).parent
         with tempfile.TemporaryDirectory() as tmp:
             assets=Path(tmp);(assets/'recording_metadata.json').write_text(json.dumps({'schema_version':1,'sha256':{}}));export_scenes(assets)
-            binary=assets/'check_collection';lib=next(mj.glob('libmujoco*.dylib'))
+            binary=assets/'check_collection';lib=next(mj.glob('libmujoco*.dylib' if sys.platform == 'darwin' else 'libmujoco.so*'))
             subprocess.run(['c++','-std=c++17','-O2','-Wall','-Wextra','-Werror','-I'+str(root/'android/native'),'-I'+str(mj/'include'),str(root/'tests/check_collection.cpp'),str(lib),'-o',str(binary)],check=True)
-            result=subprocess.run([str(binary),str(assets)],env=dict(os.environ,DYLD_LIBRARY_PATH=str(mj)),capture_output=True,text=True)
+            result=subprocess.run([str(binary),str(assets)],env=dict(os.environ, **{('DYLD_LIBRARY_PATH' if sys.platform == 'darwin' else 'LD_LIBRARY_PATH'): str(mj)}),capture_output=True,text=True)
             print(result.stdout,end='');self.assertEqual(result.returncode,0,result.stdout+result.stderr)
 
     def test_basket_opens_door_by_contact(self):

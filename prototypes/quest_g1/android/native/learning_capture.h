@@ -30,7 +30,8 @@ public:
         if(!std::isfinite(d->qpos[2])||d->qpos[2]<.50||(pelvis>=0&&d->xmat[9*pelvis+8]<.70710678))return 2;
         int all=0,inside=0;
         for(double x=-.26;x<.21;x+=.02)for(double y=-.29;y<.30;y+=.02){
-            if(!InT(x,y))continue;all++;
+            if(!InT(x,y))continue;
+            all++;
             double world[3],local[3],p[3]={x,y,0};
             mju_mulMatVec(world,d->xmat+9*target,p,3,3);mju_addTo3(world,d->xpos+3*target);mju_subFrom3(world,d->xpos+3*box);
             mju_mulMatTVec(local,d->xmat+9*box,world,3,3);inside+=InT(local[0],local[1]);
@@ -62,7 +63,8 @@ public:
         mju_mat2Quat(qbase,base);mju_mulQuat(qrel,by,px);mju_mulQuat(q,qbase,qrel);
         int result=Result(m,d);if(!outcome&&result)outcome=result;
         stream<<rows++<<','<<sequence<<','<<step<<','<<d->time<<','<<segment<<','<<gazeValid;
-        for(int k=0;k<3;k++)stream<<','<<scratch->cam_xpos[3*camera+k];for(double v:q)stream<<','<<v;
+        for(int k=0;k<3;k++)stream<<','<<scratch->cam_xpos[3*camera+k];
+        for(double v:q)stream<<','<<v;
         stream<<','<<yaw<<','<<pitch<<','<<outcome<<'\n';
     }
     void FinalState(const mjModel*m,const mjData*d){if(!outcome)outcome=Result(m,d);}

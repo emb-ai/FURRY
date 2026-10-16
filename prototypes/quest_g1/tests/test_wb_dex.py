@@ -1,3 +1,4 @@
+import sys
 """Regression tests for floor-placement crouching and passive cup stability."""
 from pathlib import Path
 import os,subprocess,tempfile,unittest
@@ -9,16 +10,18 @@ class WBDexTests(unittest.TestCase):
   mj=Path(mujoco.__file__).parent
   with tempfile.TemporaryDirectory() as temp:
    binary=Path(temp)/'wb-test'
-   subprocess.run(['c++','-std=c++17','-O2','-Wall','-Wextra','-Werror','-I'+str(ROOT/'android/native'),'-I'+str(mj/'include'),str(ROOT/'tests/check_wb_dex.cpp'),str(next(mj.glob('libmujoco*.dylib'))),'-o',str(binary)],check=True)
-   result=subprocess.run([str(binary),str(ROOT/'android/assets')],env=dict(os.environ,DYLD_LIBRARY_PATH=str(mj)),capture_output=True,text=True)
+   subprocess.run(['c++','-std=c++17','-O2','-Wall','-Wextra','-Werror','-I'+str(ROOT/'android/native'),'-I'+str(mj/'include'),str(ROOT/'tests/check_wb_dex.cpp'),str(next(mj.glob('libmujoco*.dylib' if sys.platform == 'darwin' else 'libmujoco.so*'))),'-o',str(binary)],check=True)
+   result=subprocess.run([str(binary),str(ROOT/'android/assets')],env=dict(os.environ, **{('DYLD_LIBRARY_PATH' if sys.platform == 'darwin' else 'LD_LIBRARY_PATH'): str(mj)}),capture_output=True,text=True)
    self.assertEqual(result.returncode,0,result.stdout+result.stderr)
  def test_runtime_does_not_abort_squat(self):
   import onnxruntime
   mj=Path(mujoco.__file__).parent;ort=Path(onnxruntime.__file__).parent/'capi'
   with tempfile.TemporaryDirectory() as temp:
    binary=Path(temp)/'physics-test'
-   subprocess.run(['c++','-std=c++17','-O1','-I'+str(ROOT/'android/native'),'-I'+str(mj/'include'),'-I'+str(ROOT/'vendor/onnxruntime-android/headers'),str(ROOT/'tests/check_wb_dex_physics.cpp'),str(ROOT/'android/native/simulation.cpp'),str(next(mj.glob('libmujoco*.dylib'))),str(next(ort.glob('libonnxruntime*.dylib'))),'-o',str(binary)],check=True)
-   result=subprocess.run([str(binary),str(ROOT/'android/assets')],env=dict(os.environ,DYLD_LIBRARY_PATH=str(mj)+os.pathsep+str(ort)),capture_output=True,text=True)
+   ortlib=next(p for p in ort.glob('libonnxruntime*.dylib' if sys.platform == 'darwin' else 'libonnxruntime.so*'))
+   if sys.platform != 'darwin': (Path(temp)/'libonnxruntime.so.1').symlink_to(ortlib)
+   subprocess.run(['c++','-std=c++17','-O1','-I'+str(ROOT/'android/native'),'-I'+str(mj/'include'),'-I'+str(ROOT/'vendor/onnxruntime-android/headers'),str(ROOT/'tests/check_wb_dex_physics.cpp'),str(ROOT/'android/native/simulation.cpp'),str(next(mj.glob('libmujoco*.dylib' if sys.platform == 'darwin' else 'libmujoco.so*'))),str(ortlib),'-o',str(binary)],check=True)
+   result=subprocess.run([str(binary),str(ROOT/'android/assets')],env=dict(os.environ, **{('DYLD_LIBRARY_PATH' if sys.platform == 'darwin' else 'LD_LIBRARY_PATH'): temp+os.pathsep+str(mj)+os.pathsep+str(ort)}),capture_output=True,text=True)
    self.assertEqual(result.returncode,0,result.stdout+result.stderr)
  def test_passive_cup_settles_on_shelf_and_in_box(self):
   m,_=make_model('wb_dex');self.assertTrue(m.opt.enableflags & mujoco.mjtEnableBit.mjENBL_MULTICCD)
