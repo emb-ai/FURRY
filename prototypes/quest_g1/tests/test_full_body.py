@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+import sys
 import subprocess
 import tempfile
 import unittest
@@ -16,7 +17,7 @@ class FullBodyTests(unittest.TestCase):
             subprocess.run(['c++','-std=c++17','-Wall','-Wextra','-Werror',
                 '-I'+str(root/'android/native'),'-I'+str(runtime/'include'),
                 str(root/'tests/check_full_body.cpp'),str(library),'-o',str(binary)],check=True)
-            env=dict(os.environ, DYLD_LIBRARY_PATH=str(runtime))
+            env=dict(os.environ, **{('DYLD_LIBRARY_PATH' if sys.platform == 'darwin' else 'LD_LIBRARY_PATH'): str(runtime)})
             subprocess.run([str(binary),directory],env=env,check=True)
             raw=(Path(directory)/'body_full.bin').read_bytes()
             self.assertEqual(struct.unpack_from('<8sIII',raw), (b'G1BODY84',1,3072,84))
