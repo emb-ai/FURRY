@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-16",
+  "source_repository": "https://github.com/emb-ai/FURRY",
+  "runtime_commit": "f6d87c83b98e6c0527274a90d7c799b081a5a178",
+  "presentation_source": "https://docs.google.com/presentation/d/1hyqIzdS8b-cYbUaeu4GaNDoR_Sctr1FrsqFfs4joNZQ/edit",
+  "files": [
+    {
+      "file": "furry-final-montage.mp4",
+      "bytes": 41979178,
+      "sha256": "2d9b3df6ec96171666d12e01de203c2a454edad87c591f2586f153f8d073c8c0",
+      "source": "outputs/final-montage-20261016/furry-final-montage.mp4",
+      "kind": "edited demonstration reel",
+      "video": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "30/1"
+          }
+        ],
+        "format": {
+          "duration": "89.233333"
+        }
+      },
+      "full_decode": "passed"
+    },
+    {
+      "file": "policies-comparison.mp4",
+      "bytes": 34840161,
+      "sha256": "41503a64c0a16029981dbd3df734ca30685fb7b834d82c1a60fdda659e383574",
+      "source": "outputs/policy-comparison-20261016/eight-policies-right-turn-v5.mp4",
+      "kind": "native offline policy comparison",
+      "video": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 3840,
+            "height": 2160,
+            "r_frame_rate": "25/1"
+          }
+        ],
+        "format": {
+          "duration": "26.000000"
+        }
+      },
+      "full_decode": "passed"
+    }
+  ],
+  "presentation_status": "Fresh PPTX export pending: Google returned truncated ZIP archives; the earlier 12:30 export omits later edits and is not included.",
+  "validation": {
+    "runtime_ci": "https://github.com/emb-ai/FURRY/actions/runs/38931337126",
+    "runtime_ci_result": "success",
+    "documentation_ci": "https://github.com/emb-ai/FURRY/actions/runs/38931336795",
+    "documentation_ci_result": "success"
+  }
+}

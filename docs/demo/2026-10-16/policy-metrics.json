@@ -1,0 +1,69 @@
+{
+  "definition": "Mean root XY Euclidean error in cm, mean absolute wrapped root yaw error in degrees, same timestamps and common base GMR reference; no posthoc alignment. Falls recorded separately, no reset.",
+  "results": [
+    {
+      "id": "twist2-20k",
+      "name": "TWIST2 Original",
+      "mean_xy_cm": 51.95279022830849,
+      "mean_yaw_deg": 13.638836526580455,
+      "fall": false,
+      "duration_s": 20
+    },
+    {
+      "id": "quest-111586-500",
+      "name": "TWIST2 Finetuned",
+      "mean_xy_cm": 36.00929465156482,
+      "mean_yaw_deg": 14.270131969006059,
+      "fall": false,
+      "duration_s": 20
+    },
+    {
+      "id": "quest-111586-500-lift10",
+      "name": "TWIST2 Lift",
+      "mean_xy_cm": 35.45475520222174,
+      "mean_yaw_deg": 15.596469372152743,
+      "fall": false,
+      "duration_s": 20
+    },
+    {
+      "id": "quest-stance12-B-s11",
+      "name": "TWIST2 Narrow",
+      "mean_xy_cm": 23.16128518462395,
+      "mean_yaw_deg": 9.47685932289655,
+      "fall": false,
+      "duration_s": 20
+    },
+    {
+      "id": "homie-v2",
+      "name": "HOMIE v2",
+      "mean_xy_cm": 11.307339866155813,
+      "mean_yaw_deg": 5.250159039494892,
+      "fall": false,
+      "duration_s": 20
+    },
+    {
+      "id": "dexweave-wide-2977",
+      "name": "DexWeave Wide",
+      "mean_xy_cm": 4.149170334042224,
+      "mean_yaw_deg": 3.678331407189657,
+      "fall": false,
+      "duration_s": 20
+    },
+    {
+      "id": "dexweave-B-4174",
+      "name": "DexWeave Narrow",
+      "mean_xy_cm": 3.9137585126284193,
+      "mean_yaw_deg": 3.1667122863472894,
+      "fall": false,
+      "duration_s": 20
+    },
+    {
+      "id": "sonic-vr3",
+      "name": "SONIC VR3",
+      "mean_xy_cm": 27.34570983649478,
+      "mean_yaw_deg": 11.902509384095184,
+      "fall": false,
+      "duration_s": 20
+    }
+  ]
+}

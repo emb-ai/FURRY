@@ -13,6 +13,7 @@ deployment is outside this project's scope.
 
 ## Start Here
 
+- [Final demo, presentation and policy comparison — 16 October 2026](docs/demo/2026-10-16/README.md)
 - [Knowledge base and reading order](docs/Home.md)
 - [Getting started](docs/Getting-Started.md)
 - [Team setup and Quest updates over Wi-Fi](docs/Quest-WiFi-Deploy.md)
@@ -25,14 +26,19 @@ deployment is outside this project's scope.
 
 ## Status
 
-The repository includes the research foundation and an experimental
-[standalone Quest 3 / macOS G1 prototype](prototypes/quest_g1/README.md).
-The prototype runs MuJoCo and a TWIST2 policy locally on the headset, with
-passthrough, controller wrist IK, simulation reset and local motion recording.
-It is not a complete reproduction of TWIST2: operator-reported arm correspondence
-remains poor, and cup lifting, Kick-T, walking and optical-hand tracking are not
-validated. See [implementation task #11](https://github.com/emb-ai/FURRY/issues/11).
-Architecture choices remain provisional research decisions.
+As of 16 October 2026, the
+[standalone Quest 3 / macOS G1 prototype](prototypes/quest_g1/README.md)
+runs native OpenXR, MuJoCo and ONNX control on the headset. Meta body tracking
+passes through C++ GMR; controller wrist targets, passthrough, calibration,
+policy selection, trajectory capture and operator MP4 recording are available.
+TWIST2, HOMIE and SONIC modes and experimental fine-tuned policies are included.
+
+The [final demo package](docs/demo/2026-10-16/README.md) shows tracking, cup,
+Kick-T and tennis, with a Rubik teaser. Published Quest datasets and autonomous
+visual-policy results are available in `datasets/` and the prototype's training
+reports. These demonstrations do not establish general task reliability:
+walking, external-camera leg tracking and arbitrary Rubik sequences remain
+research limitations. Physical-robot deployment remains outside scope.
 
 `docs/` is authoritative; the Wiki is a manually published mirror. See the
 [publishing procedure](docs/Contributing.md#wiki-publication).

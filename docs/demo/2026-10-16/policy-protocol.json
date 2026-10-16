@@ -1,0 +1,151 @@
+{
+  "variants": [
+    {
+      "id": "twist2-20k",
+      "title": "TWIST2 Original",
+      "reference": "base",
+      "exit_code": 0,
+      "policy": {
+        "id": "twist2-20k",
+        "title": "TWIST2: авторская 20k",
+        "note": "Основная",
+        "file": "policy.onnx",
+        "sha256": "2d1fb3a31e4e967f70ecfefc3ad1e7b2ac491677068b89f60b565a94e7735061",
+        "policy_hz": 50,
+        "legacy_policy_hz": 100,
+        "backend": "twist2"
+      }
+    },
+    {
+      "id": "quest-111586-500",
+      "title": "TWIST2 Finetuned",
+      "reference": "base",
+      "exit_code": 0,
+      "policy": {
+        "id": "quest-111586-500",
+        "title": "Quest: новое +500 / 50 Гц",
+        "note": "Продолжение 1000 · 09.10 / RTX",
+        "file": "policy-quest-111586-500.onnx",
+        "sha256": "57d6ac4b2461ac8884afeac86d32bcc9a7b4b72f376e15b898af7ac3d8a5241d",
+        "policy_hz": 50,
+        "legacy_policy_hz": 50,
+        "backend": "twist2"
+      }
+    },
+    {
+      "id": "quest-111586-500-lift10",
+      "title": "TWIST2 Lift",
+      "reference": "lift",
+      "exit_code": 0,
+      "policy": {
+        "id": "quest-111586-500-lift10",
+        "title": "Virtual Legs: шаг +10 см",
+        "note": "TWIST2 +500 · IK ноги",
+        "file": "policy-quest-111586-500-lift10.onnx",
+        "sha256": "57d6ac4b2461ac8884afeac86d32bcc9a7b4b72f376e15b898af7ac3d8a5241d",
+        "policy_hz": 50,
+        "legacy_policy_hz": 50,
+        "backend": "twist2",
+        "input_patch": "virtual_leg_lift10_v1"
+      }
+    },
+    {
+      "id": "quest-stance12-B-s11",
+      "title": "TWIST2 Narrow",
+      "reference": "narrow",
+      "exit_code": 0,
+      "policy": {
+        "id": "quest-stance12-B-s11",
+        "title": "TWIST2: узкая стойка −12 см",
+        "note": "B · дообучение +1000 · 50 Гц",
+        "file": "policy-quest-stance12-B-s11.onnx",
+        "sha256": "f24be7b0ef36b9bfef61672aa54dbd7f494c6527a0cc66f64b449d2f7da15745",
+        "policy_hz": 50,
+        "legacy_policy_hz": 100,
+        "backend": "twist2",
+        "input_patch": "stance_narrow12_v1"
+      }
+    },
+    {
+      "id": "homie-v2",
+      "title": "HOMIE v2",
+      "reference": "base",
+      "exit_code": 0,
+      "policy": {
+        "id": "homie-v2",
+        "title": "HOMIE v2: автономная ходьба",
+        "note": "Эксперимент · руки оператора, шаги робота",
+        "file": "policy-homie-v2-balance.onnx",
+        "sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+        "policy_hz": 50,
+        "legacy_policy_hz": 50,
+        "backend": "groot_decoupled_v1",
+        "secondary_file": "policy-homie-v2-walk.onnx",
+        "secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407"
+      }
+    },
+    {
+      "id": "dexweave-wide-2977",
+      "title": "DexWeave Wide",
+      "reference": "base",
+      "exit_code": 0,
+      "policy": {
+        "id": "dexweave-wide-2977",
+        "title": "DexWeave: широкая 2977",
+        "note": "Исходная · эксперимент · 50 Гц",
+        "file": "policy-dexweave-wide-2977.onnx",
+        "sha256": "9a24da67253426a779209e2f18f52259bfbef1b7bee146645cb81ba5858d54d2",
+        "policy_hz": 50,
+        "legacy_policy_hz": 50,
+        "backend": "dexweave_body_v1"
+      }
+    },
+    {
+      "id": "dexweave-B-4174",
+      "title": "DexWeave Narrow",
+      "reference": "narrow",
+      "exit_code": 0,
+      "policy": {
+        "id": "dexweave-B-4174",
+        "title": "DexWeave B: узкая стойка",
+        "note": "4174 · эксперимент · 50 Гц",
+        "file": "policy-dexweave-B-4174.onnx",
+        "sha256": "7bf8d82997c152c6c425ed0c715d0fc782905e9cb273bba764052eb48cc25761",
+        "policy_hz": 50,
+        "legacy_policy_hz": 50,
+        "backend": "dexweave_body_v1",
+        "input_patch": "stance_narrow12_v1"
+      }
+    },
+    {
+      "id": "sonic-vr3",
+      "title": "SONIC VR3",
+      "reference": "base",
+      "exit_code": 0,
+      "policy": {
+        "id": "sonic-vr3",
+        "title": "SONIC: автономные ноги",
+        "note": "Эксперимент · три верхние цели",
+        "backend": "sonic_vr3_v1",
+        "policy_hz": 50,
+        "legacy_policy_hz": 50,
+        "file": "policy-sonic-vr3-sonic_encoder.onnx",
+        "sha256": "013ab0287236aa2721e13f1e936d699db982302d0de0bfcdae76d5c3245362d3",
+        "secondary_file": "policy-sonic-vr3-sonic_decoder.onnx",
+        "secondary_sha256": "c7241a123eaa36b5d64bad19540efde93cac1ad443bd4572fd12ca99898118ed",
+        "planner_file": "policy-sonic-vr3-planner.onnx",
+        "planner_sha256": "39b553e197f62f077975ba38512bc04781a3fc37c2af7c6756e04629f760edea"
+      }
+    }
+  ],
+  "source": "outputs/stance-finetune-20261013/A-prepared/sources/epoch1.txt",
+  "source_sha256": "509b33b4f6bfdd886b597aaeeed3f779e12e99c511d579062bd2972f8e8ca472",
+  "clip": "stage09-run00 first20s",
+  "native_assets": "outputs/training-capture-20261015/project/android/assets",
+  "duration_s": 20,
+  "physics_hz": 1000,
+  "policy_hz": 50,
+  "reference": "Continuous current native Meta/GMR from original calibration, three native menu input modes. No offline filtering or floor guard. Observer camera target from FK. Common yaw and XY transform. Each policy native reset and common baseline neutral physical pose; zero velocities and empty histories; native .5s command blend.",
+  "catch_up": "Native v2 for TWIST2, HOMIE, SONIC; native absolute reference for DexWeave.",
+  "metric": "Mean root XY Euclidean error in cm, mean absolute wrapped root yaw error in degrees, same timestamps and common base GMR reference; no posthoc alignment. Falls recorded separately, no reset."
+}
