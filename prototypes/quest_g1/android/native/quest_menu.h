@@ -22,7 +22,7 @@ enum class Action {
     DebugEnabled, DebugStats, DebugMeta, DebugCamera, DebugTargets, DebugContacts,
     PageSession, PageView, PageDebug, PagePolicy, CatchUp, PolicyPrevious, PolicyNext,
     PolicySelect0, PolicySelect1, PolicySelect2, PolicySelect3, LegsMeta, LegsCamera,
-    CameraRecalibrate
+    CameraRecalibrate, ToggleOperatorVideo
 };
 enum class Kind { Text, MutedText, Divider, Tab, Button, Primary, Radio, Checkbox };
 
@@ -40,6 +40,9 @@ struct State {
     bool debugCamera = false, debugTargets = false, debugContacts = false;
     std::string notice, recordingInfo, cameraInfo, cameraStatus, tennisInfo, rubikInfo;
     int cameraLevel = 0; // 0 hidden, 1 muted, 2 warning, 3 good
+    int videoState = 0;
+    bool videoAvailable = false;
+    std::string videoMessage;
     int exportStatus = 0;
     std::vector<questpolicy::Entry> policies;
     int policyIndex = 0, policyPage = 0;
@@ -245,22 +248,29 @@ inline std::vector<Widget> BuildLayout(const State& s) {
         label(.214f, "Камера");
         segments(.214f, "Наблюдатель", "От первого лица", Action::ViewObserver,
                  Action::ViewFirstPerson, !s.firstPerson, !human);
-        check(.130f, "Реальная комната", Action::Passthrough, human || s.passthrough, !human);
-        label(.047f, "Сцена");
-        add({-.192f, .047f, .544f, .054f}, "Поставить перед собой", Action::Place,
+        check(.148f, "Реальная комната", Action::Passthrough, human || s.passthrough, !human);
+        label(.082f, "Сцена");
+        add({-.192f, .082f, .544f, .054f}, "Поставить перед собой", Action::Place,
             !human && !s.recording, false, Kind::Button);
-        line(.032f);
-        label(-.039f, "Ноги");
-        segments(-.039f, "Meta", "Камера", Action::LegsMeta, Action::LegsCamera,
+        line(.070f);
+        label(.016f, "Ноги");
+        segments(.016f, "Meta", "Камера", Action::LegsMeta, Action::LegsCamera,
                  !s.cameraLegs, s.cameraConfigured && !human);
-        line(-.051f);
-        label(-.121f, "Meta");
-        text(-.121f, s.trackingValid ? "Трекинг есть" : "Нет свежего трекинга");
-        label(-.190f, "RGB-D");
-        add({-.192f, -.190f, .300f, .054f}, s.cameraInfo.empty() ? "Не подключена" : s.cameraInfo);
+        line(.004f);
+        label(-.050f, "Meta");
+        text(-.050f, s.trackingValid ? "Трекинг есть" : "Нет свежего трекинга");
+        label(-.116f, "RGB-D");
+        add({-.192f, -.116f, .300f, .054f}, s.cameraInfo.empty() ? "Не подключена" : s.cameraInfo);
         // Registration is kept across launches; redo it after moving the camera.
-        add({.118f, -.190f, .234f, .054f}, "Калибровать", Action::CameraRecalibrate,
+        add({.118f, -.116f, .234f, .054f}, "Калибровать", Action::CameraRecalibrate,
             s.cameraConfigured && !human, false, Kind::Button);
+        add({-.352f, -.190f, .704f, .054f},
+            s.videoState == 3 ? "Остановить видео оператора" :
+            s.videoState == 1 ? "Подтвердите запись в системном окне" :
+            s.videoState == 2 ? "Запуск видео..." :
+            s.videoState == 4 ? "Сохранение видео..." : "Записать видео оператора",
+            Action::ToggleOperatorVideo, s.videoAvailable && (s.videoState == 0 || s.videoState == 3),
+            s.videoState == 3, Kind::Button);
     } else if(s.page == Page::Policy) {
         const int count=int(s.policies.size());
         const int pages=std::max(1,(count+PoliciesPerPage-1)/PoliciesPerPage);
@@ -296,6 +306,7 @@ inline std::vector<Widget> BuildLayout(const State& s) {
     if (s.exportStatus == 1) info = "Архив копируется в Download/G1Quest";
     else if (s.exportStatus == 2) info = "Архив сохранён в Download/G1Quest";
     else if (s.exportStatus == 3) info = "Ошибка экспорта. Исходники сохранены в очках";
+    if (s.page == Page::View) info = s.videoMessage;
     add({-.352f, -.278f, .704f, .036f}, info, Action::None, true, false, Kind::MutedText);
     line(-.292f);
     add({-.352f, -.362f, .26f, .054f}, s.recording ? "Сохранить запись" : "Сбросить",

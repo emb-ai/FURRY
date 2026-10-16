@@ -32,8 +32,13 @@ if [[ "${G1_CAPTURE_APP:-0}" == 1 ]]; then
   .venv/bin/python scripts/capture_app_manifest.py android/AndroidManifest.xml android/build/AndroidManifest-capture.xml
   G1_MANIFEST=android/build/AndroidManifest-capture.xml
 fi
+mkdir -p android/build/java android/build/dex
+"$JAVA_HOME/bin/javac" -encoding UTF-8 -parameters --release 8 -classpath "$G1_SDK/platforms/android-34/android.jar" -d android/build/java android/java/org/g1lab/quest/*.java
+"$JAVA_HOME/bin/jar" cf android/build/operator-video.jar -C android/build/java .
+"$G1_BT/d8" --lib "$G1_SDK/platforms/android-34/android.jar" --min-api 29 --output android/build/dex android/build/operator-video.jar
 "$G1_BT/aapt2" link --manifest "$G1_MANIFEST" -I "$G1_SDK/platforms/android-34/android.jar" -A android/assets -o android/build/unsigned.apk
 (cd android/build/package && /usr/bin/zip -q -r ../unsigned.apk lib)
+(cd android/build/dex && /usr/bin/zip -q ../unsigned.apk classes.dex)
 "$G1_BT/zipalign" -f -p 4 android/build/unsigned.apk android/build/aligned.apk
 if [[ ! -f .tools/g1-debug.keystore ]]; then
   "$JAVA_HOME/bin/keytool" -genkeypair -keystore .tools/g1-debug.keystore -storepass android -keypass android -alias androiddebugkey -dname 'CN=G1 Quest Lab Development' -keyalg RSA -keysize 2048 -validity 10000

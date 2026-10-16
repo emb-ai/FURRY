@@ -19,6 +19,7 @@
 #include "world_skeleton_gl.h"
 #include "camera_pose_servo.h"
 #include "recording_export.h"
+#include "operator_video.h"
 #include "quest_menu_gl.h"
 #include <deque>
 #include <set>
@@ -138,6 +139,8 @@ std::array<float,2> calibrationGrip{};
 std::array<float,29> calibrationReference{};
 std::array<float,35> calibrationMimic{};
 std::unique_ptr<RecordingExport> exporter;
+std::unique_ptr<OperatorVideo> operatorVideo;
+double videoPollTime=0;
 std::atomic<int> recordingStatus{0};
 std::atomic<double> recordingStarted{0};
 std::atomic<bool> toggleRecording{false};
@@ -416,6 +419,11 @@ void ChangeConfiguration(questmenu::Action action){
 }
 void ApplyMenuAction(questmenu::Action action,bool fresh,uint64_t sequence,int policyIndex=-1){
     using A=questmenu::Action;
+    if(action==A::ToggleOperatorVideo){
+        try{if(operatorVideo)operatorVideo->Toggle();}
+        catch(const std::exception& e){Notice("Не удалось переключить видео");__android_log_print(ANDROID_LOG_ERROR,"G1Video","%s",e.what());}
+        return;
+    }
     if(action==A::CatchUp){
         if(sim->Standing()||sim->Backend()==questpolicy::DexWeave)return;
         if(recorder.active){Notice("Сначала сохраните запись.");return;}
@@ -542,6 +550,9 @@ void G1GraphicsContextCreated(){
     __android_log_print(ANDROID_LOG_INFO,"G1Quest","Created graphics context generation %llu",static_cast<unsigned long long>(generation));
 }
 void G1Initialize(android_app* app){
+    videoPollTime=0;
+    try{operatorVideo=std::make_unique<OperatorVideo>(app->activity->vm,app->activity->clazz);}
+    catch(const std::exception& e){operatorVideo.reset();__android_log_print(ANDROID_LOG_ERROR,"G1Video","%s",e.what());}
     // The native library can survive NativeActivity/context recreation.
     // Never carry old pending clicks, focus, calibration or controller input.
     {std::lock_guard<std::mutex> guard(inputMutex);pendingInputs.clear();pendingEvents.clear();pendingMenuActions.clear();latestTracking={};menuNotice.clear();}
@@ -962,6 +973,8 @@ void G1Shutdown(bool interrupted){
         if(interrupted){recorder.Event("app_error",latestTracking.sequence);recorder.Flush();recorder.Abort();CloseFailedRecordingStreams();capture.Stop();}
         else FinishRecording(latestTracking.sequence,"app_shutdown");
     });
+    try{if(operatorVideo)operatorVideo->Stop();}catch(const std::exception& e){__android_log_print(ANDROID_LOG_ERROR,"G1Video","%s",e.what());}
+    operatorVideo.reset();
     exporter.reset();cameraStream.reset();
     // RuntimeGuard is destroyed before the owning Graphics/EGL context. Drop
     // scene resources also when a runtime restarts inside that same context.
@@ -1049,6 +1062,12 @@ void G1PrepareFrame(){
     menuState.policyIndex=selectedPolicy;menuState.catchUp=catchUpEnabled;
     menuState.cameraConfigured=cameraConfigured;menuState.cameraLegs=cameraLegsEnabled;
     menuState.policyLoading=loadingPolicy.load()>=0;
+    menuState.videoAvailable=bool(operatorVideo);
+    if(operatorVideo && ClockSeconds()-videoPollTime>.25){
+        videoPollTime=ClockSeconds();
+        try{operatorVideo->Poll();menuState.videoState=operatorVideo->state;menuState.videoMessage=operatorVideo->message;}
+        catch(const std::exception& e){menuState.videoAvailable=false;menuState.videoMessage="Ошибка состояния видео";}
+    }
     menuState.mode=questmenu::Mode(sessionMode.load());menuState.scene=questmenu::Scene(sessionScene.load());
     menuState.capture=questmenu::Capture(sessionCapture.load());menuState.plan=questmenu::Plan(sessionPlan.load());
     menuState.plannerWaiting=plannerWaiting;menuState.open=menuOpen;menuState.paused=SessionPaused()||!active;menuState.recording=recordingStatus==1;
@@ -1126,6 +1145,7 @@ void G1PrepareFrame(){
         frameEgoWorld=CalibratedCameraWorld(frameCamera,headMatrix,frameEgoRotation,frameEgoScale);refreshEgoAnchor=false;
     }
 }
+bool G1OperatorVideoNeedsWideFov(){ return menuState.videoState != 0; }
 void G1Render(const float* vp,const float* projection){
     double renderStart=ClockSeconds();
     if(!sim)return;

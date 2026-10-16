@@ -129,6 +129,20 @@ int main() {
     Check(CentreHit(BuildLayout(state), Action::LegsCamera) == Action::None, "Camera legs selectable without a camera");
     state.cameraConfigured = true; state.capture = Capture::Human;
 
+    state.videoAvailable = true;
+    for (int video = 0; video <= 4; ++video) {
+        state.videoState = video;
+        CheckGeometry(state);
+        auto videoLayout = BuildLayout(state);
+        Check((CentreHit(videoLayout, Action::ToggleOperatorVideo) == Action::ToggleOperatorVideo)
+              == (video == 0 || video == 3), "Video button busy gating failed");
+        Check(PolicyRow(Action::ToggleOperatorVideo) == -1, "Video interpreted as policy row");
+        Check(Find(videoLayout, Action::ToggleOperatorVideo).selected == (video == 3),
+              "Video recording indicator wrong");
+    }
+    state.videoAvailable = false; state.videoState = 0;
+    Check(CentreHit(BuildLayout(state), Action::ToggleOperatorVideo) == Action::None,
+          "Missing Java bridge can start video");
     state.page = Page::Debug;
     layout = BuildLayout(state);
     Check(CentreHit(layout, Action::DebugEnabled) == Action::DebugEnabled, "Master debug control disabled");

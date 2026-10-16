@@ -20,3 +20,6 @@ void G1ToggleView();
 void G1ToggleMenu();
 void G1SubmitMenuRay(int hand,const TrackedPose& pose,bool valid,bool triggerActive,float trigger);
 bool G1PassthroughVisible();
+
+// Called on the render thread after G1PrepareFrame.
+bool G1OperatorVideoNeedsWideFov();

@@ -297,6 +297,10 @@ for name in names:
     if name == 'openxr_program.cpp':
         from menu_input_patch import adapt_menu_input
         text = adapt_menu_input(text)
+        text = text.replace('#include "quest_runtime.h"', '#include "quest_runtime.h"\n#include "capture_fov.h"')
+        capture_assignment = 'projectionLayerViews[i].fov = m_views[i].fov;'
+        assert text.count(capture_assignment) == 1
+        text = text.replace(capture_assignment, 'projectionLayerViews[i].fov = questcapture::ProjectionFov(m_views[i].fov, G1OperatorVideoNeedsWideFov());\n            // RenderView uses this same FOV; the submitted layer therefore preserves\n            // the headset\'s angular geometry while supplying pixels for MR capture.\n            static int previousCaptureState[2] = {-1, -1};\n            const int captureState = G1OperatorVideoNeedsWideFov() ? 1 : 0;\n            if (i < 2 && previousCaptureState[i] != captureState) {\n                previousCaptureState[i] = captureState;\n                const auto& f = projectionLayerViews[i].fov;\n                __android_log_print(ANDROID_LOG_INFO, "G1CaptureFov", "eye=%u wide=%d fov=%f,%f,%f,%f", i, captureState,\n                                    f.angleLeft, f.angleRight, f.angleUp, f.angleDown);\n            }')
     (dest/name).write_text(text)
 print('Android scene and OpenXR lifecycle prepared:',assets)
 
@@ -315,7 +319,7 @@ metadata = dict(schema_version=1, retargeting='native_gmr_meta_full_body', input
                 state_phase='before next 10 physics steps; ctrl is last physics-step output',
                 clocks='xr_time_ns is predicted display time; receive_ns is steady_clock, no clock-offset fit',
                 missing_data='valid and per-pose OpenXR flags are authoritative; invalid numerical poses must not be used',
-                limitations=['no measured elbows, legs or finger skeleton', 'no video', 'no complete controller hidden state for dynamic restart'])
+                limitations=['no measured elbows, legs or finger skeleton', 'episode trajectory files do not include video; optional operator MP4 is separate', 'no complete controller hidden state for dynamic restart'])
 (assets/'recording_metadata.json').write_text(json.dumps(metadata, indent=2)+'\n')
 
 from export_gmr import export as export_gmr
@@ -327,6 +331,17 @@ for file in ['gmr.cpp','gmr.h','meta_retarget.cpp','meta_retarget.h','foot_floor
     metadata['sha256']['android/native/'+file]=hashlib.sha256((ROOT/'android/native'/file).read_bytes()).hexdigest()
 for file in ['world_skeleton.h', 'world_skeleton_gl.h', 'operator_skeleton.h', 'operator_skeleton_draw.h', 'camera_fusion.cpp', 'camera_fusion.h', 'camera_stream.cpp', 'quest_menu.h', 'quest_menu_gl.h', 'policy_catalog.h', 'policy_backend.h', 'groot_decoupled.h', 'dexweave.h', 'sonic.h', 'sonic_constants.h', 'virtual_leg_lift.h', 'body_motor_profile.h', 'body_motor_model.h', 'recording.h', 'learning_capture.h', 'episode_manifest.h', 'simulation.h', 'standing_arms.h', 'file_sha256.h', 'camera_pose_servo.h', 'tennis_task.h', 'collection_task.h', 'render_geom.h', 'cup_lab_shaders.h', 'cup_placement_cue.h', 'rubik_task.h', 'camera_fade.h', 'graphics_epoch.h', 'graphics.cpp']:
     metadata['sha256']['android/native/'+file]=hashlib.sha256((ROOT/'android/native'/file).read_bytes()).hexdigest()
+for file in ['android/native/operator_video.h', 'android/native/capture_fov.h', 'android/native/quest_runtime.h',
+             'android/generated/xr/openxr_program.cpp', 'android/AndroidManifest.xml',
+             'android/java/org/g1lab/quest/QuestActivity.java',
+             'android/java/org/g1lab/quest/OperatorVideoService.java']:
+    metadata['sha256'][file] = hashlib.sha256((ROOT/file).read_bytes()).hexdigest()
+metadata['operator_video'] = dict(optional=True, source='Horizon OS MediaProjection compositor',
+    width=1024, height=1024, fps=30, codec='H264', bitrate=8000000, audio=False,
+    symmetric_projection_during_capture=True, minimum_render_half_fov_degrees=57,
+    compositor_capture_fov_degrees=110, compositor_override_requires_adb=True,
+    destination='Movies/G1Quest', synchronized_to_episode=False,
+    consent='system dialog on every start', validation='requires on-device acceptance')
 metadata['camera_fade'] = dict(schema_version=1, enabled=True, render_only=True,
     invisible_distance_m=.08, opaque_distance_m=.22, segments='robot visual/collision geometry only',
     distance='oriented bounds of uploaded vertices in STAGE metres', camera='shared centre HMD',
@@ -340,7 +355,7 @@ metadata['sha256']['g1_sim/rubik.py']=hashlib.sha256((ROOT/'g1_sim/rubik.py').re
 metadata['ik_error_semantics']='unweighted GMR stage-2 SE3 residual norm; mixed metres/radians, not wrist distance'
 metadata.update(catch_up_v2=True,neutral_wrists=True,wrist_frame_v2=True,controller_stage_targets=True,controller_anatomical_frame=True,controller_target_point="palm mesh bounds centre",travel_gain_percent=100)
 metadata['body_tracking']={'source':'XR_FB_body_tracking + XR_META_body_tracking_full_body','lower_body':'runtime-estimated, not measured foot trackers','retargeting':'GMR two-stage SE3 box QP; Meta bind-skeleton adapter','root_xy':'Meta pelvis displacement from A, scaled to robot proportions; head-relative sway excluded','scaling':'leg height and arm lengths from Meta bind skeleton; source-specific bone-axis offsets','joints':['Pelvis','Spine3','Left_Hip','Right_Hip','Left_Knee','Right_Knee','Left_Foot','Right_Foot','Left_Shoulder','Right_Shoulder','Left_Elbow','Right_Elbow','Left_Wrist','Right_Wrist']}
-metadata['limitations']=['Meta lower-body poses are estimates','no video','no complete policy hidden state for dynamic restart','Meta source adapter requires hardware validation']
+metadata['limitations']=['Meta lower-body poses are estimates','episode trajectory files do not include video; optional operator MP4 is separate','no complete policy hidden state for dynamic restart','Meta source adapter requires hardware validation']
 metadata['visual_learning_capture']={'schema':'furry-visual-capture-v1','rgb':'offline rendering of archived model/state/camera','action_schema':'body35_grip2_gaze2','fps':30,'not_quest_screen_video':True}
 for name in ['SOURCE_LICENSE', 'MODEL_LICENSE', 'NOTICE']:
     target = assets/f'HOMIE_V2_{name}.txt'

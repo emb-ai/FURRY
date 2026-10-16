@@ -330,7 +330,8 @@ inline int DrawMinimalStatus(const float* headVP, const std::string& assetsPath,
                    state.cameraLevel == 3 ? glmenu::Good : state.cameraLevel == 2 ? glmenu::Warning : glmenu::Muted, .027f);
     std::string title = state.mode == Mode::Trajectories ? "Сбор траекторий" : "Симуляция";
     if (state.recording) title = state.paused ? "REC - пауза" : "REC";
-    draw.Label({-.35f, bottom + .070f, .22f, .036f}, title, state.recording ? glmenu::Warning : glmenu::Text, .029f);
+    if (state.videoState == 3) title = state.recording ? "REC + VIDEO" : "VIDEO REC";
+    draw.Label({-.35f, bottom + .070f, .22f, .036f}, title, (state.recording || state.videoState == 3) ? glmenu::Warning : glmenu::Text, .029f);
     draw.Label({-.115f, bottom + .070f, .465f, .036f}, status, warning ? glmenu::Warning : glmenu::Muted, .029f);
     std::string detail = state.recordingInfo;
     if (detail.empty()) detail = HumanCapture(state) ?

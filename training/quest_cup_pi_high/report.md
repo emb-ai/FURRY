@@ -82,6 +82,7 @@
 ## Прогоны
 
 У всех прогонов:
+
 - U-Net Diffusion Policy, горизонт 16, AdamW betas (0.95, 0.999), lr 1e-4,
   weight decay 1e-6;
 - batch 64, warmup 500 + cosine, EMA 0.9999, сдвиг ±8 px, 100k шагов;
