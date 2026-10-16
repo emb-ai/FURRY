@@ -24,7 +24,6 @@ class FullBodyTests(unittest.TestCase):
             header=struct.unpack_from('<QqqqIfBBBBI',raw,20)
             self.assertEqual(header,(42,987654321012345,123456789012345,123456789012245,7,.875,1,1,1,1,84))
             self.assertEqual(struct.unpack_from('<Q',raw,20+3072+48+3*36)[0],1<<60)
-            import sys
             sys.path.insert(0,str(root/'scripts'))
             from inspect_full_body import inspect
             report=inspect(directory,Path(directory)/'raw.csv')
