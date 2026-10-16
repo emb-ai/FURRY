@@ -2,6 +2,7 @@
 #include <ixwebsocket/IXWebSocket.h>
 #include <json/json.h>
 #include <chrono>
+#include <algorithm>
 #include <cmath>
 #include <sstream>
 namespace {
@@ -24,6 +25,38 @@ bool CameraStream::Parse(const std::string&s,double received,CameraSkeleton&out)
  if(!Joint(v["pelvis"],c.pelvis))return false;
  const char*names[]={"lhip","rhip","lknee","rknee","lankle","rankle","nose","lshoulder","rshoulder","lwrist","rwrist","lelbow","relbow"};
  for(int i=0;i<13;i++){if(i>=9 && !v["joints"].isMember(names[i]))continue;if(!Joint(v["joints"][names[i]],c.joints[i]))return false;}
+ // Optional raw 2D keypoints with pinhole intrinsics. Malformed values
+ // reject the packet; an absent name means "not detected".
+ if(v.isMember("kp2d") || v.isMember("intr")){
+  const auto&intr=v["intr"];const auto&kp=v["kp2d"];
+  if(!intr.isArray() || intr.size()!=4 || !kp.isObject())return false;
+  for(int i=0;i<4;i++){if(!intr[i].isNumeric())return false;c.intrinsics[i]=intr[i].asDouble();}
+  if(!(c.intrinsics[0]>50 && c.intrinsics[0]<1e4 && c.intrinsics[1]>50 && c.intrinsics[1]<1e4) ||
+     !(std::abs(c.intrinsics[2])<1e4 && std::abs(c.intrinsics[3])<1e4))return false;
+  for(const auto&name:kp.getMemberNames()){
+   int i=int(std::find_if(std::begin(names),std::end(names),[&](const char*n){return name==n;})-std::begin(names));
+   if(i>=13)return false;
+   const auto&k=kp[name];if(!k.isArray() || k.size()!=3)return false;
+   for(int a=0;a<3;a++)if(!k[a].isNumeric())return false;
+   auto&p=c.keypoints[i];p.u=k[0].asDouble();p.v=k[1].asDouble();p.confidence=k[2].asDouble();
+   if(!std::isfinite(p.u) || !std::isfinite(p.v) || std::abs(p.u)>1e5 || std::abs(p.v)>1e5 ||
+      !std::isfinite(p.confidence) || p.confidence<0 || p.confidence>1)return false;
+   p.valid=true;
+  }
+  c.hasKeypoints=true;
+ }
+ // Optional PC-side AprilTag registration; must be a proper rotation.
+ if(v.isMember("stage_from_camera")){
+  const auto&f=v["stage_from_camera"];
+  if(!f.isObject() || !f["R"].isArray() || f["R"].size()!=9 || !f["t"].isArray() || f["t"].size()!=3)return false;
+  for(int i=0;i<9;i++){if(!f["R"][i].isNumeric())return false;c.stageRotation[i]=f["R"][i].asDouble();}
+  for(int i=0;i<3;i++){if(!f["t"][i].isNumeric())return false;c.stageTranslation[i]=f["t"][i].asDouble();if(!std::isfinite(c.stageTranslation[i]) || std::abs(c.stageTranslation[i])>30)return false;}
+  const auto&R=c.stageRotation;
+  for(int r=0;r<3;r++)for(int k=0;k<3;k++){double d=R[3*r]*R[3*k]+R[3*r+1]*R[3*k+1]+R[3*r+2]*R[3*k+2];if(!std::isfinite(d) || std::abs(d-(r==k))>1e-3)return false;}
+  double det=R[0]*(R[4]*R[8]-R[5]*R[7])-R[1]*(R[3]*R[8]-R[5]*R[6])+R[2]*(R[3]*R[7]-R[4]*R[6]);
+  if(det<.99)return false;
+  c.hasStagePose=true;
+ }
  out=c;return true;
 }
 CameraStream::CameraStream(const std::string&url):socket(std::make_unique<ix::WebSocket>()){

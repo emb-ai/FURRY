@@ -152,6 +152,38 @@ input sequence, alongside unmodified Meta body/input streams and applied mimic
 commands. View switches are recorded as events. Participant recordings remain
 local and excluded from Git.
 
+## 2D keypoint legs (no camera depth)
+
+Packets may carry `kp2d` (raw detector pixels per joint, `[u, v, conf]`,
+undistorted, before One-Euro), `intr` (`[fx, fy, cx, cy]`) and, after the PC
+AprilTag lock, `stage_from_camera` (`R` row-major, `t`; `p_stage = R p_camera +
+t`). Malformed values reject the packet; an absent joint means not detected.
+
+When `kp2d` is present and the camera is registered (AprilTag pose in the
+packet, or the shoulder fit), the legs come from reprojection instead of depth
+(`native/camera_legs2d.h`). Per leg, thigh and shin directions from Meta's hip
+with Meta's bone lengths are solved so that knee and ankle reproject onto the
+keypoints. The camera's depth axis is only regularised: a 1 m tie-breaker
+toward Meta's time-matched depth, 8 cm toward the previous solution, and soft
+limits on knee bend, varus, hip extension and thigh abduction. Every bone has
+two ray–sphere roots; the solver starts from both, Meta and the previous frame
+and keeps the cheapest. The result enters the same direction transfer,
+hinge, smoothing and fading as the depth path. Unlike the depth path, an
+accepted 2D leg drives at full weight: keypoint confidence already weighs the
+pixels, and scaling by YOLO's typical 0.9 shrank lifts by 10%.
+
+A person gate projects Meta's hip midpoint into the image: detected hips more
+than 35 cm away at that depth are another person. A solution that cannot
+reproject within 25 px drives nothing. The overlay shows the solved knees and
+ankles from Meta's hips, never invented shoulders.
+
+`pose_yolo.py --no-depth` opens the RealSense as a colour camera only. Then
+only the AprilTag can register the camera; the HUD says `нужна связка
+AprilTag`. `--no-kp2d` keeps the depth path for A/B; `CameraFusion::use2d`
+does the same on the headset. The status row reads `Ноги: камера 2D` and the
+debug line appends `2D`. Synthetic results, the frontal-camera limit and the
+evaluation protocol are in [Camera Legs From 2D Keypoints](../../../docs/Camera-2D-Legs.md).
+
 ## First-person world and robot feedback
 
 The scene-to-STAGE transform is computed from the A-calibration camera pose,

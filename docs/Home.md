@@ -74,6 +74,7 @@ unset until participants agree to a bounded task.
 | [Common Ground](Common-Ground.md) | What do our terms, transforms, clocks and representations mean? |
 | [Data And Evaluation](Data-and-Evaluation.md) | What makes a trajectory auditable and a comparison fair? |
 | [Policy Learning](Policy-Learning.md) | How would a state-based Diffusion Policy plug into the simulator loop? |
+| [Camera Legs From 2D Keypoints](Camera-2D-Legs.md) | How can one RGB camera drive the robot's legs without trusting D435i depth? |
 | [Quest Tracker Research](Quest-Tracker-Research.md) | What was tried in low-level tracker finetuning, how were data and losses handled, and what reached Quest? |
 | [Quest Wi-Fi Deployment](Quest-WiFi-Deploy.md) | How can teammates authorise their computers and update the shared headset over Wi-Fi? |
 | [Contributing](Contributing.md) | How do I turn an investigation into a reviewed contribution? |

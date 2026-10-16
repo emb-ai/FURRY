@@ -96,16 +96,17 @@ std::string CameraLegStatus(const RuntimeStats& s,bool connected,bool synced,boo
     // Registration and fusion run in the robot loop only.
     if(paused || s.published<=0){level=1;menu="Подключена";return "Ноги: Meta. Камера подключена, симуляция на паузе";}
     if(s.cameraState==1){
-        const char* hints[]={"","встаньте в кадр","повернитесь к камере","походите лицом к камере","один человек в кадре","камера сдвинута, походите лицом к ней"};
+        const char* hints[]={"","встаньте в кадр","повернитесь к камере","походите лицом к камере","один человек в кадре","камера сдвинута, походите лицом к ней","нужна связка AprilTag (клавиша c на ПК)"};
         int percent=int(std::lround(100*std::clamp(s.cameraFitProgress,0.,1.)));
         std::snprintf(text,sizeof(text),"Калибровка %d%%",percent);menu=text;
-        std::snprintf(text,sizeof(text),"Ноги: Meta. Калибровка %d%%: %s",percent,hints[std::clamp(s.cameraFitHint,0,5)]);
+        std::snprintf(text,sizeof(text),"Ноги: Meta. Калибровка %d%%: %s",percent,hints[std::clamp(s.cameraFitHint,0,6)]);
         level=2;return text;
     }
     if(s.cameraLegs>0){
         const char* side=s.cameraLegs>1?"обе":"одна";
-        if(s.cameraState==3)std::snprintf(text,sizeof(text),"Ноги: камера (%s), задержка %.0f мс",side,s.cameraAgeMs);
-        else std::snprintf(text,sizeof(text),"Ноги: камера (%s)",side);
+        const char* source=s.cameraLegs2d>0?"камера 2D":"камера";
+        if(s.cameraState==3)std::snprintf(text,sizeof(text),"Ноги: %s (%s), задержка %.0f мс",source,side,s.cameraAgeMs);
+        else std::snprintf(text,sizeof(text),"Ноги: %s (%s)",source,side);
         level=3;menu="Ноги с камеры";return text;
     }
     level=2;
@@ -921,7 +922,7 @@ void G1Initialize(android_app* app){
                 for(int a=0;a<2;a++){sample.targetXY[a]=retarget->solver().data()->qpos[a];sample.actualXY[a]=sim->data->qpos[a];sample.commandXY[a]=sim->WholeBodyReference()[a];sample.velocityXY[a]=sim->data->qvel[a];}
                 CameraSkeleton displayCamera;bool haveDisplayCamera=cameraStream->Latest(displayCamera);
                 sample.cameraOverlay=cameraFusion.MapForDisplay(haveDisplayCamera?&displayCamera:nullptr,input,CameraEpochMs());
-                sample.cameraState=cameraFusion.stats.state;sample.cameraLegs=cameraFusion.stats.legs;sample.cameraReady=cameraFusion.stats.ready;sample.cameraLegsEnabled=cameraFusion.legsEnabled;
+                sample.cameraState=cameraFusion.stats.state;sample.cameraLegs=cameraFusion.stats.legs;sample.cameraLegs2d=cameraFusion.stats.legs2d;sample.cameraReady=cameraFusion.stats.ready;sample.cameraLegsEnabled=cameraFusion.legsEnabled;
                 sample.cameraAgeMs=cameraFusion.stats.ageMs;sample.cameraFitMm=cameraFusion.stats.fitMm;
                 sample.cameraFitProgress=cameraFusion.stats.fitProgress;sample.cameraFitHint=cameraFusion.stats.fitHint;
                 sample.cameraWeight=cameraFusion.stats.weight;sample.cameraConnected=cameraStream->connected;

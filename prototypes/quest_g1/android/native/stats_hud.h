@@ -44,7 +44,7 @@ void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
     else if(recording==2)std::snprintf(recordText,sizeof(recordText),"RECORD FAILED / DATA KEPT");
     else std::snprintf(recordText,sizeof(recordText),"%s",exports[std::clamp(exportStatus,0,3)]);
     const char* opticalStates[]={"META","ALIGN","FUSE","STALE"};
-    std::snprintf(opticalText,sizeof(opticalText),"CAM %s %.0f%% %.0fms FIT %.0fmm %dL",s.cameraConnected?(s.cameraClockSynced?opticalStates[std::clamp(s.cameraState,0,3)]:"SYNC"):"OFF",100*s.cameraFitProgress,s.cameraAgeMs,s.cameraFitMm,s.cameraLegs);
+    std::snprintf(opticalText,sizeof(opticalText),"CAM %s %.0f%% %.0fms FIT %.0fmm %dL%s",s.cameraConnected?(s.cameraClockSynced?opticalStates[std::clamp(s.cameraState,0,3)]:"SYNC"):"OFF",100*s.cameraFitProgress,s.cameraAgeMs,s.cameraFitMm,s.cameraLegs,s.cameraLegs2d?" 2D":"");
     if(s.cameraPositionError>=0)std::snprintf(cameraText,sizeof(cameraText),"HEAD %.1f cm / %.1f deg",100*s.cameraPositionError,s.cameraOrientationError);
     else std::snprintf(cameraText,sizeof(cameraText),"HEAD target: OFF");
     std::snprintf(text,sizeof(text),
