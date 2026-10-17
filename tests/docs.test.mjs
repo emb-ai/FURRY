@@ -91,13 +91,13 @@ test("Wiki conversion rewrites table/reference links but preserves code and loca
   assert.ok(home.includes("[example](Common-Ground.md)"));
   assert.ok(home.includes("[local](#home)"));
   assert.ok(home.includes("https://example.org/"));
-  assert.equal(output.size, 11);
+  assert.equal(output.size, PAGES.length + 2);
   for (const page of PAGES) assert.ok(output.get("_Sidebar.md").includes(`/wiki/${page.slug}`));
   assert.ok(output.get("_Footer.md").includes(SHA));
   assert.deepEqual(renderWiki(files, SHA), output);
 });
 
-test("a full immutable SHA and all eight pages are required", () => {
+test("a full immutable SHA and all pages are required", () => {
   assert.throws(() => renderWiki(pages(), "main"), /immutable/);
   const files = pages();
   files.delete("docs/Home.md");
@@ -163,7 +163,7 @@ test("repeat generation is unchanged after the Wiki changes are committed", (t) 
   commit(f.wiki);
   const result = f.run("--write");
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /0\/11 generated files differ/);
+  assert.match(result.stdout, new RegExp(`0/${PAGES.length + 2} generated files differ`));
   assert.equal(git(f.wiki, "status", "--porcelain"), "");
 });
 

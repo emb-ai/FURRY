@@ -27,7 +27,7 @@ function check(root) {
     ...validateKnowledgeBase(files),
   ];
   if (errors.length) throw new Error(errors.join("\n"));
-  console.log(`Checked ${files.size} Markdown files, internal links, page navigation and 12 bibliography entries.`);
+  console.log(`Checked ${files.size} Markdown files, internal links, page navigation and 13 bibliography entries.`);
 }
 
 function canonicalPath(requested) {

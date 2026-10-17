@@ -14,6 +14,7 @@ weights, data licenses and causal timing assumptions before adopting a method.
 | [TWIST](#twist-2025) | Full-body mocap references; retargeting and RL plus behavior-cloning tracking. | G1; [released training/deployment code](https://github.com/YanjieZe/TWIST). | Understand the controller lineage; does not remove the need for sparse-input reconstruction. |
 | [TWIST2](#twist2-2025) | PICO plus calf trackers; GMR-derived retargeting, tracking policy and data collection. | G1; [released code](https://github.com/amazon-far/TWIST2) includes ONNX policies and walking clips. | Starting baseline; Quest sensing and working dexterous-hand simulation are separate extensions. |
 | [GMR](#gmr-2025) | Requires human skeletal motion, measured or estimated elsewhere; optimization-based retargeting. | Multiple humanoids; [code](https://github.com/YanjieZe/GMR). | Strong initial retargeter candidate; input pose quality and dynamic feasibility still matter. |
+| [DexWeave](#dexweave-2026) | Recorded body, hand and object motion; contact-aware two-stage retargeting, then a per-clip anatomy-aware Transformer trained with PPO. | G1 with Inspire hands; [project](https://dexweave.github.io/) and [repository](https://github.com/WU-CVGL/DexWeave), no training code released as of 2026-10-12. | Retargeting and policy ideas, not a live teleoperation controller. See the [DexWeave page](DexWeave.md). |
 | [OmniH2O](#omnih2o-2024) | Sparse VR or RGB-derived pose goals; teacher/student motion-tracking policies. | Humanoid whole-body control; [code](https://github.com/LeCAR-Lab/human2humanoid). | Directly relevant sparse-control baseline; reproduce its sensing/training assumptions, not only the demo interface. |
 | [HOVER](#hover-2024) | Mode-dependent position, joint or root commands, including sparse head/hand modes; policy distillation. | Humanoid; [Isaac Lab release](https://github.com/NVlabs/HOVER). | Suggests flexible command interfaces; not evidence that arbitrary unobserved human motion is identifiable. |
 | [SONIC](#sonic-2025) | Motion references or VR/planner interfaces; scaled tracking with a shared token representation. | G1 among release targets; [code and checkpoint instructions](https://github.com/NVlabs/GR00T-WholeBodyControl). | Useful comparator, not the required starting stack. Account for model-specific lookahead and deployment requirements. |
@@ -69,6 +70,11 @@ Ze et al. *TWIST2: Scalable, Portable, and Holistic Humanoid Data Collection Sys
 
 Araujo et al. *Retargeting Matters: General Motion Retargeting for Humanoid Motion Tracking*.
 [arXiv:2510.02252](https://arxiv.org/abs/2510.02252).
+
+### DexWeave (2026)
+
+Sun, Shen et al. *DexWeave: Learning Dexterous Humanoid Loco-Manipulation from Human Demonstrations*.
+[arXiv:2609.34724](https://arxiv.org/abs/2609.34724).
 
 ### OmniH2O (2024)
 
