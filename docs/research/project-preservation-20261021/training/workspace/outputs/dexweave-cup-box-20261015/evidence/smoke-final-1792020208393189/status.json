@@ -1,0 +1,18 @@
+{
+  "status": "completed",
+  "pid": 848586,
+  "iteration": 1,
+  "seconds": 1.2137070149183273,
+  "elapsed_s": 1.2143524559214711,
+  "reward_mean": -0.09652588757065435,
+  "failed": 6,
+  "completed_segments": 0,
+  "object_error_m": 0.01937776417707937,
+  "learning_rate": 1e-05,
+  "losses": {
+    "value_function": 0.46978440284729006,
+    "surrogate": 0.24535091668367387,
+    "entropy": 61.030212593078616
+  },
+  "actor_changed": true
+}

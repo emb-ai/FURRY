@@ -1,0 +1,30 @@
+[
+  {
+    "sampler": "leading",
+    "steps": 10,
+    "arms_deg": 15.161892890930176,
+    "grip_mae": 0.13720852136611938,
+    "normalized_mse": 0.0899755209684372
+  },
+  {
+    "sampler": "leading",
+    "steps": 50,
+    "arms_deg": 14.369056701660156,
+    "grip_mae": 0.14385783672332764,
+    "normalized_mse": 0.08226614445447922
+  },
+  {
+    "sampler": "trailing",
+    "steps": 10,
+    "arms_deg": 15.4229154586792,
+    "grip_mae": 0.14289158582687378,
+    "normalized_mse": 0.09380965679883957
+  },
+  {
+    "sampler": "ddpm",
+    "steps": 50,
+    "arms_deg": 11.546928405761719,
+    "grip_mae": 0.056042805314064026,
+    "normalized_mse": 0.056028131395578384
+  }
+]

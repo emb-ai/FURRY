@@ -1,0 +1,242 @@
+[
+  {
+    "split": "valid",
+    "episode": "episode-1792015107773946",
+    "time": 0.0,
+    "arm_mae_degrees": 16.536094665527344,
+    "grip_mae": 0.2391500473022461,
+    "gaze_mae_degrees": 10.430143356323242,
+    "grip_onset_prediction_s": 0.9,
+    "grip_onset_demo_s": null
+  },
+  {
+    "split": "valid",
+    "episode": "episode-1792015107773946",
+    "time": 1.0,
+    "arm_mae_degrees": 13.59534740447998,
+    "grip_mae": 0.2171110063791275,
+    "gaze_mae_degrees": 15.332618713378906,
+    "grip_onset_prediction_s": 1.0,
+    "grip_onset_demo_s": null
+  },
+  {
+    "split": "valid",
+    "episode": "episode-1792015107773946",
+    "time": 2.0,
+    "arm_mae_degrees": 9.428866386413574,
+    "grip_mae": 0.21071378886699677,
+    "gaze_mae_degrees": 8.577624320983887,
+    "grip_onset_prediction_s": 0.8666666666666667,
+    "grip_onset_demo_s": 1.4666666666666666
+  },
+  {
+    "split": "valid",
+    "episode": "episode-1792017633764131",
+    "time": 0.0,
+    "arm_mae_degrees": 13.821227073669434,
+    "grip_mae": 0.24143986403942108,
+    "gaze_mae_degrees": 6.340707778930664,
+    "grip_onset_prediction_s": 0.9,
+    "grip_onset_demo_s": null
+  },
+  {
+    "split": "valid",
+    "episode": "episode-1792017633764131",
+    "time": 1.0,
+    "arm_mae_degrees": 12.82107925415039,
+    "grip_mae": 0.2490071803331375,
+    "gaze_mae_degrees": 7.576550006866455,
+    "grip_onset_prediction_s": 0.9666666666666667,
+    "grip_onset_demo_s": null
+  },
+  {
+    "split": "valid",
+    "episode": "episode-1792017633764131",
+    "time": 2.0,
+    "arm_mae_degrees": 14.860848426818848,
+    "grip_mae": 0.09953852742910385,
+    "gaze_mae_degrees": 4.323583602905273,
+    "grip_onset_prediction_s": 0.8,
+    "grip_onset_demo_s": 1.0
+  },
+  {
+    "split": "valid",
+    "episode": "episode-1792017999001122",
+    "time": 0.0,
+    "arm_mae_degrees": 16.726789474487305,
+    "grip_mae": 0.17089135944843292,
+    "gaze_mae_degrees": 6.700840950012207,
+    "grip_onset_prediction_s": 1.2333333333333334,
+    "grip_onset_demo_s": null
+  },
+  {
+    "split": "valid",
+    "episode": "episode-1792017999001122",
+    "time": 1.0,
+    "arm_mae_degrees": 8.496363639831543,
+    "grip_mae": 0.17833586037158966,
+    "gaze_mae_degrees": 4.811286926269531,
+    "grip_onset_prediction_s": 1.2333333333333334,
+    "grip_onset_demo_s": null
+  },
+  {
+    "split": "valid",
+    "episode": "episode-1792017999001122",
+    "time": 2.0,
+    "arm_mae_degrees": 11.513957023620605,
+    "grip_mae": 0.09575366973876953,
+    "gaze_mae_degrees": 5.215564250946045,
+    "grip_onset_prediction_s": 1.1666666666666667,
+    "grip_onset_demo_s": 1.1666666666666667
+  },
+  {
+    "split": "valid",
+    "episode": "episode-1792018134901046",
+    "time": 0.0,
+    "arm_mae_degrees": 15.990880012512207,
+    "grip_mae": 0.24418608844280243,
+    "gaze_mae_degrees": 14.772613525390625,
+    "grip_onset_prediction_s": 0.9,
+    "grip_onset_demo_s": null
+  },
+  {
+    "split": "valid",
+    "episode": "episode-1792018134901046",
+    "time": 1.0,
+    "arm_mae_degrees": 18.784236907958984,
+    "grip_mae": 0.24039359390735626,
+    "gaze_mae_degrees": 14.15379524230957,
+    "grip_onset_prediction_s": 0.9333333333333333,
+    "grip_onset_demo_s": null
+  },
+  {
+    "split": "valid",
+    "episode": "episode-1792018134901046",
+    "time": 2.0,
+    "arm_mae_degrees": 17.97414779663086,
+    "grip_mae": 0.25706231594085693,
+    "gaze_mae_degrees": 11.97379207611084,
+    "grip_onset_prediction_s": 0.8666666666666667,
+    "grip_onset_demo_s": null
+  },
+  {
+    "split": "train",
+    "episode": "episode-1792014836827567",
+    "time": 0.0,
+    "arm_mae_degrees": 16.867490768432617,
+    "grip_mae": 0.24871480464935303,
+    "gaze_mae_degrees": 8.304551124572754,
+    "grip_onset_prediction_s": 0.9,
+    "grip_onset_demo_s": null
+  },
+  {
+    "split": "train",
+    "episode": "episode-1792014836827567",
+    "time": 1.0,
+    "arm_mae_degrees": 12.68463134765625,
+    "grip_mae": 0.1508432775735855,
+    "gaze_mae_degrees": 13.497308731079102,
+    "grip_onset_prediction_s": 1.0666666666666667,
+    "grip_onset_demo_s": null
+  },
+  {
+    "split": "train",
+    "episode": "episode-1792014836827567",
+    "time": 2.0,
+    "arm_mae_degrees": 8.976189613342285,
+    "grip_mae": 0.2193305939435959,
+    "gaze_mae_degrees": 7.609223365783691,
+    "grip_onset_prediction_s": 0.9333333333333333,
+    "grip_onset_demo_s": null
+  },
+  {
+    "split": "train",
+    "episode": "episode-1792014872903812",
+    "time": 0.0,
+    "arm_mae_degrees": 17.72709083557129,
+    "grip_mae": 0.24876129627227783,
+    "gaze_mae_degrees": 4.614011287689209,
+    "grip_onset_prediction_s": 0.8666666666666667,
+    "grip_onset_demo_s": null
+  },
+  {
+    "split": "train",
+    "episode": "episode-1792014872903812",
+    "time": 1.0,
+    "arm_mae_degrees": 13.681350708007812,
+    "grip_mae": 0.14935541152954102,
+    "gaze_mae_degrees": 11.04588508605957,
+    "grip_onset_prediction_s": 1.0666666666666667,
+    "grip_onset_demo_s": null
+  },
+  {
+    "split": "train",
+    "episode": "episode-1792014872903812",
+    "time": 2.0,
+    "arm_mae_degrees": 8.628602981567383,
+    "grip_mae": 0.24872078001499176,
+    "gaze_mae_degrees": 7.2895917892456055,
+    "grip_onset_prediction_s": 0.9,
+    "grip_onset_demo_s": null
+  },
+  {
+    "split": "train",
+    "episode": "episode-1792014887031766",
+    "time": 0.0,
+    "arm_mae_degrees": 16.933509826660156,
+    "grip_mae": 0.2455582469701767,
+    "gaze_mae_degrees": 11.904224395751953,
+    "grip_onset_prediction_s": 0.9,
+    "grip_onset_demo_s": null
+  },
+  {
+    "split": "train",
+    "episode": "episode-1792014887031766",
+    "time": 1.0,
+    "arm_mae_degrees": 13.086492538452148,
+    "grip_mae": 0.21416075527668,
+    "gaze_mae_degrees": 13.637849807739258,
+    "grip_onset_prediction_s": 0.9333333333333333,
+    "grip_onset_demo_s": null
+  },
+  {
+    "split": "train",
+    "episode": "episode-1792014887031766",
+    "time": 2.0,
+    "arm_mae_degrees": 6.865067481994629,
+    "grip_mae": 0.2579662799835205,
+    "gaze_mae_degrees": 8.102636337280273,
+    "grip_onset_prediction_s": 0.8666666666666667,
+    "grip_onset_demo_s": null
+  },
+  {
+    "split": "train",
+    "episode": "episode-1792014905170281",
+    "time": 0.0,
+    "arm_mae_degrees": 16.558425903320312,
+    "grip_mae": 0.2453588992357254,
+    "gaze_mae_degrees": 10.398690223693848,
+    "grip_onset_prediction_s": 0.8666666666666667,
+    "grip_onset_demo_s": null
+  },
+  {
+    "split": "train",
+    "episode": "episode-1792014905170281",
+    "time": 1.0,
+    "arm_mae_degrees": 8.945451736450195,
+    "grip_mae": 0.22139407694339752,
+    "gaze_mae_degrees": 9.97364616394043,
+    "grip_onset_prediction_s": 0.9333333333333333,
+    "grip_onset_demo_s": null
+  },
+  {
+    "split": "train",
+    "episode": "episode-1792014905170281",
+    "time": 2.0,
+    "arm_mae_degrees": 8.28736400604248,
+    "grip_mae": 0.23112750053405762,
+    "gaze_mae_degrees": 7.716126918792725,
+    "grip_onset_prediction_s": 0.8,
+    "grip_onset_demo_s": 1.4333333333333333
+  }
+]

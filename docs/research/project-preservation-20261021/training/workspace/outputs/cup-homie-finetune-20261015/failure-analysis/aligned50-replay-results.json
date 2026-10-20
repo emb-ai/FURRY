@@ -1,0 +1,66 @@
+[
+  {
+    "episode": "episode-1792058834151648",
+    "mode": "all50_aligned",
+    "success": true,
+    "outcome": 1,
+    "error": null,
+    "final_distance_m": 0.02390226505222909
+  },
+  {
+    "episode": "episode-1792058974761240",
+    "mode": "all50_aligned",
+    "success": true,
+    "outcome": 1,
+    "error": null,
+    "final_distance_m": 0.010428680395714346
+  },
+  {
+    "episode": "episode-1792059112053736",
+    "mode": "all50_aligned",
+    "success": true,
+    "outcome": 1,
+    "error": null,
+    "final_distance_m": 0.019897371900523302
+  },
+  {
+    "episode": "episode-1792059256525492",
+    "mode": "all50_aligned",
+    "success": true,
+    "outcome": 1,
+    "error": null,
+    "final_distance_m": 0.0020623550750725732
+  },
+  {
+    "episode": "episode-1792059418003475",
+    "mode": "all50_aligned",
+    "success": true,
+    "outcome": 1,
+    "error": null,
+    "final_distance_m": 0.02570393121598306
+  },
+  {
+    "episode": "episode-1792059590200464",
+    "mode": "all50_aligned",
+    "success": true,
+    "outcome": 1,
+    "error": null,
+    "final_distance_m": 0.020756250201310965
+  },
+  {
+    "episode": "episode-1792059694167464",
+    "mode": "all50_aligned",
+    "success": true,
+    "outcome": 1,
+    "error": null,
+    "final_distance_m": 0.003652318804957919
+  },
+  {
+    "episode": "episode-1792059849292471",
+    "mode": "all50_aligned",
+    "success": true,
+    "outcome": 1,
+    "error": null,
+    "final_distance_m": 0.03182546770045311
+  }
+]

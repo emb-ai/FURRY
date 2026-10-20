@@ -1,0 +1,14 @@
+{
+  "whole-x": {
+    "start": 197.29,
+    "end": 203.29,
+    "other_support_frames": 0,
+    "both_hands_without_cube_contact_frames": 0
+  },
+  "whole-regrasp": {
+    "start": 203.29,
+    "end": 227.29,
+    "other_support_frames": 0,
+    "both_hands_without_cube_contact_frames": 0
+  }
+}

@@ -13,7 +13,7 @@ JOINTS = {"lhip": 11, "lknee": 13, "lankle": 15, "rhip": 12,
 
 
 def packet(points, confidence, sources, timestamp, seq, fps, backend,
-           frame="camera", pelvis=None, timing=None, session_id=None):
+           frame="camera", pelvis=None, timing=None, session_id=None, *, debug_arms=False):
     def joint(i):
         p = points.get(i)
         if p is None or not all(math.isfinite(float(x)) for x in p):
@@ -28,9 +28,12 @@ def packet(points, confidence, sources, timestamp, seq, fps, backend,
                       "conf": min(left["conf"], right["conf"])}
     else:
         pelvis = {"p": [float(x) for x in pelvis["p"]], "conf": float(pelvis.get("conf", 0))}
+    joints = dict(JOINTS)
+    if debug_arms:
+        joints.update(lelbow=7, relbow=8, lwrist=9, rwrist=10)
     value = {"t": timestamp, "seq": seq, "fps": fps, "backend": backend,
              "frame": frame, "pelvis": pelvis,
-             "joints": {name: joint(i) for name, i in JOINTS.items()}}
+             "joints": {name: joint(i) for name, i in joints.items()}}
     # clock: источник t (global_time | system_time | host_after_wait),
     # frame_age_ms: возраст кадра к выходу из wait, dropped: выброшено старых
     if timing:

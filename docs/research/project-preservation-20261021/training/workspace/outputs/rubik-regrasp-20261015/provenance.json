@@ -1,0 +1,17 @@
+{
+  "files": {
+    "regrasp.py": "b53efab7883df58f3a8f787ff5847889ae1b4b30aecfb97130906b55082ef4ea",
+    "turn_series.py": "a2cad2f02fe55e02fc3d298d2fdcfbadc80ef122ff2c58a8caf40ae836cdc62f",
+    "run_verified.py": "fc04ccefdc86feb274fcb71839ec18c9abdfedb7b02b1e6b7bf55db18871bbba",
+    "four-cycles.npz": "0f3af8115bad7957be417ec73e8ea89b359cccbd7b43f653c17ff821b6611dd2",
+    "four-cycles-wrist-commands.csv": "365968e2bb290441e6d922f3af8e6fe628984c82891d2bd7f6378bc66ce70313",
+    "four-cycles-verification.json": "b83a79805be284866094f3cd4e6c6a9c05c83d221feee747c1f7007694ce55d0",
+    "four-cycles-replay.json": "07c3afd1bf0083878f57b1bf25cdd880838114bcbc4c6b6bd2f30a1a8a01923c",
+    "four-cycles-and-regrasp.mp4": "5a7f1a06fe25c6450991b2fdd2446521dd14cf7397bae6409a640ddbab16b7ff"
+  },
+  "scene_sha256": "b731d2e4cdd0fbc9660d0e437db833563ed4727f163a1be74354dd9e8bec1ce3",
+  "bridge_sha256": {
+    "bridge-original-snapshot.dylib": "fa21d2470d196782b7ce1efa09909d8a700578e47a597dc4ca5b37102f349b5c",
+    "bridge-original-home.dylib": "ce14f36599ff466d57963e882aeec03b7f6a9149a24d469bbcde2a2e683464f3"
+  }
+}

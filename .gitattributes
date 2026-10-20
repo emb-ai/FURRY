@@ -20,3 +20,27 @@ datasets/quest-bimanual/**/rendered/*.hdf5 filter=lfs diff=lfs merge=lfs -text
 datasets/quest-cup/**/rendered/*.hdf5.part* filter=lfs diff=lfs merge=lfs -text
 docs/demo/**/*.mp4 filter=lfs diff=lfs merge=lfs -text
 docs/demo/**/*.pptx filter=lfs diff=lfs merge=lfs -text
+
+docs/research/project-preservation-20261021/**/*.npz filter=lfs diff=lfs merge=lfs -text
+docs/research/project-preservation-20261021/**/*.pt filter=lfs diff=lfs merge=lfs -text
+docs/research/project-preservation-20261021/**/*.pth filter=lfs diff=lfs merge=lfs -text
+docs/research/project-preservation-20261021/**/*.onnx filter=lfs diff=lfs merge=lfs -text
+docs/research/project-preservation-20261021/**/*.zip filter=lfs diff=lfs merge=lfs -text
+docs/research/project-preservation-20261021/**/*.hdf5 filter=lfs diff=lfs merge=lfs -text
+docs/research/project-preservation-20261021/**/*.bin filter=lfs diff=lfs merge=lfs -text
+docs/research/project-preservation-20261021/**/*.mjb filter=lfs diff=lfs merge=lfs -text
+docs/research/project-preservation-20261021/**/*.mp4 filter=lfs diff=lfs merge=lfs -text
+docs/research/project-preservation-20261021/**/*.gif filter=lfs diff=lfs merge=lfs -text
+docs/research/project-preservation-20261021/**/*.png filter=lfs diff=lfs merge=lfs -text
+docs/research/project-preservation-20261021/**/*.jpg filter=lfs diff=lfs merge=lfs -text
+docs/research/project-preservation-20261021/**/*.jpeg filter=lfs diff=lfs merge=lfs -text
+docs/research/project-preservation-20261021/**/*.csv filter=lfs diff=lfs merge=lfs -text
+
+# Historical evidence must remain byte-identical, including CRLF and trailing spaces.
+# Maintained archive READMEs, manifests and verification helpers still use normal checks.
+docs/research/project-preservation-20261021/training/workspace/** -text -whitespace
+docs/research/project-preservation-20261021/artifacts/*/** -text -whitespace
+docs/research/project-preservation-20261021/runtime/*.patch -text -whitespace
+docs/research/project-preservation-20261021/runtime/predicted-hands-evidence/** -text -whitespace
+docs/research/project-preservation-20261021/runtime/predicted-hands-supplemental/** -text -whitespace
+docs/research/project-preservation-20261021/runtime/skeleton-denoiser-v0/** -text -whitespace

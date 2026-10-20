@@ -1,0 +1,7 @@
+{
+  "teleop_trace.csv": true,
+  "teleop_trace_previous.csv": true,
+  "runtime_stats.csv": true,
+  "menu_settings.txt": true,
+  "policy_catalog.json": true
+}

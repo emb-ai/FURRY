@@ -1,0 +1,14 @@
+{
+  "frames": 336,
+  "duration": 47.968,
+  "position_rms_cm_p50_p95": [
+    4.694318455204432,
+    9.380544784496053
+  ],
+  "solve_ms_p50_p95": [
+    59.664083000825485,
+    61.516979503721814
+  ],
+  "upstream_gmr": true,
+  "physical_simulation": false
+}

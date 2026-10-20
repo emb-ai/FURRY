@@ -1,0 +1,14 @@
+[
+  {
+    "file": "tokenizer_config.json",
+    "access": false,
+    "error_type": "GatedRepoError",
+    "status_code": 401
+  },
+  {
+    "file": "preprocessor_config.json",
+    "access": false,
+    "error_type": "GatedRepoError",
+    "status_code": 401
+  }
+]

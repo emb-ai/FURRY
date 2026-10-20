@@ -1,0 +1,32 @@
+[
+  {
+    "domain": "existing_control",
+    "angles": [
+      0.0,
+      -0.4470464574762778,
+      -0.2663019356793611
+    ],
+    "min_clearance_m": -0.020449097503331327,
+    "limiting_pair": [
+      "right_hand_thumb_1_link_collision",
+      "rubik_block_4",
+      1.0
+    ],
+    "evaluations": 132
+  },
+  {
+    "domain": "joint_limits",
+    "angles": [
+      -0.1274638778814481,
+      0.7241073245811491,
+      -0.17730610647689005
+    ],
+    "min_clearance_m": -0.006321961452870591,
+    "limiting_pair": [
+      "right_hand_thumb_1_link_collision",
+      "rubik_block_4",
+      1.0
+    ],
+    "evaluations": 378
+  }
+]

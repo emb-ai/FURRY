@@ -1,0 +1,597 @@
+{
+  "stage": 0,
+  "name": "settle_grasp",
+  "evaluation": 14,
+  "results": [
+    {
+      "holdout": false,
+      "seed": 10000,
+      "reset": {
+        "sequence": [
+          [
+            3,
+            -1
+          ]
+        ],
+        "start": "replayed airborne grasp at 40.50s",
+        "stage": "settle_grasp",
+        "warm_start": {
+          "macro": 0,
+          "offset": 0.6,
+          "frame": 5872
+        },
+        "logical_end_indices": [
+          1
+        ]
+      },
+      "initial_metrics": {
+        "corner_position": 5.306422224636723e-05,
+        "corner_angle": 0.026966288775005776,
+        "center": 0.002684885362877285,
+        "grid_angle": 0.028136861884385758,
+        "hand_position": [
+          0.002109755608846861,
+          0.0005206696148582181
+        ],
+        "hand_angle": [
+          0.03306871516214897,
+          0.00696658238236322
+        ]
+      },
+      "final": {
+        "completed_moves": 1,
+        "requested_moves": 1,
+        "success": true,
+        "failure": null,
+        "metrics": {
+          "corner_position": 4.5292067718292006e-05,
+          "corner_angle": 0.019418810218123313,
+          "center": 0.0009229122144522291,
+          "grid_angle": 0.008915643925514744,
+          "hand_position": [
+            0.001668155648001274,
+            0.0008066130520274867
+          ],
+          "hand_angle": [
+            0.022038792766729518,
+            0.012382843699704132
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": true,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 0,
+        "warm_start": {
+          "macro": 0,
+          "offset": 0.6,
+          "frame": 5872
+        },
+        "completed_logical_moves": 1,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 0.30000000000000004
+      },
+      "reward": 10.196900510019052,
+      "actions": 6
+    },
+    {
+      "holdout": false,
+      "seed": 10000,
+      "reset": {
+        "sequence": [
+          [
+            3,
+            -1
+          ]
+        ],
+        "start": "replayed airborne grasp at 40.50s",
+        "stage": "settle_grasp",
+        "warm_start": {
+          "macro": 0,
+          "offset": 1.0,
+          "frame": 5832
+        },
+        "logical_end_indices": [
+          1
+        ]
+      },
+      "initial_metrics": {
+        "corner_position": 7.723278580891079e-05,
+        "corner_angle": 0.028814156871642377,
+        "center": 0.004519398432484241,
+        "grid_angle": 0.033476589383226056,
+        "hand_position": [
+          0.003308788228990144,
+          0.0009913553855934742
+        ],
+        "hand_angle": [
+          0.04599877077949257,
+          0.011187953287874617
+        ]
+      },
+      "final": {
+        "completed_moves": 1,
+        "requested_moves": 1,
+        "success": true,
+        "failure": null,
+        "metrics": {
+          "corner_position": 5.870445160901376e-05,
+          "corner_angle": 0.022593334737867055,
+          "center": 0.0015931151767642703,
+          "grid_angle": 0.021109185527228257,
+          "hand_position": [
+            0.0022218739830940993,
+            0.0005380766485321199
+          ],
+          "hand_angle": [
+            0.032401284110413237,
+            0.00844791013492929
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": true,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 0,
+        "warm_start": {
+          "macro": 0,
+          "offset": 1.0,
+          "frame": 5832
+        },
+        "completed_logical_moves": 1,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 0.30000000000000004
+      },
+      "reward": 10.270804073438434,
+      "actions": 6
+    },
+    {
+      "holdout": false,
+      "seed": 10004,
+      "reset": {
+        "sequence": [
+          [
+            3,
+            -1
+          ]
+        ],
+        "start": "replayed airborne grasp at 40.50s",
+        "stage": "settle_grasp",
+        "warm_start": {
+          "macro": 4,
+          "offset": 0.6,
+          "frame": 13130
+        },
+        "logical_end_indices": [
+          1
+        ]
+      },
+      "initial_metrics": {
+        "corner_position": 3.165779536773134e-05,
+        "corner_angle": 0.01778676443830573,
+        "center": 0.00045815360456556107,
+        "grid_angle": 0.031377433058530475,
+        "hand_position": [
+          0.0035279839183603025,
+          0.00265532909255843
+        ],
+        "hand_angle": [
+          0.047314106215579015,
+          0.026689716203525893
+        ]
+      },
+      "final": {
+        "completed_moves": 1,
+        "requested_moves": 1,
+        "success": true,
+        "failure": null,
+        "metrics": {
+          "corner_position": 2.46498032929753e-05,
+          "corner_angle": 0.017104844538861,
+          "center": 0.0018192830486262893,
+          "grid_angle": 0.03361180989454155,
+          "hand_position": [
+            0.004176447340269249,
+            0.0026950056213823005
+          ],
+          "hand_angle": [
+            0.039363123701427936,
+            0.031817436398657514
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": true,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 0,
+        "warm_start": {
+          "macro": 4,
+          "offset": 0.6,
+          "frame": 13130
+        },
+        "completed_logical_moves": 1,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 0.30000000000000004
+      },
+      "reward": 9.906937838207838,
+      "actions": 6
+    },
+    {
+      "holdout": false,
+      "seed": 10004,
+      "reset": {
+        "sequence": [
+          [
+            3,
+            -1
+          ]
+        ],
+        "start": "replayed airborne grasp at 40.50s",
+        "stage": "settle_grasp",
+        "warm_start": {
+          "macro": 4,
+          "offset": 1.0,
+          "frame": 13090
+        },
+        "logical_end_indices": [
+          1
+        ]
+      },
+      "initial_metrics": {
+        "corner_position": 3.490082079296355e-05,
+        "corner_angle": 0.018210181736521613,
+        "center": 0.0010803360069396748,
+        "grid_angle": 0.02192273928639564,
+        "hand_position": [
+          0.0019018044599457989,
+          0.0026309044861470266
+        ],
+        "hand_angle": [
+          0.026859387026987556,
+          0.02854364273122796
+        ]
+      },
+      "final": {
+        "completed_moves": 1,
+        "requested_moves": 1,
+        "success": true,
+        "failure": null,
+        "metrics": {
+          "corner_position": 2.2199979311390596e-05,
+          "corner_angle": 0.017703080725772393,
+          "center": 0.0013825026791908412,
+          "grid_angle": 0.02398543135143165,
+          "hand_position": [
+            0.002161467256418832,
+            0.002684202704457165
+          ],
+          "hand_angle": [
+            0.027586528811281194,
+            0.03179530255066415
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": true,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 0,
+        "warm_start": {
+          "macro": 4,
+          "offset": 1.0,
+          "frame": 13090
+        },
+        "completed_logical_moves": 1,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 0.30000000000000004
+      },
+      "reward": 9.967816062772094,
+      "actions": 6
+    },
+    {
+      "holdout": true,
+      "seed": 10003,
+      "reset": {
+        "sequence": [
+          [
+            3,
+            -1
+          ]
+        ],
+        "start": "replayed airborne grasp at 40.50s",
+        "stage": "settle_grasp",
+        "warm_start": {
+          "macro": 3,
+          "offset": 0.6,
+          "frame": 11641
+        },
+        "logical_end_indices": [
+          1
+        ]
+      },
+      "initial_metrics": {
+        "corner_position": 7.434322217509064e-05,
+        "corner_angle": 0.02969426789943706,
+        "center": 0.00340926171585378,
+        "grid_angle": 0.0403051602059835,
+        "hand_position": [
+          0.004736786727211667,
+          0.0024849052637455514
+        ],
+        "hand_angle": [
+          0.05647957389661213,
+          0.024107918045707367
+        ]
+      },
+      "final": {
+        "completed_moves": 1,
+        "requested_moves": 1,
+        "success": true,
+        "failure": null,
+        "metrics": {
+          "corner_position": 0.00047168097997096184,
+          "corner_angle": 0.025136968593360103,
+          "center": 0.005046710530017556,
+          "grid_angle": 0.04297809329411552,
+          "hand_position": [
+            0.00432252796207977,
+            0.0027008835445101963
+          ],
+          "hand_angle": [
+            0.06061979037494703,
+            0.02930608976212565
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": true,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 0,
+        "warm_start": {
+          "macro": 3,
+          "offset": 0.6,
+          "frame": 11641
+        },
+        "completed_logical_moves": 1,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 0.30000000000000004
+      },
+      "reward": 9.905476911131238,
+      "actions": 6
+    },
+    {
+      "holdout": true,
+      "seed": 10003,
+      "reset": {
+        "sequence": [
+          [
+            3,
+            -1
+          ]
+        ],
+        "start": "replayed airborne grasp at 40.50s",
+        "stage": "settle_grasp",
+        "warm_start": {
+          "macro": 3,
+          "offset": 1.0,
+          "frame": 11601
+        },
+        "logical_end_indices": [
+          1
+        ]
+      },
+      "initial_metrics": {
+        "corner_position": 3.64883936372042e-05,
+        "corner_angle": 0.027772327814667565,
+        "center": 0.007117028532268627,
+        "grid_angle": 0.07517434831679615,
+        "hand_position": [
+          0.00789762036975001,
+          0.0026614945169707647
+        ],
+        "hand_angle": [
+          0.1069976539890627,
+          0.025231306382609703
+        ]
+      },
+      "final": {
+        "completed_moves": 1,
+        "requested_moves": 1,
+        "success": true,
+        "failure": null,
+        "metrics": {
+          "corner_position": 0.00042155596164651817,
+          "corner_angle": 0.023745338444708823,
+          "center": 0.007285922840090915,
+          "grid_angle": 0.07483778895505967,
+          "hand_position": [
+            0.006301353800345956,
+            0.002080948188207625
+          ],
+          "hand_angle": [
+            0.08635206082393193,
+            0.017524572904193333
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": true,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 0,
+        "warm_start": {
+          "macro": 3,
+          "offset": 1.0,
+          "frame": 11601
+        },
+        "completed_logical_moves": 1,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 0.30000000000000004
+      },
+      "reward": 10.096543421206153,
+      "actions": 6
+    },
+    {
+      "holdout": true,
+      "seed": 10007,
+      "reset": {
+        "sequence": [
+          [
+            3,
+            -1
+          ]
+        ],
+        "start": "replayed airborne grasp at 40.50s",
+        "stage": "settle_grasp",
+        "warm_start": {
+          "macro": 7,
+          "offset": 0.6,
+          "frame": 18038
+        },
+        "logical_end_indices": [
+          1
+        ]
+      },
+      "initial_metrics": {
+        "corner_position": 0.00011877708604809334,
+        "corner_angle": 0.028491907375660614,
+        "center": 0.00395410269492959,
+        "grid_angle": 0.07491532593919548,
+        "hand_position": [
+          0.005737714354883054,
+          0.005319303682636658
+        ],
+        "hand_angle": [
+          0.08610024142999918,
+          0.07660086858564127
+        ]
+      },
+      "final": {
+        "completed_moves": 0,
+        "requested_moves": 1,
+        "success": false,
+        "failure": null,
+        "metrics": {
+          "corner_position": 0.012939393221917174,
+          "corner_angle": 0.43013555755195776,
+          "center": 0.1946887948159705,
+          "grid_angle": 1.0028344791138866,
+          "hand_position": [
+            0.18329330907303715,
+            0.08389180657741667
+          ],
+          "hand_angle": [
+            1.1731056426607307,
+            1.8668602015216633
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": false,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 0,
+        "warm_start": {
+          "macro": 7,
+          "offset": 0.6,
+          "frame": 18038
+        },
+        "completed_logical_moves": 0,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 5.0
+      },
+      "reward": -25.962211106756815,
+      "actions": 100
+    },
+    {
+      "holdout": true,
+      "seed": 10007,
+      "reset": {
+        "sequence": [
+          [
+            3,
+            -1
+          ]
+        ],
+        "start": "replayed airborne grasp at 40.50s",
+        "stage": "settle_grasp",
+        "warm_start": {
+          "macro": 7,
+          "offset": 1.0,
+          "frame": 17998
+        },
+        "logical_end_indices": [
+          1
+        ]
+      },
+      "initial_metrics": {
+        "corner_position": 0.00012717451683547497,
+        "corner_angle": 0.03223081936409131,
+        "center": 0.0024116991214960326,
+        "grid_angle": 0.08369139437013097,
+        "hand_position": [
+          0.005693994782777615,
+          0.005255838906911997
+        ],
+        "hand_angle": [
+          0.094338731943737,
+          0.08087151403816284
+        ]
+      },
+      "final": {
+        "completed_moves": 0,
+        "requested_moves": 1,
+        "success": false,
+        "failure": null,
+        "metrics": {
+          "corner_position": 0.00999430000096645,
+          "corner_angle": 0.33231558903748376,
+          "center": 0.18781117538341147,
+          "grid_angle": 1.0083440983862915,
+          "hand_position": [
+            0.17899468378512456,
+            0.08248554310629237
+          ],
+          "hand_angle": [
+            1.1418206082890854,
+            1.846072779554881
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": false,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 0,
+        "warm_start": {
+          "macro": 7,
+          "offset": 1.0,
+          "frame": 17998
+        },
+        "completed_logical_moves": 0,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 5.0
+      },
+      "reward": -25.137870540211313,
+      "actions": 100
+    }
+  ],
+  "holdout_success": 0.5,
+  "train_success": 1.0,
+  "independent_physical_start": false,
+  "complete": true,
+  "warm_start": true,
+  "optimizer_timesteps": 57344
+}

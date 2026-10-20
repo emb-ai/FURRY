@@ -1,0 +1,16 @@
+{
+  "new_clips": [
+    {
+      "source": "/Users/vlad/Downloads/2026-10-08 17-13-04.mp4",
+      "in": 16.2,
+      "out": 24.8
+    },
+    {
+      "source": "/Users/vlad/Downloads/2026-10-08 17-13-04.mp4",
+      "in": 39.0,
+      "out": 43.8
+    }
+  ],
+  "followed_by": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/scene-selects-20261016/combined-v2/cup-kick-t-sixseven-tennis-no-captions.mp4",
+  "note": "Added two real camera / 3D marker tracking excerpts before existing montage. Original speed. Removed application title bar only. No added captions; silent."
+}

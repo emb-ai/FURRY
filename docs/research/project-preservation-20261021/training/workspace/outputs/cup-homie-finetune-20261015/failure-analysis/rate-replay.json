@@ -1,0 +1,144 @@
+{
+  "protocol": "Same warm0.5s continuation. Original100Hz versus linearly interpolated30Hz sampled operator commands, applied100Hz. Interpolation uses future samples offline; not autonomous success.",
+  "summary": {
+    "recorded100": {
+      "successes": 8,
+      "n": 8
+    },
+    "linear30_at100": {
+      "successes": 4,
+      "n": 8
+    }
+  },
+  "errors": [],
+  "results": [
+    {
+      "episode": "episode-1792058834151648",
+      "mode": "recorded100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.023987313393379846
+    },
+    {
+      "episode": "episode-1792058834151648",
+      "mode": "linear30_at100",
+      "success": false,
+      "outcome": 0,
+      "error": null,
+      "final_distance_m": 0.07893331767806495
+    },
+    {
+      "episode": "episode-1792058974761240",
+      "mode": "recorded100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.004659168447995236
+    },
+    {
+      "episode": "episode-1792058974761240",
+      "mode": "linear30_at100",
+      "success": false,
+      "outcome": 0,
+      "error": null,
+      "final_distance_m": 0.023458563895738405
+    },
+    {
+      "episode": "episode-1792059112053736",
+      "mode": "recorded100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.019890647462806988
+    },
+    {
+      "episode": "episode-1792059112053736",
+      "mode": "linear30_at100",
+      "success": false,
+      "outcome": 0,
+      "error": null,
+      "final_distance_m": 0.16147081586004636
+    },
+    {
+      "episode": "episode-1792059256525492",
+      "mode": "recorded100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.002257028288692803
+    },
+    {
+      "episode": "episode-1792059256525492",
+      "mode": "linear30_at100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.0037300725565493336
+    },
+    {
+      "episode": "episode-1792059418003475",
+      "mode": "recorded100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.02533936362557885
+    },
+    {
+      "episode": "episode-1792059418003475",
+      "mode": "linear30_at100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.026509855607588482
+    },
+    {
+      "episode": "episode-1792059590200464",
+      "mode": "recorded100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.019731942927716715
+    },
+    {
+      "episode": "episode-1792059590200464",
+      "mode": "linear30_at100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.03983723549277872
+    },
+    {
+      "episode": "episode-1792059694167464",
+      "mode": "recorded100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.005116107514307388
+    },
+    {
+      "episode": "episode-1792059694167464",
+      "mode": "linear30_at100",
+      "success": false,
+      "outcome": 0,
+      "error": null,
+      "final_distance_m": 0.19670248494417286
+    },
+    {
+      "episode": "episode-1792059849292471",
+      "mode": "recorded100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.03170251787452896
+    },
+    {
+      "episode": "episode-1792059849292471",
+      "mode": "linear30_at100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.01626227785053795
+    }
+  ]
+}

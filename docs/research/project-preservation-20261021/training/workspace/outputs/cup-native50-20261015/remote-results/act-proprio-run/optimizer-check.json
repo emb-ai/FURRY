@@ -1,0 +1,1 @@
+{"step": 10, "parameter_max_abs_change": 7.25090503692627e-05, "new_input_column_max_abs": {"model.vae_encoder_robot_state_input_proj.weight": 1.722629167488776e-05, "model.encoder_robot_state_input_proj.weight": 0.0005445777787826955}}

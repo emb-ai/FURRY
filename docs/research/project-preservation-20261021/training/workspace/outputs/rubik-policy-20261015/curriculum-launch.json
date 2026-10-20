@@ -1,0 +1,24 @@
+{
+  "pid": 91056,
+  "started_unix": 1792073432.512245,
+  "command": [
+    "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs/cup-dp-eval-20261015/env/bin/python",
+    "-u",
+    "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs.nosync/rubik-policy-20261015/train_curriculum.py",
+    "--run",
+    "curriculum-v1",
+    "--envs",
+    "2",
+    "--block-steps",
+    "4096",
+    "--stage-steps",
+    "65536",
+    "--total-steps",
+    "500000",
+    "--bc-updates",
+    "1500"
+  ],
+  "log": "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs.nosync/rubik-policy-20261015/curriculum-v1.log",
+  "run": "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs.nosync/rubik-policy-20261015/curriculum-v1",
+  "local_cpu": true
+}

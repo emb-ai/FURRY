@@ -1,0 +1,163 @@
+{
+  "policy_id": "quest-111260-1000",
+  "policy_hz": 100,
+  "catch_up": true,
+  "reports": [
+    {
+      "episode": "episode-1791652593739690",
+      "warmup_pair_max_error": 0.0,
+      "fork_pair_max_error": 0.0,
+      "variants": {
+        "baseline": {
+          "duration_s": 33.52,
+          "fell": false,
+          "slip_forceweighted_m_s": 0.06811290653157265,
+          "xy_error_p95_m": 0.7593354315221953,
+          "xy_error_mean_m": 0.38016436078034216,
+          "tilt_p95_deg": 7.394851842553634,
+          "min_height_m": 0.7519819268782244,
+          "reference_parity_vs_previous_policy_max": 0.0
+        },
+        "ratio50": {
+          "duration_s": 33.52,
+          "fell": false,
+          "slip_forceweighted_m_s": 0.0529644125685145,
+          "xy_error_p95_m": 0.7954321486307384,
+          "xy_error_mean_m": 0.38016505153879965,
+          "tilt_p95_deg": 5.656464250437266,
+          "min_height_m": 0.7479166165914529,
+          "reference_parity_vs_previous_policy_max": 0.0,
+          "slip_change_percent": -22.24026947967094
+        }
+      }
+    },
+    {
+      "episode": "episode-1791652646384286",
+      "warmup_pair_max_error": 0.0,
+      "fork_pair_max_error": 0.0,
+      "variants": {
+        "baseline": {
+          "duration_s": 24.96,
+          "fell": false,
+          "slip_forceweighted_m_s": 0.06259987299503542,
+          "xy_error_p95_m": 0.3927145308365858,
+          "xy_error_mean_m": 0.20971650112810572,
+          "tilt_p95_deg": 7.315129164423879,
+          "min_height_m": 0.7574693925306735,
+          "reference_parity_vs_previous_policy_max": 0.0
+        },
+        "ratio50": {
+          "duration_s": 24.96,
+          "fell": false,
+          "slip_forceweighted_m_s": 0.042537750591100716,
+          "xy_error_p95_m": 0.3352800295923489,
+          "xy_error_mean_m": 0.17384903396209453,
+          "tilt_p95_deg": 6.0430558618646675,
+          "min_height_m": 0.7576949781312097,
+          "reference_parity_vs_previous_policy_max": 0.0,
+          "slip_change_percent": -32.04818387654838
+        }
+      }
+    }
+  ],
+  "previous_policy_comparison": {
+    "episode-1791652593739690": {
+      "baseline": {
+        "duration_s": 33.52,
+        "fell": false,
+        "target_width_median_cm": 34.42811799810406,
+        "actual_width_median_cm": 31.15021684778033,
+        "slip_forceweighted_m_s": 0.047668239027200576,
+        "xy_error_p95_m": 1.0781780878488945,
+        "xy_error_mean_m": 0.5144886576303135,
+        "tilt_p95_deg": 6.820049477235646,
+        "leg_joint_rmse_deg": 6.595753723185635,
+        "dominant_support_fraction": 0.5429594272076372,
+        "single_support_fraction": 0.52118138424821,
+        "com_to_dominant_support_lateral_median_cm": 12.359917789372055,
+        "ref_com_to_actual_dominant_foot_lateral_median_cm": 14.499826953815464,
+        "navigation_max_difference": 0.0,
+        "actual_sole_p95_cm": 2.3021587403906203,
+        "reference_sole_p95_cm": 2.7445118723575903,
+        "root_path_m": 11.291321326271458,
+        "root_relative_feet_error_mean_cm": 12.946528068141793,
+        "slip_change_percent": 0.0,
+        "xy_p95_change_m": 0.0
+      },
+      "ratio50": {
+        "duration_s": 33.52,
+        "fell": false,
+        "target_width_median_cm": 26.620563391170982,
+        "actual_width_median_cm": 24.426467146124388,
+        "slip_forceweighted_m_s": 0.03760143007471557,
+        "xy_error_p95_m": 0.9179207063608039,
+        "xy_error_mean_m": 0.49449118085911214,
+        "tilt_p95_deg": 5.386322171282139,
+        "leg_joint_rmse_deg": 6.954303481948449,
+        "dominant_support_fraction": 0.6730310262529833,
+        "single_support_fraction": 0.6354415274463007,
+        "com_to_dominant_support_lateral_median_cm": 8.251555948972007,
+        "ref_com_to_actual_dominant_foot_lateral_median_cm": 10.869400402493584,
+        "navigation_max_difference": 0.08287669718265533,
+        "actual_sole_p95_cm": 3.0212589550372355,
+        "reference_sole_p95_cm": 2.5772736286087072,
+        "root_path_m": 11.979643286573232,
+        "root_relative_feet_error_mean_cm": 9.273769289652071,
+        "slip_change_percent": -21.118482993971423,
+        "xy_p95_change_m": -0.16025738148809054
+      }
+    },
+    "episode-1791652646384286": {
+      "baseline": {
+        "duration_s": 24.96,
+        "fell": false,
+        "target_width_median_cm": 33.67465640174383,
+        "actual_width_median_cm": 33.46354883775406,
+        "slip_forceweighted_m_s": 0.04724934128061191,
+        "xy_error_p95_m": 0.31022852478106483,
+        "xy_error_mean_m": 0.17019396878509244,
+        "tilt_p95_deg": 7.5147144237039,
+        "leg_joint_rmse_deg": 6.451226618620763,
+        "dominant_support_fraction": 0.530448717948718,
+        "single_support_fraction": 0.5068108974358975,
+        "com_to_dominant_support_lateral_median_cm": 13.209821082604922,
+        "ref_com_to_actual_dominant_foot_lateral_median_cm": 14.741372800515945,
+        "navigation_max_difference": 0.0,
+        "actual_sole_p95_cm": 2.5302506741874216,
+        "reference_sole_p95_cm": 3.1321638399986798,
+        "root_path_m": 7.139956954414009,
+        "root_relative_feet_error_mean_cm": 6.408795271754197,
+        "slip_change_percent": 0.0,
+        "xy_p95_change_m": 0.0
+      },
+      "ratio50": {
+        "duration_s": 24.96,
+        "fell": false,
+        "target_width_median_cm": 26.32888389975752,
+        "actual_width_median_cm": 26.754239606194492,
+        "slip_forceweighted_m_s": 0.03402432250879604,
+        "xy_error_p95_m": 0.3949317146674114,
+        "xy_error_mean_m": 0.21186850974411825,
+        "tilt_p95_deg": 6.111056943395383,
+        "leg_joint_rmse_deg": 6.583357630280342,
+        "dominant_support_fraction": 0.6586538461538461,
+        "single_support_fraction": 0.6306089743589743,
+        "com_to_dominant_support_lateral_median_cm": 10.024737589788755,
+        "ref_com_to_actual_dominant_foot_lateral_median_cm": 10.913790246196386,
+        "navigation_max_difference": 0.844039797782898,
+        "actual_sole_p95_cm": 2.472329587562542,
+        "reference_sole_p95_cm": 2.9463240015658547,
+        "root_path_m": 7.124527229460479,
+        "root_relative_feet_error_mean_cm": 5.505380630257928,
+        "slip_change_percent": -27.98984792882724,
+        "xy_p95_change_m": 0.08470318988634656
+      }
+    }
+  },
+  "limitations": [
+    "Two existing recordings, one deterministic run per condition; no live Quest acceptance.",
+    "Checkpoint1000 runs at its native100Hz; prior quest111586500 runs at native50Hz, so between-policy comparison includes cadence.",
+    "Same recorded physical states and commands during1s teacher-forced warmup; policy history rebuilt for each actor, not restored from unknown original session.",
+    "Sliding metric is force-weighted contact sliding speed; XY p95 is camera navigation error, not step length."
+  ]
+}

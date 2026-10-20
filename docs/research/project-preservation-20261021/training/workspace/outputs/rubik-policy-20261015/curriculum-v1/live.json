@@ -1,0 +1,11 @@
+{
+  "status": "evaluation",
+  "stage": 0,
+  "stage_name": "settle_grasp",
+  "evaluation": 16,
+  "finished_cases": 8,
+  "total_cases": 8,
+  "successes": 6,
+  "updated_unix": 1792075195.142823,
+  "pid": 91056
+}

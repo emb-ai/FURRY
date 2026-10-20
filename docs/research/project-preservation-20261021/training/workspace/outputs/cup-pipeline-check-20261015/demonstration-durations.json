@@ -1,0 +1,12 @@
+[
+  {
+    "episode": "episode-1792014836827567",
+    "split": "train",
+    "recorded_active_s": 8.2
+  },
+  {
+    "episode": "episode-1792015107773946",
+    "split": "valid",
+    "recorded_active_s": 6.87
+  }
+]

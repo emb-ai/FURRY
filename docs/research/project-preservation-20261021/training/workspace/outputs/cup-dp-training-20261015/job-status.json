@@ -1,0 +1,12 @@
+{
+  "state": "RUNNING",
+  "main_job": 118174,
+  "smoke_job": 118172,
+  "node": "node211-22",
+  "observed_step": 682,
+  "completed_epochs_observed": 2,
+  "checked_at_utc": "2026-10-14T23:55:04.040928+00:00",
+  "summary": "Обучение завершено: Slurm 118174, 301 эпоха, 102641 обновление. Лучший EMA checkpoint — эпоха 15; автономный замер опубликован в соседнем отчёте.",
+  "status": "COMPLETED",
+  "completed_epochs": 301
+}

@@ -1,0 +1,94 @@
+{
+  "apk": {
+    "apk": "g1-quest-lab-vlad-anatomical-hands.apk",
+    "bytes": 832275683,
+    "sha256": "ffeea973b3b192d09e189104a2cafce59bfc09ab6fd664de4847bb131257de4f",
+    "zip_crc": true,
+    "source_and_asset_digest_checks": 107,
+    "model_digest_checks": 13,
+    "policy_count": 10,
+    "metadata_variants": 66,
+    "controller_anatomical_frame": true,
+    "controller_stage_targets": true,
+    "soft_grip_preserved": true,
+    "package": "org.g1lab.quest",
+    "label": "G1 Quest Lab-vlad",
+    "installed": true
+  },
+  "installation": {
+    "time_utc": "2026-10-13T12:04:13.278701+00:00",
+    "serial": "2G0YC5ZG7T05SR",
+    "installed": true,
+    "install_r": true,
+    "data_cleared": false,
+    "sha256": "ffeea973b3b192d09e189104a2cafce59bfc09ab6fd664de4847bb131257de4f",
+    "device_digest_match": true,
+    "settings_preserved": true,
+    "other_apps_unchanged": true,
+    "packages": [
+      {
+        "package": "org.g1lab.quest",
+        "sha256": "ffeea973b3b192d09e189104a2cafce59bfc09ab6fd664de4847bb131257de4f",
+        "match": true
+      },
+      {
+        "package": "org.g1lab.quest.smooth",
+        "sha256": "3e0c4f70fd55f63d351c332e95230e18d7af45d4f9c47a573626658685b123f7",
+        "match": true
+      },
+      {
+        "package": "org.g1lab.quest.camera",
+        "sha256": "e5f81c253137448e17f8d8061ded13fe0d60b5ee4c9f3e8cab235b652f4c9397",
+        "match": true
+      }
+    ],
+    "start": "Starting: Intent { cmp=org.g1lab.quest/android.app.NativeActivity }\n",
+    "new_live_acceptance": false
+  },
+  "startup": {
+    "pid": "",
+    "power": [
+      "mWakefulness=Asleep"
+    ],
+    "resumed": [
+      "ResumedActivity: ActivityRecord{9b5ac19 u0 com.oculus.vrshell/.systemdialog.launchcheck.LaunchCheckControllerRequiredDialogActivity t3614}"
+    ],
+    "g1_log": []
+  },
+  "episodes": [
+    "episode-1791891578110906",
+    "episode-1791891624250590",
+    "episode-1791891634250582",
+    "episode-1791891640362257"
+  ],
+  "download": {
+    "episodes": 4,
+    "files_per_episode": 15,
+    "independent_device_sha256_matches": true
+  },
+  "finding": "Controller rotation calibration anchored raised human hand to physical standing wrist; pose-dependent ~80–108 deg error",
+  "full_skeleton": {
+    "joints": 84,
+    "selected_joints": 14,
+    "selected_absolute_pose_difference_from_full": 0,
+    "wrist_parent_forearm_already_selected": true
+  },
+  "fix": "Controller neutral wrist registered against source forearm plus G1 bind neutral wrist frame; retains controller rotation increments",
+  "validation": {
+    "native_raised_down_target_rotation_difference_max_rad": 1e-09,
+    "native_legacy_discrepancy_rad": 1.6,
+    "physical_wrist_pose_invariance": true,
+    "unit_suite_cases": 113,
+    "aggregate_passed_after_targeted_repair": 112,
+    "optional_skipped": 1,
+    "synthetic_replay_cases": 37,
+    "synthetic_max_state_reference_error": 0,
+    "android_build": true
+  },
+  "limitations": [
+    "Recorded-input comparison is kinematic GMR, not new physical rollout",
+    "Headset asleep/system controller dialog after install; no new live acceptance",
+    "No expansion of IK task count in this fix",
+    "No commit/push of this fix series"
+  ]
+}

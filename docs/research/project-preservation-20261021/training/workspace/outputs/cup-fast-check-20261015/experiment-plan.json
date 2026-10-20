@@ -1,0 +1,35 @@
+{
+  "task": "cup",
+  "existing_checkpoints_unchanged": true,
+  "runtime_unchanged": true,
+  "sweep": [
+    {
+      "execution": 4,
+      "denoise": 10
+    },
+    {
+      "execution": 16,
+      "denoise": 10
+    },
+    {
+      "execution": 8,
+      "denoise": 20
+    }
+  ],
+  "baseline": {
+    "execution": 8,
+    "denoise": 10,
+    "source": "outputs/cup-pipeline-check-20261015/results-latest-policy-h8-valid.json"
+  },
+  "confirmation_seeds": [
+    1,
+    2
+  ],
+  "limit_s": 90,
+  "split": "valid",
+  "limitations": [
+    "Same-session diagnostic starts; not independent test",
+    "Simulation pauses during inference",
+    "Lower HOMIE starts with empty history"
+  ]
+}

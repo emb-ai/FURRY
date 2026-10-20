@@ -1,0 +1,84 @@
+{
+  "checkpoint_iteration": 3600,
+  "checkpoint_sha256": "3b9fa68111192e40425cf6de5ea8cc56cd5b90d7c74011a73cc2e2a1b11c6c1c",
+  "num_trials": 10,
+  "successes": 0,
+  "falls": 8,
+  "timeouts": 2,
+  "simulated_seconds": 90,
+  "wall_seconds": 1262.9938053451478,
+  "verification": "Independently recomputed from4500 trajectory samples. Every trial fails necessary conditions: no cup lift exceeding4.5cm and no goal-box entry before fall/timeout. No positive-success contact detector was needed or claimed.",
+  "trials": [
+    {
+      "seed": 0,
+      "outcome": "fall",
+      "first_fall_s": 1.34,
+      "max_lift_before_end_m": 0.0,
+      "goal_entry_samples_before_end": 0
+    },
+    {
+      "seed": 1,
+      "outcome": "fall",
+      "first_fall_s": 17.44,
+      "max_lift_before_end_m": 0.0,
+      "goal_entry_samples_before_end": 0
+    },
+    {
+      "seed": 2,
+      "outcome": "fall",
+      "first_fall_s": 1.56,
+      "max_lift_before_end_m": 0.0,
+      "goal_entry_samples_before_end": 0
+    },
+    {
+      "seed": 3,
+      "outcome": "fall",
+      "first_fall_s": 2.0,
+      "max_lift_before_end_m": 0.0,
+      "goal_entry_samples_before_end": 0
+    },
+    {
+      "seed": 4,
+      "outcome": "fall",
+      "first_fall_s": 1.44,
+      "max_lift_before_end_m": 0.0,
+      "goal_entry_samples_before_end": 0
+    },
+    {
+      "seed": 5,
+      "outcome": "timeout",
+      "first_fall_s": null,
+      "max_lift_before_end_m": 0.03267749166488643,
+      "goal_entry_samples_before_end": 0
+    },
+    {
+      "seed": 6,
+      "outcome": "timeout",
+      "first_fall_s": null,
+      "max_lift_before_end_m": 0.01442237710952754,
+      "goal_entry_samples_before_end": 0
+    },
+    {
+      "seed": 7,
+      "outcome": "fall",
+      "first_fall_s": 1.54,
+      "max_lift_before_end_m": 0.0,
+      "goal_entry_samples_before_end": 0
+    },
+    {
+      "seed": 8,
+      "outcome": "fall",
+      "first_fall_s": 1.52,
+      "max_lift_before_end_m": 0.0,
+      "goal_entry_samples_before_end": 0
+    },
+    {
+      "seed": 9,
+      "outcome": "fall",
+      "first_fall_s": 2.42,
+      "max_lift_before_end_m": 0.0,
+      "goal_entry_samples_before_end": 0
+    }
+  ],
+  "rollout_sha256": "fba344d4cb4e54cfffb9092425cb2d2ae669e95e961143dc8b238a98ed526f86"
+}

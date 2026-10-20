@@ -1,0 +1,116 @@
+{
+  "date": "2026-10-21",
+  "source_archive": {
+    "verified_files": 1223,
+    "parsed_python_sources": 401,
+    "zip_crc_checks": 10,
+    "action": "verify",
+    "group": null
+  },
+  "rubik_references": {
+    "verified_files": 756,
+    "parsed_python_sources": 173,
+    "zip_crc_checks": 5,
+    "action": "verify",
+    "group": "rubik"
+  },
+  "restore_smoke": {
+    "verified_files": 59,
+    "parsed_python_sources": 8,
+    "zip_crc_checks": 2,
+    "action": "restore",
+    "group": "rubik-policy"
+  },
+  "restore_independent_hash_check": {
+    "files": 59,
+    "byte_identical": true,
+    "relocation": false
+  },
+  "rubik_rebuild_and_prefix_replay": {
+    "frames": 100,
+    "full_rollout": false,
+    "qpos_max_error": 0.0,
+    "userdata_max_error": 0.0,
+    "warnings": 0,
+    "mujoco_version": "3.3.7",
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "control": "two wrist poses and two ordinary scalar Grip values"
+  },
+  "new_helpers_python_ast": "passed",
+  "new_task_performance_evaluation": false,
+  "new_headset_deployment": false,
+  "limits": [
+    "The new replay check covers100frames; the full28367frame exact replay is a preserved2026-10-15receipt.",
+    "GPU training and failed experiment evaluations were not rerun.",
+    "The source archive reuses570 byte-identical files from main; only Rubik references were all materialized and rehashed during the restore smoke."
+  ],
+  "summary": {
+    "files": 1793,
+    "archived_files": 1223,
+    "existing_main_references": 570,
+    "archived_bytes": 202895091,
+    "existing_main_bytes": 121297094,
+    "large_files": [
+      {
+        "workspace_path": "outputs/cup-state-il-20261015/dataset.npz",
+        "bytes": 20707180,
+        "sha256": "82ddbd5f40cd3a3c2c9d2edd7096a4ad605cd193990929e4e881c9e3c0c00857"
+      },
+      {
+        "workspace_path": "outputs/cup-state-il-20261015/run-bc-rnn/best.pt",
+        "bytes": 8424052,
+        "sha256": "ff4980e5439a2b78d7858d69fab15aad32a80281abaa119679435bfa8dee2bfb"
+      },
+      {
+        "workspace_path": "outputs/cup-state-il-20261015/run-diffusion/best.pt",
+        "bytes": 32209570,
+        "sha256": "05dddc517852dad8fc867332bc6bb0f19ee65af5e092f6c33c07f3b2002f11b7"
+      },
+      {
+        "workspace_path": "outputs/dexweave-cup-box-20261015/data/episode-1792020014648126.npz",
+        "bytes": 5175037,
+        "sha256": "f70bda0f17704d135b1c9cf8816721146a18383c549be75c68a16231a59e5b2a"
+      },
+      {
+        "workspace_path": "outputs/dexweave-cup-box-20261015/data/episode-1792020055691156.npz",
+        "bytes": 4017684,
+        "sha256": "bbf1ae5c8d669355ac2ce850bb856a7c36b97a18c496bad0150c57a28ba23499"
+      },
+      {
+        "workspace_path": "outputs/dexweave-cup-box-20261015/data/episode-1792020126135729.npz",
+        "bytes": 6769562,
+        "sha256": "00802bd919531908d6aee3196030f2d3fb188b453e50c2a2a36d936637f57ae8"
+      },
+      {
+        "workspace_path": "outputs/dexweave-cup-box-20261015/data/episode-1792020208393189.npz",
+        "bytes": 4611154,
+        "sha256": "34fe6c0bba4662878a4416c0e1b7ad40b813bbdcbd024a414fc7370d00d698c9"
+      },
+      {
+        "workspace_path": "outputs/rubik-feedback-20261015/second-other-face.npz",
+        "bytes": 54079976,
+        "sha256": "d6a5d326101a7c97fbf6c390937915e633135e2efe1ca1555f68488704a289f2"
+      },
+      {
+        "workspace_path": "outputs/rubik-policy-20261015/bc-policy.zip",
+        "bytes": 1214762,
+        "sha256": "c432b83a51cd5a2fcd3666c70c2a497be94bd367567aaa397a8c0026e56f4a80"
+      },
+      {
+        "workspace_path": "outputs/rubik-policy-20261015/demonstrations.npz",
+        "bytes": 3645843,
+        "sha256": "a56e4a53584933840a118bae014405d319262b7ce971e6944952996c9acfcded"
+      },
+      {
+        "workspace_path": "outputs/rubik-regrasp-20261015/four-cycles.npz",
+        "bytes": 22282698,
+        "sha256": "0f3af8115bad7957be417ec73e8ea89b359cccbd7b43f653c17ff821b6611dd2"
+      },
+      {
+        "workspace_path": "outputs/rubik-stable-20261015/five-cycles.npz",
+        "bytes": 26624912,
+        "sha256": "6b118ff619e858b32bd2ef3a9d331d3702ec1cb723c8632c97aa6cf1b0df8959"
+      }
+    ]
+  }
+}

@@ -1,13 +1,17 @@
 # FURRY — final presentation materials, 16 October 2026
 
+- [Fresh presentation export — PPTX, 23 slides](furry-presentation.pptx)
 - [Current presentation — Google Slides](https://docs.google.com/presentation/d/1hyqIzdS8b-cYbUaeu4GaNDoR_Sctr1FrsqFfs4joNZQ/edit)
 - [Final montage — MP4, 1:29](furry-final-montage.mp4)
 - [Eight-policy comparison — MP4, 0:26](policies-comparison.mp4)
 
-The current presentation is available through Google Slides. A fresh PPTX is
-still pending: repeated export attempts on 16 October produced truncated ZIP
-archives. The saved 12:30 export predates further edits and is intentionally
-not published as the final deck.
+The PPTX is a complete, unchanged Google Slides export retrieved on 21 October
+2026. All 23 slides, ZIP checksums, XML parts and internal relationships were
+checked. It includes later changes missing from the 16 October 12:30 export.
+
+The export contains seven GIF assets and no embedded video parts. Video
+playback from Google Slides is not guaranteed in PowerPoint. The two standalone
+MP4 files below preserve the final montage and policy comparison.
 
 The final 1280×720, 30 fps montage combines tracking, cup, Kick-T and tennis,
 followed by the Rubik “coming soon” ending. It is an edited presentation reel

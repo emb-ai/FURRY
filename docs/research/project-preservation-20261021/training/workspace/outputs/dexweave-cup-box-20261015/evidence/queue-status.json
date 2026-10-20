@@ -1,0 +1,7 @@
+{
+  "status": "waiting_for_free_gpu",
+  "pid": 848328,
+  "updated_utc": "2026-10-15T00:36:45Z",
+  "required": "one H100 with no compute processes, memory < 1000 MiB",
+  "references": 4
+}

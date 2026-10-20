@@ -1,0 +1,66 @@
+[
+  {
+    "episode": "episode-1792058834151648",
+    "success": false,
+    "outcome": 0,
+    "wall_s": 2.1991586685180664,
+    "error": null,
+    "final_distance_m": 0.39121574903536893
+  },
+  {
+    "episode": "episode-1792058974761240",
+    "success": true,
+    "outcome": 1,
+    "wall_s": 1.7246391773223877,
+    "error": null,
+    "final_distance_m": 0.023038066026376765
+  },
+  {
+    "episode": "episode-1792059112053736",
+    "success": false,
+    "outcome": 0,
+    "wall_s": 2.157888412475586,
+    "error": null,
+    "final_distance_m": 0.10143530767987054
+  },
+  {
+    "episode": "episode-1792059256525492",
+    "success": false,
+    "outcome": 0,
+    "wall_s": 3.5336644649505615,
+    "error": null,
+    "final_distance_m": 0.08764064451877203
+  },
+  {
+    "episode": "episode-1792059418003475",
+    "success": false,
+    "outcome": 0,
+    "wall_s": 2.6986732482910156,
+    "error": null,
+    "final_distance_m": 0.24523209212344238
+  },
+  {
+    "episode": "episode-1792059590200464",
+    "success": true,
+    "outcome": 1,
+    "wall_s": 1.4881484508514404,
+    "error": null,
+    "final_distance_m": 0.03288455410230893
+  },
+  {
+    "episode": "episode-1792059694167464",
+    "success": false,
+    "outcome": 0,
+    "wall_s": 1.9869356155395508,
+    "error": null,
+    "final_distance_m": 0.23769220839506297
+  },
+  {
+    "episode": "episode-1792059849292471",
+    "success": false,
+    "outcome": 0,
+    "wall_s": 2.1499338150024414,
+    "error": null,
+    "final_distance_m": 0.24367546046904046
+  }
+]

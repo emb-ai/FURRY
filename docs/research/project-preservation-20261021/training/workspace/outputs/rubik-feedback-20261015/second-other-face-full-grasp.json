@@ -1,0 +1,65 @@
+{
+  "reference_time_s": 40.5,
+  "boundaries": [
+    {
+      "time_s": 40.5,
+      "cube_center_error_mm": 0.0,
+      "cube_orientation_error_deg": 7.432094907943494e-16,
+      "hand_position_rms_mm": [
+        0.0,
+        0.0
+      ],
+      "hand_orientation_rms_deg": [
+        1.1584278670365142e-15,
+        1.62033657755535e-15
+      ]
+    },
+    {
+      "time_s": 197.29,
+      "cube_center_error_mm": 3.916132633316323,
+      "cube_orientation_error_deg": 1.5864480525092737,
+      "hand_position_rms_mm": [
+        4.379434193509837,
+        4.637849235930358
+      ],
+      "hand_orientation_rms_deg": [
+        3.228529076577139,
+        2.9040156187188955
+      ]
+    },
+    {
+      "time_s": 250.09,
+      "cube_center_error_mm": 7.251100912812082,
+      "cube_orientation_error_deg": 4.803854382543802,
+      "hand_position_rms_mm": [
+        8.21244227211278,
+        13.443283021207321
+      ],
+      "hand_orientation_rms_deg": [
+        8.77890200034617,
+        5.87100870819399
+      ]
+    },
+    {
+      "time_s": 278.31,
+      "cube_center_error_mm": 2.931397796272187,
+      "cube_orientation_error_deg": 3.5755906637642747,
+      "hand_position_rms_mm": [
+        9.356310512500905,
+        8.699216633814975
+      ],
+      "hand_orientation_rms_deg": [
+        6.9580102049037125,
+        5.494078248987225
+      ]
+    }
+  ],
+  "other_support_frames": 0,
+  "both_hands_without_cube_contact_frames": 0,
+  "policy": "HOMIE Standing",
+  "wrist_and_scalar_grip_only": true,
+  "physics_modified": false,
+  "headset_tested": false,
+  "objective_complete": false,
+  "reason": "Same-face sequence only; arbitrary continuation, other faces, and robustness remain unresolved"
+}

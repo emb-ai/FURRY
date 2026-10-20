@@ -1,0 +1,31 @@
+{
+  "started": 1792071967.2366374,
+  "max_training_s_each": 1800,
+  "max_steps_each": 12000,
+  "jobs": [
+    {
+      "kind": "bc-rnn",
+      "pid": 3846482,
+      "gpu_index": 0,
+      "gpu_uuid": "GPU-4ff902a0-d404-08b4-62da-92d04766ecb6",
+      "command": [
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/env-dp/bin/python",
+        "/home/jovyan/vlad/FURRY/cup-state-il-20261015/pipeline.py",
+        "--kind",
+        "bc-rnn"
+      ]
+    },
+    {
+      "kind": "diffusion",
+      "pid": 3846487,
+      "gpu_index": 5,
+      "gpu_uuid": "GPU-155dccab-a2eb-fa75-e708-04360ff896fe",
+      "command": [
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/env-dp/bin/python",
+        "/home/jovyan/vlad/FURRY/cup-state-il-20261015/pipeline.py",
+        "--kind",
+        "diffusion"
+      ]
+    }
+  ]
+}

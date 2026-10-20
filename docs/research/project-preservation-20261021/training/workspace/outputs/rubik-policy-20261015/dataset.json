@@ -1,0 +1,142 @@
+{
+  "source": "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs.nosync/rubik-feedback-20261015/second-other-face.npz",
+  "source_sha256": "d6a5d326101a7c97fbf6c390937915e633135e2efe1ca1555f68488704a289f2",
+  "unique_source_chains": 1,
+  "segments": [
+    {
+      "macro": 0,
+      "start": 40.5,
+      "end": 59.32,
+      "command": [
+        3,
+        -1
+      ],
+      "samples": 376,
+      "complete_canonical_demonstration": true,
+      "split": "train"
+    },
+    {
+      "macro": 1,
+      "start": 59.32,
+      "end": 78.17,
+      "command": [
+        3,
+        -1
+      ],
+      "samples": 377,
+      "complete_canonical_demonstration": true,
+      "split": "train"
+    },
+    {
+      "macro": 2,
+      "start": 78.17,
+      "end": 93.02,
+      "command": [
+        3,
+        -1
+      ],
+      "samples": 297,
+      "complete_canonical_demonstration": true,
+      "split": "train"
+    },
+    {
+      "macro": 3,
+      "start": 93.02,
+      "end": 117.01,
+      "command": [
+        3,
+        -1
+      ],
+      "samples": 479,
+      "complete_canonical_demonstration": true,
+      "split": "validation"
+    },
+    {
+      "macro": 4,
+      "start": 117.01,
+      "end": 131.9,
+      "command": [
+        3,
+        -1
+      ],
+      "samples": 297,
+      "complete_canonical_demonstration": true,
+      "split": "train"
+    },
+    {
+      "macro": 5,
+      "start": 131.9,
+      "end": 148.16,
+      "command": [
+        3,
+        -1
+      ],
+      "samples": 325,
+      "complete_canonical_demonstration": true,
+      "split": "train"
+    },
+    {
+      "macro": 6,
+      "start": 148.16,
+      "end": 164.62,
+      "command": [
+        3,
+        -1
+      ],
+      "samples": 329,
+      "complete_canonical_demonstration": true,
+      "split": "train"
+    },
+    {
+      "macro": 7,
+      "start": 164.62,
+      "end": 180.98,
+      "command": [
+        3,
+        -1
+      ],
+      "samples": 327,
+      "complete_canonical_demonstration": true,
+      "split": "validation"
+    },
+    {
+      "macro": 8,
+      "start": 180.98,
+      "end": 197.29,
+      "command": [
+        3,
+        -1
+      ],
+      "samples": 326,
+      "complete_canonical_demonstration": true,
+      "split": "train"
+    },
+    {
+      "macro": 9,
+      "start": 197.29,
+      "end": 278.31,
+      "command": [
+        4,
+        -1
+      ],
+      "samples": 1620,
+      "complete_canonical_demonstration": false,
+      "split": "train"
+    }
+  ],
+  "observation_shape": [
+    313
+  ],
+  "action_dim": 14,
+  "control_hz": 20,
+  "training_samples": 3947,
+  "validation_samples": 806,
+  "raw_action_absolute_max": 1.0,
+  "clipped_samples": 0,
+  "limitations": [
+    "Correlated macro holdout from one deterministic simulation, not an independent test",
+    "Nine complete same-face cycles and one provisional adjacent-face macro",
+    "No demonstrations of all faces or all inverse commands",
+    "20 Hz interpolated actions need native rollout validation; saved source was 100 Hz"
+  ]
+}

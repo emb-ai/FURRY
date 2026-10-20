@@ -1,0 +1,24 @@
+{
+  "camera_rise": [
+    0,
+    6.5
+  ],
+  "hold": [
+    6.5,
+    8.3
+  ],
+  "dim_75_percent": [
+    8.3,
+    9.4
+  ],
+  "coming_soon": [
+    9.3,
+    10
+  ],
+  "maybe": [
+    11.3,
+    12
+  ],
+  "end": 14.5,
+  "note": "Staged offline MuJoCo render; static robot and cube, animated camera. Not a recorded task execution."
+}

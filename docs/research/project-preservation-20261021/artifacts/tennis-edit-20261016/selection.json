@@ -1,0 +1,40 @@
+{
+  "clips": [
+    {
+      "index": 0,
+      "source": "/Users/vlad/Downloads/Telegram Desktop/IMG_3699.MOV",
+      "in": 7.7,
+      "out": 12.4,
+      "label": "Со стороны · IMG_3699 · 00:07.7–00:12.4"
+    },
+    {
+      "index": 1,
+      "source": "/Users/vlad/Downloads/Telegram Desktop/IMG_3698.MOV",
+      "in": 173.1,
+      "out": 175.3,
+      "label": "Со стороны · IMG_3698 · 02:53.1–02:55.3"
+    },
+    {
+      "index": 2,
+      "source": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/operator-video-20261015/downloads/G1Quest/operator-20261015-161726-139.mp4",
+      "in": 36.8,
+      "out": 45.8,
+      "label": "Из очков: соперник · 16:17:26 · 00:36.8–00:45.8"
+    },
+    {
+      "index": 3,
+      "source": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/operator-video-20261015/downloads/G1Quest/operator-20261015-184609-879.mp4",
+      "in": 36.8,
+      "out": 39.3,
+      "label": "Симуляция · 18:46:09 · 00:36.8–00:39.3"
+    },
+    {
+      "index": 4,
+      "source": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/operator-video-20261015/downloads/G1Quest/operator-20261015-184609-879.mp4",
+      "in": 41.8,
+      "out": 44.3,
+      "label": "Симуляция · 18:46:09 · 00:41.8–00:44.3"
+    }
+  ],
+  "note": "Editorial selection of separate takes, not synchronized views; no claim of successful returns. Silent review draft; original speed."
+}

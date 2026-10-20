@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-21",
+  "repository": "https://github.com/emb-ai/FURRY",
+  "base_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c",
+  "fetched_refs": {
+    "origin/main": "68079cfdfa36fbaef020eb192db3a477f8fe961c",
+    "origin/camera-skeleton": "a77eebe82098e1a0290ffa12e2aa02770231f485",
+    "origin/codex/quest-cup-15-trajectories": "d2379775c024961c90007486d52dbd01642b228e",
+    "origin/skeleton-denoiser-v0": "81159c1aac822f35f782632851f058a42081dd63",
+    "origin/claude/project-thread-ei5tbk": "1b26515ce69f247d7c7a7b770bca04633c27c786",
+    "origin/claude/project-thread-2u40dx": "735d5a5b6cee5cf884afc9a39e6e62151ff5b51f",
+    "origin/claude/project-thread-mp64bu": "b6fe0bdb650441ba64e2bf9690f75d82b3e1f121"
+  },
+  "local_checkouts_inspected": 13,
+  "branch_decisions": {
+    "reviewed_cup": "3 additive dataset commits cherry-picked; all67archive SHA/CRC checked",
+    "camera_skeleton": "Already ancestor of main",
+    "skeleton_denoiser": "Standalone logger integrated; full change preserved with6LFSoriginals, live behavior unchanged",
+    "camera_2d": "Desktop tools integrated; full native experiment archived",
+    "dexweave_page": "Adopted with updated local implementation status",
+    "policy_learning": "Already superseded by main, older branch not copied",
+    "tracker_training": "Committed code already content-equivalent; old dirtyv4 not imported"
+  },
+  "missing_checkpoints": [
+    "cup-mix-imnet-100k-75k",
+    "bimanual-unet-h16-imnet-100k-50k"
+  ],
+  "native_runtime_changes": false,
+  "headset_installed": false,
+  "new_live_acceptance": false,
+  "missing_checkpoint_location": "User confirmed on2026-10-21: held by teammates; unavailable in this workspace"
+}

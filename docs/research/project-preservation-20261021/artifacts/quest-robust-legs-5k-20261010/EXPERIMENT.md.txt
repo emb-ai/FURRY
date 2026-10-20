@@ -1,0 +1,58 @@
+# Продолжение TWIST2 до 5000 actor updates
+
+Подтверждено 2026-10-10 14:53:35 МСК. Запрос: продолжить/поставить обучение на 5k и посмотреть loss-кривые.
+
+- Slurm **112038** — контроль, из `twist2-leg-faults-20261010/runs/111995/training/final.pt` (500 actor updates).
+- Slurm **112039** — actor-only задержки/замирания ног, из своего будущего `runs/111994/training/final.pt` (500 actor updates).
+- Цель каждого: **5000 суммарных actor updates в этом эксперименте**, то есть ещё 4500 после пилота. Базовая политика для сравнения остаётся checkpoint1000 job111260.
+- Сейчас оба продолжения PENDING/Dependency; GPU-check **112035** PENDING/Resources. Второй прогон дополнительно зависит от успешного завершения pilot `111994_1`, который RUNNING и на срезе выполнил 194 actor updates.
+- 4096 envs, seed1, source Isaac Gym/DaggerPPO, actor 50 Hz. Лимит Slurm каждого продолжения 12 часов. KL только адаптирует LR как в source; самодельных KL/validation early stop нет.
+- Сохраняются прежние общие экспериментальные изменения: window displacement/turn reward, sphere soles, nonlooping motions; варианты различаются только actor leg faults. Разделение train/validation не меняется.
+
+## Что восстановлено
+
+Actor, critic, learnable std, frozen actor normalization, critic normalization, полное состояние Adam, последний adaptive LR, algorithm counter и прогресс noise/action-delay schedule. Critic warmup не повторяется.
+
+CPU test на реальных source model/PPO: побайтно совпали модель, нормализация и Adam; следующий полный source PPO update на одинаковом синтетическом rollout и RNG совпал с независимым прямым восстановлением. Отрицательный тест отвергает перенос между разными условиями. См. `status/cpu-resume-check.json`.
+
+GPU integration check с 4096 envs ещё в очереди. Длинные jobs имеют afterok dependency и не начнутся, если этот check не пройдёт.
+
+**Ограничение старого checkpoint:** physical state/history, RNG и per-motion difficulty не сохранены. Rollout и motion-difficulty curriculum начинают заново; это продолжение состояния модели/optimizer с новым rollout, не точное восстановление траектории симулятора. Применяется одинаково к обоим условиям. Новые checkpoint сохраняют дополнительно counters, remaining action-delay sequence и motion difficulty/termination tensors.
+
+## Кривые и оценка
+
+`loss-curves.png` — срез текущих pilot logs: control 500 actor / 550 critic updates, faults 194 actor / 550 critic. Тонкие линии — сырые значения, толстые — trailing mean 50 updates. Critic-only surrogate placeholders исключены.
+
+Control: средний train reward первых/последних100 actor updates 6.4277→6.7740; window displacement error 0.11012→0.10064 м. Последний100 value loss 0.01737, critic EV0.99154. Рост reward не подтверждает исправление живых спотыканий.
+
+Каждые500 actor updates pipeline сохраняет checkpoint, автоматический PNG loss-curves с историей пилота и validation JSON для той же отложенной выборки (12 clips ×2 seeds). В конце отдельные compatibility100Hz, train-stage05 и clean/delay/freeze probes. Это ранее просмотренная validation, не независимый test. Автопродвижения политики/деплоя нет.
+
+Исходный код из чистого git snapshot ветки обучения; shared dirty checkout и Quest не изменялись. SHA256 локальных ключевых adapter-файлов совпали с remote submission manifest. Точные параметры/зависимости: `status/submitted-training.json`; актуальный срез: `status/status-snapshot.json`.
+
+## Проверка 2026-10-10 15:25 МСК
+
+Продолжения112038/112039 ещё PENDING/Dependency; smoke112035 PENDING/Resources. Оба pilot trainer завершили500 actor updates; Slurm111994_1 ещё RUNNING (последующие оценки pipeline).
+
+Checkpoint500 на одинаковой validation, matched prefixes к baseline111260/1000:
+
+| Условие | Новые падения | Slide rate change | Root XY error change | Detector trips, matched prefixes |
+|---|---:|---:|---:|---:|
+| Baseline | — | — | — | 78 |
+| Control500 | 0 | −4.78% | −18.94% | 82 |
+| Faults500 | 1 | +21.97% | −33.68% | 91 |
+
+Новый failure faults500: stage14-run01-003000-part01__seed1; legacy verdict rejected также по more_falls/key_rmse/sliding. Контроль500 проходит старый gate, но trips не улучшились. Detector trips — события алгоритма на одинаковых префиксах, не подтверждённые человеком подсчёты из живого Quest.
+
+Train first100→last100 actor updates: control reward6.4277→6.7740/window error11.0116→10.0644см; faults reward6.3563→6.6443/window error11.5727→10.5158см. Улучшение train losses/reward не подтверждает улучшение походки на validation. loss-curves.png обновлён: оба условия до500.
+
+## Перенос на свободные V100, 2026-10-10
+
+По запросу пользователя проверены все partitions: свободны1 A100 на node208-24,2 V100 на node211-27,16 TITAN X на node005-16/21. У V100112 свободных CPU-ядра. Прежняя проверка только RTX была слишком узкой.
+
+Перенос pending jobs112035/112038/112039 на V100 сохранил dependencies, но первая GPU-проверка выявила отсутствующий env/bin в PATH (ninja не найден), что автоматически отменило dependents. Исправлено. Повтор112048 выявил ошибочную ссылку resume на schedule LeggedRobot; фактический G1Future наследует HumanoidChar.step и использует counter-ramped Bernoulli delay между5000 и20000 updates. Убраны несуществующие action_curr_step/delay_update_global_steps; восстановлен total_env_steps_counter, original schedule не изменён. CPU-next-PPO-update test повторно прошёл.
+
+**Smoke112052 COMPLETED/exit0:0 на V100:** 4096 envs, все1090 motions, bitwise actor/critic/std/normalization/Adam restore, полный следующий PPO update(20 minibatches),500→501 actor updates; без повторного critic warmup. Свидетельство: status/resume-check.json.
+
+**Новые актуальные jobs:112053 control и112054 faults**, оба RUNNING на node211-27 в AMD7V12-V100-CCP-common. Каждому выделены1 GPU +16 CPU +32G RAM, целевой предел5000 суммарных actor updates. На зафиксированном срезе выполняется исходная baseline CPU-evaluation перед запуском trainer. Смена аппаратуры не подтверждает качества походки. Это два параллельных независимых conditions, не распределённый PPO на16GPU.
+
+Актуальные submission/status: status/submitted-training.json и status/v100-running-status.json. Старые112038/112039 отменены scheduler вслед за failed dependency; активных дублирующих5k прогонов нет. Состояние Quest не менялось.

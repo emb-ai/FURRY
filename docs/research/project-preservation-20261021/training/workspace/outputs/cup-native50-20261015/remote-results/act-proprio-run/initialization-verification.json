@@ -1,0 +1,10 @@
+{
+  "model_exact": false,
+  "old_weights_exact": true,
+  "new_input_columns_zero": true,
+  "optimizer_loaded": true,
+  "source_normalization_exact": true,
+  "new_measured_state_normalization": "train-only mean/std",
+  "ema_loaded": false,
+  "source_step": 20000
+}

@@ -1,0 +1,398 @@
+{
+  "job_array": "111994",
+  "conditions": {
+    "0": "control, clean actor legs",
+    "1": "50% episode leg faults during locomotion"
+  },
+  "source_seed": 1,
+  "max_actor_updates_each": 500,
+  "num_envs": 4096,
+  "control_hz": 50,
+  "headset_deployment": false,
+  "smoke_passed": true,
+  "critic_actor_and_std_bitwise_unchanged": true,
+  "ppo_config_matches_upstream": true,
+  "changes_common": [
+    "Nonlooping RSI and padded final future poses",
+    "Exact floor-contacting sole evaluation"
+  ],
+  "treatment_change": "Actor leg references delayed 20--120 ms with 160--320 ms freezes; clean reward targets and critic references",
+  "existing_overrides": [
+    "Pretrained checkpoint111260/1000 actor, normalization, std",
+    "New critic warmup",
+    "Window displacement/turn reward",
+    "Sphere soles",
+    "Protected author/Quest train mixture"
+  ],
+  "action_delay_schedule": "Source schedule retained and effective values logged; still zero at this pilot length",
+  "selection": "No automatic promotion; legacy tracking/sliding gate is only a diagnostic. Assess falls, progress, trips, braking and exact sole gap jointly.",
+  "snapshot_time_moscow": "2026-10-10T12:45:23.014847+03:00",
+  "status_at_check": {
+    "111994_0": "RUNNING; baseline completed; critic iteration 7, actor_updates=0",
+    "111994_1": "PENDING Resources; RTX partition full"
+  },
+  "code_base_commit": "5eb11ff9ed8ee20a5e604f9e282029a20da6f570",
+  "source_files_sha256": {
+    "adapter/add_replay.py": "cdd9ebd990b83bf2a38b743e9087baa89d082df57bdee88d32e64d976a9de69c",
+    "adapter/author_dataset.py": "f87435da2ae21f5b7400715ac9659b9150865462e1bb0c674b056b99b2a42c53",
+    "adapter/author_eval.py": "a1d8dc352ff06a10684394d5bc991bde20ddf3341eb311e6b1dc5fbeb72cfec5",
+    "adapter/author_finetune.py": "16129fde1c37f43cbe636278175df4dda7ffe219b41c8a331158b904fb08b6f1",
+    "adapter/build_sole_urdf.py": "9bf792cee3652322ddfc5b9259bd5947b0860c886bba7ee998de1bf4c987e579",
+    "adapter/check_author_env.py": "d2db3a3618156a2d1227b23641e08aee408cd5c5550463cecf2f30f72ecc3c78",
+    "adapter/check_gait_runtime.py": "ce3e662b7ee82556419f7cca76492295f049d399b48a6dfc1a361e75a21a347b",
+    "adapter/check_pipeline.py": "5deff3b0b7e0273efd2957ebdc8fccd6e28dd24c703223d0480920d3e31abb58",
+    "adapter/check_reference_faults.py": "3eca14815e4478a4b380065723404794eb249632fa57c01d5a79985c09ee01e8",
+    "adapter/check_training_performance.py": "8353374da91a0e65767999c5d6dac01ebc6fa60c5ba65fa1197399df7672d83e",
+    "adapter/check_upstream_kl.py": "278095ff07099dfd8bc1fe6fc0d44f4ffe47da7aabaf81340d940f37ae71303e",
+    "adapter/checkpoint_lineage.py": "ad406980d3a2eae597c64c4a2c7b16d27655407aeeec341d524feae9bbe6addf",
+    "adapter/conflict_probe.py": "fc49fc05300b5fa7c6e63aa35fbfba0154efdef70b3a4b622086a5623857bc54",
+    "adapter/critic.py": "07be2385b2d6bcff47c96dc922cb1ced5934f047a0b4b43dc45c428da52602fb",
+    "adapter/curate.py": "6b12c21c1f8f2f9cf7e3c208e07f02726fde2167b35615bd58e32548a0025a4c",
+    "adapter/curate_replay.py": "9cddac3093ace358007b753e46de77fea2d341d889bf0bf335ffb2e3a9ef3001",
+    "adapter/env.py": "40633728f5faa284c0b46ce8e89114d73d442bb390cfd0f56482613d2e15d12f",
+    "adapter/evaluate.py": "7a3ef16f81b93dd1be5119abc811595a1b71f86f8f98ff93133127bd012cc35f",
+    "adapter/export_policy.py": "2e0f57a341b21f12592fad04c5c767cf0a5d660c5df880407513a1532e97bab6",
+    "adapter/fetch_author_motions.py": "11fbe231c0118bb3df18423cb7b0330cda348dca783da692d84f4d470813a965",
+    "adapter/gait_evaluation.py": "81e041d17cc2ffda94cfd60417709d2b2495429f5733b9eabdc2f6b56b0cfa0f",
+    "adapter/mirror_dataset.py": "1144fd1edb105662b4610a3208daa53eda258202fa3abee96616293c0227b80c",
+    "adapter/mirror_guard.py": "d09e85e7a197b815839c9e14178df7d9869626e06dcef7a33f305debf3e0c4c9",
+    "adapter/motion_coordinates.py": "4c51bd44dea9b01cd2933acc24fd2b1d4762469fa0d7dc2a4b2b27e29dc1a43f",
+    "adapter/night_experiment.py": "5c32b914d69e3d423730ff5c3860eea692d88536c6dba3863c7c9d9b67819d0a",
+    "adapter/policy.py": "9d96d27f9bcf84837ca7ae34b0d94f98f7b6d3ae3a9dd9ee0a4c6c6c97da7bb6",
+    "adapter/ppo_utils.py": "c995181ec0089fefc042be0fd33dd9d8bc8a4319bd92d315f456c549fa98396b",
+    "adapter/prepare.py": "d20980494f9216dc403d51e5ff00d9758c5ac20619442d3b4d3ee1b9bfc7a097",
+    "adapter/prepare_author_probe.py": "70524971d75bb82e1556f21265a289c62215ad59ee047d8bb5d4fda9d4037da7",
+    "adapter/reference_faults.py": "cb804ae2b5dbf30b1832688e7f36a053707c0832e0046de51e02fa4cc242ce23",
+    "adapter/rewards.py": "93200ba631c3cad525c9da071d0e1bce4abf3041f64bf8a3b8de77b964a00f73",
+    "adapter/run_author_pipeline.py": "c2c3d0cb4b813f2fa0dd3e6d383a7799d45371a56336802ce0394fcfbbc8ecb5",
+    "adapter/select_author_motions.py": "53c88b6802096f02482716a8e12bc662852ad287f0c533506e96b4a767f26da7",
+    "adapter/smoke_updates.py": "097f9eb432d33580501b4d5b0f92d7e45f55c75af05a186ab90f560e579a72a1",
+    "adapter/sole_geometry.py": "506e2db82c333a4fd2752293b5602e2aebd01758920e89730838884eb9f4133e",
+    "adapter/test_author_dataset.py": "345d74a4549ec62fa9cc90a216a8c5313b25ce705d6a45624091b7d764a00b07",
+    "adapter/test_checkpoint_lineage.py": "6b189a7c4b1d1e68786f09c9c4707f0f6826c5b82884c6d5491cce36bf1544e2",
+    "adapter/test_gait_evaluation.py": "6dba44d43b371856e2768ff79ec079145d21ae44fc44fd3b3936476a362c1ae6",
+    "adapter/test_reference_faults.py": "0e5feaba5f7c04550bffb57582bf14c942e4e71dbc158362e0344e83d6a6ccc2",
+    "adapter/test_sole_geometry.py": "718959bd851e5c880a1588750e83ee9e30770e656752b2ccf74c54837b0a20d8",
+    "adapter/test_trainer_flow.py": "95b13779613e2273af7e84eb86d55d6c8e0b107596b15794d509d934d219157b",
+    "adapter/test_training.py": "bd2937212b04c25b882abc53f2ab13eb45eb56d140cbbd96afa6f0883737daf2",
+    "adapter/test_v3.py": "590335d189941f4c8fdb535e5ff1a5821ba3c12742d661242d2e02147eda09f9",
+    "adapter/test_window_reward.py": "93ed8b5934a64570c2740599d5a6681e47c7cca4abba6840b2f959d817b914bc",
+    "adapter/train.py": "0310ca7c922b749a9e24ba23e6bf71aa3c4cf0b92d4ca7c7392ff7c122529836",
+    "adapter/training_performance.py": "2ac5254b6e6ed5165f6dbe307551eee3fbe56de19c0ed4311633983e0cf7e90a",
+    "adapter/window_reward.py": "e983c881996bad068fe252e39363382ee5bb4be282f721940eba70d6d1f52774"
+  },
+  "new_checks": {
+    "reference_faults_unit_tests": 6,
+    "sole_geometry_unit_tests": 3,
+    "gait_unit_tests": 7,
+    "gpu_preflight": {
+      "passed": true,
+      "num_envs": 4096,
+      "dt": 0.020000000949949026,
+      "steps": 256,
+      "clean_reward_reference_checks": 256,
+      "fault_samples": {
+        "locomotion": 856052,
+        "active": 428024,
+        "frozen": 15253,
+        "changed": 424268
+      },
+      "seams": {
+        "end_resets": 5005,
+        "padded_samples": 4388149
+      },
+      "actor_updates": 0
+    },
+    "runtime_bitwise_parity": [
+      {
+        "control_hz": 100,
+        "physics_steps": 2000,
+        "policy_calls": 200,
+        "state_reward_and_termination_bitwise_equal": true,
+        "gait": {
+          "seconds": 1.0,
+          "trips": 1,
+          "braking_trips": 0,
+          "trips_per_s": 1.0,
+          "sole_clearance_semantics": "exact support of floor-colliding shapes, sphere radius invariant under rotation",
+          "middle_swing_clearance_p10_m": -0.013733067308517439,
+          "middle_swing_below_1cm_fraction": 0.3333333333333333,
+          "middle_swing_contact_fraction": 0.3333333333333333,
+          "braking_trips_per_s": 0.0,
+          "complete_swings": 1,
+          "swing_peak_median_m": 0.04805819550964988,
+          "swings_below_1cm_fraction": 0.0,
+          "swing_floor_contact_fraction": 0.32,
+          "heading_error_mean_deg": 21.124769187668015,
+          "heading_delta_error_mean_deg": 25.542434975510115,
+          "heading_delta_error_final_deg": 38.507699360315605,
+          "along_error_mean_m": -0.19463619885046946,
+          "along_error_abs_mean_m": 0.19463619885046946,
+          "lateral_error_abs_mean_m": 0.10371818439746265,
+          "directed_progress_m": 0.37164273433313166,
+          "moving_reference_path_m": 0.6929986544445661,
+          "directed_progress_ratio": 0.5362820431895368,
+          "robot_path_m": 0.5655065496074917,
+          "reference_path_m": 0.6929986544445661,
+          "path_length_ratio": 0.8160283515423872
+        }
+      },
+      {
+        "control_hz": 50,
+        "physics_steps": 2000,
+        "policy_calls": 100,
+        "state_reward_and_termination_bitwise_equal": true,
+        "gait": {
+          "seconds": 1.0,
+          "trips": 1,
+          "braking_trips": 0,
+          "trips_per_s": 1.0,
+          "sole_clearance_semantics": "exact support of floor-colliding shapes, sphere radius invariant under rotation",
+          "middle_swing_clearance_p10_m": 0.015432069519019624,
+          "middle_swing_below_1cm_fraction": 0.06666666666666667,
+          "middle_swing_contact_fraction": 0.0,
+          "braking_trips_per_s": 0.0,
+          "complete_swings": 1,
+          "swing_peak_median_m": 0.05179275739031903,
+          "swings_below_1cm_fraction": 0.0,
+          "swing_floor_contact_fraction": 0.2,
+          "heading_error_mean_deg": 27.864797293358382,
+          "heading_delta_error_mean_deg": 27.20968599444263,
+          "heading_delta_error_final_deg": 42.44776667809384,
+          "along_error_mean_m": -0.21075543828605856,
+          "along_error_abs_mean_m": 0.21075543828605856,
+          "lateral_error_abs_mean_m": 0.10318980015647176,
+          "directed_progress_m": 0.3564207045335729,
+          "moving_reference_path_m": 0.6929986544445661,
+          "directed_progress_ratio": 0.5143165895743935,
+          "robot_path_m": 0.5559542165790434,
+          "reference_path_m": 0.6929986544445661,
+          "path_length_ratio": 0.802244294434651
+        }
+      }
+    ]
+  },
+  "live_recording": {
+    "episode": "episode-1791621888465718",
+    "policy_id": "quest-111586-500",
+    "policy_hz": 50,
+    "catch_up_v2": true,
+    "seconds": 40.073397273000005,
+    "active_seconds": 39.58,
+    "moving_command_seconds": 39.56,
+    "pelvis_height_range_m": [
+      0.7214920478883478,
+      0.8091436859759447
+    ],
+    "tilt_p95_deg": 8.05185019936918,
+    "scene_sha256_verified": true,
+    "download_sha256_rechecked": true,
+    "sole_clearance_semantics": "Exact signed support of all shapes allowed to collide with floor; negative values are solver penetration, not a physical floor below zero.",
+    "target_semantics": "Consumed mimic joint targets, commanded root height/roll/pitch; yaw replaced by actual yaw (does not change height above horizontal floor).",
+    "limitations": [
+      "Saved state FK, not dynamic actor replay",
+      "No measured human feet",
+      "Clearance alone does not identify a braking trip",
+      "Reference target gap is not a commanded swing phase"
+    ],
+    "left": {
+      "actual_p05_m": -0.0048464933054218435,
+      "actual_median_m": -0.00038533271474438646,
+      "target_p05_m": -0.007089991129042228,
+      "target_above_1cm_seconds": 12.33,
+      "actual_below_5mm_given_target_above_1cm_fraction": 0.5442011354420113
+    },
+    "right": {
+      "actual_p05_m": -0.0040100767261582035,
+      "actual_median_m": -0.0003911350381094426,
+      "target_p05_m": -0.007979696832527906,
+      "target_above_1cm_seconds": 4.14,
+      "actual_below_5mm_given_target_above_1cm_fraction": 0.24396135265700483
+    },
+    "operator_reports_tripping": true,
+    "do_not_infer_no_trips_from_zero_detector": true
+  },
+  "author_diagnostic": {
+    "author-conflict-20k": {
+      "split": "Existing author train only, not independent test",
+      "conditions": {
+        "clean": [
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_425_walking_medium07_stageii",
+            "fell": false,
+            "directed_progress_ratio": 1.0196530525271799,
+            "middle_swing_contact_fraction": 0.21978021978021978
+          },
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_11_WalkingStraightBackwards02_1_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.7205876708946329,
+            "middle_swing_contact_fraction": 0.0
+          },
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_4_WalkInClockwiseCircle10_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.542236853786952,
+            "middle_swing_contact_fraction": 0.13333333333333333
+          },
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_4_WalkInCounterClockwiseCircle04_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.8692324152772349,
+            "middle_swing_contact_fraction": 0.04145077720207254
+          }
+        ],
+        "delay_freeze": [
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_425_walking_medium07_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.877072059818571,
+            "middle_swing_contact_fraction": 0.6813186813186813
+          },
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_11_WalkingStraightBackwards02_1_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.692959269092711,
+            "middle_swing_contact_fraction": 0.453781512605042
+          },
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_4_WalkInClockwiseCircle10_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.6572602153287798,
+            "middle_swing_contact_fraction": 0.29743589743589743
+          },
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_4_WalkInCounterClockwiseCircle04_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.6227454898214504,
+            "middle_swing_contact_fraction": 0.49740932642487046
+          }
+        ],
+        "locked": [
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_425_walking_medium07_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.44892669802576696,
+            "middle_swing_contact_fraction": 0.5274725274725275
+          },
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_11_WalkingStraightBackwards02_1_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.3630942314543746,
+            "middle_swing_contact_fraction": 0.7142857142857143
+          },
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_4_WalkInClockwiseCircle10_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.7276402535118883,
+            "middle_swing_contact_fraction": 0.5897435897435898
+          },
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_4_WalkInCounterClockwiseCircle04_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.4396619519730609,
+            "middle_swing_contact_fraction": 0.7202072538860104
+          }
+        ]
+      }
+    },
+    "author-conflict-1000": {
+      "split": "Existing author train only, not independent test",
+      "conditions": {
+        "clean": [
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_425_walking_medium07_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.9832172932270637,
+            "middle_swing_contact_fraction": 0.2087912087912088
+          },
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_11_WalkingStraightBackwards02_1_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.8871372450645473,
+            "middle_swing_contact_fraction": 0.03361344537815126
+          },
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_4_WalkInClockwiseCircle10_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.7367710350840839,
+            "middle_swing_contact_fraction": 0.12307692307692308
+          },
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_4_WalkInCounterClockwiseCircle04_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.6820085304436933,
+            "middle_swing_contact_fraction": 0.10362694300518134
+          }
+        ],
+        "delay_freeze": [
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_425_walking_medium07_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.7534305362151535,
+            "middle_swing_contact_fraction": 0.4065934065934066
+          },
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_11_WalkingStraightBackwards02_1_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.7403029398445697,
+            "middle_swing_contact_fraction": 0.17647058823529413
+          },
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_4_WalkInClockwiseCircle10_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.5061198973939555,
+            "middle_swing_contact_fraction": 0.30256410256410254
+          },
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_4_WalkInCounterClockwiseCircle04_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.50162394272431,
+            "middle_swing_contact_fraction": 0.39896373056994816
+          }
+        ],
+        "locked": [
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_425_walking_medium07_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.3480805487485121,
+            "middle_swing_contact_fraction": 0.5824175824175825
+          },
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_11_WalkingStraightBackwards02_1_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.30285941349453466,
+            "middle_swing_contact_fraction": 0.18487394957983194
+          },
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_4_WalkInClockwiseCircle10_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.42028830167306025,
+            "middle_swing_contact_fraction": 0.36923076923076925
+          },
+          {
+            "clip": "author/AMASS_g1_GMR8/KIT_4_WalkInCounterClockwiseCircle04_stageii",
+            "fell": false,
+            "directed_progress_ratio": 0.3332805004821924,
+            "middle_swing_contact_fraction": 0.5025906735751295
+          }
+        ]
+      }
+    }
+  },
+  "interpretation": "Frozen-policy probes support sensitivity to contradictory legs. They do not prove the cause of all live trips. Training is a short-fault robustness pilot; no autonomous foot-planning mode or clearance reward has been added.",
+  "statistical_limitations": [
+    "One training seed per condition",
+    "Repeatedly inspected Quest validation, not independent test",
+    "No catch-up in evaluation",
+    "Locked whole-clip legs is a stress test outside the short-freeze training distribution"
+  ],
+  "clearance_reward_added": false,
+  "kick_t_note": "Generative Legs is not a reliable source of deliberate kicking intent; this pilot targets locomotion robustness.",
+  "control_progress": {
+    "critic_iteration": 7,
+    "actor_updates": 0,
+    "visited_train_motions": 1086,
+    "effective_action_delay_steps": 0.0
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "apk": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/rubik-size-20261014/g1-quest-rubik-100mm.apk",
+  "sha256": "296c08355ae84498ce75f3d2db3bca2ce51b40b6363bcf33bdd43911bd787fb9",
+  "bytes": 846786879,
+  "edge_xyz_m": [
+    0.10000000000000003,
+    0.1,
+    0.09999999999999987
+  ],
+  "core_position_m": [
+    0.25,
+    0.0,
+    0.9526
+  ],
+  "zip_crc": true,
+  "signature_verified_by_build": true,
+  "unchanged_policy_files": 16,
+  "unchanged_other_scene_xml": 8,
+  "rubik_metadata_verified": 14,
+  "tests_passed": 9,
+  "installed": true,
+  "live_grasp_verified": false,
+  "base": "scene-physics-20261014 stage2; includes earlier scene physics changes",
+  "installation_report": "installation.json"
+}

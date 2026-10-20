@@ -1,0 +1,7 @@
+{
+  "model_exact": true,
+  "optimizer_loaded": true,
+  "normalization_exact": true,
+  "ema_loaded": false,
+  "source_step": 20000
+}

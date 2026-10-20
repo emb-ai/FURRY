@@ -1,0 +1,14 @@
+{
+  "policy_id": "quest-111260-1000",
+  "policy_sha256": "8d386bf94724d1dccc7050e1bb3dee40315e20e1bba20a31debb5d9b0b61cae3",
+  "policy_hz": 100,
+  "catch_up": true,
+  "files": {
+    "outputs.nosync/stance-checkpoint1000-20261013/runner.cpp": "6a92c7542b70148b0b8bc1521f96665a947f666f695b3f30249da37e0698a202",
+    "outputs/virtual-legs-width-20261013/meta_retarget.cpp": "0ea2edcf96c58b3126058bd00de4673b494a32068cc3a99fff27829775906e8e",
+    "outputs/full-body-apk-20261010/source/android/native/simulation.cpp": "f801b19721b86a021a2159eba0690bfe5093bd143d665aff33c4340b09700c72",
+    "outputs/full-body-apk-20261010/source/android/native/gmr.cpp": "042748b4aca7b255bb2cad52307b0321791fe9cd89ddf0706b29c2b6f4da6df7",
+    "outputs/full-body-apk-20261010/source/policies/quest-111260/checkpoint_001000.onnx": "8d386bf94724d1dccc7050e1bb3dee40315e20e1bba20a31debb5d9b0b61cae3"
+  },
+  "method": "Original recorded streams untouched. Explicit policy override in offline runner; original recorded policy integrity still checked. Same 1s teacher-forced warmup and exact recorded physical fork for paired variants. Natural GMR output and camera catch-up per rollout. Source ratio50 rotates legs at fixed hips preserving segment lengths. No live runtime edits."
+}

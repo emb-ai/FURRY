@@ -1,0 +1,24 @@
+{
+  "apk": "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs.nosync/rubik-grip-guard-20261015/g1-quest-rubik-grip-guard.apk",
+  "sha256": "b7970138d82bbebfd417acc8d33558298a8be8367fb27675f3cd1a4bc2bd0cbf",
+  "bytes": 850691477,
+  "zip_crc": true,
+  "assets_equal_to_prepared": 280,
+  "jni_libraries": 5,
+  "changed_scene_models": [
+    "assets/scene-rubik.xml"
+  ],
+  "protected_policy_assets_unchanged": 20,
+  "baseline_apk_sha256": "fdc079d6bf6ba44cef820844a88731cc9cdd42c87d191a490fddc558c91e2bd3",
+  "changed_sources": {
+    "android/build_apk.sh": "815e5d98377fb459d6adaaa0eccf82c7f8803b51acab47fdf7d0188f2b1066b7",
+    "android/native/recording.h": "ffb537c139738d87ba27de72559acf35d07661bd4305b5104e17772337c29b15",
+    "android/native/rubik_task.h": "c2cfb28ac23ac0b1df8eb7e3f38ebaf75d121a6a52a01e665d981fecedeec892",
+    "g1_sim/rubik.py": "874db72ab073bf33ad2106bc11cbc10ea474de83f81446385241a8a6229c0771",
+    "scripts/scene_assets.py": "9fd0f75329b8e77de657c859f7af5081b796ace9c76b0a386a222e72f2f80af0",
+    "tests/check_rubik_grip_guard.cpp": "08040b287eeb118a115639a9a4d5f9fe015630bcf7b516eddd7ace4a5e051ec4",
+    "tests/check_rubik_intent.cpp": "ff895e66050d313ba4a87c28d647966053d7b1d23f925d49d336e554bca0c07b",
+    "tests/test_rubik.py": "1ca3a08d2e60d358df3b27c603f3810d9579bf5c4e6828189e73dc0bd9f44ff4"
+  },
+  "installed": false
+}

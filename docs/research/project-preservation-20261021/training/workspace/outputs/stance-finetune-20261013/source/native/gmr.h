@@ -1,0 +1,50 @@
+#pragma once
+#include "retarget.h"
+#include <string>
+// Native port of GMR bb1bbe4 and Mink 0.0.13. See third_party licenses.
+// Model, costs, two-stage solve, SE(3) residuals and joint limits match upstream.
+struct GmrTask {
+    std::string human,robot;
+    int body=-1;
+    double scale=1;
+    std::array<double,4> costs{}; // position/orientation for each of two stages
+    TrackedPose offset;
+};
+class GmrRetargeter {
+    mjModel* model_=nullptr; mjData* data_=nullptr;
+    std::vector<GmrTask> tasks_;
+    double assumedHeight=1.8,ground=0;
+    bool cameraEnabled=false;
+    int cameraBody=-1;
+    TrackedPose cameraTarget,cameraLocal;
+    double cameraPositionCost=10,cameraRotationCost=3;
+    std::vector<TrackedPose> targets;
+    double Error(int stage);
+    void Step(int stage);
+public:
+    GmrRetargeter(const std::string& assets);
+    ~GmrRetargeter();
+    GmrRetargeter(const GmrRetargeter&)=delete;
+    const mjModel* model()const{return model_;}
+    mjData* data(){return data_;}
+    const std::vector<GmrTask>& tasks()const{return tasks_;}
+    const std::vector<TrackedPose>& Targets()const{return targets;}
+    void Reset(const double* qpos=nullptr);
+    // Upstream xrobot input, in GMR world coordinates, quaternion wxyz.
+    void SetHumanTargets(const std::vector<TrackedPose>& human,double height,bool offsetToGround);
+    // Device adapter may supply already-scaled, anatomically aligned targets.
+    void SetTargets(const std::vector<TrackedPose>& value);
+    // Upstream offset_to_ground=True: foot task origin, not sole, at 0.1 m.
+    void GroundFootTargets(std::vector<TrackedPose>& value)const;
+    // Optional Meta extension; disabled for the unmodified upstream oracle.
+    void SetCameraTarget(const TrackedPose& target);
+    // Translate the reference constellation together; retain floor height.
+    std::array<double,3> AlignTargetsToCameraXY(const TrackedPose& target);
+    void ClearCameraTarget(){cameraEnabled=false;}
+    TrackedPose CameraPose()const;
+    const TrackedPose& CameraTarget()const{return cameraTarget;}
+    bool HasCameraTarget()const{return cameraEnabled;}
+    void Solve();
+    double error=0,positionRms=0,orientationRms=0;
+    int iterations=0;
+};

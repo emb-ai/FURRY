@@ -1,0 +1,6 @@
+{
+  "checked_seed": 1261690313,
+  "frames": 2700,
+  "qpos_max_abs": 0,
+  "purpose": "Confirm matching recorded header versions do not change cup dynamics compared with original baseline bridge"
+}

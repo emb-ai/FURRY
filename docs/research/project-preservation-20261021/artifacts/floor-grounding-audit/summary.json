@@ -1,0 +1,246 @@
+{
+  "episode-1791296229786271": {
+    "baseline": {
+      "floor": {
+        "unique_inputs": 1978,
+        "target": {
+          "below_1mm_fraction": 0.25985844287158744,
+          "penetration_p95_mm": 11.338016703643785,
+          "penetration_max_mm": 26.245589029994374,
+          "height_p05_mm": -11.338016703643786,
+          "height_median_mm": 8.948921603348928
+        },
+        "ref": {
+          "below_1mm_fraction": 0.2608695652173913,
+          "penetration_p95_mm": 11.196265220688492,
+          "penetration_max_mm": 26.391320180789332,
+          "height_p05_mm": -11.196265220688499,
+          "height_median_mm": 8.559278850680798
+        },
+        "root_height_p05_p50_p95_m": [
+          0.7719842702150345,
+          0.7909983694553375,
+          0.8043345361948013
+        ]
+      }
+    },
+    "target_lift": {
+      "floor": {
+        "unique_inputs": 1978,
+        "target": {
+          "below_1mm_fraction": 0.0,
+          "penetration_p95_mm": 0.0,
+          "penetration_max_mm": 6.938893903907228e-15,
+          "height_p05_mm": 0.0,
+          "height_median_mm": 8.948921603348928
+        },
+        "ref": {
+          "below_1mm_fraction": 0.0,
+          "penetration_p95_mm": 0.3764189544011256,
+          "penetration_max_mm": 0.7295237377127166,
+          "height_p05_mm": -0.3764189544011257,
+          "height_median_mm": 8.55927884831129
+        },
+        "root_height_p05_p50_p95_m": [
+          0.7756360471248627,
+          0.793748527765274,
+          0.8043345361948013
+        ]
+      }
+    },
+    "target_ground": {
+      "floor": {
+        "unique_inputs": 1978,
+        "target": {
+          "below_1mm_fraction": 0.0,
+          "penetration_p95_mm": 3.469446951953614e-15,
+          "penetration_max_mm": 6.938893903907228e-15,
+          "height_p05_mm": -3.469446951953614e-15,
+          "height_median_mm": 0.0
+        },
+        "ref": {
+          "below_1mm_fraction": 0.056622851365015166,
+          "penetration_p95_mm": 1.0228358647446327,
+          "penetration_max_mm": 1.8993383787363551,
+          "height_p05_mm": -1.0228358647446334,
+          "height_median_mm": -0.022487886683939667
+        },
+        "root_height_p05_p50_p95_m": [
+          0.7716922134160995,
+          0.7870664000511169,
+          0.7968054682016372
+        ]
+      }
+    },
+    "reference_lift": {
+      "floor": {
+        "unique_inputs": 1978,
+        "target": {
+          "below_1mm_fraction": 0.0,
+          "penetration_p95_mm": 0.3352253940622635,
+          "penetration_max_mm": 0.5800234185111761,
+          "height_p05_mm": -0.3352253940622635,
+          "height_median_mm": 8.948921603348928
+        },
+        "ref": {
+          "below_1mm_fraction": 0.0,
+          "penetration_p95_mm": 4.163336342344337e-14,
+          "penetration_max_mm": 1.6653345369377348e-13,
+          "height_p05_mm": -4.163336342344337e-14,
+          "height_median_mm": 8.559278847814966
+        },
+        "root_height_p05_p50_p95_m": [
+          0.7758463799953461,
+          0.7938023209571838,
+          0.8043345361948013
+        ]
+      }
+    },
+    "twist_ground": {
+      "floor": {
+        "unique_inputs": 1978,
+        "target": {
+          "below_1mm_fraction": 0.0,
+          "penetration_p95_mm": 0.0,
+          "penetration_max_mm": 0.0,
+          "height_p05_mm": 72.2797400171424,
+          "height_median_mm": 80.12555350780576
+        },
+        "ref": {
+          "below_1mm_fraction": 0.0,
+          "penetration_p95_mm": 0.0,
+          "penetration_max_mm": 0.0,
+          "height_p05_mm": 72.55464300293097,
+          "height_median_mm": 80.08472731565166
+        },
+        "root_height_p05_p50_p95_m": [
+          0.8537141054868698,
+          0.8660994172096252,
+          0.8748532474040985
+        ]
+      }
+    }
+  },
+  "episode-1791382878606181": {
+    "baseline": {
+      "floor": {
+        "unique_inputs": 15264,
+        "target": {
+          "below_1mm_fraction": 0.09682914046121593,
+          "penetration_p95_mm": 4.404669062291847,
+          "penetration_max_mm": 27.85558814631861,
+          "height_p05_mm": -4.404669062291849,
+          "height_median_mm": 13.16426285420816
+        },
+        "ref": {
+          "below_1mm_fraction": 0.08018867924528301,
+          "penetration_p95_mm": 3.559517182828495,
+          "penetration_max_mm": 27.957562385155835,
+          "height_p05_mm": -3.559517182828496,
+          "height_median_mm": 14.320712343370849
+        },
+        "root_height_p05_p50_p95_m": [
+          0.7875437289476395,
+          0.8020177185535431,
+          0.8069313853979111
+        ]
+      }
+    },
+    "target_lift": {
+      "floor": {
+        "unique_inputs": 15264,
+        "target": {
+          "below_1mm_fraction": 0.0,
+          "penetration_p95_mm": 0.0,
+          "penetration_max_mm": 6.938893903907228e-15,
+          "height_p05_mm": 0.0,
+          "height_median_mm": 13.16426285420816
+        },
+        "ref": {
+          "below_1mm_fraction": 0.0,
+          "penetration_p95_mm": 0.0,
+          "penetration_max_mm": 0.57329202962101,
+          "height_p05_mm": 0.8252276937378579,
+          "height_median_mm": 14.320712343370811
+        },
+        "root_height_p05_p50_p95_m": [
+          0.7889515906572342,
+          0.802177220582962,
+          0.8071132093667984
+        ]
+      }
+    },
+    "target_ground": {
+      "floor": {
+        "unique_inputs": 15264,
+        "target": {
+          "below_1mm_fraction": 0.0,
+          "penetration_p95_mm": 3.469446951953614e-15,
+          "penetration_max_mm": 6.938893903907228e-15,
+          "height_p05_mm": -3.469446951953614e-15,
+          "height_median_mm": 0.0
+        },
+        "ref": {
+          "below_1mm_fraction": 0.0032756813417190774,
+          "penetration_p95_mm": 0.0,
+          "penetration_max_mm": 1.7272699670574063,
+          "height_p05_mm": 0.03273575523699872,
+          "height_median_mm": 1.1526352133480708
+        },
+        "root_height_p05_p50_p95_m": [
+          0.7817740559577941,
+          0.789910078048706,
+          0.7981118202209473
+        ]
+      }
+    },
+    "reference_lift": {
+      "floor": {
+        "unique_inputs": 15264,
+        "target": {
+          "below_1mm_fraction": 0.039111635220125784,
+          "penetration_p95_mm": 0.8810963470266933,
+          "penetration_max_mm": 1.4420321545756953,
+          "height_p05_mm": -0.8810963470266994,
+          "height_median_mm": 13.16426285420816
+        },
+        "ref": {
+          "below_1mm_fraction": 0.0,
+          "penetration_p95_mm": 0.0,
+          "penetration_max_mm": 1.5959455978986625e-13,
+          "height_p05_mm": 3.989863994746972e-15,
+          "height_median_mm": 14.320712343370909
+        },
+        "root_height_p05_p50_p95_m": [
+          0.7888270944356919,
+          0.8021579384803772,
+          0.8070225238800048
+        ]
+      }
+    },
+    "twist_ground": {
+      "floor": {
+        "unique_inputs": 15264,
+        "target": {
+          "below_1mm_fraction": 0.0,
+          "penetration_p95_mm": 0.0,
+          "penetration_max_mm": 0.0,
+          "height_p05_mm": 67.387329533115,
+          "height_median_mm": 79.63360519429023
+        },
+        "ref": {
+          "below_1mm_fraction": 0.0,
+          "penetration_p95_mm": 0.0,
+          "penetration_max_mm": 0.0,
+          "height_p05_mm": 69.25591267414825,
+          "height_median_mm": 80.71970818015927
+        },
+        "root_height_p05_p50_p95_m": [
+          0.8573211312294007,
+          0.8674393892288208,
+          0.8796650171279907
+        ]
+      }
+    }
+  }
+}

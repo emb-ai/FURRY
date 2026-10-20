@@ -1,0 +1,118 @@
+[
+  {
+    "execution_steps": 48,
+    "label": "latest",
+    "episode": "episode-1792014836827567",
+    "mode": "policy",
+    "seed": 0,
+    "success": true,
+    "outcome": 1,
+    "elapsed_sim_s": 8.70000000000001,
+    "wall_s": 8.5663743019104,
+    "lift_m": 0.051520050752489666,
+    "contact_frames": 101,
+    "final_goal_xy_error_m": 0.017404048873048573,
+    "initial_distance_m": 0.17235412785740215,
+    "min_pelvis_z": 0.7588894084360137,
+    "final_cup": [
+      0.4426387503524174,
+      -0.0119650702757958,
+      0.7499963398935007
+    ],
+    "goal": [
+      0.43,
+      0.0,
+      0.75
+    ],
+    "error": null,
+    "inference_mean_s": 0.6648116111755371,
+    "split": "train"
+  },
+  {
+    "execution_steps": 48,
+    "label": "latest",
+    "episode": "episode-1792015107773946",
+    "mode": "policy",
+    "seed": 0,
+    "success": false,
+    "outcome": 3,
+    "elapsed_sim_s": 90.00000000000287,
+    "wall_s": 77.37785601615906,
+    "lift_m": 0.043005069937104956,
+    "contact_frames": 220,
+    "final_goal_xy_error_m": 0.3338834456159299,
+    "initial_distance_m": 0.2459814878239907,
+    "min_pelvis_z": 0.7568615500035847,
+    "final_cup": [
+      0.580565254714898,
+      0.2980071464394831,
+      0.7830528197348693
+    ],
+    "goal": [
+      0.43,
+      0.0,
+      0.75
+    ],
+    "error": null,
+    "inference_mean_s": 0.5140664284689385,
+    "split": "valid"
+  },
+  {
+    "execution_steps": 8,
+    "label": "latest",
+    "episode": "episode-1792014836827567",
+    "mode": "policy",
+    "seed": 0,
+    "success": true,
+    "outcome": 1,
+    "elapsed_sim_s": 9.500000000000007,
+    "wall_s": 29.927075147628784,
+    "lift_m": 0.0505779681617633,
+    "contact_frames": 105,
+    "final_goal_xy_error_m": 0.021826406544429407,
+    "initial_distance_m": 0.17235412785740215,
+    "min_pelvis_z": 0.7588894084360137,
+    "final_cup": [
+      0.4471886562064796,
+      -0.013451472798848526,
+      0.7499971848350171
+    ],
+    "goal": [
+      0.43,
+      0.0,
+      0.75
+    ],
+    "error": null,
+    "inference_mean_s": 0.6234712402025858,
+    "split": "train"
+  },
+  {
+    "execution_steps": 8,
+    "label": "latest",
+    "episode": "episode-1792015107773946",
+    "mode": "policy",
+    "seed": 0,
+    "success": true,
+    "outcome": 1,
+    "elapsed_sim_s": 37.40000000000028,
+    "wall_s": 86.9776701927185,
+    "lift_m": 0.08033692361477818,
+    "contact_frames": 70,
+    "final_goal_xy_error_m": 0.03794027511662005,
+    "initial_distance_m": 0.2459814878239907,
+    "min_pelvis_z": 0.7565872695489425,
+    "final_cup": [
+      0.44035662456355357,
+      -0.03649938086563137,
+      0.7499958049118741
+    ],
+    "goal": [
+      0.43,
+      0.0,
+      0.75
+    ],
+    "error": null,
+    "inference_mean_s": 0.45221704117795253,
+    "split": "valid"
+  }
+]

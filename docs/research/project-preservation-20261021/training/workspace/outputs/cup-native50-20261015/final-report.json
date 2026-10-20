@@ -1,0 +1,186 @@
+{
+  "updated_at": 1792070459.8364449,
+  "status": "Completed two corrected training runs and all30same-platformfullreset evaluations; task not solved reliably",
+  "confirmed_causes": [
+    {
+      "finding": "30Hz resampling changes task-critical body/arm execution",
+      "evidence": {
+        "original100": 8,
+        "sampled30": 5,
+        "interpolated30_to100": 4,
+        "body100_grip30": 8,
+        "body30_grip100": 4,
+        "all50_aligned": 8,
+        "n": 8
+      },
+      "scope": "same eight train episodes; identical reconstructed0.5s prefix; recorded-command continuation, not autonomous success"
+    },
+    {
+      "finding": "ACT prediction error additionally reduces success even with recorded observations",
+      "evidence": {
+        "recorded30": 5,
+        "ACT_with_recorded_RGB_and_previous_command": 1,
+        "half_recorded_half_ACT": 3,
+        "n": 8
+      },
+      "scope": "Same starts and30Hz execution; offline teacher observation diagnostic, not deployment performance"
+    },
+    {
+      "finding": "Full-reset start is absent from accepted training prefixes",
+      "evidence": {
+        "sim_time": [
+          0.4300000000000003,
+          0.8000000000000006,
+          3.6299999999997112
+        ],
+        "root_xy_from_reset_m": [
+          0.0060831538503212405,
+          0.033116902621981054,
+          0.12134385104966625
+        ],
+        "arms_mae_from_reset_deg": [
+          9.989131090300875,
+          13.748416198946368,
+          18.34080544193996
+        ],
+        "duration": [
+          5.8,
+          8.8,
+          13.4
+        ]
+      },
+      "scope": "all59 accepted demonstrations; no claim that this alone explains failures"
+    }
+  ],
+  "additional_hypothesis": {
+    "finding": "No measured robot state in original ACT input",
+    "scope": "Confirmed implementation choice; causal contribution to low success unconfirmed",
+    "test": "Same50Hz data, old39 input plus92measured features; 10000updates; same10fullreset scenes"
+  },
+  "experiments": [
+    {
+      "variant": "native50",
+      "changes": [
+        "native50Hz sampling and execution",
+        "10000additionalupdates",
+        "Linux Mesa images",
+        "64-frame horizon now1.28s"
+      ],
+      "status": "training"
+    },
+    {
+      "variant": "native50_proprio",
+      "changes": [
+        "same asnative50",
+        "add measured joints/velocities/gravity with zero initialized added input columns"
+      ],
+      "status": "training"
+    }
+  ],
+  "old_baseline": {
+    "Mac": {
+      "n": 10,
+      "successes": 1
+    },
+    "Linux": {
+      "n": 10,
+      "successes": 0,
+      "errors": []
+    },
+    "caveat": "Platform/renderer differ; compare new variants with same-platform baseline; no Quest deployment claim"
+  },
+  "sources": {
+    "input-probe": "outputs/cup-homie-finetune-20261015/failure-analysis/input-probe.json",
+    "autoregressive-probe": "outputs/cup-homie-finetune-20261015/failure-analysis/autoregressive-probe.json",
+    "start-coverage": "outputs/cup-homie-finetune-20261015/failure-analysis/start-coverage.json",
+    "teacher-action-replay": "outputs/cup-homie-finetune-20261015/failure-analysis/teacher-action-replay.json",
+    "rate-replay": "outputs/cup-homie-finetune-20261015/failure-analysis/rate-replay.json",
+    "component-replay": "outputs/cup-homie-finetune-20261015/failure-analysis/component-replay.json",
+    "aligned50-replay": "outputs/cup-homie-finetune-20261015/failure-analysis/aligned50-replay.json",
+    "trace-audit": "outputs/cup-homie-finetune-20261015/failure-analysis/trace-audit.json"
+  },
+  "recording_start_cause": {
+    "source": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/cup-native50-20261015/native/quest_runtime.cpp",
+    "record_start_line": 619,
+    "separate_reset_line": 570,
+    "finding": "Normal recording starts current calibrated session; no reset in recording-start branch. Initial reset-to-record interval absent from raw files."
+  },
+  "new_diagnostics": {
+    "recorded50_warm": {
+      "successes": 8,
+      "n": 8
+    },
+    "recorded50_full_reset": {
+      "successes": 2,
+      "n": 8
+    },
+    "native50_teacher_observations": {
+      "successes": 1,
+      "n": 8,
+      "mean_arm_mae_deg": 0.6025341786444187
+    },
+    "proprio_teacher_observations": {
+      "successes": 3,
+      "n": 8
+    },
+    "horizon": "recorded trajectory duration plus3s holding final command",
+    "caveat": "These are operator/teacher-observation diagnostics on8train episodes, not10random90s learned-policy evaluations."
+  },
+  "full_reset_results": {
+    "old_act_30hz": {
+      "successes": 0,
+      "n": 10,
+      "errors": [],
+      "action_hz": 30,
+      "weights": "/home/jovyan/vlad/FURRY/cup-native50-20261015/exports/old-act-cuda",
+      "successful_seeds": [],
+      "lift_over_4_5cm": 1,
+      "final_on_side_over70deg": 1,
+      "source": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/cup-native50-20261015/remote-results/evaluation-old30/summary.json"
+    },
+    "act_50hz": {
+      "successes": 2,
+      "n": 10,
+      "errors": [],
+      "action_hz": 50,
+      "weights": "/home/jovyan/vlad/FURRY/cup-native50-20261015/exports/act",
+      "successful_seeds": [
+        886437167,
+        1446583522
+      ],
+      "lift_over_4_5cm": 5,
+      "final_on_side_over70deg": 1,
+      "source": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/cup-native50-20261015/remote-results/evaluation-native50/summary.json"
+    },
+    "act_50hz_measured_state": {
+      "successes": 0,
+      "n": 10,
+      "errors": [],
+      "action_hz": 50,
+      "weights": "/home/jovyan/vlad/FURRY/cup-native50-20261015/exports/act-proprio",
+      "successful_seeds": [],
+      "lift_over_4_5cm": 6,
+      "final_on_side_over70deg": 3,
+      "source": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/cup-native50-20261015/remote-results/evaluation-proprio/summary.json"
+    }
+  },
+  "protocol": {
+    "n": 10,
+    "seed_file": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/cup-native50-20261015/scenes.json",
+    "reset": "all native physics/controller state, zero history/qvel/previousAction/grip, neutral gaze, no reference or demo prefix",
+    "simulation_limit_s": 90,
+    "all59demonstrations_train": true
+  },
+  "next_priorities": [
+    "Capture genuine reset-to-first-action transitions; recording currently starts an already running session.",
+    "Retain validated native-aligned50Hz data/execution.",
+    "Collect closed-loop correction examples around missed grasp and slipping/release; extra imitation updates alone did not produce reliable success."
+  ],
+  "caveats": [
+    "Linux rendering differs slightly from Mac; comparison uses sameLinux for allthreevariants.",
+    "New variants also have10000additionalupdates and different temporal horizon; improvements do not isolate only frequency.",
+    "Diagnostics8episodes use recorded duration+3s and are separate from10random90s full-reset evaluations.",
+    "Measured-state model is one10000-update test; low score does not prove measured state is unhelpful in general.",
+    "No Quest deployment or real-time acceptance."
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "variants": [
+    [
+      "baseline",
+      "Без сужения",
+      "Исходная цепочка Meta → GMR"
+    ],
+    [
+      "legs8",
+      "Вся нога · −8 см",
+      "Сдвиг бедра, колена и стопы до GMR"
+    ],
+    [
+      "feet8",
+      "Только стопы · −8 см",
+      "Сдвиг стоп; бедро и колено без изменений"
+    ],
+    [
+      "rotate4",
+      "Поворот ног · −4 см",
+      "Тазобедренный сустав фиксирован; длины сохранены"
+    ],
+    [
+      "rotate8",
+      "Поворот ног · −8 см",
+      "Тазобедренный сустав фиксирован; длины сохранены"
+    ],
+    [
+      "rotate12",
+      "Поворот ног · −12 см",
+      "Тазобедренный сустав фиксирован; длины сохранены"
+    ],
+    [
+      "ratio50",
+      "Оставить 50% ширины",
+      "Поворот ног; сужение зависит от текущей ширины"
+    ],
+    [
+      "ratio35",
+      "Оставить 35% ширины",
+      "Поворот ног; сужение зависит от текущей ширины"
+    ]
+  ],
+  "clips": [
+    {
+      "episode": "episode-1791652593739690",
+      "duration_s": 34.510000000131235,
+      "references": [
+        "outputs/virtual-legs-width-20261013/natural/episode-1791652593739690-baseline.csv.references.csv",
+        "outputs/virtual-legs-width-20261013/natural/episode-1791652593739690-legs8.csv.references.csv",
+        "outputs/virtual-legs-width-20261013/natural/episode-1791652593739690-feet8.csv.references.csv",
+        "outputs/virtual-legs-width-20261013/episode-1791652593739690-rotate4.csv.references.csv",
+        "outputs/virtual-legs-width-20261013/episode-1791652593739690-rotate8.csv.references.csv",
+        "outputs/virtual-legs-width-20261013/natural/episode-1791652593739690-rotate12.csv.references.csv",
+        "outputs/virtual-legs-width-20261013/natural/episode-1791652593739690-ratio50.csv.references.csv",
+        "outputs/virtual-legs-width-20261013/natural/episode-1791652593739690-ratio35.csv.references.csv"
+      ]
+    },
+    {
+      "episode": "episode-1791652646384286",
+      "duration_s": 25.950000000011606,
+      "references": [
+        "outputs/virtual-legs-width-20261013/natural/episode-1791652646384286-baseline.csv.references.csv",
+        "outputs/virtual-legs-width-20261013/natural/episode-1791652646384286-legs8.csv.references.csv",
+        "outputs/virtual-legs-width-20261013/natural/episode-1791652646384286-feet8.csv.references.csv",
+        "outputs/virtual-legs-width-20261013/episode-1791652646384286-rotate4.csv.references.csv",
+        "outputs/virtual-legs-width-20261013/episode-1791652646384286-rotate8.csv.references.csv",
+        "outputs/virtual-legs-width-20261013/natural/episode-1791652646384286-rotate12.csv.references.csv",
+        "outputs/virtual-legs-width-20261013/natural/episode-1791652646384286-ratio50.csv.references.csv",
+        "outputs/virtual-legs-width-20261013/natural/episode-1791652646384286-ratio35.csv.references.csv"
+      ]
+    }
+  ],
+  "fps": 25,
+  "frames": 1512,
+  "resolution": [
+    3840,
+    2160
+  ],
+  "duration_s": 60.48,
+  "method": "Fresh native GMR reference exports before physics baseline root override. Source is original unmodified Meta selected joints, common source hip-defined heading, pelvis-centered; source unscaled, identical metric scale. Virtual shoulder midpoint for all skeletons. Actual policy response not shown."
+}

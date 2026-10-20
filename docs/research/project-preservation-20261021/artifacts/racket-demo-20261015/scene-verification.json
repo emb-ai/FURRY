@@ -1,0 +1,13 @@
+{
+  "nq": 50,
+  "nv": 49,
+  "nu": 43,
+  "racket_mass_kg": 0.17500000000000002,
+  "attached_to": "right_wrist_yaw_link",
+  "removed": [
+    "table",
+    "feeder",
+    "ball"
+  ],
+  "only_robot_floor_racket": true
+}

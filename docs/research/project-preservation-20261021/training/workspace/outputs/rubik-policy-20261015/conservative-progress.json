@@ -1,0 +1,7 @@
+{
+  "status": "completed",
+  "timesteps": 2048,
+  "completed_moves": 0,
+  "completed_episodes": 9,
+  "successful_episodes": 0
+}

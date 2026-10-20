@@ -1,0 +1,24 @@
+[
+  {
+    "episode": "episode-1792017999001122",
+    "warm_prefix_s": 0.8,
+    "success": false,
+    "outcome": 0,
+    "lift_m": 0.06956928758719494,
+    "final_xy_error_m": 0.09055150222132265,
+    "initial_error": 0.0,
+    "first_second_root_error_m": 3.0890184333406984e-08,
+    "seconds": 30.0
+  },
+  {
+    "episode": "episode-1792017999001122",
+    "warm_prefix_s": 1.0,
+    "success": false,
+    "outcome": 0,
+    "lift_m": 0.06962468871987393,
+    "final_xy_error_m": 0.08469077713795405,
+    "initial_error": 0.0,
+    "first_second_root_error_m": 4.614237615274346e-08,
+    "seconds": 30.0
+  }
+]

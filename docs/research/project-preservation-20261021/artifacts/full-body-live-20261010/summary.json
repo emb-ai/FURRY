@@ -1,0 +1,189 @@
+{
+  "downloaded_episodes": 5,
+  "verified_original_files": 70,
+  "all_84_pose_and_orientation_flags_valid": true,
+  "selected14_match_raw84_exactly": true,
+  "weights_match_episode_manifests": true,
+  "long_episodes": [
+    {
+      "episode": "episode-1791652593739690",
+      "policy": "quest-111586-500",
+      "full_foot_retarget": true,
+      "catch_up": true,
+      "first_person": false,
+      "duration_s": 34.513859427999705,
+      "accepted_s": 34.5200000000017,
+      "selected14_vs_raw84_max_error": 0.0,
+      "live_body_rate_hz": 72.16048491845865,
+      "pelvis_height_m": {
+        "min": 0.7503200710189886,
+        "median": 0.7800482377052211,
+        "p95": 0.790631123613808,
+        "max": 0.8059083249713699
+      },
+      "pelvis_tilt_deg": {
+        "min": 0.04348102920543249,
+        "median": 2.92084303688575,
+        "p95": 6.7455205581816955,
+        "max": 8.932818379543512
+      },
+      "root_xy_path_m": 11.184599531040423,
+      "samples_height_below_0_4m": 0,
+      "samples_tilt_above_60deg": 0,
+      "feet": {
+        "left": {
+          "ankle_ball_length_m": {
+            "min": 0.14483413100242615,
+            "median": 0.14755640923976898,
+            "p95": 0.14901400804519654,
+            "max": 0.14965204894542694
+          },
+          "world_forefoot_elevation_deg": {
+            "min": -69.44699096679688,
+            "median": -21.470844268798828,
+            "p95": -15.582734107971202,
+            "max": -13.64625072479248
+          },
+          "direction_change_in_ankle_frame_from_first_deg": {
+            "min": 0.0,
+            "median": 0.9301866668127675,
+            "p95": 2.5501571492435855,
+            "max": 2.891003014655303
+          },
+          "ball_rotation_relative_ankle_change_from_first_deg": {
+            "min": 7.550087753783516e-16,
+            "median": 3.8910469277400193,
+            "p95": 8.85633779063036,
+            "max": 10.45390794491614
+          }
+        },
+        "right": {
+          "ankle_ball_length_m": {
+            "min": 0.14475446939468384,
+            "median": 0.14739170670509338,
+            "p95": 0.1489259898662567,
+            "max": 0.1499181091785431
+          },
+          "world_forefoot_elevation_deg": {
+            "min": -67.33069610595703,
+            "median": -21.808679580688477,
+            "p95": -12.968915462493896,
+            "max": -10.66856575012207
+          },
+          "direction_change_in_ankle_frame_from_first_deg": {
+            "min": 1.2074182697257333e-06,
+            "median": 1.019976748304225,
+            "p95": 3.6942316879950394,
+            "max": 4.1812459878693415
+          },
+          "ball_rotation_relative_ankle_change_from_first_deg": {
+            "min": 3.195908644114251e-16,
+            "median": 3.891057892130843,
+            "p95": 8.774044598542362,
+            "max": 11.03550111628813
+          }
+        }
+      }
+    },
+    {
+      "episode": "episode-1791652646384286",
+      "policy": "quest-111586-500",
+      "full_foot_retarget": true,
+      "catch_up": false,
+      "first_person": true,
+      "duration_s": 25.950354720996984,
+      "accepted_s": 25.96000000000126,
+      "selected14_vs_raw84_max_error": 0.0,
+      "live_body_rate_hz": 72.16048491845865,
+      "pelvis_height_m": {
+        "min": 0.7502367523288,
+        "median": 0.7792329366861684,
+        "p95": 0.7886498733248315,
+        "max": 0.7976092151066596
+      },
+      "pelvis_tilt_deg": {
+        "min": 0.12197636357267515,
+        "median": 4.061184143840677,
+        "p95": 7.137371592033915,
+        "max": 11.490447775102737
+      },
+      "root_xy_path_m": 5.829705144670504,
+      "samples_height_below_0_4m": 0,
+      "samples_tilt_above_60deg": 0,
+      "feet": {
+        "left": {
+          "ankle_ball_length_m": {
+            "min": 0.14481763541698456,
+            "median": 0.14698978513479233,
+            "p95": 0.14803528860211373,
+            "max": 0.14844003319740295
+          },
+          "world_forefoot_elevation_deg": {
+            "min": -64.31515502929688,
+            "median": -22.17150592803955,
+            "p95": -16.497190475463867,
+            "max": -13.87130069732666
+          },
+          "direction_change_in_ankle_frame_from_first_deg": {
+            "min": 0.0,
+            "median": 1.6373768713514893,
+            "p95": 3.384584932577015,
+            "max": 4.046310075029084
+          },
+          "ball_rotation_relative_ankle_change_from_first_deg": {
+            "min": 8.450266278998261e-16,
+            "median": 6.39387510189826,
+            "p95": 9.488208943074014,
+            "max": 10.161369609457909
+          }
+        },
+        "right": {
+          "ankle_ball_length_m": {
+            "min": 0.14513540267944336,
+            "median": 0.14698682725429535,
+            "p95": 0.1479726679623127,
+            "max": 0.14857646822929382
+          },
+          "world_forefoot_elevation_deg": {
+            "min": -58.647300720214844,
+            "median": -20.456049919128418,
+            "p95": -13.081562328338624,
+            "max": -9.669724464416504
+          },
+          "direction_change_in_ankle_frame_from_first_deg": {
+            "min": 0.0,
+            "median": 1.411558672497562,
+            "p95": 3.5763154833738073,
+            "max": 3.7277903829767114
+          },
+          "ball_rotation_relative_ankle_change_from_first_deg": {
+            "min": 4.052812018136637e-16,
+            "median": 5.289483673657713,
+            "p95": 7.974829844842441,
+            "max": 9.856825908225549
+          }
+        }
+      }
+    }
+  ],
+  "retarget_replay": [
+    {
+      "episode": "episode-1791652593739690",
+      "exit_code": 0,
+      "stdout": "GMR replay frames=3452 skipped_before_calibration=0 max_reference_error=0.182468\nAfter first 0.5s max_reference_error=1.78814e-07\n",
+      "stderr": ""
+    },
+    {
+      "episode": "episode-1791652646384286",
+      "exit_code": 0,
+      "stdout": "GMR replay frames=2596 skipped_before_calibration=0 max_reference_error=0.201657\nAfter first 0.5s max_reference_error=5.96046e-08\n",
+      "stderr": ""
+    }
+  ],
+  "limitations": [
+    "No matched A/B comparison; cannot claim gait improvement",
+    "Meta lower-body estimates are not independent measured foot trackers",
+    "The initial 0.5 seconds of replay differ because recording starts within an existing blend/session",
+    "Reference replay checked; actor hidden history not reconstructed for exact dynamic replay"
+  ]
+}

@@ -1,0 +1,264 @@
+{
+  "files": [
+    {
+      "file": "body_motor_model.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "simulation.h",
+      "same_as_recorded": false,
+      "adapter_change": true
+    },
+    {
+      "file": "capture_hud.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "swing_clearance.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "operator_skeleton_draw.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "quest_menu.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "camera_pose_servo.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "operator_skeleton.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "retarget.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "gmr.cpp",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "recording.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "cup_placement_cue.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "sonic.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "camera_fusion.cpp",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "groot_decoupled.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "quest_runtime.cpp",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "world_skeleton.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "cup_lab_shaders.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "standing_arms.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "camera_fade.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "body_tracking.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "runtime_stats.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "file_sha256.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "tennis_task.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "rubik_task.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "retarget.cpp",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "graphics.cpp",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "virtual_leg_lift.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "dexweave.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "body_motor_profile.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "foot_floor.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "recording_export.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "camera_fusion.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "world_skeleton_gl.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "render_geom.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "episode_manifest.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "policy_catalog.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "collection_task.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "graphics_epoch.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "learning_capture.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "meta_retarget.cpp",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "sonic_constants.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "guided_capture.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "simulation.cpp",
+      "same_as_recorded": false,
+      "adapter_change": true
+    },
+    {
+      "file": "meta_retarget.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "camera_stream.cpp",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "gmr.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "quest_menu_gl.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "policy_backend.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "full_body_io.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    },
+    {
+      "file": "stats_hud.h",
+      "same_as_recorded": true,
+      "adapter_change": false
+    }
+  ],
+  "adapter_changes": [
+    "load archived MJB",
+    "expose private state for evaluation initialization"
+  ],
+  "manifest_policy_id": "homie-v2"
+}

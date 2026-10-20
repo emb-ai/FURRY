@@ -1,0 +1,18 @@
+{
+  "names": [
+    "TWIST2 исходная",
+    "TWIST2 дообученная",
+    "TWIST2 подъём стоп",
+    "TWIST2 узкая стойка",
+    "HOMIE ходьба",
+    "DexWeave широкая стойка",
+    "DexWeave узкая стойка",
+    "SONIC ходьба"
+  ],
+  "title_font": 64,
+  "metric_label_font": 44,
+  "metric_definition_font": 36,
+  "metric_value_font": 112,
+  "position_metric": "Mean Euclidean XY distance: mean(sqrt(dx^2+dy^2)), not coordinate-wise MAE and not RMSE",
+  "rotation_metric": "Yaw MAE: mean(abs(wrap(yaw_robot-yaw_reference)))"
+}

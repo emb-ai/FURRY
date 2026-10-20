@@ -1,0 +1,91 @@
+{
+  "reference_time_s": 40.5,
+  "boundaries": [
+    {
+      "time_s": 40.5,
+      "cube_center_error_mm": 0.0,
+      "cube_orientation_error_deg": 7.432094907943494e-16,
+      "hand_position_rms_mm": [
+        0.0,
+        0.0
+      ],
+      "hand_orientation_rms_deg": [
+        1.1584278670365142e-15,
+        1.62033657755535e-15
+      ]
+    },
+    {
+      "time_s": 59.32,
+      "cube_center_error_mm": 1.7859330630798538,
+      "cube_orientation_error_deg": 1.6769551282181945,
+      "hand_position_rms_mm": [
+        2.041358506635157,
+        0.8193320824918039
+      ],
+      "hand_orientation_rms_deg": [
+        1.7748855513117507,
+        0.5367292491380473
+      ]
+    },
+    {
+      "time_s": 78.17,
+      "cube_center_error_mm": 4.511888433319971,
+      "cube_orientation_error_deg": 4.506629500667383,
+      "hand_position_rms_mm": [
+        4.240516663795331,
+        1.1661351597920557
+      ],
+      "hand_orientation_rms_deg": [
+        5.319105077506508,
+        1.0659785799475339
+      ]
+    },
+    {
+      "time_s": 93.02,
+      "cube_center_error_mm": 3.9125160161779022,
+      "cube_orientation_error_deg": 4.041706331294649,
+      "hand_position_rms_mm": [
+        4.407407623224607,
+        1.001872664645337
+      ],
+      "hand_orientation_rms_deg": [
+        5.015920071193471,
+        1.0816735181961978
+      ]
+    },
+    {
+      "time_s": 117.01,
+      "cube_center_error_mm": 2.8664541729459585,
+      "cube_orientation_error_deg": 1.55225809887845,
+      "hand_position_rms_mm": [
+        3.8531292040139715,
+        2.5831960789187347
+      ],
+      "hand_orientation_rms_deg": [
+        2.5260058711036737,
+        1.4203013202377117
+      ]
+    },
+    {
+      "time_s": 131.9,
+      "cube_center_error_mm": 0.6538401693301985,
+      "cube_orientation_error_deg": 2.0683293496368633,
+      "hand_position_rms_mm": [
+        2.8425141440670423,
+        2.8767972033307765
+      ],
+      "hand_orientation_rms_deg": [
+        2.2629645837353047,
+        1.6562193004787669
+      ]
+    }
+  ],
+  "other_support_frames": 0,
+  "both_hands_without_cube_contact_frames": 0,
+  "policy": "HOMIE Standing",
+  "wrist_and_scalar_grip_only": true,
+  "physics_modified": false,
+  "headset_tested": false,
+  "objective_complete": false,
+  "reason": "Five same-face turns verified; sixth continuation remains unresolved"
+}

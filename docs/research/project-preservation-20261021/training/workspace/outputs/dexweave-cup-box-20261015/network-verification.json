@@ -1,0 +1,6 @@
+{
+  "directed_attention": true,
+  "finite_gradients": true,
+  "parameters": 848171,
+  "torch": "2.14.1"
+}

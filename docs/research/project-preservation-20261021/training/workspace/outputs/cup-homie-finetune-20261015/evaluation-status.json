@@ -1,0 +1,57 @@
+{
+  "pid": 34733,
+  "started": 1792062404.7585669,
+  "completed": [
+    "act"
+  ],
+  "baseline_completed": [
+    "act",
+    "dp-epsilon",
+    "dp-sample"
+  ],
+  "phase": "superseded_by_full_reset_protocol",
+  "active": null,
+  "remote": {
+    "act": {
+      "status": "completed",
+      "kind": "act",
+      "pid": 3639308,
+      "step": 20000,
+      "source_step": 100000,
+      "target_steps": 20000,
+      "loss": 0.0646977499127388,
+      "elapsed_s": 1014.2350618839264,
+      "autonomous_evaluation": false
+    },
+    "dp-epsilon": {
+      "status": "running",
+      "kind": "dp-epsilon",
+      "pid": 3639309,
+      "step": 15500,
+      "source_step": 102641,
+      "target_steps": 20000,
+      "loss": 0.007978012785315514,
+      "elapsed_s": 2742.6951735019684
+    },
+    "dp-sample": {
+      "status": "running",
+      "kind": "dp-sample",
+      "pid": 3639310,
+      "step": 15500,
+      "source_step": 102641,
+      "target_steps": 20000,
+      "loss": 0.001339646172709763,
+      "elapsed_s": 2741.7850818634033
+    }
+  },
+  "last_poll": 1792065060.552889,
+  "last_connection_error": null,
+  "results": {
+    "act": {
+      "successes": 0,
+      "n": 10
+    }
+  },
+  "stopped_at": 1792065087.3299332,
+  "reason": "User requires native full reset, not restored demonstration pose"
+}

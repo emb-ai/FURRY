@@ -1,0 +1,64 @@
+{
+  "pid": 47386,
+  "started": 1792065088.345697,
+  "completed": [
+    "act",
+    "dp-epsilon",
+    "dp-sample"
+  ],
+  "baseline_completed": [],
+  "phase": "completed",
+  "active": null,
+  "results": {
+    "act": {
+      "successes": 1,
+      "n": 10
+    },
+    "dp-epsilon": {
+      "successes": 0,
+      "n": 10
+    },
+    "dp-sample": {
+      "successes": 0,
+      "n": 10
+    }
+  },
+  "remote": {
+    "act": {
+      "status": "completed",
+      "kind": "act",
+      "pid": 3639308,
+      "step": 20000,
+      "source_step": 100000,
+      "target_steps": 20000,
+      "loss": 0.0646977499127388,
+      "elapsed_s": 1014.2350618839264,
+      "autonomous_evaluation": false
+    },
+    "dp-epsilon": {
+      "status": "completed",
+      "kind": "dp-epsilon",
+      "pid": 3639309,
+      "step": 20000,
+      "source_step": 102641,
+      "target_steps": 20000,
+      "loss": 0.002973678056150675,
+      "elapsed_s": 3319.940162420273,
+      "autonomous_evaluation": false
+    },
+    "dp-sample": {
+      "status": "completed",
+      "kind": "dp-sample",
+      "pid": 3639310,
+      "step": 20000,
+      "source_step": 102641,
+      "target_steps": 20000,
+      "loss": 0.0012099851155653596,
+      "elapsed_s": 3324.005389213562,
+      "autonomous_evaluation": false
+    }
+  },
+  "last_poll": 1792065646.9328058,
+  "last_connection_error": null,
+  "elapsed_s": 3218.68399810791
+}

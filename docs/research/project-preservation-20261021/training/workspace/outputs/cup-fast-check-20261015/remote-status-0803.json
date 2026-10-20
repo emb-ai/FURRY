@@ -1,0 +1,186 @@
+{
+  "checked_at": 1792051415.7664118,
+  "jobs": {
+    "epsilon": {
+      "wrapper": {
+        "kind": "epsilon",
+        "status": "training",
+        "gpu": "GPU-b23c212d-4adf-9e06-ee33-7bdc20932a44",
+        "pid": 1282520,
+        "updated": 1792051332.3760173,
+        "command": [
+          "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/env-dp/bin/python",
+          "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/train_dp.py",
+          "--data",
+          "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/cup44-no-shadow-causal.hdf5",
+          "--weights",
+          "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/r3m-resnet18-encoder.pt",
+          "--prediction-type",
+          "epsilon",
+          "--out",
+          "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/dp-epsilon"
+        ]
+      },
+      "status.json": {
+        "epoch": 3,
+        "step": 1364,
+        "train_loss": 0.07258645182364089,
+        "elapsed_s": 64.70403814315796,
+        "status": "running",
+        "best_validation_noise_mse": 0.5926100299729389
+      },
+      "optimizer-check.json": {
+        "encoder_max_abs_update": 6.034970283508301e-07,
+        "unet_max_abs_update": 6.007030606269836e-07,
+        "step": 3
+      },
+      "log_tail": ", \"loss\": 0.0761399045586586, \"lr\": 9.999408750219621e-05, \"elapsed_s\": 49.72821807861328}\n{\"epoch\": 2, \"step\": 1023, \"train_loss\": 0.10030261441669754, \"elapsed_s\": 50.619606494903564}\n{\"step\": 1050, \"epoch\": 3, \"loss\": 0.08115347474813461, \"lr\": 9.999284590726718e-05, \"elapsed_s\": 51.842729568481445}\n{\"step\": 1100, \"epoch\": 3, \"loss\": 0.07716038078069687, \"lr\": 9.999148607699456e-05, \"elapsed_s\": 53.93075489997864}\n{\"step\": 1150, \"epoch\": 3, \"loss\": 0.06470362097024918, \"lr\": 9.99900080145944e-05, \"elapsed_s\": 55.93374824523926}\n{\"step\": 1200, \"epoch\": 3, \"loss\": 0.08355895429849625, \"lr\": 9.998841172356237e-05, \"elapsed_s\": 57.97977948188782}\n{\"step\": 1250, \"epoch\": 3, \"loss\": 0.06935451179742813, \"lr\": 9.99866972076738e-05, \"elapsed_s\": 59.99679160118103}\n{\"step\": 1300, \"epoch\": 3, \"loss\": 0.057667072862386703, \"lr\": 9.998486447098356e-05, \"elapsed_s\": 62.10083293914795}\n{\"step\": 1350, \"epoch\": 3, \"loss\": 0.06924260407686234, \"lr\": 9.998291351782621e-05, \"elapsed_s\": 64.13304853439331}\n{\"epoch\": 3, \"step\": 1364, \"train_loss\": 0.07258645182364089, \"elapsed_s\": 64.70403814315796}\n{\"step\": 1400, \"epoch\": 4, \"loss\": 0.073773093521595, \"lr\": 9.998084435281579e-05, \"elapsed_s\": 66.35197520256042}\n{\"step\": 1450, \"epoch\": 4, \"loss\": 0.07197212427854538, \"lr\": 9.997865698084601e-05, \"elapsed_s\": 68.3761785030365}\n{\"step\": 1500, \"epoch\": 4, \"loss\": 0.056373707950115204, \"lr\": 9.997635140709008e-05, \"elapsed_s\": 70.47015762329102}\n{\"step\": 1550, \"epoch\": 4, \"loss\": 0.04884365200996399, \"lr\": 9.997392763700077e-05, \"elapsed_s\": 72.52280902862549}\n{\"step\": 1600, \"epoch\": 4, \"loss\": 0.06578975170850754, \"lr\": 9.997138567631044e-05, \"elapsed_s\": 74.62067794799805}\n{\"step\": 1650, \"epoch\": 4, \"loss\": 0.048882823437452316, \"lr\": 9.996872553103094e-05, \"elapsed_s\": 76.63390374183655}\n"
+    },
+    "sample": {
+      "wrapper": {
+        "kind": "sample",
+        "status": "training",
+        "gpu": "GPU-68d1fffd-2ea2-3f95-f100-38f39855bcdf",
+        "pid": 1349698,
+        "updated": 1792051395.292052,
+        "command": [
+          "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/env-dp/bin/python",
+          "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/train_dp.py",
+          "--data",
+          "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/cup44-no-shadow-causal.hdf5",
+          "--weights",
+          "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/r3m-resnet18-encoder.pt",
+          "--prediction-type",
+          "sample",
+          "--out",
+          "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/dp-sample"
+        ]
+      },
+      "optimizer-check.json": {
+        "encoder_max_abs_update": 6.034970283508301e-07,
+        "unet_max_abs_update": 6.007030606269836e-07,
+        "step": 3
+      },
+      "log_tail": "-v1\", \"upstream_commit\": \"f5b27faabbb8952672dd3d6a21d0ba762d5dfabb\", \"dataset_sha256\": \"6f0cd24a85e68a9a5ca140418e7edf784e4f2cf43a8698afbb9ac39b0b9ccd39\", \"prediction_type\": \"sample\", \"r3m_sha256\": \"4ed6446408489e6fe99f826e15c4d8b62878a765be66f5359380c23fd3a86cea\", \"args\": {\"prediction_type\": \"sample\", \"data\": \"/home/jovyan/vlad/FURRY/cup-fast-check-20261015/cup44-no-shadow-causal.hdf5\", \"weights\": \"/home/jovyan/vlad/FURRY/cup-fast-check-20261015/r3m-resnet18-encoder.pt\", \"out\": \"/home/jovyan/vlad/FURRY/cup-fast-check-20261015/dp-sample\", \"device\": \"cuda\", \"epochs\": 301, \"batch_size\": 32, \"workers\": 4, \"seed\": 0, \"max_steps\": 0, \"resume\": false, \"threads\": 8}, \"train_episodes\": 40, \"valid_episodes\": 4, \"train_sequences\": 10889, \"valid_sequences\": 1433, \"parameters\": 90022119, \"autonomous_evaluation\": false, \"deployed\": false, \"render_shadows\": false, \"normalization\": \"train-only limits, action and command separately\", \"proprio_noise\": \"0.1 * training standard deviation per channel, train only\", \"execution\": \"64 predicted; indices1:49 execute 48 steps at30Hz\"}\n{\"step\": 1, \"epoch\": 0, \"loss\": 0.41257017850875854, \"lr\": 2.0000000000000002e-07, \"elapsed_s\": 2.581068515777588}\n{\"encoder_max_abs_update\": 6.034970283508301e-07, \"unet_max_abs_update\": 6.007030606269836e-07, \"step\": 3}\n{\"step\": 50, \"epoch\": 0, \"loss\": 0.13136200606822968, \"lr\": 1e-05, \"elapsed_s\": 4.563289403915405}\n{\"step\": 100, \"epoch\": 0, \"loss\": 0.09284503012895584, \"lr\": 2e-05, \"elapsed_s\": 6.648624658584595}\n{\"step\": 150, \"epoch\": 0, \"loss\": 0.06553143262863159, \"lr\": 3e-05, \"elapsed_s\": 8.682674646377563}\n{\"step\": 200, \"epoch\": 0, \"loss\": 0.048211030662059784, \"lr\": 4e-05, \"elapsed_s\": 10.683890104293823}\n{\"step\": 250, \"epoch\": 0, \"loss\": 0.04267387464642525, \"lr\": 5e-05, \"elapsed_s\": 12.754672527313232}\n"
+    },
+    "act": {
+      "wrapper": {
+        "kind": "act",
+        "status": "training",
+        "gpu": "GPU-2b647540-8cc6-f42e-0daf-b5d6f5ac548c",
+        "pid": 1282522,
+        "updated": 1792051329.0484452,
+        "command": [
+          "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/env-act/bin/python",
+          "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/train_act.py",
+          "--data",
+          "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/cup44-no-shadow-causal.hdf5",
+          "--out",
+          "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/act-run"
+        ]
+      },
+      "status.json": {
+        "step": 2300,
+        "loss": 0.5420181751251221,
+        "elapsed_s": 80.60648369789124,
+        "status": "running"
+      },
+      "log_tail": "\": 2.1336047649383545, \"elapsed_s\": 18.148164987564087, \"status\": \"running\"}\n{\"step\": 600, \"loss\": 1.9524294137954712, \"elapsed_s\": 21.469927549362183, \"status\": \"running\"}\n{\"step\": 700, \"loss\": 1.748916506767273, \"elapsed_s\": 24.75730037689209, \"status\": \"running\"}\n{\"step\": 800, \"loss\": 1.6168229579925537, \"elapsed_s\": 28.2827250957489, \"status\": \"running\"}\n{\"step\": 900, \"loss\": 1.6572396755218506, \"elapsed_s\": 31.767619132995605, \"status\": \"running\"}\n{\"step\": 1000, \"loss\": 1.4433451890945435, \"elapsed_s\": 35.214911460876465, \"status\": \"running\"}\n{\"step\": 1100, \"loss\": 1.313326358795166, \"elapsed_s\": 38.66141676902771, \"status\": \"running\"}\n{\"step\": 1200, \"loss\": 1.3362165689468384, \"elapsed_s\": 42.07168960571289, \"status\": \"running\"}\n{\"step\": 1300, \"loss\": 1.1108564138412476, \"elapsed_s\": 45.55454659461975, \"status\": \"running\"}\n{\"step\": 1400, \"loss\": 1.0446999073028564, \"elapsed_s\": 49.02741837501526, \"status\": \"running\"}\n{\"step\": 1500, \"loss\": 0.9626124501228333, \"elapsed_s\": 52.526612997055054, \"status\": \"running\"}\n{\"step\": 1600, \"loss\": 0.9061620235443115, \"elapsed_s\": 55.986406564712524, \"status\": \"running\"}\n{\"step\": 1700, \"loss\": 0.837664008140564, \"elapsed_s\": 59.36852788925171, \"status\": \"running\"}\n{\"step\": 1800, \"loss\": 1.1300503015518188, \"elapsed_s\": 62.71305179595947, \"status\": \"running\"}\n{\"step\": 1900, \"loss\": 0.7181267142295837, \"elapsed_s\": 66.15632796287537, \"status\": \"running\"}\n{\"step\": 2000, \"loss\": 0.7065069079399109, \"elapsed_s\": 70.20855140686035, \"status\": \"running\"}\n{\"step\": 2100, \"loss\": 0.6071231365203857, \"elapsed_s\": 73.64619398117065, \"status\": \"running\"}\n{\"step\": 2200, \"loss\": 0.5869742631912231, \"elapsed_s\": 77.187739610672, \"status\": \"running\"}\n{\"step\": 2300, \"loss\": 0.5420181751251221, \"elapsed_s\": 80.60648369789124, \"status\": \"running\"}\n"
+    }
+  },
+  "datasets": {
+    "train": {
+      "total_episodes": 40,
+      "total_frames": 11489
+    },
+    "valid": {
+      "total_episodes": 4,
+      "total_frames": 1493
+    }
+  },
+  "dexweave": {
+    "train-episode-1792020014648126": {
+      "status": "running",
+      "pid": 3077791,
+      "iteration": 3187,
+      "seconds": 7.231443806085736,
+      "elapsed_s": 22851.388140120078,
+      "reward_mean": 0.16819088036815324,
+      "failed": 180,
+      "completed_segments": 32,
+      "object_error_m": 0.04920725462337335,
+      "learning_rate": 3.3750000000000014e-05,
+      "losses": {
+        "value_function": 0.14487563967704772,
+        "surrogate": -0.0077654208066405776,
+        "entropy": 7.291993570327759
+      },
+      "actor_changed": true
+    },
+    "train-episode-1792020055691156": {
+      "status": "running",
+      "pid": 703179,
+      "iteration": 560,
+      "seconds": 74.83041880792007,
+      "elapsed_s": 6588.59120792523,
+      "reward_mean": 0.13853022269904613,
+      "failed": 280,
+      "completed_segments": 14,
+      "object_error_m": 0.03396212961524725,
+      "learning_rate": 5.0625000000000024e-05,
+      "losses": {
+        "value_function": 0.10955078452825547,
+        "surrogate": -0.00853311698010657,
+        "entropy": 30.244795036315917
+      },
+      "actor_changed": true
+    },
+    "train-episode-1792020126135729": {
+      "status": "running",
+      "pid": 703180,
+      "iteration": 903,
+      "seconds": 7.353814932983369,
+      "elapsed_s": 6621.3617110410705,
+      "reward_mean": 0.14235052652657032,
+      "failed": 146,
+      "completed_segments": 32,
+      "object_error_m": 0.008290980166445175,
+      "learning_rate": 2.2500000000000008e-05,
+      "losses": {
+        "value_function": 0.1429509673267603,
+        "surrogate": -0.007597262901253998,
+        "entropy": 22.545100021362305
+      },
+      "actor_changed": true
+    },
+    "train-episode-1792020208393189": {
+      "status": "running",
+      "pid": 703182,
+      "iteration": 910,
+      "seconds": 7.196352863218635,
+      "elapsed_s": 6618.4874947937205,
+      "reward_mean": 0.12339977671702702,
+      "failed": 160,
+      "completed_segments": 23,
+      "object_error_m": 0.02385278216873606,
+      "learning_rate": 3.3750000000000014e-05,
+      "losses": {
+        "value_function": 0.0875426847487688,
+        "surrogate": -0.007426962518366054,
+        "entropy": 16.241572761535643
+      },
+      "actor_changed": true
+    }
+  },
+  "conversion_log_tail": "\": \"demo_36\"}\n{\"split\": \"train\", \"episode\": 37, \"frames\": 307, \"source\": \"demo_37\"}\n{\"split\": \"train\", \"episode\": 38, \"frames\": 250, \"source\": \"demo_38\"}\n{\"split\": \"train\", \"episode\": 39, \"frames\": 387, \"source\": \"demo_39\"}\n{\"split\": \"valid\", \"episode\": 0, \"frames\": 207, \"source\": \"demo_40\"}\n{\"split\": \"valid\", \"episode\": 1, \"frames\": 186, \"source\": \"demo_41\"}\n{\"split\": \"valid\", \"episode\": 2, \"frames\": 851, \"source\": \"demo_42\"}\n{\"split\": \"valid\", \"episode\": 3, \"frames\": 249, \"source\": \"demo_43\"}\n",
+  "groot": {
+    "status": "blocked_model_access",
+    "model": "nvidia/Cosmos-Reason2-2B",
+    "http_status": 403,
+    "required_processor_load_failed": true,
+    "environment_installed": true,
+    "cli_import_passed": true,
+    "training_started": false
+  }
+}
+

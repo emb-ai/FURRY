@@ -1,0 +1,45 @@
+# Quest capture FOV investigation — 2026-10-15
+
+Current status: native fix installed; internal right/bottom projection cutoff absent in the 18:46 live test. See acceptance.json. Earlier sections below are chronological investigation history.
+
+The latest user recording `operator-20261015-165432-927.mp4` (47.569222 s, 1024×1024) was pulled and SHA256 matched the device. Complete ffmpeg decode passed. Both the prior square recording and this recording have the same head-locked HUD bounds at 5 seconds (approximately x=150..494, y=190..490). Setting captureFovDegrees=110 alone did not visibly widen capture. Paddle visibility within some frames does not establish a FOV fix.
+
+The installed firmware runtime binary contains a real captureFovDegrees reader. ARM64 analysis shows the read is gated by the headsetOverride configuration (see disassembly). The flag headsetOverride=1 was subsequently set and read back, but USB disconnected before a diagnostic capture. The user is not ready to reconnect. No effective FOV change is confirmed.
+
+Last acknowledged experimental device properties:
+- debug.oculus.captureFovDegrees=110 (original empty)
+- debug.oculus.headsetOverride=1 (original empty)
+
+No eyeFov properties, simulation, policy or APK changes in this investigation. Properties can reset on reboot. Restore commands (require connected device):
+
+```sh
+.tools/platform-tools/adb -s 2G0YC5ZG7T05SR shell 'setprop debug.oculus.captureFovDegrees ""; setprop debug.oculus.headsetOverride ""'
+```
+
+Next: inspect current state; verify capture automatically if possible; compare HUD framing; only then request a targeted in-headset peripheral check. Do not claim success from property readback. A runtime configuration reload might be required, not yet established.
+
+Local disk ran out during authorization review; no ADB command executed in that failed attempt. Removed only reproducible unsigned.apk and aligned.apk intermediates of the original operator-video build (~1.7 GB). Source, signed APKs and all recordings preserved.
+
+## Resumed at 17:17 MSK
+
+Quest reconnected. After KEYCODE_WAKEUP, Distortion_HmdConfig logs repeatedly confirm captureFovDegrees=110 and Custom Headset Overrides Enabled. See applied-fov-log.txt. No application restart/reinstall was performed. Four-second ADB screenrecord saved locally, but it contains the stereo distorted display; it is not proof of the operator MediaProjection framing. Legacy enableVideoCapture did not generate a new VideoShots file and was restored to its original empty property. A new operator recording is requested for acceptance.
+
+`python3 outputs/operator-video-fov-20261015/configure_capture.py apply --wake` reapplies the two overrides after reboot. `restore` restores their original empty values. Script checks device property readback and refuses apply with an active MediaProjection or existing eye FOV overrides. No claim of persistent APK-level fix.
+
+## 17:37 control video and native correction
+
+`operator-20261015-173713-663.mp4` (38.9998 seconds) confirms the capture itself widened: HUD approximately 344×300 → 202×177 pixels. Device/local SHA256 is 4b151c5f968e79f7d9c4c61d3ce591773bceebf617ff1e4c7ff2dc41bd54a198. Full decode passes. However, virtual geometry is cut off at approximately x=813 and y=986 inside the 1024-square image, while passthrough continues. Therefore the capture-FOV-only change is insufficient. Meta has a matching developer investigation: https://developers.meta.com/vr/support/investigations/1928662644499768/ .
+
+Native correction: during operator video consent/start/record/stop, expand submitted eye frusta symmetrically to at least ±57 degrees (110-degree capture plus margin), never shrinking any existing side. Pass exactly this projection to both RenderView and XrCompositionLayerProjectionView. Eye poses, physical lens parameters, simulated camera/robot and policies stay unchanged; outside operator capture the original xrLocateViews FOV is returned exactly. Added runtime logging for both eyes when capture mode changes. The patch is in the isolated project overlay plus source.patch; not published to main.
+
+Verified: host ray/projection tests, native ARM64 compile/link, generated source matches generation patch, baseline stripped native binary matches the installed square APK, all other APK payloads unchanged except provenance metadata. Note that source texture angular resolution can be lower while the expanded frustum is active. APK-wide projection fix does not grant permission to persist compositor system properties across reboot.
+
+## Installation at 17:46 MSK
+
+Installed via adb install -r, no uninstall. Installed base.apk SHA256 matches 8d6c528a27c68079e244e67d1fbdb4e12bf6cce1b20c2ab5606aa7034044af2a. All 10,476 previous app files, menu settings and videos match independent before/after hashes. Launch currently blocked by LaunchCheckControllerRequiredDialogActivity. User asked to activate controllers and record an acceptance clip. Native startup and corrected output are not yet confirmed.
+
+## Accepted live evidence, 18:46 recording
+
+Downloaded `operator-20261015-184609-879.mp4`: 47.319211 seconds, 1024×1024, 47,830,844 bytes. Device/local SHA256 c18c6b755ef5e21af18ad7df27c3680f82eb8344f71ce896534eed06a032c1c4; full decode passes. Reviewed one-second samples throughout the clip and full-size frames at 16/20 seconds. The fixed internal right/bottom cutoff is gone: table and hand extend beyond the former boundaries. Paddle is visible in sampled lower/right-hand movements. Head-locked HUD framing remains approximately unchanged from the prior 110-degree capture. Runtime logs after recording confirm new G1CaptureFov code returned to native asymmetric FOV.
+
+This confirms the specific clipping fix in this live run, not pixel-identical binocular/headset coverage for every pose. Existing transparency/occlusion and looking away can still hide objects. The captureFovDegrees/headsetOverride settings still reset on reboot; reapply via configure_capture.py. Native rendering correction remains installed.

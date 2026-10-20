@@ -1,0 +1,154 @@
+[
+  {
+    "id": "twist2-20k",
+    "title": "TWIST2: авторская 20k",
+    "note": "Основная",
+    "file": "policy.onnx",
+    "sha256": "2d1fb3a31e4e967f70ecfefc3ad1e7b2ac491677068b89f60b565a94e7735061",
+    "policy_hz": 50,
+    "legacy_policy_hz": 100,
+    "backend": "twist2"
+  },
+  {
+    "id": "twist2-25k",
+    "title": "TWIST2: авторская 25k",
+    "note": "Авторский checkpoint",
+    "file": "policy-twist2-25k.onnx",
+    "sha256": "126ab9089b6ca0be8b6582fc9ef17b0b6c6d6577378f9324a2e10d580fe48f2e",
+    "policy_hz": 50,
+    "legacy_policy_hz": 100,
+    "backend": "twist2"
+  },
+  {
+    "id": "quest-111260-500",
+    "title": "Quest: дообучение 500",
+    "note": "Эксперимент: 09.10 / 111260",
+    "file": "policy-quest-111260-500.onnx",
+    "sha256": "c83fdeb9747410c5e6b8b150d6d543966ed4024cd6111e9d94281e414c6bcfb6",
+    "policy_hz": 50,
+    "legacy_policy_hz": 100,
+    "backend": "twist2"
+  },
+  {
+    "id": "quest-111260-1000",
+    "title": "Quest: дообучение 1000",
+    "note": "Эксперимент: 09.10 / 111260",
+    "file": "policy-quest-111260-1000.onnx",
+    "sha256": "8d386bf94724d1dccc7050e1bb3dee40315e20e1bba20a31debb5d9b0b61cae3",
+    "policy_hz": 50,
+    "legacy_policy_hz": 100,
+    "backend": "twist2"
+  },
+  {
+    "id": "quest-111586-200",
+    "title": "Quest: новое +200 / 50 Гц",
+    "note": "Продолжение 1000 · 09.10 / RTX",
+    "file": "policy-quest-111586-200.onnx",
+    "sha256": "f7af32cacec3d697d902f5a19373895cba19cca04fb424d9664df11593a0c5ed",
+    "policy_hz": 50,
+    "legacy_policy_hz": 50,
+    "backend": "twist2"
+  },
+  {
+    "id": "quest-111586-300",
+    "title": "Quest: новое +300 / 50 Гц",
+    "note": "Продолжение 1000 · 09.10 / RTX",
+    "file": "policy-quest-111586-300.onnx",
+    "sha256": "a8fba7232e1d5079af5ce23c3c7fe40389c3965f7dde895ea07b45222b557c0d",
+    "policy_hz": 50,
+    "legacy_policy_hz": 50,
+    "backend": "twist2"
+  },
+  {
+    "id": "quest-111586-500",
+    "title": "Quest: новое +500 / 50 Гц",
+    "note": "Продолжение 1000 · 09.10 / RTX",
+    "file": "policy-quest-111586-500.onnx",
+    "sha256": "57d6ac4b2461ac8884afeac86d32bcc9a7b4b72f376e15b898af7ac3d8a5241d",
+    "policy_hz": 50,
+    "legacy_policy_hz": 50,
+    "backend": "twist2"
+  },
+  {
+    "id": "homie-v2",
+    "title": "HOMIE v2: автономная ходьба",
+    "note": "Эксперимент · руки оператора, шаги робота",
+    "file": "policy-homie-v2-balance.onnx",
+    "sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+    "policy_hz": 50,
+    "legacy_policy_hz": 50,
+    "backend": "groot_decoupled_v1",
+    "secondary_file": "policy-homie-v2-walk.onnx",
+    "secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407"
+  },
+  {
+    "id": "homie-standing",
+    "title": "HOMIE: стоять и работать руками",
+    "note": "Баланс на месте · без шагов по команде",
+    "file": "policy-homie-standing-balance.onnx",
+    "sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+    "policy_hz": 50,
+    "legacy_policy_hz": 50,
+    "backend": "groot_decoupled_v1",
+    "secondary_file": "policy-homie-standing-walk.onnx",
+    "secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+    "input_patch": "homie_stand_v1"
+  },
+  {
+    "id": "sonic-vr3",
+    "title": "SONIC: автономные ноги",
+    "note": "Эксперимент · три верхние цели",
+    "backend": "sonic_vr3_v1",
+    "policy_hz": 50,
+    "legacy_policy_hz": 50,
+    "file": "policy-sonic-vr3-sonic_encoder.onnx",
+    "sha256": "013ab0287236aa2721e13f1e936d699db982302d0de0bfcdae76d5c3245362d3",
+    "secondary_file": "policy-sonic-vr3-sonic_decoder.onnx",
+    "secondary_sha256": "c7241a123eaa36b5d64bad19540efde93cac1ad443bd4572fd12ca99898118ed",
+    "planner_file": "policy-sonic-vr3-planner.onnx",
+    "planner_sha256": "39b553e197f62f077975ba38512bc04781a3fc37c2af7c6756e04629f760edea"
+  },
+  {
+    "id": "quest-111586-500-lift10",
+    "title": "Virtual Legs: шаг +10 см",
+    "note": "TWIST2 +500 · IK ноги",
+    "file": "policy-quest-111586-500-lift10.onnx",
+    "sha256": "57d6ac4b2461ac8884afeac86d32bcc9a7b4b72f376e15b898af7ac3d8a5241d",
+    "policy_hz": 50,
+    "legacy_policy_hz": 50,
+    "backend": "twist2",
+    "input_patch": "virtual_leg_lift10_v1"
+  },
+  {
+    "id": "quest-stance12-B-s11",
+    "title": "TWIST2: узкая стойка −12 см",
+    "note": "B · дообучение +1000 · 50 Гц",
+    "file": "policy-quest-stance12-B-s11.onnx",
+    "sha256": "f24be7b0ef36b9bfef61672aa54dbd7f494c6527a0cc66f64b449d2f7da15745",
+    "policy_hz": 50,
+    "legacy_policy_hz": 100,
+    "backend": "twist2",
+    "input_patch": "stance_narrow12_v1"
+  },
+  {
+    "id": "dexweave-wide-2977",
+    "title": "DexWeave: широкая 2977",
+    "note": "Исходная · эксперимент · 50 Гц",
+    "file": "policy-dexweave-wide-2977.onnx",
+    "sha256": "9a24da67253426a779209e2f18f52259bfbef1b7bee146645cb81ba5858d54d2",
+    "policy_hz": 50,
+    "legacy_policy_hz": 50,
+    "backend": "dexweave_body_v1"
+  },
+  {
+    "id": "dexweave-B-4174",
+    "title": "DexWeave B: узкая стойка",
+    "note": "4174 · эксперимент · 50 Гц",
+    "file": "policy-dexweave-B-4174.onnx",
+    "sha256": "7bf8d82997c152c6c425ed0c715d0fc782905e9cb273bba764052eb48cc25761",
+    "policy_hz": 50,
+    "legacy_policy_hz": 50,
+    "backend": "dexweave_body_v1",
+    "input_patch": "stance_narrow12_v1"
+  }
+]

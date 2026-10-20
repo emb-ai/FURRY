@@ -1,0 +1,14 @@
+{
+  "pid": 2745328,
+  "started": 1792068812.8414674,
+  "gpu": 6,
+  "steps": 10000,
+  "phase": "completed",
+  "child_pid": 3210922,
+  "results": {
+    "native50": 2,
+    "old30": 0,
+    "n": 10
+  },
+  "elapsed_s": 1323.496194601059
+}

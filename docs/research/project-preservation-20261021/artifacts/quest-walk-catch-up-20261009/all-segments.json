@@ -1,0 +1,1590 @@
+{
+  "episode": "episode-1791551115540918",
+  "unique_active_source_frames": 4227,
+  "units": "cm",
+  "statistics": "p5/median/p95 over unique active input sequences; first 0.5 s and inactive calibration gap excluded",
+  "recorded_body_joints": 14,
+  "all_recorded_tree_edges_checked": 13,
+  "cross_widths_checked": 2,
+  "chain_totals_checked": 4,
+  "scales": {
+    "body": 0.8010999740743094,
+    "arms": 0.727738326640315,
+    "camera_before_recalibration": 0.8779385914239507,
+    "camera_after_recalibration": 0.8296959954437976
+  },
+  "rows": [
+    {
+      "id": "pelvis_chest",
+      "segment": "Таз → грудь",
+      "edges": [
+        [
+          0,
+          1
+        ]
+      ],
+      "task_endpoints": [
+        [
+          "pelvis",
+          "torso_link"
+        ]
+      ],
+      "anatomical_robot_endpoints": [
+        [
+          "pelvis",
+          "torso_link"
+        ]
+      ],
+      "meta_bind_cm": {
+        "p5": 46.64989715093042,
+        "median": 46.64989715093042,
+        "p95": 46.64989715093042
+      },
+      "meta_live_cm": {
+        "p5": 40.12533067668013,
+        "median": 40.867078938216004,
+        "p95": 41.57375816901549
+      },
+      "scaled_bind_before_offsets_cm": {
+        "p5": 37.37123139817956,
+        "median": 37.37123139817956,
+        "p95": 37.37123139817956
+      },
+      "scaled_live_before_offsets_cm": {
+        "p5": 32.14440136481154,
+        "median": 32.7386158778976,
+        "p95": 33.304736591369924
+      },
+      "ik_targets_after_offsets_and_floor_clamp_cm": {
+        "p5": 1.2368000018847072,
+        "median": 2.7430489094762778,
+        "p95": 4.311869012833641
+      },
+      "gmr_fk_task_markers_cm": {
+        "p5": 4.417815446858314,
+        "median": 4.417815446858323,
+        "p95": 4.417815446858331
+      },
+      "recorded_robot_task_markers_cm": {
+        "p5": 4.417815446858313,
+        "median": 4.417815446858323,
+        "p95": 4.417815446858331
+      },
+      "target_length_minus_fk_task_cm": {
+        "p5": -3.1810154449736094,
+        "median": -1.6747665373820397,
+        "p95": -0.1059464340246839
+      },
+      "g1_anatomical_comparison_available": false,
+      "g1_neutral_anatomical_cm": null
+    },
+    {
+      "id": "pelvis_hip_l",
+      "segment": "Таз → левый тазобедренный",
+      "edges": [
+        [
+          0,
+          2
+        ]
+      ],
+      "task_endpoints": [
+        [
+          "pelvis",
+          "left_hip_yaw_link"
+        ]
+      ],
+      "anatomical_robot_endpoints": [
+        [
+          "pelvis",
+          "left_hip_pitch_link"
+        ]
+      ],
+      "meta_bind_cm": {
+        "p5": 9.200395086664976,
+        "median": 9.200395086664976,
+        "p95": 9.200395086664976
+      },
+      "meta_live_cm": {
+        "p5": 7.988117029033165,
+        "median": 8.180655695850646,
+        "p95": 8.45305844215119
+      },
+      "scaled_bind_before_offsets_cm": {
+        "p5": 7.370436265400716,
+        "median": 7.370436265400716,
+        "p95": 7.370436265400716
+      },
+      "scaled_live_before_offsets_cm": {
+        "p5": 6.399280344861019,
+        "median": 6.553523065856803,
+        "p95": 6.7717448988559426
+      },
+      "ik_targets_after_offsets_and_floor_clamp_cm": {
+        "p5": 27.289646040606453,
+        "median": 28.190847873025625,
+        "p95": 28.58274087198891
+      },
+      "gmr_fk_task_markers_cm": {
+        "p5": 27.28275259136818,
+        "median": 28.365730593551326,
+        "p95": 28.952550278567067
+      },
+      "recorded_robot_task_markers_cm": {
+        "p5": 26.872162673181872,
+        "median": 28.02581532097455,
+        "p95": 28.631114775634643
+      },
+      "target_length_minus_fk_task_cm": {
+        "p5": -0.5224445168070779,
+        "median": -0.19931708608587617,
+        "p95": 0.2372676648429783
+      },
+      "g1_anatomical_comparison_available": true,
+      "g1_neutral_anatomical_cm": 12.124912496179096,
+      "gmr_fk_anatomical_cm": {
+        "p5": 12.124912496179077,
+        "median": 12.124912496179096,
+        "p95": 12.124912496179116
+      },
+      "recorded_robot_anatomical_cm": {
+        "p5": 12.124912496179075,
+        "median": 12.124912496179094,
+        "p95": 12.124912496179116
+      }
+    },
+    {
+      "id": "pelvis_hip_r",
+      "segment": "Таз → правый тазобедренный",
+      "edges": [
+        [
+          0,
+          3
+        ]
+      ],
+      "task_endpoints": [
+        [
+          "pelvis",
+          "right_hip_yaw_link"
+        ]
+      ],
+      "anatomical_robot_endpoints": [
+        [
+          "pelvis",
+          "right_hip_pitch_link"
+        ]
+      ],
+      "meta_bind_cm": {
+        "p5": 9.200396895858677,
+        "median": 9.200396895858677,
+        "p95": 9.200396895858677
+      },
+      "meta_live_cm": {
+        "p5": 7.9881050915863945,
+        "median": 8.180736159359714,
+        "p95": 8.453088480429253
+      },
+      "scaled_bind_before_offsets_cm": {
+        "p5": 7.3704377147457425,
+        "median": 7.3704377147457425,
+        "p95": 7.3704377147457425
+      },
+      "scaled_live_before_offsets_cm": {
+        "p5": 6.39927078177272,
+        "median": 6.553587525171832,
+        "p95": 6.771768962519717
+      },
+      "ik_targets_after_offsets_and_floor_clamp_cm": {
+        "p5": 27.38670797513409,
+        "median": 27.994322564079628,
+        "p95": 28.6635113642275
+      },
+      "gmr_fk_task_markers_cm": {
+        "p5": 27.48901977392782,
+        "median": 28.061446309386778,
+        "p95": 28.906920914514927
+      },
+      "recorded_robot_task_markers_cm": {
+        "p5": 27.16989725892137,
+        "median": 27.892916422901347,
+        "p95": 28.84763386961754
+      },
+      "target_length_minus_fk_task_cm": {
+        "p5": -0.5469355929017278,
+        "median": -0.12776128151626986,
+        "p95": 0.2898393707840374
+      },
+      "g1_anatomical_comparison_available": true,
+      "g1_neutral_anatomical_cm": 12.124912496179096,
+      "gmr_fk_anatomical_cm": {
+        "p5": 12.124912496179077,
+        "median": 12.124912496179096,
+        "p95": 12.124912496179116
+      },
+      "recorded_robot_anatomical_cm": {
+        "p5": 12.124912496179075,
+        "median": 12.124912496179094,
+        "p95": 12.124912496179116
+      }
+    },
+    {
+      "id": "thigh_l",
+      "segment": "Бедро Л",
+      "edges": [
+        [
+          2,
+          4
+        ]
+      ],
+      "task_endpoints": [
+        [
+          "left_hip_yaw_link",
+          "left_knee_link"
+        ]
+      ],
+      "anatomical_robot_endpoints": [
+        [
+          "left_hip_pitch_link",
+          "left_knee_link"
+        ]
+      ],
+      "meta_bind_cm": {
+        "p5": 45.97234312620342,
+        "median": 45.97234312620342,
+        "p95": 45.97234312620342
+      },
+      "meta_live_cm": {
+        "p5": 40.23475961139563,
+        "median": 41.17235187288551,
+        "p95": 42.45612811412627
+      },
+      "scaled_bind_before_offsets_cm": {
+        "p5": 36.82844288653682,
+        "median": 36.82844288653682,
+        "p95": 36.82844288653682
+      },
+      "scaled_live_before_offsets_cm": {
+        "p5": 32.23206488157511,
+        "median": 32.983170017946925,
+        "p95": 34.01160313152212
+      },
+      "ik_targets_after_offsets_and_floor_clamp_cm": {
+        "p5": 16.252540069528475,
+        "median": 17.196475869960608,
+        "p95": 18.16302456405054
+      },
+      "gmr_fk_task_markers_cm": {
+        "p5": 19.385756601229133,
+        "median": 19.385756601229158,
+        "p95": 19.38575660122919
+      },
+      "recorded_robot_task_markers_cm": {
+        "p5": 19.385756601229133,
+        "median": 19.385756601229158,
+        "p95": 19.38575660122919
+      },
+      "target_length_minus_fk_task_cm": {
+        "p5": -3.1332165317006817,
+        "median": -2.1892807312685862,
+        "p95": -1.2227320371786115
+      },
+      "g1_anatomical_comparison_available": true,
+      "g1_neutral_anatomical_cm": 34.092345757558704,
+      "gmr_fk_anatomical_cm": {
+        "p5": 33.71732076883535,
+        "median": 34.90675616082337,
+        "p95": 35.42328126143404
+      },
+      "recorded_robot_anatomical_cm": {
+        "p5": 33.653773487888394,
+        "median": 34.621762124984414,
+        "p95": 35.22557253470762
+      }
+    },
+    {
+      "id": "thigh_r",
+      "segment": "Бедро П",
+      "edges": [
+        [
+          3,
+          5
+        ]
+      ],
+      "task_endpoints": [
+        [
+          "right_hip_yaw_link",
+          "right_knee_link"
+        ]
+      ],
+      "anatomical_robot_endpoints": [
+        [
+          "right_hip_pitch_link",
+          "right_knee_link"
+        ]
+      ],
+      "meta_bind_cm": {
+        "p5": 45.97233715393551,
+        "median": 45.97233715393551,
+        "p95": 45.97233715393551
+      },
+      "meta_live_cm": {
+        "p5": 40.14288981551434,
+        "median": 41.14886519426494,
+        "p95": 42.4384875500549
+      },
+      "scaled_bind_before_offsets_cm": {
+        "p5": 36.82843810215316,
+        "median": 36.82843810215316,
+        "p95": 36.82843810215316
+      },
+      "scaled_live_before_offsets_cm": {
+        "p5": 32.158467990476396,
+        "median": 32.9643548403129,
+        "p95": 33.99747127610189
+      },
+      "ik_targets_after_offsets_and_floor_clamp_cm": {
+        "p5": 16.053150779568774,
+        "median": 16.976078938012567,
+        "p95": 18.30252970110844
+      },
+      "gmr_fk_task_markers_cm": {
+        "p5": 19.385756601229133,
+        "median": 19.385756601229158,
+        "p95": 19.38575660122919
+      },
+      "recorded_robot_task_markers_cm": {
+        "p5": 19.385756601229133,
+        "median": 19.385756601229158,
+        "p95": 19.38575660122919
+      },
+      "target_length_minus_fk_task_cm": {
+        "p5": -3.332605821660395,
+        "median": -2.409677663216567,
+        "p95": -1.0832269001206916
+      },
+      "g1_anatomical_comparison_available": true,
+      "g1_neutral_anatomical_cm": 34.092345757558704,
+      "gmr_fk_anatomical_cm": {
+        "p5": 33.70170361572396,
+        "median": 34.48931645601023,
+        "p95": 35.27133750524178
+      },
+      "recorded_robot_anatomical_cm": {
+        "p5": 33.599112508944565,
+        "median": 34.50403335297325,
+        "p95": 35.3698830807385
+      }
+    },
+    {
+      "id": "shin_l",
+      "segment": "Голень Л",
+      "edges": [
+        [
+          4,
+          6
+        ]
+      ],
+      "task_endpoints": [
+        [
+          "left_knee_link",
+          "left_toe_link"
+        ]
+      ],
+      "anatomical_robot_endpoints": [
+        [
+          "left_knee_link",
+          "left_ankle_roll_link"
+        ]
+      ],
+      "meta_bind_cm": {
+        "p5": 46.061997041103666,
+        "median": 46.061997041103666,
+        "p95": 46.061997041103666
+      },
+      "meta_live_cm": {
+        "p5": 39.992767361370824,
+        "median": 40.956929096331926,
+        "p95": 42.32031206047052
+      },
+      "scaled_bind_before_offsets_cm": {
+        "p5": 36.900264635439065,
+        "median": 36.900264635439065,
+        "p95": 36.900264635439065
+      },
+      "scaled_live_before_offsets_cm": {
+        "p5": 32.03820489635406,
+        "median": 32.81059483723484,
+        "p95": 33.90280089445962
+      },
+      "ik_targets_after_offsets_and_floor_clamp_cm": {
+        "p5": 27.224258360884374,
+        "median": 30.79503030581065,
+        "p95": 32.58230032946252
+      },
+      "gmr_fk_task_markers_cm": {
+        "p5": 32.812372661349045,
+        "median": 35.03389368938269,
+        "p95": 35.90895782762964
+      },
+      "recorded_robot_task_markers_cm": {
+        "p5": 31.86939281171064,
+        "median": 34.27946204267004,
+        "p95": 35.72243043694764
+      },
+      "target_length_minus_fk_task_cm": {
+        "p5": -5.774072284190813,
+        "median": -4.222115213728528,
+        "p95": -2.9714692879149665
+      },
+      "g1_anatomical_comparison_available": true,
+      "g1_neutral_anatomical_cm": 31.756801404401237,
+      "gmr_fk_anatomical_cm": {
+        "p5": 31.700336934742058,
+        "median": 31.75395955352185,
+        "p95": 31.75677227195551
+      },
+      "recorded_robot_anatomical_cm": {
+        "p5": 31.65199943093911,
+        "median": 31.746207386118797,
+        "p95": 31.75671682942235
+      }
+    },
+    {
+      "id": "shin_r",
+      "segment": "Голень П",
+      "edges": [
+        [
+          5,
+          7
+        ]
+      ],
+      "task_endpoints": [
+        [
+          "right_knee_link",
+          "right_toe_link"
+        ]
+      ],
+      "anatomical_robot_endpoints": [
+        [
+          "right_knee_link",
+          "right_ankle_roll_link"
+        ]
+      ],
+      "meta_bind_cm": {
+        "p5": 46.06197518556353,
+        "median": 46.06197518556353,
+        "p95": 46.06197518556353
+      },
+      "meta_live_cm": {
+        "p5": 39.99273125512879,
+        "median": 40.95690768560487,
+        "p95": 42.32031775120959
+      },
+      "scaled_bind_before_offsets_cm": {
+        "p5": 36.900247126966434,
+        "median": 36.900247126966434,
+        "p95": 36.900247126966434
+      },
+      "scaled_live_before_offsets_cm": {
+        "p5": 32.0381759716445,
+        "median": 32.81057768510195,
+        "p95": 33.90280545331054
+      },
+      "ik_targets_after_offsets_and_floor_clamp_cm": {
+        "p5": 26.974374758559726,
+        "median": 30.040575499074222,
+        "p95": 33.02405253407923
+      },
+      "gmr_fk_task_markers_cm": {
+        "p5": 32.787922553820096,
+        "median": 34.50165063538645,
+        "p95": 35.947325042837285
+      },
+      "recorded_robot_task_markers_cm": {
+        "p5": 31.076006153410958,
+        "median": 33.631062230329775,
+        "p95": 35.48423505802116
+      },
+      "target_length_minus_fk_task_cm": {
+        "p5": -6.125028038202801,
+        "median": -4.465874110281026,
+        "p95": -2.593197718597823
+      },
+      "g1_anatomical_comparison_available": true,
+      "g1_neutral_anatomical_cm": 31.756801404401237,
+      "gmr_fk_anatomical_cm": {
+        "p5": 31.699236186247326,
+        "median": 31.74957460443273,
+        "p95": 31.75669403840103
+      },
+      "recorded_robot_anatomical_cm": {
+        "p5": 31.601998952979677,
+        "median": 31.73126534369325,
+        "p95": 31.75659436059638
+      }
+    },
+    {
+      "id": "chest_shoulder_l",
+      "segment": "Грудь → плечо Л",
+      "edges": [
+        [
+          1,
+          8
+        ]
+      ],
+      "task_endpoints": [
+        [
+          "torso_link",
+          "left_shoulder_yaw_link"
+        ]
+      ],
+      "anatomical_robot_endpoints": [
+        [
+          "torso_link",
+          "left_shoulder_pitch_link"
+        ]
+      ],
+      "meta_bind_cm": {
+        "p5": 21.27217703554406,
+        "median": 21.27217703554406,
+        "p95": 21.27217703554406
+      },
+      "meta_live_cm": {
+        "p5": 17.88866901734457,
+        "median": 18.756665423865574,
+        "p95": 21.698465003745692
+      },
+      "scaled_bind_before_offsets_cm": {
+        "p5": 14.546282937004893,
+        "median": 14.546282937004893,
+        "p95": 14.546282937004893
+      },
+      "scaled_live_before_offsets_cm": {
+        "p5": 12.332700673156188,
+        "median": 13.062298058213731,
+        "p95": 14.97795631469135
+      },
+      "ik_targets_after_offsets_and_floor_clamp_cm": {
+        "p5": 22.321894838017087,
+        "median": 23.881853940957196,
+        "p95": 31.99743862053344
+      },
+      "gmr_fk_task_markers_cm": {
+        "p5": 23.429416946749097,
+        "median": 27.06066233781864,
+        "p95": 33.632475827210314
+      },
+      "recorded_robot_task_markers_cm": {
+        "p5": 23.05964746857483,
+        "median": 26.65959757684373,
+        "p95": 33.64235121825688
+      },
+      "target_length_minus_fk_task_cm": {
+        "p5": -5.17026425726533,
+        "median": -2.1166751310800147,
+        "p95": 0.7273452439022225
+      },
+      "g1_anatomical_comparison_available": false,
+      "g1_neutral_anatomical_cm": null
+    },
+    {
+      "id": "chest_shoulder_r",
+      "segment": "Грудь → плечо П",
+      "edges": [
+        [
+          1,
+          9
+        ]
+      ],
+      "task_endpoints": [
+        [
+          "torso_link",
+          "right_shoulder_yaw_link"
+        ]
+      ],
+      "anatomical_robot_endpoints": [
+        [
+          "torso_link",
+          "right_shoulder_pitch_link"
+        ]
+      ],
+      "meta_bind_cm": {
+        "p5": 21.272126457189593,
+        "median": 21.272126457189593,
+        "p95": 21.272126457189593
+      },
+      "meta_live_cm": {
+        "p5": 17.778838367414917,
+        "median": 18.660155027771708,
+        "p95": 21.552381719348528
+      },
+      "scaled_bind_before_offsets_cm": {
+        "p5": 14.5462975222893,
+        "median": 14.5462975222893,
+        "p95": 14.5462975222893
+      },
+      "scaled_live_before_offsets_cm": {
+        "p5": 12.332837861360566,
+        "median": 13.030454392035736,
+        "p95": 15.108731845066073
+      },
+      "ik_targets_after_offsets_and_floor_clamp_cm": {
+        "p5": 22.567767573250595,
+        "median": 23.780297135032004,
+        "p95": 30.597106035391995
+      },
+      "gmr_fk_task_markers_cm": {
+        "p5": 23.9817142908616,
+        "median": 26.375744385727373,
+        "p95": 32.827394848277706
+      },
+      "recorded_robot_task_markers_cm": {
+        "p5": 23.93021051274976,
+        "median": 26.289210694586757,
+        "p95": 32.58200812933866
+      },
+      "target_length_minus_fk_task_cm": {
+        "p5": -4.87209723910873,
+        "median": -2.407114389612425,
+        "p95": 0.41545625609029313
+      },
+      "g1_anatomical_comparison_available": false,
+      "g1_neutral_anatomical_cm": null
+    },
+    {
+      "id": "upper_arm_l",
+      "segment": "Плечо Л",
+      "edges": [
+        [
+          8,
+          10
+        ]
+      ],
+      "task_endpoints": [
+        [
+          "left_shoulder_yaw_link",
+          "left_elbow_link"
+        ]
+      ],
+      "anatomical_robot_endpoints": [
+        [
+          "left_shoulder_pitch_link",
+          "left_elbow_link"
+        ]
+      ],
+      "meta_bind_cm": {
+        "p5": 28.124694117898745,
+        "median": 28.124694117898745,
+        "p95": 28.124694117898745
+      },
+      "meta_live_cm": {
+        "p5": 25.40888921029446,
+        "median": 25.99852214973688,
+        "p95": 26.874307362706336
+      },
+      "scaled_bind_before_offsets_cm": {
+        "p5": 20.467417834630343,
+        "median": 20.467417834630343,
+        "p95": 20.467417834630343
+      },
+      "scaled_live_before_offsets_cm": {
+        "p5": 18.491022515688847,
+        "median": 18.920121004370678,
+        "p95": 19.557463469753404
+      },
+      "ik_targets_after_offsets_and_floor_clamp_cm": {
+        "p5": 6.4601105707219695,
+        "median": 7.2853202359275,
+        "p95": 8.509179115371499
+      },
+      "gmr_fk_task_markers_cm": {
+        "p5": 8.205029806770947,
+        "median": 8.20502980677097,
+        "p95": 8.20502980677099
+      },
+      "recorded_robot_task_markers_cm": {
+        "p5": 8.205029806770948,
+        "median": 8.205029806770968,
+        "p95": 8.205029806770987
+      },
+      "target_length_minus_fk_task_cm": {
+        "p5": -1.7449192360489953,
+        "median": -0.9197095708434716,
+        "p95": 0.3041493086005315
+      },
+      "g1_anatomical_comparison_available": true,
+      "g1_neutral_anatomical_cm": 22.4639498601765,
+      "gmr_fk_anatomical_cm": {
+        "p5": 20.078862356247598,
+        "median": 20.58483137431773,
+        "p95": 21.275111118208816
+      },
+      "recorded_robot_anatomical_cm": {
+        "p5": 19.92913860917285,
+        "median": 20.4574218587295,
+        "p95": 21.196353601406308
+      }
+    },
+    {
+      "id": "upper_arm_r",
+      "segment": "Плечо П",
+      "edges": [
+        [
+          9,
+          11
+        ]
+      ],
+      "task_endpoints": [
+        [
+          "right_shoulder_yaw_link",
+          "right_elbow_link"
+        ]
+      ],
+      "anatomical_robot_endpoints": [
+        [
+          "right_shoulder_pitch_link",
+          "right_elbow_link"
+        ]
+      ],
+      "meta_bind_cm": {
+        "p5": 28.124258089968652,
+        "median": 28.124258089968652,
+        "p95": 28.124258089968652
+      },
+      "meta_live_cm": {
+        "p5": 25.408500618995127,
+        "median": 25.998140671540515,
+        "p95": 26.873912476619015
+      },
+      "scaled_bind_before_offsets_cm": {
+        "p5": 20.467100520394123,
+        "median": 20.467100520394123,
+        "p95": 20.467100520394123
+      },
+      "scaled_live_before_offsets_cm": {
+        "p5": 18.49073972290692,
+        "median": 18.91984338806641,
+        "p95": 19.557176096013006
+      },
+      "ik_targets_after_offsets_and_floor_clamp_cm": {
+        "p5": 6.454566491529149,
+        "median": 7.397910706349435,
+        "p95": 8.619817626683993
+      },
+      "gmr_fk_task_markers_cm": {
+        "p5": 8.205029806770947,
+        "median": 8.20502980677097,
+        "p95": 8.20502980677099
+      },
+      "recorded_robot_task_markers_cm": {
+        "p5": 8.205029806770948,
+        "median": 8.205029806770968,
+        "p95": 8.20502980677099
+      },
+      "target_length_minus_fk_task_cm": {
+        "p5": -1.7504633152418216,
+        "median": -0.8071191004215315,
+        "p95": 0.4147878199130154
+      },
+      "g1_anatomical_comparison_available": true,
+      "g1_neutral_anatomical_cm": 22.4639498601765,
+      "gmr_fk_anatomical_cm": {
+        "p5": 20.322179090009683,
+        "median": 20.643852639599906,
+        "p95": 21.118736222870982
+      },
+      "recorded_robot_anatomical_cm": {
+        "p5": 20.257258328812007,
+        "median": 20.593603372505658,
+        "p95": 21.197007819323325
+      }
+    },
+    {
+      "id": "forearm_l",
+      "segment": "Предплечье Л",
+      "edges": [
+        [
+          10,
+          12
+        ]
+      ],
+      "task_endpoints": [
+        [
+          "left_elbow_link",
+          "left_wrist_yaw_link"
+        ]
+      ],
+      "anatomical_robot_endpoints": [
+        [
+          "left_elbow_link",
+          "left_wrist_yaw_link"
+        ]
+      ],
+      "meta_bind_cm": {
+        "p5": 28.065989967456694,
+        "median": 28.065989967456694,
+        "p95": 28.065989967456694
+      },
+      "meta_live_cm": {
+        "p5": 25.386806966487452,
+        "median": 26.008324031412627,
+        "p95": 26.82675571526295
+      },
+      "scaled_bind_before_offsets_cm": {
+        "p5": 20.4246965744208,
+        "median": 20.4246965744208,
+        "p95": 20.4246965744208
+      },
+      "scaled_live_before_offsets_cm": {
+        "p5": 18.47495242053227,
+        "median": 18.927254209339317,
+        "p95": 19.52285831341397
+      },
+      "ik_targets_after_offsets_and_floor_clamp_cm": {
+        "p5": 20.538456109597586,
+        "median": 21.564744218671944,
+        "p95": 23.08323755831872
+      },
+      "gmr_fk_task_markers_cm": {
+        "p5": 18.2257092303614,
+        "median": 18.38609340302235,
+        "p95": 18.435561392879087
+      },
+      "recorded_robot_task_markers_cm": {
+        "p5": 18.365307272127225,
+        "median": 18.422535087756103,
+        "p95": 18.435567049507
+      },
+      "target_length_minus_fk_task_cm": {
+        "p5": 2.125645870559325,
+        "median": 3.182853954476075,
+        "p95": 4.657497660935098
+      },
+      "g1_anatomical_comparison_available": true,
+      "g1_neutral_anatomical_cm": 18.428120957972926,
+      "gmr_fk_anatomical_cm": {
+        "p5": 18.2257092303614,
+        "median": 18.38609340302235,
+        "p95": 18.435561392879087
+      },
+      "recorded_robot_anatomical_cm": {
+        "p5": 18.365307272127225,
+        "median": 18.422535087756103,
+        "p95": 18.435567049507
+      }
+    },
+    {
+      "id": "forearm_r",
+      "segment": "Предплечье П",
+      "edges": [
+        [
+          11,
+          13
+        ]
+      ],
+      "task_endpoints": [
+        [
+          "right_elbow_link",
+          "right_wrist_yaw_link"
+        ]
+      ],
+      "anatomical_robot_endpoints": [
+        [
+          "right_elbow_link",
+          "right_wrist_yaw_link"
+        ]
+      ],
+      "meta_bind_cm": {
+        "p5": 28.06630619710182,
+        "median": 28.06630619710182,
+        "p95": 28.06630619710182
+      },
+      "meta_live_cm": {
+        "p5": 25.372171672652243,
+        "median": 26.009126433347383,
+        "p95": 26.794809474498376
+      },
+      "scaled_bind_before_offsets_cm": {
+        "p5": 20.424926706853583,
+        "median": 20.424926706853583,
+        "p95": 20.424926706853583
+      },
+      "scaled_live_before_offsets_cm": {
+        "p5": 18.464301756286748,
+        "median": 18.92783814798061,
+        "p95": 19.49960980961751
+      },
+      "ik_targets_after_offsets_and_floor_clamp_cm": {
+        "p5": 20.320192933636072,
+        "median": 21.31578605285923,
+        "p95": 23.870163041186927
+      },
+      "gmr_fk_task_markers_cm": {
+        "p5": 18.389803390739917,
+        "median": 18.432693489211523,
+        "p95": 18.436308654643337
+      },
+      "recorded_robot_task_markers_cm": {
+        "p5": 18.35599204351368,
+        "median": 18.420587529039782,
+        "p95": 18.43607893268292
+      },
+      "target_length_minus_fk_task_cm": {
+        "p5": 1.8845917550954727,
+        "median": 2.8987255708064903,
+        "p95": 5.438407759088635
+      },
+      "g1_anatomical_comparison_available": true,
+      "g1_neutral_anatomical_cm": 18.428120957972933,
+      "gmr_fk_anatomical_cm": {
+        "p5": 18.389803390739917,
+        "median": 18.432693489211523,
+        "p95": 18.436308654643337
+      },
+      "recorded_robot_anatomical_cm": {
+        "p5": 18.35599204351368,
+        "median": 18.420587529039782,
+        "p95": 18.43607893268292
+      }
+    },
+    {
+      "id": "hip_width",
+      "segment": "Ширина таза по суставам",
+      "edges": [
+        [
+          2,
+          3
+        ]
+      ],
+      "task_endpoints": [
+        [
+          "left_hip_yaw_link",
+          "right_hip_yaw_link"
+        ]
+      ],
+      "anatomical_robot_endpoints": [
+        [
+          "left_hip_pitch_link",
+          "right_hip_pitch_link"
+        ]
+      ],
+      "meta_bind_cm": {
+        "p5": 17.49443560838801,
+        "median": 17.49443560838801,
+        "p95": 17.49443560838801
+      },
+      "meta_live_cm": {
+        "p5": 15.189294540809081,
+        "median": 15.555489738232179,
+        "p95": 16.07341441240631
+      },
+      "scaled_bind_before_offsets_cm": {
+        "p5": 14.01479191232431,
+        "median": 14.01479191232431,
+        "p95": 14.01479191232431
+      },
+      "scaled_live_before_offsets_cm": {
+        "p5": 12.168143462849205,
+        "median": 12.461502426010984,
+        "p95": 12.87641186906433
+      },
+      "ik_targets_after_offsets_and_floor_clamp_cm": {
+        "p5": 28.07662946434222,
+        "median": 29.75136947194916,
+        "p95": 31.660760101133196
+      },
+      "gmr_fk_task_markers_cm": {
+        "p5": 27.409177862938233,
+        "median": 28.303509794863146,
+        "p95": 29.1695641249225
+      },
+      "recorded_robot_task_markers_cm": {
+        "p5": 25.641179533828083,
+        "median": 27.10134005697994,
+        "p95": 28.603131662678997
+      },
+      "target_length_minus_fk_task_cm": {
+        "p5": 0.5564773097526621,
+        "median": 1.4165370460474114,
+        "p95": 2.739614731723079
+      },
+      "g1_anatomical_comparison_available": true,
+      "g1_neutral_anatomical_cm": 12.8904,
+      "gmr_fk_anatomical_cm": {
+        "p5": 12.890399999999975,
+        "median": 12.8904,
+        "p95": 12.890400000000026
+      },
+      "recorded_robot_anatomical_cm": {
+        "p5": 12.890399999999971,
+        "median": 12.8904,
+        "p95": 12.890400000000026
+      }
+    },
+    {
+      "id": "shoulder_width",
+      "segment": "Ширина плеч по суставам",
+      "edges": [
+        [
+          8,
+          9
+        ]
+      ],
+      "task_endpoints": [
+        [
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link"
+        ]
+      ],
+      "anatomical_robot_endpoints": [
+        [
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link"
+        ]
+      ],
+      "meta_bind_cm": {
+        "p5": 39.371316136700585,
+        "median": 39.371316136700585,
+        "p95": 39.371316136700585
+      },
+      "meta_live_cm": {
+        "p5": 33.71201817395424,
+        "median": 35.26748216915432,
+        "p95": 38.89966993243099
+      },
+      "scaled_bind_before_offsets_cm": {
+        "p5": 28.65201572294932,
+        "median": 28.65201572294932,
+        "p95": 28.65201572294932
+      },
+      "scaled_live_before_offsets_cm": {
+        "p5": 24.533527693581348,
+        "median": 25.66549845859751,
+        "p95": 28.30878070348791
+      },
+      "ik_targets_after_offsets_and_floor_clamp_cm": {
+        "p5": 16.988500434216785,
+        "median": 19.367993670060166,
+        "p95": 28.199088775958913
+      },
+      "gmr_fk_task_markers_cm": {
+        "p5": 32.71781545228745,
+        "median": 36.980324707493686,
+        "p95": 40.070030326487995
+      },
+      "recorded_robot_task_markers_cm": {
+        "p5": 32.060580430515,
+        "median": 36.349554590559144,
+        "p95": 39.71998495311239
+      },
+      "target_length_minus_fk_task_cm": {
+        "p5": -20.890753167704386,
+        "median": -18.480505148263482,
+        "p95": -5.220380063479982
+      },
+      "g1_anatomical_comparison_available": true,
+      "g1_neutral_anatomical_cm": 20.043,
+      "gmr_fk_anatomical_cm": {
+        "p5": 20.042999999999967,
+        "median": 20.043000000000003,
+        "p95": 20.043000000000035
+      },
+      "recorded_robot_anatomical_cm": {
+        "p5": 20.042999999999964,
+        "median": 20.043,
+        "p95": 20.04300000000004
+      }
+    },
+    {
+      "id": "leg_total_l",
+      "segment": "Нога Л, сумма сегментов",
+      "edges": [
+        [
+          2,
+          4
+        ],
+        [
+          4,
+          6
+        ]
+      ],
+      "task_endpoints": [
+        [
+          "left_hip_yaw_link",
+          "left_knee_link"
+        ],
+        [
+          "left_knee_link",
+          "left_toe_link"
+        ]
+      ],
+      "anatomical_robot_endpoints": [
+        [
+          "left_hip_pitch_link",
+          "left_knee_link"
+        ],
+        [
+          "left_knee_link",
+          "left_ankle_roll_link"
+        ]
+      ],
+      "meta_bind_cm": {
+        "p5": 92.03434016730708,
+        "median": 92.03434016730708,
+        "p95": 92.03434016730708
+      },
+      "meta_live_cm": {
+        "p5": 80.23285044426781,
+        "median": 82.13303459876717,
+        "p95": 84.75232913784195
+      },
+      "scaled_bind_before_offsets_cm": {
+        "p5": 73.72870752197588,
+        "median": 73.72870752197588,
+        "p95": 73.72870752197588
+      },
+      "scaled_live_before_offsets_cm": {
+        "p5": 64.27453441081089,
+        "median": 65.79677188771676,
+        "p95": 67.89508867506254
+      },
+      "ik_targets_after_offsets_and_floor_clamp_cm": {
+        "p5": 43.765711344335266,
+        "median": 48.12190156011712,
+        "p95": 50.17562541599418
+      },
+      "gmr_fk_task_markers_cm": {
+        "p5": 52.198129262578206,
+        "median": 54.419650290611834,
+        "p95": 55.294714428858796
+      },
+      "recorded_robot_task_markers_cm": {
+        "p5": 51.255149412939836,
+        "median": 53.66521864389918,
+        "p95": 55.1081870381768
+      },
+      "target_length_minus_fk_task_cm": {
+        "p5": -8.478616694221042,
+        "median": -6.420196724003318,
+        "p95": -4.711538100175146
+      },
+      "g1_anatomical_comparison_available": true,
+      "g1_neutral_anatomical_cm": 65.84914716195993,
+      "gmr_fk_anatomical_cm": {
+        "p5": 65.4171821350466,
+        "median": 66.6611662977331,
+        "p95": 67.17984327126608
+      },
+      "recorded_robot_anatomical_cm": {
+        "p5": 65.36877548812049,
+        "median": 66.35245452088363,
+        "p95": 66.96653435467009
+      }
+    },
+    {
+      "id": "leg_total_r",
+      "segment": "Нога П, сумма сегментов",
+      "edges": [
+        [
+          3,
+          5
+        ],
+        [
+          5,
+          7
+        ]
+      ],
+      "task_endpoints": [
+        [
+          "right_hip_yaw_link",
+          "right_knee_link"
+        ],
+        [
+          "right_knee_link",
+          "right_toe_link"
+        ]
+      ],
+      "anatomical_robot_endpoints": [
+        [
+          "right_hip_pitch_link",
+          "right_knee_link"
+        ],
+        [
+          "right_knee_link",
+          "right_ankle_roll_link"
+        ]
+      ],
+      "meta_bind_cm": {
+        "p5": 92.03431233949905,
+        "median": 92.03431233949905,
+        "p95": 92.03431233949905
+      },
+      "meta_live_cm": {
+        "p5": 80.13972930959892,
+        "median": 82.12205017181715,
+        "p95": 84.75779222118429
+      },
+      "scaled_bind_before_offsets_cm": {
+        "p5": 73.72868522911959,
+        "median": 73.72868522911959,
+        "p95": 73.72868522911959
+      },
+      "scaled_live_before_offsets_cm": {
+        "p5": 64.19993507224187,
+        "median": 65.78797226357186,
+        "p95": 67.89946515098644
+      },
+      "ik_targets_after_offsets_and_floor_clamp_cm": {
+        "p5": 43.359892578387544,
+        "median": 46.92150296595382,
+        "p95": 50.68377757494659
+      },
+      "gmr_fk_task_markers_cm": {
+        "p5": 52.17367915504924,
+        "median": 53.887407236615594,
+        "p95": 55.33308164406644
+      },
+      "recorded_robot_task_markers_cm": {
+        "p5": 50.46176275464014,
+        "median": 53.01681883155895,
+        "p95": 54.86999165925034
+      },
+      "target_length_minus_fk_task_cm": {
+        "p5": -9.011670107952257,
+        "median": -6.835665133694047,
+        "p95": -4.305077419054676
+      },
+      "g1_anatomical_comparison_available": true,
+      "g1_neutral_anatomical_cm": 65.84914716195993,
+      "gmr_fk_anatomical_cm": {
+        "p5": 65.42029104255374,
+        "median": 66.23807377749094,
+        "p95": 67.02459020397812
+      },
+      "recorded_robot_anatomical_cm": {
+        "p5": 65.29304781808196,
+        "median": 66.22171062590677,
+        "p95": 67.07128542668602
+      }
+    },
+    {
+      "id": "arm_total_l",
+      "segment": "Рука Л, сумма сегментов",
+      "edges": [
+        [
+          8,
+          10
+        ],
+        [
+          10,
+          12
+        ]
+      ],
+      "task_endpoints": [
+        [
+          "left_shoulder_yaw_link",
+          "left_elbow_link"
+        ],
+        [
+          "left_elbow_link",
+          "left_wrist_yaw_link"
+        ]
+      ],
+      "anatomical_robot_endpoints": [
+        [
+          "left_shoulder_pitch_link",
+          "left_elbow_link"
+        ],
+        [
+          "left_elbow_link",
+          "left_wrist_yaw_link"
+        ]
+      ],
+      "meta_bind_cm": {
+        "p5": 56.190684085355436,
+        "median": 56.190684085355436,
+        "p95": 56.190684085355436
+      },
+      "meta_live_cm": {
+        "p5": 50.79456325960685,
+        "median": 52.00945290773785,
+        "p95": 53.70505260834331
+      },
+      "scaled_bind_before_offsets_cm": {
+        "p5": 40.892114409051146,
+        "median": 40.892114409051146,
+        "p95": 40.892114409051146
+      },
+      "scaled_live_before_offsets_cm": {
+        "p5": 36.96515046897191,
+        "median": 37.84927222855541,
+        "p95": 39.083225117325846
+      },
+      "ik_targets_after_offsets_and_floor_clamp_cm": {
+        "p5": 27.2209671124705,
+        "median": 28.99406162580853,
+        "p95": 30.675538685932292
+      },
+      "gmr_fk_task_markers_cm": {
+        "p5": 26.430739037132376,
+        "median": 26.591123209793327,
+        "p95": 26.64059119965006
+      },
+      "recorded_robot_task_markers_cm": {
+        "p5": 26.57033707889818,
+        "median": 26.62756489452707,
+        "p95": 26.640596856277977
+      },
+      "target_length_minus_fk_task_cm": {
+        "p5": 0.5994947483584145,
+        "median": 2.4176434459795004,
+        "p95": 4.159455213332758
+      },
+      "g1_anatomical_comparison_available": true,
+      "g1_neutral_anatomical_cm": 40.89207081814943,
+      "gmr_fk_anatomical_cm": {
+        "p5": 38.509213590402744,
+        "median": 38.954554604128454,
+        "p95": 39.607656832011116
+      },
+      "recorded_robot_anatomical_cm": {
+        "p5": 38.35793214970795,
+        "median": 38.87034129354753,
+        "p95": 39.59829961529749
+      }
+    },
+    {
+      "id": "arm_total_r",
+      "segment": "Рука П, сумма сегментов",
+      "edges": [
+        [
+          9,
+          11
+        ],
+        [
+          11,
+          13
+        ]
+      ],
+      "task_endpoints": [
+        [
+          "right_shoulder_yaw_link",
+          "right_elbow_link"
+        ],
+        [
+          "right_elbow_link",
+          "right_wrist_yaw_link"
+        ]
+      ],
+      "anatomical_robot_endpoints": [
+        [
+          "right_shoulder_pitch_link",
+          "right_elbow_link"
+        ],
+        [
+          "right_elbow_link",
+          "right_wrist_yaw_link"
+        ]
+      ],
+      "meta_bind_cm": {
+        "p5": 56.19056428707048,
+        "median": 56.19056428707048,
+        "p95": 56.19056428707048
+      },
+      "meta_live_cm": {
+        "p5": 50.780315447110084,
+        "median": 52.011399636683784,
+        "p95": 53.67133163149298
+      },
+      "scaled_bind_before_offsets_cm": {
+        "p5": 40.89202722724771,
+        "median": 40.89202722724771,
+        "p95": 40.89202722724771
+      },
+      "scaled_live_before_offsets_cm": {
+        "p5": 36.95478178974723,
+        "median": 37.85068893782094,
+        "p95": 39.058685070060115
+      },
+      "ik_targets_after_offsets_and_floor_clamp_cm": {
+        "p5": 26.775967804480167,
+        "median": 28.984687986353453,
+        "p95": 31.640785444261265
+      },
+      "gmr_fk_task_markers_cm": {
+        "p5": 26.594833197510887,
+        "median": 26.637723295982468,
+        "p95": 26.64133846141431
+      },
+      "recorded_robot_task_markers_cm": {
+        "p5": 26.561021850284654,
+        "median": 26.625617335810748,
+        "p95": 26.641108739453884
+      },
+      "target_length_minus_fk_task_cm": {
+        "p5": 0.13777925195388843,
+        "median": 2.375202864457365,
+        "p95": 5.0067209479104715
+      },
+      "g1_anatomical_comparison_available": true,
+      "g1_neutral_anatomical_cm": 40.89207081814943,
+      "gmr_fk_anatomical_cm": {
+        "p5": 38.756994677697264,
+        "median": 39.06932614727786,
+        "p95": 39.52724761995396
+      },
+      "recorded_robot_anatomical_cm": {
+        "p5": 38.664659208563286,
+        "median": 39.006316164180134,
+        "p95": 39.593533663828254
+      }
+    }
+  ],
+  "head_proxies": [
+    {
+      "id": "pelvis_to_eye_proxy",
+      "meta_live_cm": {
+        "p5": 56.92505207443771,
+        "median": 59.63424069999246,
+        "p95": 67.39648703119137
+      },
+      "gmr_camera_to_robot_marker_cm": {
+        "p5": 47.268107986740006,
+        "median": 47.634390163850206,
+        "p95": 47.88219233096653
+      },
+      "actual_camera_to_robot_marker_cm": {
+        "p5": 47.13240781855773,
+        "median": 47.53564380908678,
+        "p95": 47.839510818036565
+      },
+      "warning": "HMD/camera center proxy. Chest Meta vs torso_link are different physical points; not a neck/head bone length."
+    },
+    {
+      "id": "chest_to_eye_proxy",
+      "meta_live_cm": {
+        "p5": 25.529780911234738,
+        "median": 27.143707286415385,
+        "p95": 29.628610772200187
+      },
+      "gmr_camera_to_robot_marker_cm": {
+        "p5": 43.73785545725801,
+        "median": 43.73785545725807,
+        "p95": 43.73785545725814
+      },
+      "actual_camera_to_robot_marker_cm": {
+        "p5": 43.73785545725801,
+        "median": 43.73785545725807,
+        "p95": 43.73785545725814
+      },
+      "warning": "HMD/camera center proxy. Chest Meta vs torso_link are different physical points; not a neck/head bone length."
+    },
+    {
+      "id": "shoulder_midpoint_to_eye_proxy",
+      "meta_live_cm": {
+        "p5": 19.19568339157796,
+        "median": 21.820549423522277,
+        "p95": 23.930097533000747
+      },
+      "gmr_camera_to_robot_marker_cm": {
+        "p5": 19.745068431051294,
+        "median": 19.745068431051337,
+        "p95": 19.745068431051376
+      },
+      "actual_camera_to_robot_marker_cm": {
+        "p5": 19.74506843105129,
+        "median": 19.745068431051333,
+        "p95": 19.745068431051376
+      },
+      "warning": "HMD/camera center proxy. Chest Meta vs torso_link are different physical points; not a neck/head bone length."
+    }
+  ],
+  "missing_segments": [
+    "individual spine segments",
+    "neck",
+    "head anatomical length/width",
+    "ankle-to-toe / foot length",
+    "wrist-to-fingers / hand length",
+    "finger phalanges"
+  ],
+  "notes": [
+    "Meta live measurements are inferred joint positions, not physical anthropometry; no RGB-D recording available.",
+    "Scaled columns apply actual per-point scales about pelvis before bind offsets; mixed chest/shoulder scales are not a single edge multiplier.",
+    "IK targets are exported from exact native adapter after rotated bind offsets, toe clamp and HMD alignment. Common XY alignment does not change segment lengths.",
+    "GMR targets are virtual marker positions; physical G1 link lengths cannot change.",
+    "G1 anatomical comparisons use hip_pitch, shoulder_pitch and ankle_roll origins; actual task anchors are hip_yaw, shoulder_yaw and toe origins.",
+    "Meta Chest maps to torso_link at the waist, not an anatomical chest marker: their direct lengths must not be interpreted as torso proportions.",
+    "No runtime modifications or deployment performed."
+  ],
+  "point_position_residual_cm": {
+    "pelvis": {
+      "p5": 6.183373032900339,
+      "median": 7.9299348759621955,
+      "p95": 9.448263761713166
+    },
+    "torso_link": {
+      "p5": 9.765519933291362,
+      "median": 12.299196922673012,
+      "p95": 14.47112699596976
+    },
+    "left_hip_yaw_link": {
+      "p5": 5.156228414631074,
+      "median": 6.9606144213361505,
+      "p95": 8.93511827745559
+    },
+    "right_hip_yaw_link": {
+      "p5": 4.803773505191969,
+      "median": 7.251134366238504,
+      "p95": 9.524100082922837
+    },
+    "left_knee_link": {
+      "p5": 3.1131531962106123,
+      "median": 4.40688621159183,
+      "p95": 6.078336018678368
+    },
+    "right_knee_link": {
+      "p5": 2.821525464564654,
+      "median": 4.640014986045799,
+      "p95": 6.469438515286521
+    },
+    "left_toe_link": {
+      "p5": 0.03536979724473631,
+      "median": 0.1203750981472825,
+      "p95": 0.2555098112849721
+    },
+    "right_toe_link": {
+      "p5": 0.025247930939676314,
+      "median": 0.15816478627192743,
+      "p95": 0.2696832557498551
+    },
+    "left_shoulder_yaw_link": {
+      "p5": 12.194450246753451,
+      "median": 14.513885125169654,
+      "p95": 16.279394957503506
+    },
+    "right_shoulder_yaw_link": {
+      "p5": 12.401818304172417,
+      "median": 15.03623002196917,
+      "p95": 16.728704705462498
+    },
+    "left_elbow_link": {
+      "p5": 12.727164108715524,
+      "median": 15.019599401648629,
+      "p95": 18.413300419014192
+    },
+    "right_elbow_link": {
+      "p5": 13.414706996637888,
+      "median": 15.673132762073374,
+      "p95": 18.620956495323114
+    },
+    "left_wrist_yaw_link": {
+      "p5": 12.024946253585105,
+      "median": 13.522939007107393,
+      "p95": 16.209291743376703
+    },
+    "right_wrist_yaw_link": {
+      "p5": 12.44433571224234,
+      "median": 14.175688360108335,
+      "p95": 16.286668385944296
+    }
+  }
+}

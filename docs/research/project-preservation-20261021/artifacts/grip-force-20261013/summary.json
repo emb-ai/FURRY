@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-13",
+  "scope": [
+    "cup",
+    "rubik"
+  ],
+  "status": "source_fix_verified_not_built_or_installed",
+  "joint_motor_torque_limit_nm": 0.35,
+  "previous_joint_limit_nm": 2.45,
+  "joint_damping_nm_s_rad": 0.03,
+  "gain_unchanged": 1.0,
+  "closure_mapping_unchanged": true,
+  "tests": {
+    "grip": 3,
+    "scene_assets": 5,
+    "cup_lab": 4,
+    "rubik_native": 1,
+    "total_passed": 13
+  },
+  "quest_adb": "offline at diagnostic check",
+  "source_sha256": {
+    ".tools/furry-main-integration-20261013/prototypes/quest_g1/g1_sim/scene.py": "448dff1e9a4586d48c30e81446235d42276d1c128df22450b67194d4110331a0",
+    ".tools/furry-main-integration-20261013/prototypes/quest_g1/scripts/scene_assets.py": "8c21f9ea6b101a19e2a50b29a313f1977af0b01cfd11336c58e812e503bf9427",
+    ".tools/furry-main-integration-20261013/prototypes/quest_g1/tests/test_grip_force.py": "1b84a0dd499ed909047eeb05118c74dc8621ee2e883f309cb5cf84ad72f72c6b"
+  },
+  "limitations": [
+    "Motor torque limit is not a strict contact force limit; arm motion and collisions can add force.",
+    "Cube lift fixture sets the initial arm pose, then uses motor commands and free contacts. No live Quest grasp acceptance.",
+    "Candidate .15 lost hold; .25 lost hold at partial Grip; .35 retained cube at both .65 and 1.0 Grip in the tested fixture.",
+    "No APK build, installation, publication or runtime policy change."
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "execution_steps": 48,
+  "label": "single",
+  "episode": "episode-1792014836827567",
+  "mode": "policy",
+  "seed": 0,
+  "success": false,
+  "outcome": 3,
+  "elapsed_sim_s": 90.00000000000287,
+  "wall_s": 75.07947206497192,
+  "lift_m": 0.07438638275156473,
+  "contact_frames": 72,
+  "final_goal_xy_error_m": 0.16369049160348675,
+  "initial_distance_m": 0.17235412785740215,
+  "min_pelvis_z": 0.7619082360238236,
+  "final_cup": [
+    0.5832373509287095,
+    -0.05755772165177042,
+    0.7830535833377422
+  ],
+  "goal": [
+    0.43,
+    0.0,
+    0.75
+  ],
+  "error": null,
+  "inference_mean_s": 0.5211304990868819
+}

@@ -1,0 +1,752 @@
+{
+  "passed": true,
+  "bank": {
+    "states": 72,
+    "max_qpos_error": 0.0,
+    "source_sha256": "714a59bb746ccf6066abbfae49f16e7c9818a029f2488e50cbdd350fc3953932",
+    "snapshot_restore_only_at_episode_reset": true,
+    "validation_macros": [
+      3,
+      7
+    ],
+    "independent_demonstrations": false
+  },
+  "oracle_cases": [
+    {
+      "stage": 0,
+      "macro": 0,
+      "offset": 0.6,
+      "outcome": {
+        "completed_moves": 1,
+        "requested_moves": 1,
+        "success": true,
+        "failure": null,
+        "metrics": {
+          "corner_position": 7.445032674068347e-05,
+          "corner_angle": 0.027624047553028604,
+          "center": 0.0022069026258427537,
+          "grid_angle": 0.031735413051249856,
+          "hand_position": [
+            0.0021848488541580573,
+            0.0008654899402076352
+          ],
+          "hand_angle": [
+            0.034802126700717716,
+            0.010101422998534412
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": true,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 0,
+        "warm_start": {
+          "macro": 0,
+          "offset": 0.6,
+          "frame": 5872
+        },
+        "completed_logical_moves": 1,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 0.30000000000000004
+      }
+    },
+    {
+      "stage": 0,
+      "macro": 0,
+      "offset": 1.0,
+      "outcome": {
+        "completed_moves": 1,
+        "requested_moves": 1,
+        "success": true,
+        "failure": null,
+        "metrics": {
+          "corner_position": 6.30680082451438e-05,
+          "corner_angle": 0.028101925453310587,
+          "center": 0.002920745630523738,
+          "grid_angle": 0.028076921332024784,
+          "hand_position": [
+            0.0021533833736024064,
+            0.000504510077793891
+          ],
+          "hand_angle": [
+            0.03268220777117435,
+            0.0064030877263808895
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": true,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 0,
+        "warm_start": {
+          "macro": 0,
+          "offset": 1.0,
+          "frame": 5832
+        },
+        "completed_logical_moves": 1,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 0.30000000000000004
+      }
+    },
+    {
+      "stage": 0,
+      "macro": 3,
+      "offset": 0.6,
+      "outcome": {
+        "completed_moves": 1,
+        "requested_moves": 1,
+        "success": true,
+        "failure": null,
+        "metrics": {
+          "corner_position": 5.399404857557808e-05,
+          "corner_angle": 0.028579641420913817,
+          "center": 0.002915990563934287,
+          "grid_angle": 0.023516211445384443,
+          "hand_position": [
+            0.0038858132160639516,
+            0.002766961587066164
+          ],
+          "hand_angle": [
+            0.04396616750427861,
+            0.02668363664641118
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": true,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 0,
+        "warm_start": {
+          "macro": 3,
+          "offset": 0.6,
+          "frame": 11641
+        },
+        "completed_logical_moves": 1,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 0.30000000000000004
+      }
+    },
+    {
+      "stage": 0,
+      "macro": 3,
+      "offset": 1.0,
+      "outcome": {
+        "completed_moves": 1,
+        "requested_moves": 1,
+        "success": true,
+        "failure": null,
+        "metrics": {
+          "corner_position": 6.035772833707866e-05,
+          "corner_angle": 0.029148336945225124,
+          "center": 0.0037648596000676784,
+          "grid_angle": 0.04716858930603593,
+          "hand_position": [
+            0.005074231497885272,
+            0.0025161140657274567
+          ],
+          "hand_angle": [
+            0.06384665375932488,
+            0.02357032680318962
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": true,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 0,
+        "warm_start": {
+          "macro": 3,
+          "offset": 1.0,
+          "frame": 11601
+        },
+        "completed_logical_moves": 1,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 0.30000000000000004
+      }
+    },
+    {
+      "stage": 1,
+      "macro": 0,
+      "offset": 1.5,
+      "outcome": {
+        "completed_moves": 1,
+        "requested_moves": 1,
+        "success": true,
+        "failure": null,
+        "metrics": {
+          "corner_position": 6.504567965635828e-05,
+          "corner_angle": 0.01869507401904978,
+          "center": 0.005345097755712085,
+          "grid_angle": 0.03876633733340755,
+          "hand_position": [
+            0.0036328304369831286,
+            0.0015742211634499897
+          ],
+          "hand_angle": [
+            0.05242493382068215,
+            0.01943783848513572
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": true,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 1,
+        "warm_start": {
+          "macro": 0,
+          "offset": 1.5,
+          "frame": 5782
+        },
+        "completed_logical_moves": 1,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 0.4
+      }
+    },
+    {
+      "stage": 1,
+      "macro": 0,
+      "offset": 2.0,
+      "outcome": {
+        "completed_moves": 1,
+        "requested_moves": 1,
+        "success": true,
+        "failure": null,
+        "metrics": {
+          "corner_position": 7.130325202452299e-05,
+          "corner_angle": 0.02425016098633351,
+          "center": 0.005381960663539428,
+          "grid_angle": 0.03633171079978155,
+          "hand_position": [
+            0.00372388721772721,
+            0.0012377149161035496
+          ],
+          "hand_angle": [
+            0.05205859918065523,
+            0.017126472318027438
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": true,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 1,
+        "warm_start": {
+          "macro": 0,
+          "offset": 2.0,
+          "frame": 5732
+        },
+        "completed_logical_moves": 1,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 0.9
+      }
+    },
+    {
+      "stage": 1,
+      "macro": 3,
+      "offset": 1.5,
+      "outcome": {
+        "completed_moves": 1,
+        "requested_moves": 1,
+        "success": true,
+        "failure": null,
+        "metrics": {
+          "corner_position": 5.118031930765946e-05,
+          "corner_angle": 0.028962200826195054,
+          "center": 0.0037342823477004117,
+          "grid_angle": 0.04749243201787847,
+          "hand_position": [
+            0.005053202615832701,
+            0.0024908846417737106
+          ],
+          "hand_angle": [
+            0.06405534489182978,
+            0.022746622386151636
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": true,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 1,
+        "warm_start": {
+          "macro": 3,
+          "offset": 1.5,
+          "frame": 11551
+        },
+        "completed_logical_moves": 1,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 0.8
+      }
+    },
+    {
+      "stage": 1,
+      "macro": 3,
+      "offset": 2.0,
+      "outcome": {
+        "completed_moves": 1,
+        "requested_moves": 1,
+        "success": true,
+        "failure": null,
+        "metrics": {
+          "corner_position": 3.5528887392324894e-05,
+          "corner_angle": 0.026226643741930802,
+          "center": 0.0037115566528484363,
+          "grid_angle": 0.04599297899349537,
+          "hand_position": [
+            0.005023093621970003,
+            0.0027261866304269526
+          ],
+          "hand_angle": [
+            0.06295166482295168,
+            0.02593583016506509
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": true,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 1,
+        "warm_start": {
+          "macro": 3,
+          "offset": 2.0,
+          "frame": 11501
+        },
+        "completed_logical_moves": 1,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 1.3
+      }
+    },
+    {
+      "stage": 2,
+      "macro": 0,
+      "offset": 3.0,
+      "outcome": {
+        "completed_moves": 1,
+        "requested_moves": 1,
+        "success": true,
+        "failure": null,
+        "metrics": {
+          "corner_position": 6.317204371943966e-05,
+          "corner_angle": 0.022125942689622986,
+          "center": 0.005372822799136233,
+          "grid_angle": 0.03703690317851451,
+          "hand_position": [
+            0.0037332697426938643,
+            0.0012519635409310264
+          ],
+          "hand_angle": [
+            0.0525964738123022,
+            0.01700298788361498
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": true,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 2,
+        "warm_start": {
+          "macro": 0,
+          "offset": 3.0,
+          "frame": 5632
+        },
+        "completed_logical_moves": 1,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 1.9000000000000001
+      }
+    },
+    {
+      "stage": 2,
+      "macro": 0,
+      "offset": 5.0,
+      "outcome": {
+        "completed_moves": 1,
+        "requested_moves": 1,
+        "success": true,
+        "failure": null,
+        "metrics": {
+          "corner_position": 5.528972735708348e-05,
+          "corner_angle": 0.0220337760581126,
+          "center": 0.0020686437207070823,
+          "grid_angle": 0.028156848406265065,
+          "hand_position": [
+            0.002459470735438753,
+            0.002014420106378738
+          ],
+          "hand_angle": [
+            0.0424865140626353,
+            0.019231997290821968
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": true,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 2,
+        "warm_start": {
+          "macro": 0,
+          "offset": 5.0,
+          "frame": 5432
+        },
+        "completed_logical_moves": 1,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 0.30000000000000004
+      }
+    },
+    {
+      "stage": 2,
+      "macro": 3,
+      "offset": 3.0,
+      "outcome": {
+        "completed_moves": 1,
+        "requested_moves": 1,
+        "success": true,
+        "failure": null,
+        "metrics": {
+          "corner_position": 3.470688487956992e-05,
+          "corner_angle": 0.025259910396643735,
+          "center": 0.0037480314464102124,
+          "grid_angle": 0.04582415625682202,
+          "hand_position": [
+            0.004967181878957545,
+            0.0026459708176381
+          ],
+          "hand_angle": [
+            0.06341411673533161,
+            0.023569356927873934
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": true,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 2,
+        "warm_start": {
+          "macro": 3,
+          "offset": 3.0,
+          "frame": 11401
+        },
+        "completed_logical_moves": 1,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 2.3000000000000003
+      }
+    },
+    {
+      "stage": 2,
+      "macro": 3,
+      "offset": 5.0,
+      "outcome": {
+        "completed_moves": 1,
+        "requested_moves": 1,
+        "success": true,
+        "failure": null,
+        "metrics": {
+          "corner_position": 3.0330481720939962e-05,
+          "corner_angle": 0.021468811483151377,
+          "center": 0.00312587880499722,
+          "grid_angle": 0.07872544849814314,
+          "hand_position": [
+            0.005535945304675353,
+            0.001627172861770709
+          ],
+          "hand_angle": [
+            0.10079975798917619,
+            0.028034776214703034
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": true,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 2,
+        "warm_start": {
+          "macro": 3,
+          "offset": 5.0,
+          "frame": 11201
+        },
+        "completed_logical_moves": 1,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 0.30000000000000004
+      }
+    },
+    {
+      "stage": 3,
+      "macro": 0,
+      "offset": 8.0,
+      "outcome": {
+        "completed_moves": 1,
+        "requested_moves": 1,
+        "success": true,
+        "failure": null,
+        "metrics": {
+          "corner_position": 5.6500689497448175e-05,
+          "corner_angle": 0.023117238132663823,
+          "center": 0.005870213654145614,
+          "grid_angle": 0.043591232067717735,
+          "hand_position": [
+            0.005075575411057185,
+            0.0013067685453858923
+          ],
+          "hand_angle": [
+            0.07042689223046326,
+            0.019946059540471617
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": true,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 3,
+        "warm_start": {
+          "macro": 0,
+          "offset": 8.0,
+          "frame": 5132
+        },
+        "completed_logical_moves": 1,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 2.15
+      }
+    },
+    {
+      "stage": 3,
+      "macro": 0,
+      "offset": "return_start",
+      "outcome": {
+        "completed_moves": 1,
+        "requested_moves": 1,
+        "success": true,
+        "failure": null,
+        "metrics": {
+          "corner_position": 3.5167862453016614e-05,
+          "corner_angle": 0.01851509498783228,
+          "center": 0.006464107440671468,
+          "grid_angle": 0.03547532648614922,
+          "hand_position": [
+            0.003923507479652612,
+            0.005007962457514283
+          ],
+          "hand_angle": [
+            0.05624968397400722,
+            0.030324960634939335
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": true,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 3,
+        "warm_start": {
+          "macro": 0,
+          "offset": "return_start",
+          "frame": 4456
+        },
+        "completed_logical_moves": 1,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 9.05
+      }
+    },
+    {
+      "stage": 3,
+      "macro": 3,
+      "offset": 8.0,
+      "outcome": {
+        "completed_moves": 1,
+        "requested_moves": 1,
+        "success": true,
+        "failure": null,
+        "metrics": {
+          "corner_position": 3.0133930684561628e-05,
+          "corner_angle": 0.018338398399244237,
+          "center": 0.005959262956910221,
+          "grid_angle": 0.044739563467994105,
+          "hand_position": [
+            0.003891979571553217,
+            0.0019358488480651283
+          ],
+          "hand_angle": [
+            0.06406582485953555,
+            0.017308696408516334
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": true,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 3,
+        "warm_start": {
+          "macro": 3,
+          "offset": 8.0,
+          "frame": 10901
+        },
+        "completed_logical_moves": 1,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 2.0500000000000003
+      }
+    },
+    {
+      "stage": 3,
+      "macro": 3,
+      "offset": "return_start",
+      "outcome": {
+        "completed_moves": 1,
+        "requested_moves": 1,
+        "success": true,
+        "failure": null,
+        "metrics": {
+          "corner_position": 6.359953463655958e-05,
+          "corner_angle": 0.020540911042079654,
+          "center": 0.006321090458342413,
+          "grid_angle": 0.04385079372147313,
+          "hand_position": [
+            0.0031759348598841015,
+            0.003867204717568164
+          ],
+          "hand_angle": [
+            0.055742548664363165,
+            0.03139987069347169
+          ]
+        },
+        "released_and_withdrawn": true,
+        "completed_this_step": true,
+        "next_command": [
+          3,
+          -1
+        ],
+        "stage": 3,
+        "warm_start": {
+          "macro": 3,
+          "offset": "return_start",
+          "frame": 9735
+        },
+        "completed_logical_moves": 1,
+        "requested_logical_moves": 1,
+        "elapsed_seconds": 13.700000000000001
+      }
+    }
+  ],
+  "random_sequence": [
+    [
+      3,
+      -1
+    ],
+    [
+      4,
+      -1
+    ],
+    [
+      4,
+      -1
+    ],
+    [
+      4,
+      -1
+    ],
+    [
+      3,
+      -1
+    ],
+    [
+      3,
+      -1
+    ],
+    [
+      3,
+      -1
+    ],
+    [
+      4,
+      -1
+    ],
+    [
+      4,
+      -1
+    ],
+    [
+      4,
+      -1
+    ],
+    [
+      0,
+      -1
+    ],
+    [
+      0,
+      -1
+    ],
+    [
+      0,
+      -1
+    ],
+    [
+      4,
+      -1
+    ],
+    [
+      3,
+      -1
+    ],
+    [
+      4,
+      -1
+    ],
+    [
+      0,
+      -1
+    ],
+    [
+      4,
+      -1
+    ]
+  ],
+  "logical_faces": [
+    3,
+    4,
+    3,
+    4,
+    0,
+    4,
+    3,
+    4,
+    0,
+    4
+  ],
+  "wall_seconds": 135.28985895798542,
+  "action_dim": 14,
+  "no_finger_command_api": true,
+  "native_warnings": 0,
+  "policy_tested": false,
+  "code_sha256": {
+    "native_env.py": "58a92d5d4f0a2af730643ac97a03ea604a3c9ab4ccaa0575efeb56496d2ba30d",
+    "curriculum_env.py": "7e086be43132e30320832674271bbbb8e55d75c315aad6c9c5d18617a420b3f2",
+    "validate_curriculum.py": "26170f09aad5df5bb2a4a99f2a35eb8f668c212a43701d4ad06fc03cb7bda79a"
+  }
+}

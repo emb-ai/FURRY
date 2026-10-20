@@ -1,0 +1,106 @@
+[
+  {
+    "episode": "episode-1792015107773946",
+    "mode": "oracle100",
+    "seed": 0,
+    "success": true,
+    "outcome": 1,
+    "elapsed_sim_s": 7.349999999999888,
+    "wall_s": 1.9150981903076172,
+    "lift_m": 0.06352481521215503,
+    "contact_frames": 288,
+    "final_goal_xy_error_m": 0.017923678769595417,
+    "initial_distance_m": 0.2459814878239907,
+    "min_pelvis_z": 0.7553720719525343,
+    "final_cup": [
+      0.4360560315928318,
+      -0.016869580373627218,
+      0.7499983516129839
+    ],
+    "goal": [
+      0.43,
+      0.0,
+      0.75
+    ],
+    "error": null,
+    "inference_mean_s": null
+  },
+  {
+    "episode": "episode-1792017633764131",
+    "mode": "oracle100",
+    "seed": 0,
+    "success": false,
+    "outcome": 0,
+    "elapsed_sim_s": 30.00000000000189,
+    "wall_s": 13.654002904891968,
+    "lift_m": 0.1191366053196794,
+    "contact_frames": 227,
+    "final_goal_xy_error_m": 0.05877255917057705,
+    "initial_distance_m": 0.32413819231674706,
+    "min_pelvis_z": 0.7577723599870865,
+    "final_cup": [
+      0.5078020235071109,
+      0.20245246173690395,
+      0.7830523321481279
+    ],
+    "goal": [
+      0.45824597113998605,
+      0.23405011015012864,
+      0.75
+    ],
+    "error": null,
+    "inference_mean_s": null
+  },
+  {
+    "episode": "episode-1792017999001122",
+    "mode": "oracle100",
+    "seed": 0,
+    "success": false,
+    "outcome": 0,
+    "elapsed_sim_s": 30.00000000000189,
+    "wall_s": 15.788125038146973,
+    "lift_m": 0.06967375834801626,
+    "contact_frames": 980,
+    "final_goal_xy_error_m": 0.10153738677392475,
+    "initial_distance_m": 0.3344510123001047,
+    "min_pelvis_z": 0.7490360103473338,
+    "final_cup": [
+      0.5401865236451854,
+      0.14904099484455607,
+      0.7830535878038846
+    ],
+    "goal": [
+      0.4467791395820677,
+      0.18885181643068794,
+      0.75
+    ],
+    "error": null,
+    "inference_mean_s": null
+  },
+  {
+    "episode": "episode-1792018134901046",
+    "mode": "oracle100",
+    "seed": 0,
+    "success": true,
+    "outcome": 1,
+    "elapsed_sim_s": 8.279999999999868,
+    "wall_s": 3.90036678314209,
+    "lift_m": 0.10751910808869625,
+    "contact_frames": 239,
+    "final_goal_xy_error_m": 0.016732884805808458,
+    "initial_distance_m": 0.24224438177974833,
+    "min_pelvis_z": 0.7501778955654591,
+    "final_cup": [
+      0.43466775784995665,
+      0.018409850412373797,
+      0.7499990246582324
+    ],
+    "goal": [
+      0.45089916689787063,
+      0.022475658357143404,
+      0.75
+    ],
+    "error": null,
+    "inference_mean_s": null
+  }
+]

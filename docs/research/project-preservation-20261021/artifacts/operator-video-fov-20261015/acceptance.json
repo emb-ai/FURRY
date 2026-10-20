@@ -1,0 +1,30 @@
+{
+  "video": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/operator-video-20261015/downloads/G1Quest/operator-20261015-184609-879.mp4",
+  "sha256": "c18c6b755ef5e21af18ad7df27c3680f82eb8344f71ce896534eed06a032c1c4",
+  "bytes": 47830844,
+  "duration_seconds": 47.319211,
+  "width": 1024,
+  "height": 1024,
+  "device_sha256_matched": true,
+  "full_decode_passed": true,
+  "visual_review": "1 Hz samples across the full clip plus full-size frames at 16 and 20 seconds",
+  "observations": [
+    "Fixed right/bottom source-projection cutoff is absent in reviewed frames.",
+    "Virtual table and hand are rendered beyond the former x~813/y~986 boundaries.",
+    "Paddle visible during sampled lower/right-hand movements.",
+    "Head-locked HUD bounds approximately unchanged from captureFov110 before native fix."
+  ],
+  "native_runtime_confirmed": true,
+  "runtime_evidence": "G1CaptureFov eye=0/1 wide=0 logged after video save at 18:46:58; source returns native asymmetric projection after recording.",
+  "capture_properties": {
+    "debug.oculus.captureFovDegrees": "110",
+    "debug.oculus.headsetOverride": "1"
+  },
+  "internal_projection_cutoff_fixed_in_test": true,
+  "exact_binocular_headset_parity_measured": false,
+  "limitations": [
+    "One live recording; no synchronized through-lens reference or all-pose acceptance.",
+    "Camera/head movements, natural occlusion and existing transparency may still hide the paddle.",
+    "110-degree compositor override is reset by headset reboot and must be reapplied with configure_capture.py."
+  ]
+}

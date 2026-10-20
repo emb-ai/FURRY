@@ -25,6 +25,22 @@ class TransportTest(unittest.TestCase):
         self.assertEqual((p["clock"], p["frame_age_ms"], p["dropped"]), ("global_time", 40, 3))
         self.assertNotIn("clock", packet({}, {}, {}, 1, 1, 30, "test"))
 
+    def test_optional_arms_keep_existing_packet_contract(self):
+        p = packet({7: [1, 2, 3], 9: [4, 5, 6], 10: [float("nan"), 0, 0]},
+                   {7: .8, 9: .9}, {7: "line"}, 123, 1, 30, "test",
+                   "pelvis-relative", {"p": [1, 2, 3], "conf": .85},
+                   {"clock": "global_time", "frame_age_ms": 40, "dropped": 3}, "abc",
+                   debug_arms=True)
+        self.assertEqual(len(p["joints"]), 13)
+        self.assertEqual(p["joints"]["lelbow"], {"p": [1., 2., 3.], "conf": .8, "src": "line"})
+        self.assertEqual(p["joints"]["lwrist"]["p"], [4., 5., 6.])
+        self.assertEqual(p["joints"]["rwrist"]["conf"], 0)
+        self.assertEqual(p["joints"]["relbow"]["src"], "missing")
+        self.assertEqual((p["frame"], p["clock"], p["session_id"]),
+                         ("pelvis-relative", "global_time", "abc"))
+        self.assertEqual(p["pelvis"]["p"], [1., 2., 3.])
+        json.dumps(p, allow_nan=False)
+
     def test_session_id(self):
         self.assertEqual(packet({}, {}, {}, 1, 1, 30, "test", session_id="abc")["session_id"], "abc")
         self.assertNotIn("session_id", packet({}, {}, {}, 1, 1, 30, "test"))

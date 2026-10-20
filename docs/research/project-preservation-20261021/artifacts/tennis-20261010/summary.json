@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-10",
+  "repository": "https://github.com/emb-ai/FURRY",
+  "checkout": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/.tools/furry-publish/prototypes/quest_g1",
+  "branch": "main",
+  "source_changes_committed": false,
+  "published": false,
+  "apk": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs/tennis-20261010/g1-quest-tennis.apk",
+  "apk_sha256": "4efe53732cd030af3de32c4d05b97bf079378e8a05d74bdea652b870e769ef73",
+  "headset_installed": true,
+  "headset_live_acceptance": false,
+  "first_touch_delay_s": 7,
+  "serve_interval_s": 4,
+  "muzzle_speed_m_s": 5.5,
+  "air_drag": "quadratic",
+  "spin": false,
+  "magnus": false,
+  "racket_restitution": 1,
+  "table_restitution": 0.9,
+  "ball_mass_kg": 0.0027,
+  "ball_diameter_m": 0.04,
+  "air_density_kg_m3": 1.204,
+  "drag_coefficient": 0.5,
+  "unit_suite": {
+    "run": 84,
+    "passed": 83,
+    "skipped": 1
+  },
+  "tennis_native_test": "passed separately; analytical drag/gravity, momentum/energy, high-speed impact, touch/countdown, landing/miss, robot obstacles, snapshot and state recording",
+  "policy_native_check": {
+    "policies": 7,
+    "scenes": 4,
+    "checks": 28,
+    "passed": true
+  },
+  "baseline_tennis_runtime_s": 8.5,
+  "render_budget": 99941,
+  "limitations": [
+    "No Quest pickup/return acceptance",
+    "Fixed drag coefficient and training launch trajectory; no calibration to a specific measured flight",
+    "Hand/racket grip contacts resolved by subsequent MuJoCo step",
+    "Mid-session recording does not recover prior actor history"
+  ],
+  "replay_check": {
+    "synthetic_cases": 20,
+    "passed": true,
+    "max_state_error": 0,
+    "max_command_error": 0
+  },
+  "documentation_lint": "passed",
+  "native_started": true,
+  "install_receipt": "install-receipt.json"
+}

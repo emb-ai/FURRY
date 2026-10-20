@@ -1,0 +1,671 @@
+{
+  "date_utc": "2026-10-14T12:55:37.518586+00:00",
+  "offline_only": true,
+  "apk_changed": false,
+  "headset_accessed": false,
+  "apk_sha256": "d2f0ad4e17d0ec84240e3c792d1a5f54d5901f00119c13266bb251c9fe3fa117",
+  "source_manifest_verified_files": 27,
+  "reset_cases": 5120,
+  "reset_limit_m": 0.001,
+  "focused_tests_passed": 12,
+  "idle_trials": [
+    {
+      "scene": "stand",
+      "policy": "homie-standing",
+      "seconds": 60.0,
+      "failed": false,
+      "min_root_z_m": 0.745300183582385,
+      "max_root_xy_m": 0.09950357987897832,
+      "max_tilt_deg": 3.1619791283031407,
+      "max_contact_penetration_m": 0.0031873663334863007,
+      "warnings": 0,
+      "task": []
+    },
+    {
+      "scene": "cup",
+      "policy": "homie-standing",
+      "seconds": 60.0,
+      "failed": false,
+      "min_root_z_m": 0.7398462595665294,
+      "max_root_xy_m": 0.17163146059460252,
+      "max_tilt_deg": 6.863074171736811,
+      "max_contact_penetration_m": 0.0006974878350705467,
+      "warnings": 0,
+      "task": [
+        0.0,
+        59.999999999950866,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.754,
+        0.0
+      ]
+    },
+    {
+      "scene": "bimanual",
+      "policy": "homie-standing",
+      "seconds": 60.0,
+      "failed": false,
+      "min_root_z_m": 0.7398462595665294,
+      "max_root_xy_m": 0.17163146059460468,
+      "max_tilt_deg": 6.863074171736917,
+      "max_contact_penetration_m": 0.0006974878350705606,
+      "warnings": 0,
+      "task": [
+        0.0,
+        59.999999999950866,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.799,
+        0.799
+      ]
+    },
+    {
+      "scene": "rubik",
+      "policy": "homie-standing",
+      "seconds": 60.0,
+      "failed": false,
+      "min_root_z_m": 0.7399136394806333,
+      "max_root_xy_m": 0.16879932985384333,
+      "max_tilt_deg": 6.8019771491337835,
+      "max_contact_penetration_m": 0.0006746730296054602,
+      "warnings": 0,
+      "task": [
+        -1.0,
+        0.0,
+        0.0,
+        -1.0,
+        0.0,
+        -1.0,
+        0.0,
+        0.0,
+        0.025477707,
+        -0.025477707,
+        0.025477707,
+        0.5,
+        -0.5,
+        -0.5,
+        0.5,
+        -0.025477707,
+        0.025477707,
+        0.025477707,
+        0.7071067811865476,
+        0.0,
+        0.0,
+        -0.7071067811865476,
+        -0.025477707,
+        0.025477707,
+        -0.025477707,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.025477707,
+        0.025477707,
+        -0.025477707,
+        0.5,
+        -0.5,
+        -0.5,
+        -0.5,
+        0.025477707,
+        -0.025477707,
+        -0.025477707,
+        1.0,
+        -1.01465364e-17,
+        0.0,
+        0.0,
+        0.025477707,
+        0.025477707,
+        0.025477707,
+        0.7071067811865476,
+        0.0,
+        -1.1102230202928969e-16,
+        0.7071067811865476,
+        -0.025477707,
+        -0.025477707,
+        0.025477707,
+        1.8952692505000062e-16,
+        0.7071067811865476,
+        -0.7071067811865476,
+        -5.551115121464485e-17,
+        -0.025477707,
+        -0.025477707,
+        -0.025477707,
+        1.8952692505000062e-16,
+        0.7071067811865476,
+        -0.7071067811865476,
+        -5.551115121464485e-17
+      ]
+    },
+    {
+      "scene": "wb_dex",
+      "policy": "homie-standing",
+      "seconds": 60.0,
+      "failed": false,
+      "min_root_z_m": 0.7452858669182787,
+      "max_root_xy_m": 0.09957177092818069,
+      "max_tilt_deg": 3.1744668314153195,
+      "max_contact_penetration_m": 0.003197718849145748,
+      "warnings": 0,
+      "task": [
+        0.0,
+        59.999999999950866,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.554,
+        0.0
+      ]
+    },
+    {
+      "scene": "basket",
+      "policy": "homie-standing",
+      "seconds": 60.0,
+      "failed": false,
+      "min_root_z_m": 0.7452858669182787,
+      "max_root_xy_m": 0.09957177092818069,
+      "max_tilt_deg": 3.1744668314153195,
+      "max_contact_penetration_m": 0.003197718849145748,
+      "warnings": 0,
+      "task": [
+        0.0,
+        59.999999999950866,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.005,
+        -0.0680906637020927
+      ]
+    },
+    {
+      "scene": "tennis",
+      "policy": "homie-standing",
+      "seconds": 60.0,
+      "failed": false,
+      "min_root_z_m": 0.7453413557570536,
+      "max_root_xy_m": 0.0989656186508067,
+      "max_tilt_deg": 3.220940670459785,
+      "max_contact_penetration_m": 0.0032050380076012177,
+      "warnings": 0,
+      "task": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        -4.323158027045585,
+        -0.6769133921036146,
+        1.4184826163129738,
+        1.0865431109536439,
+        -0.29960611786693336
+      ]
+    },
+    {
+      "scene": "push_t",
+      "policy": "homie-standing",
+      "seconds": 60.0,
+      "failed": false,
+      "min_root_z_m": 0.745300183582385,
+      "max_root_xy_m": 0.09950357987897845,
+      "max_tilt_deg": 3.1619791283031407,
+      "max_contact_penetration_m": 0.003187366333486287,
+      "warnings": 0,
+      "task": []
+    },
+    {
+      "scene": "stand",
+      "policy": "homie-v2",
+      "seconds": 60.0,
+      "failed": false,
+      "min_root_z_m": 0.745452229267669,
+      "max_root_xy_m": 0.09723659830566946,
+      "max_tilt_deg": 3.004319834145983,
+      "max_contact_penetration_m": 0.003418232680917027,
+      "warnings": 0,
+      "task": []
+    },
+    {
+      "scene": "cup",
+      "policy": "homie-v2",
+      "seconds": 60.0,
+      "failed": false,
+      "min_root_z_m": 0.7454487668709713,
+      "max_root_xy_m": 0.09822038095142448,
+      "max_tilt_deg": 3.0708325520363444,
+      "max_contact_penetration_m": 0.003461891099051386,
+      "warnings": 0,
+      "task": [
+        0.0,
+        59.999999999950866,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.754,
+        0.0
+      ]
+    },
+    {
+      "scene": "bimanual",
+      "policy": "homie-v2",
+      "seconds": 60.0,
+      "failed": false,
+      "min_root_z_m": 0.7454487668709713,
+      "max_root_xy_m": 0.09822038095142449,
+      "max_tilt_deg": 3.0708325520363444,
+      "max_contact_penetration_m": 0.0034618910990513825,
+      "warnings": 0,
+      "task": [
+        0.0,
+        59.999999999950866,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.799,
+        0.799
+      ]
+    },
+    {
+      "scene": "rubik",
+      "policy": "homie-v2",
+      "seconds": 60.0,
+      "failed": false,
+      "min_root_z_m": 0.7454727167474652,
+      "max_root_xy_m": 0.09706705875100899,
+      "max_tilt_deg": 3.0112502842792503,
+      "max_contact_penetration_m": 0.0034249213662058747,
+      "warnings": 0,
+      "task": [
+        -1.0,
+        0.0,
+        0.0,
+        -1.0,
+        0.0,
+        -1.0,
+        0.0,
+        0.0,
+        0.025477707,
+        -0.025477707,
+        0.025477707,
+        0.5,
+        -0.5,
+        -0.5,
+        0.5,
+        -0.025477707,
+        0.025477707,
+        0.025477707,
+        0.7071067811865476,
+        0.0,
+        0.0,
+        -0.7071067811865476,
+        -0.025477707,
+        0.025477707,
+        -0.025477707,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.025477707,
+        0.025477707,
+        -0.025477707,
+        0.5,
+        -0.5,
+        -0.5,
+        -0.5,
+        0.025477707,
+        -0.025477707,
+        -0.025477707,
+        1.0,
+        -1.01465364e-17,
+        0.0,
+        0.0,
+        0.025477707,
+        0.025477707,
+        0.025477707,
+        0.7071067811865476,
+        0.0,
+        -1.1102230202928969e-16,
+        0.7071067811865476,
+        -0.025477707,
+        -0.025477707,
+        0.025477707,
+        1.8952692505000062e-16,
+        0.7071067811865476,
+        -0.7071067811865476,
+        -5.551115121464485e-17,
+        -0.025477707,
+        -0.025477707,
+        -0.025477707,
+        1.8952692505000062e-16,
+        0.7071067811865476,
+        -0.7071067811865476,
+        -5.551115121464485e-17
+      ]
+    },
+    {
+      "scene": "wb_dex",
+      "policy": "homie-v2",
+      "seconds": 60.0,
+      "failed": false,
+      "min_root_z_m": 0.7454727167474652,
+      "max_root_xy_m": 0.09706705875100942,
+      "max_tilt_deg": 3.0112502842792503,
+      "max_contact_penetration_m": 0.003424921366205944,
+      "warnings": 0,
+      "task": [
+        0.0,
+        59.999999999950866,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.554,
+        0.0
+      ]
+    },
+    {
+      "scene": "basket",
+      "policy": "homie-v2",
+      "seconds": 60.0,
+      "failed": false,
+      "min_root_z_m": 0.7454727167474652,
+      "max_root_xy_m": 0.09706705875100942,
+      "max_tilt_deg": 3.0112502842792503,
+      "max_contact_penetration_m": 0.003424921366205944,
+      "warnings": 0,
+      "task": [
+        0.0,
+        59.999999999950866,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.005,
+        -0.0659409479518532
+      ]
+    },
+    {
+      "scene": "tennis",
+      "policy": "homie-v2",
+      "seconds": 60.0,
+      "failed": false,
+      "min_root_z_m": 0.7457425837787798,
+      "max_root_xy_m": 0.09487525456815726,
+      "max_tilt_deg": 3.094662926409683,
+      "max_contact_penetration_m": 0.0035742182958984556,
+      "warnings": 0,
+      "task": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        -4.323158027045585,
+        -0.6769133921036146,
+        1.4184826163129738,
+        1.0865431109536439,
+        -0.29960611786693336
+      ]
+    },
+    {
+      "scene": "push_t",
+      "policy": "homie-v2",
+      "seconds": 60.0,
+      "failed": false,
+      "min_root_z_m": 0.7454522292676689,
+      "max_root_xy_m": 0.09723659830566946,
+      "max_tilt_deg": 3.0043198341458615,
+      "max_contact_penetration_m": 0.0034182326809170235,
+      "warnings": 0,
+      "task": []
+    }
+  ],
+  "standing_world_wrist_trials": [
+    {
+      "scene": "stand",
+      "failed": false,
+      "seconds": 60.0,
+      "foot_xy_max_m": 0.017967350678948633,
+      "root_xy_max_m": 0.003283924729002937,
+      "wrist_error_max_m": 0.003179983208500527,
+      "root_min_z_m": 0.748064905344316
+    },
+    {
+      "scene": "cup",
+      "failed": false,
+      "seconds": 60.0,
+      "foot_xy_max_m": 0.0020901124639516886,
+      "root_xy_max_m": 0.0314697581403928,
+      "wrist_error_max_m": 0.035218924502152374,
+      "root_min_z_m": 0.7432644661967747
+    },
+    {
+      "scene": "rubik",
+      "failed": false,
+      "seconds": 60.0,
+      "foot_xy_max_m": 0.008600725807788192,
+      "root_xy_max_m": 0.023503749255887926,
+      "wrist_error_max_m": 0.025305919575023164,
+      "root_min_z_m": 0.7436356317123439
+    },
+    {
+      "scene": "tennis",
+      "failed": false,
+      "seconds": 60.0,
+      "foot_xy_max_m": 0.017911804371743157,
+      "root_xy_max_m": 0.003879519741231001,
+      "wrist_error_max_m": 0.0025947732779514504,
+      "root_min_z_m": 0.7480334519797228
+    }
+  ],
+  "push_t_contact_trials": [
+    {
+      "speed": 0.12,
+      "seconds": 10.0,
+      "failed": false,
+      "object_displacement_m": 0.13259585419524586,
+      "root_min_z_m": 0.7374772879488849,
+      "warnings": 0
+    },
+    {
+      "speed": 0.2,
+      "seconds": 10.0,
+      "failed": false,
+      "object_displacement_m": 0.3637813302267264,
+      "root_min_z_m": 0.7381755387989762,
+      "warnings": 0
+    },
+    {
+      "speed": 0.3,
+      "seconds": 10.0,
+      "failed": false,
+      "object_displacement_m": 0.3257941128635802,
+      "root_min_z_m": 0.7387819659386183,
+      "warnings": 0
+    }
+  ],
+  "rubik_paired_baseline": [
+    {
+      "config": [
+        0.15,
+        0.075,
+        0,
+        0.6,
+        1
+      ],
+      "lift_max_m": 0.14770028239765942,
+      "hold_min_lift_m": -0.9024784088535643,
+      "root_min_z_m": 0.7437283711205561,
+      "warnings": 0,
+      "failed": false,
+      "turns": 0.0,
+      "hand_contact_frames": [
+        259,
+        494
+      ]
+    },
+    {
+      "config": [
+        0.15,
+        0.075,
+        0,
+        0.8,
+        1
+      ],
+      "lift_max_m": 0.1442071107406906,
+      "hold_min_lift_m": -0.07720441371292286,
+      "root_min_z_m": 0.7437283711205561,
+      "warnings": 0,
+      "failed": false,
+      "turns": 0.0,
+      "hand_contact_frames": [
+        230,
+        522
+      ]
+    },
+    {
+      "config": [
+        0.15,
+        0.075,
+        0,
+        1,
+        1
+      ],
+      "lift_max_m": 0.17117804961251903,
+      "hold_min_lift_m": -0.07797307752068605,
+      "root_min_z_m": 0.7437283711205561,
+      "warnings": 0,
+      "failed": false,
+      "turns": 1.0,
+      "hand_contact_frames": [
+        236,
+        350
+      ]
+    },
+    {
+      "config": [
+        0.15,
+        0.09,
+        0,
+        0.8,
+        1
+      ],
+      "lift_max_m": 0.000869489851100691,
+      "hold_min_lift_m": -0.07716494370180804,
+      "root_min_z_m": 0.7437283711205561,
+      "warnings": 0,
+      "failed": false,
+      "turns": 0.0,
+      "hand_contact_frames": [
+        99,
+        111
+      ]
+    }
+  ],
+  "rubik_unaccepted_noslip_experiment": [
+    {
+      "config": [
+        0.15,
+        0.075,
+        0,
+        0.6,
+        1
+      ],
+      "lift_max_m": 0.15153392861963755,
+      "hold_min_lift_m": 0.059190693363410984,
+      "root_min_z_m": 0.7434692985855736,
+      "warnings": 0,
+      "failed": false,
+      "turns": 0.0,
+      "hand_contact_frames": [
+        1742,
+        273
+      ]
+    },
+    {
+      "config": [
+        0.15,
+        0.075,
+        0,
+        0.8,
+        1
+      ],
+      "lift_max_m": 0.17223331636643335,
+      "hold_min_lift_m": 0.07240191758631465,
+      "root_min_z_m": 0.7434692985855736,
+      "warnings": 0,
+      "failed": false,
+      "turns": 0.0,
+      "hand_contact_frames": [
+        1742,
+        271
+      ]
+    },
+    {
+      "config": [
+        0.15,
+        0.075,
+        0,
+        1,
+        1
+      ],
+      "lift_max_m": 0.14799457579315267,
+      "hold_min_lift_m": -0.07606409995437691,
+      "root_min_z_m": 0.7434692985855736,
+      "warnings": 0,
+      "failed": false,
+      "turns": 0.0,
+      "hand_contact_frames": [
+        345,
+        266
+      ]
+    },
+    {
+      "config": [
+        0.15,
+        0.09,
+        0,
+        0.8,
+        1
+      ],
+      "lift_max_m": 0.0008396798884947598,
+      "hold_min_lift_m": -0.07487592818411859,
+      "root_min_z_m": 0.7434692985855736,
+      "warnings": 0,
+      "failed": false,
+      "turns": 0.0,
+      "hand_contact_frames": [
+        107,
+        91
+      ]
+    }
+  ],
+  "rubik_baseline_acceptance": false,
+  "full_wb_dex_basket_task_acceptance": false,
+  "limitations": [
+    "macOS native simulation, not Quest performance or live operator validation",
+    "Rubik scripts use known initial object pose, physical finger contacts only; no object teleport, hand weld, or force override",
+    "Rubik fixed-core mechanism unit test does not prove a hand-operated turn",
+    "NoSlip + MultiCCD changed only a separate experiment asset directory; not source or APK",
+    "Push-T tested displacement, not task completion",
+    "Tennis runtime uses its existing assisted racket weld; not proof of contact-only racket grasp"
+  ]
+}

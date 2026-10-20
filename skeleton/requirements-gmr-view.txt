@@ -1,0 +1,4 @@
+# Live GMR viewer (gmr_view.py), on top of requirements.txt.
+# Same pins as the desktop GMR oracle and the APK's MuJoCo.
+mujoco==3.3.7
+-r ../prototypes/quest_g1/android/requirements-gmr-test.txt

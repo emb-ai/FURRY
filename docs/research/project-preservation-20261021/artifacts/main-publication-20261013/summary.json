@@ -1,0 +1,43 @@
+{
+  "repository": "https://github.com/emb-ai/FURRY",
+  "branch": "main",
+  "head": "6db2e2ea63b4008faf4fb6f05235f6e2db1d76d8",
+  "packages": {
+    "recording_modes_training": "2ecec1d7c53a7de504637b174f6b2d8cbdee8cf3",
+    "scenes_fade": "dab9038fae8c64a77b5e24eee8b47a65a7f09eae"
+  },
+  "ci": {
+    "Documentation": {
+      "run": 38366882546,
+      "conclusion": "success"
+    },
+    "Quest G1 Prototype": {
+      "run": 38366882494,
+      "conclusion": "success"
+    }
+  },
+  "local_runtime_tests": {
+    "run": 109,
+    "passed": 108,
+    "skipped": 1
+  },
+  "replay": {
+    "cases": 37,
+    "max_state_error": 0,
+    "max_reference_error": 0
+  },
+  "trainer_tests": 61,
+  "dexweave_tests": 21,
+  "adapter_tests": 10,
+  "sonic_native_parity_max_qpos_error": 4.3143267541845276e-07,
+  "default_policy": "twist2-20k",
+  "new_trained_policy_promoted": false,
+  "headset_installation": false,
+  "headset_acceptance": false,
+  "rubik_bimanual_acceptance": false,
+  "source_checkout": "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/.tools/furry-main-integration-20261013",
+  "sonic_lfs_uploaded": {
+    "objects": 3,
+    "bytes": 864954190
+  }
+}

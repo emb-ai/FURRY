@@ -1,0 +1,12 @@
+{
+  "pid": 2852500,
+  "started": 1792069246.9995077,
+  "gpu": 6,
+  "steps": 10000,
+  "state_dim": 131,
+  "phase": "completed",
+  "child_pid": 2981869,
+  "successes": 0,
+  "n": 10,
+  "elapsed_s": 1154.4056112766266
+}

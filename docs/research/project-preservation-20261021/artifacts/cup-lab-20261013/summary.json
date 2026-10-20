@@ -1,0 +1,89 @@
+{
+  "date_moscow": "2026-10-13",
+  "source_checkout": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/.tools/furry-publish/prototypes/quest_g1",
+  "source_head": "9858d31; pre-existing local full-body/tennis changes retained",
+  "apk": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs/cup-lab-20261013/g1-quest-cup-lab.apk",
+  "apk_sha256": "d542305b2fd0e173e6f8cd5160bd0080d820727a613fca7c61f6b49c992f61b0",
+  "apk_bytes": 46994678,
+  "zip_crc_verified": true,
+  "packaged_asset_hashes_verified": 54,
+  "compiled_native_contains_new_shader": true,
+  "tests": {
+    "run": 89,
+    "passed": 88,
+    "skipped": 1
+  },
+  "synthetic_replay_cases": 20,
+  "max_replay_state_and_command_error": 0,
+  "triangles_per_eye_including_ui_reserve": 99601,
+  "appearance": {
+    "style": "cup-lab-v1",
+    "room": "visual-only; hidden in passthrough",
+    "mug_mass_kg": 0.24,
+    "mug_handle": "12 physical capsules; 32-step visual loop",
+    "placement_cue": {
+      "goal_xyz_m": [
+        0.65,
+        -0.25,
+        0.75
+      ],
+      "radius_m": 0.055,
+      "height_tolerance_m": 0.012,
+      "upright_cosine_min": 0.966,
+      "linear_speed_max_m_s": 0.05,
+      "angular_speed_max_rad_s": 0.2,
+      "affects_task_score": false
+    },
+    "lighting": "hemisphere + directional + analytic contact cues"
+  },
+  "robot_physics_preservation": {
+    "robot_bodies": 53,
+    "max_abs_differences": {
+      "body_mass": 0.0,
+      "body_inertia": 0.0,
+      "body_pos": 0.0,
+      "body_quat": 0.0,
+      "body_ipos": 0.0,
+      "body_iquat": 0.0
+    },
+    "joint_and_actuator_arrays_exact": true,
+    "physics_hz": 1000,
+    "nq": 57,
+    "nv": 55,
+    "nu": 43
+  },
+  "preview": {
+    "cup-lab-overview": {
+      "triangles": 89359,
+      "renderer": "Apple M4",
+      "native_shader": true,
+      "headset_capture": false
+    },
+    "cup-lab-workbench": {
+      "triangles": 89359,
+      "renderer": "Apple M4",
+      "native_shader": true,
+      "headset_capture": false
+    },
+    "cup-lab-room": {
+      "triangles": 89359,
+      "renderer": "Apple M4",
+      "native_shader": true,
+      "headset_capture": false
+    },
+    "cup-lab-mr": {
+      "triangles": 87763,
+      "renderer": "Apple M4",
+      "native_shader": true,
+      "headset_capture": false
+    },
+    "cup-lab-before": {
+      "triangles": 89591,
+      "renderer": "Apple M4",
+      "native_shader": true,
+      "headset_capture": false
+    }
+  },
+  "installed": false,
+  "quest_live_acceptance": false
+}

@@ -1,0 +1,57 @@
+{
+  "status": "both_trainings_complete_diffusion_evaluation_running",
+  "dataset": {
+    "schema": "cup-state-homie-v1",
+    "sha256": "82ddbd5f40cd3a3c2c9d2edd7096a4ad605cd193990929e4e881c9e3c0c00857",
+    "train": 53,
+    "valid": 6,
+    "frames": 26713,
+    "fps": 50,
+    "family": {
+      "policy_id": "homie-v2",
+      "policy_backend": "groot_decoupled_v1",
+      "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+      "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+      "input_patch": null,
+      "catch_up": true,
+      "scene": "cup",
+      "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+      "camera_mode": "robot_head_pan_tilt_v1"
+    }
+  },
+  "methods": [
+    "bc-rnn",
+    "diffusion"
+  ],
+  "max_training_seconds_per_method": 1800,
+  "max_steps_per_method": 12000,
+  "max_concurrent_gpus": 2,
+  "deployment": false,
+  "test": "10 predetermined randomized native NewSceneTrial resets, no demonstration pose or history prefix",
+  "waiting_for": null,
+  "source_episodes": 59,
+  "has_images": false,
+  "first_sample_padding": "repeat first physical observation, previous-command zero sentinel",
+  "training_initialization": "from scratch high-level models; frozen recorded walking HOMIE weights",
+  "limitations": [
+    "one recording session",
+    "single training seed",
+    "no fresh-start demonstrations added",
+    "host inference latency not applied to physics"
+  ],
+  "gpu_jobs_started": 2,
+  "updated_at_unix": 1792072476.38059,
+  "gpu_allocation_confirmed_at_unix": 1792070654.945164,
+  "dispatch_pid": 3841438,
+  "max_idle_wait_s": 900,
+  "training_started": true,
+  "active_gpu_indices": [
+    0,
+    5
+  ],
+  "pipeline_pids": {
+    "bc-rnn": 3846482,
+    "diffusion": 3846487
+  },
+  "training_complete": true
+}

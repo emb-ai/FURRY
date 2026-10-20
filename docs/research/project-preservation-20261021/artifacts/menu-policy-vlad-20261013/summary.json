@@ -1,0 +1,91 @@
+{
+  "apk": {
+    "apk": "g1-quest-lab-vlad-soft-grip.apk",
+    "bytes": 832271587,
+    "sha256": "a7b074bc8050c14138259b8eaf5c10f6fe85c1cfeac18a2801681db4d52328f5",
+    "zip_crc": true,
+    "source_and_asset_digest_checks": 107,
+    "model_digest_checks": 13,
+    "policies": 10,
+    "controller_stage_targets": true,
+    "controller_target_point": "palm mesh bounds centre",
+    "package": "org.g1lab.quest",
+    "label": "G1 Quest Lab-vlad",
+    "soft_grip_scenes": [
+      "cup",
+      "rubik"
+    ],
+    "hand_control": {
+      "motor_torque_limit_nm": 0.35,
+      "joint_damping_nm_s_rad": 0.03,
+      "contact_force_limit": false
+    },
+    "hand_metadata_variants_checked": 22,
+    "native_source_digests_preserved": true,
+    "other_scene_xml_unchanged": true,
+    "kp_ranges_grip_mapping_preserved": true,
+    "installed": true
+  },
+  "installation": {
+    "time_utc": "2026-10-13T10:37:06.322154+00:00",
+    "serial": "2G0YC5ZG7T05SR",
+    "installed": true,
+    "install_r": true,
+    "data_cleared": false,
+    "sha256": "a7b074bc8050c14138259b8eaf5c10f6fe85c1cfeac18a2801681db4d52328f5",
+    "device_digest_match": true,
+    "settings_preserved": true,
+    "other_app_digests_unchanged": true,
+    "packages_after": [
+      {
+        "package": "org.g1lab.quest",
+        "label": "G1 Quest Lab-vlad",
+        "sha256": "a7b074bc8050c14138259b8eaf5c10f6fe85c1cfeac18a2801681db4d52328f5",
+        "expected_match": true,
+        "updated": true
+      },
+      {
+        "package": "org.g1lab.quest.smooth",
+        "label": "FURRY Smooth",
+        "sha256": "3e0c4f70fd55f63d351c332e95230e18d7af45d4f9c47a573626658685b123f7",
+        "expected_match": true,
+        "updated": false
+      },
+      {
+        "package": "org.g1lab.quest.camera",
+        "label": "G1 Quest Camera Test",
+        "sha256": "e5f81c253137448e17f8d8061ded13fe0d60b5ee4c9f3e8cab235b652f4c9397",
+        "expected_match": true,
+        "updated": false
+      }
+    ],
+    "start": "Starting: Intent { cmp=org.g1lab.quest/android.app.NativeActivity }\n",
+    "live_acceptance": false
+  },
+  "startup": {
+    "pid": "",
+    "power": [
+      "mWakefulness=Asleep"
+    ]
+  },
+  "validation": {
+    "android_build": true,
+    "unit_tests": 110,
+    "passed": 109,
+    "optional_skipped": 1,
+    "native_controller_validity_check": true,
+    "synthetic_replay_cases": 37,
+    "replay_max_state_reference_error": 0,
+    "sonic_real_model_delayed_plan_yield_resume": true,
+    "sonic_python_native_max_qpos_error": 4.3143267541845276e-07,
+    "soft_grip_scene_tests_passed": 13
+  },
+  "live_acceptance": false,
+  "awaiting": "Wake Quest and test policy switches, controller alignment and tracking recovery, SONIC and warm reopen in G1 Quest Lab-vlad",
+  "published_this_fix_series": false,
+  "changes_added": [
+    "cup/rubik 14 finger motor torque limits ±0.35 Nm; damping 0.03",
+    "Regenerated scene XML and all 22 cup/rubik metadata variants; hand_control verified in APK",
+    "Native fix source digests preserved; other scene XML identical"
+  ]
+}

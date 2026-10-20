@@ -1,0 +1,94 @@
+{
+  "cube_edge_m": 0.085,
+  "previous_cube_edge_m": 0.1,
+  "support": "tabletop; stand removed",
+  "standing_rest": "arms down: shoulder pitch0, roll±.2, elbow1.4; operator references unaffected",
+  "wb_dex_fix_included": true,
+  "fresh_recordings": {
+    "copied": 33,
+    "files_sha_verified": 660,
+    "accepted": 30,
+    "accepted_seconds": 313.56666666666666
+  },
+  "tests": {
+    "run": 133,
+    "passed": 132,
+    "skipped": 1,
+    "standing_replay_cases": 12,
+    "idle_scenes": 8,
+    "grasp_lift_hold_release_trials_passed": 4
+  },
+  "quarter_turn": {
+    "turns": 1.0,
+    "hold_frames": 1200,
+    "hold_hand_contact_frames": [
+      1200,
+      1200
+    ],
+    "hold_nonhand_support_frames": 0,
+    "hinge_final_deg": {
+      "R": -0.0002040152016489497,
+      "L": 0.0002040152016489497,
+      "B": 0.00017817499298230821,
+      "F": -83.28674116152419,
+      "U": -0.0001193099735477833,
+      "D": 0.0001193099735477833
+    },
+    "last_3s_B_range_deg": [
+      -0.0023093592577676254,
+      0.00068197906847006
+    ],
+    "last_3s_F_range_deg": [
+      -83.32203607064972,
+      -82.32011658043521
+    ]
+  },
+  "limitations": [
+    "Four turn approaches: one clean quarter turn; others contact forearm/table or fail to turn. Arbitrary grasps/full solve not validated.",
+    "No live headset acceptance after this build. Offline scripted controls are not human training demonstrations."
+  ],
+  "apk": {
+    "apk": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/rubik-table-rest-20261015/g1-quest-rubik-table-rest.apk",
+    "sha256": "fdc079d6bf6ba44cef820844a88731cc9cdd42c87d191a490fddc558c91e2bd3",
+    "bytes": 850687381,
+    "zip_crc": true,
+    "assets_equal_to_prepared": 280,
+    "jni_libraries": 5,
+    "changed_scene_models": [
+      "assets/scene-rubik.xml",
+      "assets/scene-wb_dex.xml"
+    ],
+    "protected_policy_assets_unchanged": 19,
+    "baseline_apk_sha256": "3e25f5c17fad0f206dc584b34879b25d6eb7b5177481fd8c44c472caebfc8b30",
+    "changed_sources": {
+      "android/build_apk.sh": "64df510e7570aa96610dd4f294ec325d03884bf109e445882198db54d3653d89",
+      "android/native/collection_task.h": "7927ae21842552cbeefba27f864b1b6a7b75c3190da2da06c887c79639202b4e",
+      "android/native/simulation.cpp": "68e7bc18d871d882147ccab3cbba430789d3be3e86a2c51a523daf93bf36cb7b",
+      "g1_sim/collection_scenes.py": "a744b355f53cb9ff9f50d923405c4c34e692e56bc97bc890251dd03958ee4f42",
+      "g1_sim/rubik.py": "8668eb135235f6e2d4dea4bdfba2c3e0828a8e9eb971378117af6edd7245d0b3",
+      "g1_sim/scene.py": "a66f4b015c7f2f2bdac8e7a9dba4780906c2196c765e573e5e66060861808c98",
+      "scripts/scene_assets.py": "6c75281346d7f6fba51446039277c68fafecf0edb681937e1373f7e61fb212e6",
+      "tests/check_collection.cpp": "4644616fca8f0b3f51d78f5e59129b50014e586612db9c4a585f75c55cd4ea4b",
+      "tests/check_wb_dex.cpp": "e760a88ba38da196492c696bd4924aa1077c9360eb93c398ca7e20e8ddc7f6f4",
+      "tests/check_wb_dex_physics.cpp": "a70158ea649276308565d272de55d6900494858e7c56a3a5e638a8e75d7e582a",
+      "tests/test_wb_dex.py": "575605dff4441caf3c6b798c9061fbdcd3cec8cf27b667ca1322231964014232"
+    },
+    "installed": true,
+    "installation_receipt": "install/verification.json"
+  },
+  "install": {
+    "time_utc": "2026-10-14T23:05:54.631266+00:00",
+    "serial": "2G0YC5ZG7T05SR",
+    "apk": "/data/app/~~qdMH-3_E3J8Mt0W5XaXbMw==/org.g1lab.quest-f14Fzx6K4Ua2JHWIV_i9tQ==/base.apk",
+    "apk_sha256": "fdc079d6bf6ba44cef820844a88731cc9cdd42c87d191a490fddc558c91e2bd3",
+    "latest_episode": "episode-1792018156140205",
+    "latest_status": "complete",
+    "recording_files": 2226,
+    "settings_sha256": "4fa8974d0aa30d049d03cec9214cee394a3e8e0a496bbb804d785972a26f75d2",
+    "install_method": "adb install -r",
+    "recording_files_preserved": 2226,
+    "settings_preserved": true,
+    "verified_local_apk_sha256": "fdc079d6bf6ba44cef820844a88731cc9cdd42c87d191a490fddc558c91e2bd3",
+    "live_headset_acceptance": false
+  }
+}

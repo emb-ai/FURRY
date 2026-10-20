@@ -1,0 +1,8 @@
+{
+  "dataset_sha256": "82ddbd5f40cd3a3c2c9d2edd7096a4ad605cd193990929e4e881c9e3c0c00857",
+  "frames": 26713,
+  "hz": 50,
+  "independent_native50_action_comparisons": 59,
+  "action_error_max": 0,
+  "notes": "Independent visual-training preparation has byte-identical sampled commands; state-only pipeline uses no RGB."
+}

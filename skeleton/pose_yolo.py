@@ -167,6 +167,8 @@ def main():
     parser.add_argument("--bone-sigma-depth", type=float, default=0.10,
                         help="ноги: допуск глубины колена/лодыжки, м, против длины кости (0 = выкл)")
     parser.add_argument("--ws", action="store_true")
+    parser.add_argument("--debug-arms", action="store_true",
+                        help="send optional elbow/wrist landmarks for alignment display")
     parser.add_argument("--host", default="0.0.0.0")
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--log", help="JSONL of downlink and headset uplink")
@@ -379,7 +381,8 @@ def main():
                 wire, wire_frame, pelvis = smoothed, "camera", None
                 if session.locked:
                     server.record("camera", packet(smoothed, confidence, sources, frame_timestamp,
-                                                   sequence, fps, backend, timing=timing, session_id=session_id))
+                                                   sequence, fps, backend, timing=timing, session_id=session_id,
+                                                   debug_arms=args.debug_arms))
                     converted = to_stage_relative(smoothed, session.R, session.t)
                     wire_frame = "pelvis-relative"
                     if converted:
@@ -388,7 +391,8 @@ def main():
                     else:
                         wire, pelvis = {}, {"p": [0, 0, 0], "conf": 0}
                 server.publish(packet(wire, confidence, sources, frame_timestamp,
-                                      sequence, fps, backend, wire_frame, pelvis, timing, session_id))
+                                      sequence, fps, backend, wire_frame, pelvis, timing, session_id,
+                                      debug_arms=args.debug_arms))
             frames += 1
             dt = time.monotonic() - t0
             if dt > 1:

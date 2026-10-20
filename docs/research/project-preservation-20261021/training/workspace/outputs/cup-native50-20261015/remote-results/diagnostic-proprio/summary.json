@@ -1,0 +1,82 @@
+{
+  "protocol": "CONTINUATION after0.5s recorded state/control prefix; recorded observations for neural predictions; not full-reset policy performance",
+  "weights": "/home/jovyan/vlad/FURRY/cup-native50-20261015/exports/act-proprio",
+  "successes": 3,
+  "n": 8,
+  "errors": [],
+  "results": [
+    {
+      "episode": "episode-1792058834151648",
+      "success": false,
+      "outcome": 0,
+      "wall_s": 2.8838160037994385,
+      "arms_mae_deg": 0.6895207166671753,
+      "final_distance_m": 0.07937296721885936,
+      "error": null
+    },
+    {
+      "episode": "episode-1792058974761240",
+      "success": false,
+      "outcome": 0,
+      "wall_s": 1.9719610214233398,
+      "arms_mae_deg": 0.6424461603164673,
+      "final_distance_m": 0.1252047279426301,
+      "error": null
+    },
+    {
+      "episode": "episode-1792059112053736",
+      "success": false,
+      "outcome": 0,
+      "wall_s": 2.0182442665100098,
+      "arms_mae_deg": 0.7734927535057068,
+      "final_distance_m": 0.13293804525788752,
+      "error": null
+    },
+    {
+      "episode": "episode-1792059256525492",
+      "success": true,
+      "outcome": 1,
+      "wall_s": 2.524704933166504,
+      "arms_mae_deg": 0.7069144248962402,
+      "final_distance_m": 0.032686786326245554,
+      "error": null
+    },
+    {
+      "episode": "episode-1792059418003475",
+      "success": false,
+      "outcome": 0,
+      "wall_s": 2.178133487701416,
+      "arms_mae_deg": 0.5512346625328064,
+      "final_distance_m": 0.19776656432483186,
+      "error": null
+    },
+    {
+      "episode": "episode-1792059590200464",
+      "success": true,
+      "outcome": 1,
+      "wall_s": 1.6460366249084473,
+      "arms_mae_deg": 0.564880907535553,
+      "final_distance_m": 0.029871783764229384,
+      "error": null
+    },
+    {
+      "episode": "episode-1792059694167464",
+      "success": true,
+      "outcome": 1,
+      "wall_s": 1.8905653953552246,
+      "arms_mae_deg": 0.5177225470542908,
+      "final_distance_m": 0.05319036839365602,
+      "error": null
+    },
+    {
+      "episode": "episode-1792059849292471",
+      "success": false,
+      "outcome": 0,
+      "wall_s": 2.4282732009887695,
+      "arms_mae_deg": 0.4826586842536926,
+      "final_distance_m": 0.14568896552097396,
+      "error": null
+    }
+  ],
+  "horizon": "recorded trajectory duration plus3s holding final command"
+}

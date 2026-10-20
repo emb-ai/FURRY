@@ -1,0 +1,10 @@
+{
+  "apk": "g1-quest-lab-vlad-menu-diagnostic.apk",
+  "bytes": 832259299,
+  "sha256": "525019da9e6484deeb9b0b31607cf69af2876c2b59206eec3b664245d49af0f7",
+  "zip_crc": true,
+  "onnx_files": 13,
+  "label": "G1 Quest Lab-vlad",
+  "package": "org.g1lab.quest",
+  "diagnostic_build": true
+}

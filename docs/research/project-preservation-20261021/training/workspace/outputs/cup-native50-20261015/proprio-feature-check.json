@@ -1,0 +1,8 @@
+{
+  "state_dim": 131,
+  "new_features": 92,
+  "excludes_cup_state": true,
+  "excludes_absolute_root_position": true,
+  "projected_gravity_unit_norm": true,
+  "test_frames": 5
+}

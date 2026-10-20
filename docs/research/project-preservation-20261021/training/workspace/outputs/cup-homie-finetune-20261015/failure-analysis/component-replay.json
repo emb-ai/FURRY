@@ -1,0 +1,212 @@
+{
+  "protocol": "Same warm0.5s continuation. Isolate30Hz sampling of body vs grip. Third case body50Hz synchronized to HOMIE phase, grips original100Hz. Not autonomous success.",
+  "summary": {
+    "body100_grip30": {
+      "successes": 8,
+      "n": 8
+    },
+    "body30_grip100": {
+      "successes": 4,
+      "n": 8
+    },
+    "body50_aligned_grip100": {
+      "successes": 8,
+      "n": 8
+    }
+  },
+  "errors": [],
+  "results": [
+    {
+      "episode": "episode-1792058834151648",
+      "mode": "body100_grip30",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.02219233577099899
+    },
+    {
+      "episode": "episode-1792058834151648",
+      "mode": "body30_grip100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.05325211369614058
+    },
+    {
+      "episode": "episode-1792058834151648",
+      "mode": "body50_aligned_grip100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.023987313393379846
+    },
+    {
+      "episode": "episode-1792058974761240",
+      "mode": "body100_grip30",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.008560931141342272
+    },
+    {
+      "episode": "episode-1792058974761240",
+      "mode": "body30_grip100",
+      "success": false,
+      "outcome": 0,
+      "error": null,
+      "final_distance_m": 0.052460540529720115
+    },
+    {
+      "episode": "episode-1792058974761240",
+      "mode": "body50_aligned_grip100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.004659168447995236
+    },
+    {
+      "episode": "episode-1792059112053736",
+      "mode": "body100_grip30",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.02006410111171412
+    },
+    {
+      "episode": "episode-1792059112053736",
+      "mode": "body30_grip100",
+      "success": false,
+      "outcome": 0,
+      "error": null,
+      "final_distance_m": 0.18843426316328696
+    },
+    {
+      "episode": "episode-1792059112053736",
+      "mode": "body50_aligned_grip100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.019890647462806988
+    },
+    {
+      "episode": "episode-1792059256525492",
+      "mode": "body100_grip30",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.002556984857238079
+    },
+    {
+      "episode": "episode-1792059256525492",
+      "mode": "body30_grip100",
+      "success": false,
+      "outcome": 0,
+      "error": null,
+      "final_distance_m": 0.07404508532432408
+    },
+    {
+      "episode": "episode-1792059256525492",
+      "mode": "body50_aligned_grip100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.002257028288692803
+    },
+    {
+      "episode": "episode-1792059418003475",
+      "mode": "body100_grip30",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.024144496249745358
+    },
+    {
+      "episode": "episode-1792059418003475",
+      "mode": "body30_grip100",
+      "success": false,
+      "outcome": 0,
+      "error": null,
+      "final_distance_m": 0.07095121387024038
+    },
+    {
+      "episode": "episode-1792059418003475",
+      "mode": "body50_aligned_grip100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.02533936362557885
+    },
+    {
+      "episode": "episode-1792059590200464",
+      "mode": "body100_grip30",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.020756250201310965
+    },
+    {
+      "episode": "episode-1792059590200464",
+      "mode": "body30_grip100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.0451417598771424
+    },
+    {
+      "episode": "episode-1792059590200464",
+      "mode": "body50_aligned_grip100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.019731942927716715
+    },
+    {
+      "episode": "episode-1792059694167464",
+      "mode": "body100_grip30",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.004866720948169127
+    },
+    {
+      "episode": "episode-1792059694167464",
+      "mode": "body30_grip100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.026333334572777835
+    },
+    {
+      "episode": "episode-1792059694167464",
+      "mode": "body50_aligned_grip100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.005116107514307388
+    },
+    {
+      "episode": "episode-1792059849292471",
+      "mode": "body100_grip30",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.032280403291646755
+    },
+    {
+      "episode": "episode-1792059849292471",
+      "mode": "body30_grip100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.03559045388667231
+    },
+    {
+      "episode": "episode-1792059849292471",
+      "mode": "body50_aligned_grip100",
+      "success": true,
+      "outcome": 1,
+      "error": null,
+      "final_distance_m": 0.03170251787452896
+    }
+  ]
+}

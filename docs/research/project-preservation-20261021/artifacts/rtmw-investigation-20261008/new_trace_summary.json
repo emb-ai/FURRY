@@ -1,0 +1,109 @@
+{
+  "episode-1791453824870454": {
+    "duration_s": 69.889768629,
+    "events": [
+      "start",
+      "record_button_start",
+      "observer_view",
+      "tracking_pause",
+      "tracking_resume",
+      "ego_world",
+      "record_button_stop",
+      "user_stop"
+    ],
+    "camera_packets": 0
+  },
+  "episode-1791453976077276": {
+    "duration_s": 9.319659105,
+    "events": [
+      "start",
+      "record_button_start",
+      "observer_view",
+      "calibrate",
+      "record_button_stop",
+      "user_stop"
+    ],
+    "camera_packets": 75,
+    "age_median_ms": 166.61376953125,
+    "under150": 0.17333333333333334,
+    "availability": {
+      "lhip": 1.0,
+      "lknee": 1.0,
+      "lankle": 1.0,
+      "rhip": 1.0,
+      "rknee": 1.0,
+      "rankle": 1.0,
+      "nose": 1.0,
+      "lshoulder": 1.0,
+      "rshoulder": 1.0
+    },
+    "lengths": {
+      "lhip_lknee": {
+        "median": 0.4524739963536199,
+        "min": 0.41891391446135373,
+        "max": 0.49455125762886026
+      },
+      "lknee_lankle": {
+        "median": 0.350637642595524,
+        "min": 0.337987044165618,
+        "max": 0.37333060392033474
+      },
+      "rhip_rknee": {
+        "median": 0.41881616886807127,
+        "min": 0.40027582999275696,
+        "max": 0.44912964778353615
+      },
+      "rknee_rankle": {
+        "median": 0.3754768524148995,
+        "min": 0.35058760118315146,
+        "max": 0.39607570992151664
+      }
+    }
+  },
+  "episode-1791453991117291": {
+    "duration_s": 69.910492276,
+    "events": [
+      "start",
+      "record_button_start",
+      "observer_view",
+      "record_button_stop",
+      "user_stop"
+    ],
+    "camera_packets": 578,
+    "age_median_ms": 169.0806884765625,
+    "under150": 0.15570934256055363,
+    "availability": {
+      "lhip": 1.0,
+      "lknee": 1.0,
+      "lankle": 0.9982698961937716,
+      "rhip": 1.0,
+      "rknee": 0.9982698961937716,
+      "rankle": 1.0,
+      "nose": 0.9290657439446367,
+      "lshoulder": 0.9913494809688581,
+      "rshoulder": 0.9948096885813149
+    },
+    "lengths": {
+      "lhip_lknee": {
+        "median": 0.40132278781739766,
+        "min": 0.3315620070591864,
+        "max": 0.5240143185898112
+      },
+      "lknee_lankle": {
+        "median": 0.3534778124534276,
+        "min": 0.304324306975518,
+        "max": 0.5466747542608661
+      },
+      "rhip_rknee": {
+        "median": 0.40507874092618934,
+        "min": 0.3350762999919121,
+        "max": 0.5387681395304478
+      },
+      "rknee_rankle": {
+        "median": 0.38894809952523496,
+        "min": 0.3347352751801621,
+        "max": 0.5297766748025918
+      }
+    }
+  }
+}

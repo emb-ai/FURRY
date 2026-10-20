@@ -1,0 +1,137 @@
+{
+  "schema": "furry-dexweave-manip-reference-v1",
+  "accepted": [
+    {
+      "id": "episode-1792020014648126",
+      "file": "episode-1792020014648126.npz",
+      "sha256": "f70bda0f17704d135b1c9cf8816721146a18383c549be75c68a16231a59e5b2a",
+      "frames": 1442,
+      "seconds": 28.82,
+      "source_identity": "a71d7bf2464ce1b5ce6402e6938c1da35f69935d84cf0a07389b83cedeb1e368",
+      "source_frames_sha256": "428685ddffe686c58c92a79377baf04c9d6f1e1e30078527db8092a382bfe1c6",
+      "source_model_sha256": "3f9b75cebff22faf63ca02071c0f8479d565d7fd9ed167159e886a8154594faf"
+    },
+    {
+      "id": "episode-1792020055691156",
+      "file": "episode-1792020055691156.npz",
+      "sha256": "bbf1ae5c8d669355ac2ce850bb856a7c36b97a18c496bad0150c57a28ba23499",
+      "frames": 1117,
+      "seconds": 22.32,
+      "source_identity": "04af79940e82196cde85d8e6b82893adfb6ca83c5561559ba888eed4dce9a4fc",
+      "source_frames_sha256": "295a418ae60b37f128837d7b086be1f69bcae6f58d297bba48dd72c21900496e",
+      "source_model_sha256": "3f9b75cebff22faf63ca02071c0f8479d565d7fd9ed167159e886a8154594faf"
+    },
+    {
+      "id": "episode-1792020126135729",
+      "file": "episode-1792020126135729.npz",
+      "sha256": "00802bd919531908d6aee3196030f2d3fb188b453e50c2a2a36d936637f57ae8",
+      "frames": 1890,
+      "seconds": 37.78,
+      "source_identity": "f7af0fda545b4df312a7fb7a66f736d2e2ccaef3b69e7ef3ab23a7f69444f9c7",
+      "source_frames_sha256": "d03651656aec47ed311822c2d4dcf519fe94e94ee9d1d0f833f0b12c3efecb84",
+      "source_model_sha256": "3f9b75cebff22faf63ca02071c0f8479d565d7fd9ed167159e886a8154594faf"
+    },
+    {
+      "id": "episode-1792020208393189",
+      "file": "episode-1792020208393189.npz",
+      "sha256": "34fe6c0bba4662878a4416c0e1b7ad40b813bbdcbd024a414fc7370d00d698c9",
+      "frames": 1286,
+      "seconds": 25.7,
+      "source_identity": "c6a84a43eed8a831bcc0d4c7720df6593de8878e3427f9b68e5ddd9cd64e72d9",
+      "source_frames_sha256": "06b4580df452d50b174df614b54fe6746a96457dff3e7fd63636e68716422612",
+      "source_model_sha256": "3f9b75cebff22faf63ca02071c0f8479d565d7fd9ed167159e886a8154594faf"
+    }
+  ],
+  "rejected": [
+    {
+      "episode": "episode-1792015434582696",
+      "reason": "Task did not succeed (outcome=2)"
+    },
+    {
+      "episode": "episode-1792015467386805",
+      "reason": "Task did not succeed (outcome=2)"
+    },
+    {
+      "episode": "episode-1792020109771161",
+      "reason": "Task did not succeed (outcome=0)"
+    },
+    {
+      "episode": "episode-1792020172753838",
+      "reason": "Task did not succeed (outcome=0)"
+    }
+  ],
+  "joints": [
+    "left_hip_pitch_joint",
+    "left_hip_roll_joint",
+    "left_hip_yaw_joint",
+    "left_knee_joint",
+    "left_ankle_pitch_joint",
+    "left_ankle_roll_joint",
+    "right_hip_pitch_joint",
+    "right_hip_roll_joint",
+    "right_hip_yaw_joint",
+    "right_knee_joint",
+    "right_ankle_pitch_joint",
+    "right_ankle_roll_joint",
+    "waist_yaw_joint",
+    "waist_roll_joint",
+    "waist_pitch_joint",
+    "left_shoulder_pitch_joint",
+    "left_shoulder_roll_joint",
+    "left_shoulder_yaw_joint",
+    "left_elbow_joint",
+    "left_wrist_roll_joint",
+    "left_wrist_pitch_joint",
+    "left_wrist_yaw_joint",
+    "right_shoulder_pitch_joint",
+    "right_shoulder_roll_joint",
+    "right_shoulder_yaw_joint",
+    "right_elbow_joint",
+    "right_wrist_roll_joint",
+    "right_wrist_pitch_joint",
+    "right_wrist_yaw_joint",
+    "left_hand_thumb_0_joint",
+    "left_hand_thumb_1_joint",
+    "left_hand_thumb_2_joint",
+    "left_hand_middle_0_joint",
+    "left_hand_middle_1_joint",
+    "left_hand_index_0_joint",
+    "left_hand_index_1_joint",
+    "right_hand_thumb_0_joint",
+    "right_hand_thumb_1_joint",
+    "right_hand_thumb_2_joint",
+    "right_hand_middle_0_joint",
+    "right_hand_middle_1_joint",
+    "right_hand_index_0_joint",
+    "right_hand_index_1_joint"
+  ],
+  "links": [
+    "pelvis",
+    "left_hip_roll_link",
+    "left_knee_link",
+    "left_ankle_roll_link",
+    "right_hip_roll_link",
+    "right_knee_link",
+    "right_ankle_roll_link",
+    "torso_link",
+    "left_shoulder_roll_link",
+    "left_elbow_link",
+    "left_wrist_yaw_link",
+    "right_shoulder_roll_link",
+    "right_elbow_link",
+    "right_wrist_yaw_link",
+    "left_hand_thumb_finger_tip",
+    "left_hand_middle_finger_tip",
+    "left_hand_index_finger_tip",
+    "right_hand_thumb_finger_tip",
+    "right_hand_middle_finger_tip",
+    "right_hand_index_finger_tip"
+  ],
+  "independent_test_session": false,
+  "training": "separate policy per successful reference",
+  "adaptations": [
+    "Recorded physical robot trajectory used directly; no human retargeting.",
+    "Unitree three-finger hands: 14 independent hand joints, six fingertips, 43 actions, actor244/critic437.",
+    "URDF exported from archived MuJoCo collision geometry and inertial frames; PhysX contact behavior must be validated separately."
+  ]
+}

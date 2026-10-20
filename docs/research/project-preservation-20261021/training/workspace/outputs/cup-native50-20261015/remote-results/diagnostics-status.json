@@ -1,0 +1,19 @@
+{
+  "pid": 2939768,
+  "completed": [
+    {
+      "variant": "act",
+      "successes": 1,
+      "n": 8
+    },
+    {
+      "variant": "act-proprio",
+      "successes": 3,
+      "n": 8
+    }
+  ],
+  "protocol": "Recorded-prefix continuation diagnostics, not full resets",
+  "phase": "completed",
+  "variant": "act-proprio",
+  "child_pid": 2982381
+}

@@ -1,0 +1,83 @@
+{
+  "policy": "outputs/dexweave-body-20261012/mixture12-ddp6-20261013/videos/inputs/evaluation/policy-02000.onnx",
+  "sha256": "c3196634f849546ebc8673f4e6139417f52517f0bdae2f6ac8cb15b1434c0015",
+  "iteration": 2000,
+  "host": "macOS-26.5.2-arm64-arm-64bit",
+  "machine": "arm64",
+  "processor": "arm",
+  "ort_version": "1.23.2",
+  "providers": [
+    "CPUExecutionProvider"
+  ],
+  "input_shape": [
+    1,
+    157
+  ],
+  "output_shape": [
+    1,
+    29
+  ],
+  "control_hz": 50,
+  "observations": 300,
+  "measurement": "Python ONNX Runtime session.run only, batch1, 200 warmup calls, 3 blocks of2000 calls per thread count; inputs sampled from300-frame actual MuJoCo C01 rollout. Includes normalization inside ONNX, excludes observation construction, action processing, physics, retargeting, display and transport.",
+  "results": [
+    {
+      "threads": 1,
+      "blocks": [
+        {
+          "n": 2000,
+          "mean_ms": 0.0898225575,
+          "median_ms": 0.091375,
+          "p95_ms": 0.09837915,
+          "p99_ms": 0.11158524,
+          "max_ms": 0.141
+        },
+        {
+          "n": 2000,
+          "mean_ms": 0.0892951645,
+          "median_ms": 0.08989549999999999,
+          "p95_ms": 0.09920805,
+          "p99_ms": 0.11291601,
+          "max_ms": 0.162709
+        },
+        {
+          "n": 2000,
+          "mean_ms": 0.09039864649999999,
+          "median_ms": 0.090208,
+          "p95_ms": 0.09912710000000001,
+          "p99_ms": 0.11387615999999992,
+          "max_ms": 0.314916
+        }
+      ]
+    },
+    {
+      "threads": 2,
+      "blocks": [
+        {
+          "n": 2000,
+          "mean_ms": 0.08436120550000001,
+          "median_ms": 0.083625,
+          "p95_ms": 0.089375,
+          "p99_ms": 0.10445842,
+          "max_ms": 0.184792
+        },
+        {
+          "n": 2000,
+          "mean_ms": 0.0858185335,
+          "median_ms": 0.083583,
+          "p95_ms": 0.09204934999999999,
+          "p99_ms": 0.13995041999999994,
+          "max_ms": 0.408542
+        },
+        {
+          "n": 2000,
+          "mean_ms": 0.0832138715,
+          "median_ms": 0.083208,
+          "p95_ms": 0.08637705,
+          "p99_ms": 0.09208525,
+          "max_ms": 0.134333
+        }
+      ]
+    }
+  ]
+}

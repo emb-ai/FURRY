@@ -1,0 +1,50 @@
+{
+  "status": "single_cycle_only_arbitrary_sequences_not_achieved",
+  "policy": "HOMIE Standing",
+  "environment": "Unmodified installed Rubik model and native physics; desktop offline simulation.",
+  "scene_sha256": "b731d2e4cdd0fbc9660d0e437db833563ed4727f163a1be74354dd9e8bec1ce3",
+  "warmup_seconds": 2.5,
+  "command_hz": 100,
+  "physics_hz": 1000,
+  "policy_hz": 50,
+  "seed": 0,
+  "initial_pickup_end_s": 11.0,
+  "cycle_end_s": 27.97,
+  "cycle_metrics": {
+    "start_s": 10.99999999999981,
+    "end_s": 27.970000000001573,
+    "corner_position_max_error_m": 0.000708520039115011,
+    "corner_orientation_max_error_deg": 2.373566843824709,
+    "common_rotation_deg": 5.115187322138707,
+    "center_error_m": 0.0024226965653547108,
+    "wrist_position_error_m": [
+      0.028066297568365994,
+      0.016215976459881758
+    ],
+    "wrist_orientation_error_deg": [
+      12.27211226359239,
+      3.637858280419445
+    ],
+    "moving_corner_ids": [
+      7,
+      0,
+      6,
+      4
+    ]
+  },
+  "right_contact_free_longest_s": 1.2,
+  "right_max_geometry_clearance_m": 0.08675384420763596,
+  "non_hand_support_frames_during_cycle": 0,
+  "both_hands_in_contact_at_end": true,
+  "replay": {
+    "run": "macro-follow07",
+    "bridge": "bridge-original-snapshot.dylib",
+    "frames": 3196,
+    "qpos_max_error": 0.0,
+    "userdata_max_error": 0.0,
+    "first_divergent_frame": null,
+    "warnings": 0
+  },
+  "series_success": false,
+  "limitation": "Next physical move after this return loses the grasp. The cube pose returns closely, but wrist poses differ by 1.6–2.8 cm. This is not a reusable move basis."
+}

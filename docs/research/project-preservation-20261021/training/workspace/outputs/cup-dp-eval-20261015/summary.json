@@ -1,0 +1,477 @@
+{
+  "timestamp_utc": "2026-10-15T06:35:30.270160+00:00",
+  "checkpoint_sha256": "cd6c21082681d0dc22d8da1701fed75357288f64b8357933e6db3b8a1820e875",
+  "checkpoint_epoch": 15,
+  "checkpoint_step": 5456,
+  "checkpoint_selection": "best EMA validation noise MSE .0418417831",
+  "episodes": 4,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "completed_rollouts": 12,
+  "successes": 0,
+  "robot_falls": 0,
+  "numerical_failures": 0,
+  "raised_over_4_5cm": 7,
+  "cup_on_floor_at_end": 1,
+  "timeout_s": 90,
+  "controls_30hz_successes": 2,
+  "controls": [
+    {
+      "episode": "episode-1792015107773946",
+      "mode": "oracle30",
+      "seed": 0,
+      "success": true,
+      "outcome": 1,
+      "elapsed_sim_s": 7.133000000000009,
+      "wall_s": 2.737349271774292,
+      "lift_m": 0.06362982206957501,
+      "contact_frames": 91,
+      "final_goal_xy_error_m": 0.014327786186519814,
+      "initial_distance_m": 0.2459814878239907,
+      "min_pelvis_z": 0.7553725250563837,
+      "final_cup": [
+        0.43598694333035626,
+        -0.013016987614871984,
+        0.74999876917993
+      ],
+      "goal": [
+        0.43,
+        0.0,
+        0.75
+      ],
+      "error": null,
+      "inference_mean_s": null
+    },
+    {
+      "episode": "episode-1792017633764131",
+      "mode": "oracle30",
+      "seed": 0,
+      "success": false,
+      "outcome": 3,
+      "elapsed_sim_s": 90.00000000000287,
+      "wall_s": 40.545132875442505,
+      "lift_m": 0.1187279063029143,
+      "contact_frames": 68,
+      "final_goal_xy_error_m": 0.06968253977118367,
+      "initial_distance_m": 0.32413819231674706,
+      "min_pelvis_z": 0.7575791340960106,
+      "final_cup": [
+        0.5196986701521794,
+        0.20119859369990425,
+        0.7830523599583233
+      ],
+      "goal": [
+        0.45824597113998605,
+        0.23405011015012864,
+        0.75
+      ],
+      "error": null,
+      "inference_mean_s": null
+    },
+    {
+      "episode": "episode-1792017999001122",
+      "mode": "oracle30",
+      "seed": 0,
+      "success": false,
+      "outcome": 3,
+      "elapsed_sim_s": 90.00000000000287,
+      "wall_s": 46.88768005371094,
+      "lift_m": 0.06962937044164907,
+      "contact_frames": 239,
+      "final_goal_xy_error_m": 0.14352712556286892,
+      "initial_distance_m": 0.3344510123001047,
+      "min_pelvis_z": 0.7487761346294742,
+      "final_cup": [
+        0.49516119505044554,
+        0.05372516294961353,
+        0.7830536587164463
+      ],
+      "goal": [
+        0.4467791395820677,
+        0.18885181643068794,
+        0.75
+      ],
+      "error": null,
+      "inference_mean_s": null
+    },
+    {
+      "episode": "episode-1792018134901046",
+      "mode": "oracle30",
+      "seed": 0,
+      "success": true,
+      "outcome": 1,
+      "elapsed_sim_s": 8.33300000000001,
+      "wall_s": 3.501439094543457,
+      "lift_m": 0.10770690294212382,
+      "contact_frames": 74,
+      "final_goal_xy_error_m": 0.01873766936767796,
+      "initial_distance_m": 0.24224438177974833,
+      "min_pelvis_z": 0.749936324377478,
+      "final_cup": [
+        0.43296629053515767,
+        0.017043145246982704,
+        0.7499978925904447
+      ],
+      "goal": [
+        0.45089916689787063,
+        0.022475658357143404,
+        0.75
+      ],
+      "error": null,
+      "inference_mean_s": null
+    }
+  ],
+  "rollouts": [
+    {
+      "episode": "episode-1792015107773946",
+      "mode": "policy",
+      "seed": 0,
+      "success": false,
+      "outcome": 3,
+      "elapsed_sim_s": 90.00000000000287,
+      "wall_s": 54.851507902145386,
+      "lift_m": 0.044554721693546684,
+      "contact_frames": 40,
+      "final_goal_xy_error_m": 0.4028375523426508,
+      "initial_distance_m": 0.2459814878239907,
+      "min_pelvis_z": 0.757220322623114,
+      "final_cup": [
+        0.5017674524350612,
+        0.3963931461925132,
+        0.7830523148658883
+      ],
+      "goal": [
+        0.43,
+        0.0,
+        0.75
+      ],
+      "error": null,
+      "inference_mean_s": 0.4026371679807964
+    },
+    {
+      "episode": "episode-1792015107773946",
+      "mode": "policy",
+      "seed": 1,
+      "success": false,
+      "outcome": 3,
+      "elapsed_sim_s": 90.00000000000287,
+      "wall_s": 48.87765097618103,
+      "lift_m": 0.03523837379313233,
+      "contact_frames": 11,
+      "final_goal_xy_error_m": 0.39683865015155995,
+      "initial_distance_m": 0.2459814878239907,
+      "min_pelvis_z": 0.7550643538069183,
+      "final_cup": [
+        0.47003611184159844,
+        0.39481391059930904,
+        0.7830526482226766
+      ],
+      "goal": [
+        0.43,
+        0.0,
+        0.75
+      ],
+      "error": null,
+      "inference_mean_s": 0.32511609060722485
+    },
+    {
+      "episode": "episode-1792015107773946",
+      "mode": "policy",
+      "seed": 2,
+      "success": false,
+      "outcome": 3,
+      "elapsed_sim_s": 90.00000000000287,
+      "wall_s": 44.00479793548584,
+      "lift_m": 0.03473413532541492,
+      "contact_frames": 24,
+      "final_goal_xy_error_m": 0.3358033472031887,
+      "initial_distance_m": 0.2459814878239907,
+      "min_pelvis_z": 0.7567683235288156,
+      "final_cup": [
+        0.49500658819768795,
+        0.3294511063629344,
+        0.7830533005140793
+      ],
+      "goal": [
+        0.43,
+        0.0,
+        0.75
+      ],
+      "error": null,
+      "inference_mean_s": 0.28377587753429745
+    },
+    {
+      "episode": "episode-1792017633764131",
+      "mode": "policy",
+      "seed": 0,
+      "success": false,
+      "outcome": 3,
+      "elapsed_sim_s": 90.00000000000287,
+      "wall_s": 54.03166317939758,
+      "lift_m": 0.05947502481546996,
+      "contact_frames": 31,
+      "final_goal_xy_error_m": 0.29123956186279126,
+      "initial_distance_m": 0.32413819231674706,
+      "min_pelvis_z": 0.75822213268661,
+      "final_cup": [
+        0.6324940034274849,
+        0.0006875046668049312,
+        0.7830532987096562
+      ],
+      "goal": [
+        0.45824597113998605,
+        0.23405011015012864,
+        0.75
+      ],
+      "error": null,
+      "inference_mean_s": 0.3669382354669404
+    },
+    {
+      "episode": "episode-1792017633764131",
+      "mode": "policy",
+      "seed": 1,
+      "success": false,
+      "outcome": 3,
+      "elapsed_sim_s": 90.00000000000287,
+      "wall_s": 44.76297378540039,
+      "lift_m": 0.04543478330016759,
+      "contact_frames": 25,
+      "final_goal_xy_error_m": 0.3448469628189888,
+      "initial_distance_m": 0.32413819231674706,
+      "min_pelvis_z": 0.7584026279944384,
+      "final_cup": [
+        0.6009372039737368,
+        -0.07989039350918796,
+        0.7830532899630279
+      ],
+      "goal": [
+        0.45824597113998605,
+        0.23405011015012864,
+        0.75
+      ],
+      "error": null,
+      "inference_mean_s": 0.29043297182049665
+    },
+    {
+      "episode": "episode-1792017633764131",
+      "mode": "policy",
+      "seed": 2,
+      "success": false,
+      "outcome": 3,
+      "elapsed_sim_s": 90.00000000000287,
+      "wall_s": 75.37458300590515,
+      "lift_m": 0.0993261243968232,
+      "contact_frames": 130,
+      "final_goal_xy_error_m": 0.3692472406549579,
+      "initial_distance_m": 0.32413819231674706,
+      "min_pelvis_z": 0.7553775100943204,
+      "final_cup": [
+        0.7110447440539395,
+        -0.035089825839497095,
+        0.843999563109009
+      ],
+      "goal": [
+        0.45824597113998605,
+        0.23405011015012864,
+        0.75
+      ],
+      "error": null,
+      "inference_mean_s": 0.2868187971282424
+    },
+    {
+      "episode": "episode-1792017999001122",
+      "mode": "policy",
+      "seed": 0,
+      "success": false,
+      "outcome": 3,
+      "elapsed_sim_s": 90.00000000000287,
+      "wall_s": 36.69616508483887,
+      "lift_m": 0.039885448928350775,
+      "contact_frames": 51,
+      "final_goal_xy_error_m": 0.25560760773846347,
+      "initial_distance_m": 0.3344510123001047,
+      "min_pelvis_z": 0.7500423635381093,
+      "final_cup": [
+        0.27670975826932426,
+        -0.0019665649524505144,
+        0.03304500424567864
+      ],
+      "goal": [
+        0.4467791395820677,
+        0.18885181643068794,
+        0.75
+      ],
+      "error": null,
+      "inference_mean_s": 0.24479825036567554
+    },
+    {
+      "episode": "episode-1792017999001122",
+      "mode": "policy",
+      "seed": 1,
+      "success": false,
+      "outcome": 3,
+      "elapsed_sim_s": 90.00000000000287,
+      "wall_s": 44.65553522109985,
+      "lift_m": 0.10028265047947016,
+      "contact_frames": 47,
+      "final_goal_xy_error_m": 0.2806359756716015,
+      "initial_distance_m": 0.3344510123001047,
+      "min_pelvis_z": 0.7516076396946787,
+      "final_cup": [
+        0.6503819727062105,
+        -0.004286572257253092,
+        0.7830532382153531
+      ],
+      "goal": [
+        0.4467791395820677,
+        0.18885181643068794,
+        0.75
+      ],
+      "error": null,
+      "inference_mean_s": 0.2812129781957258
+    },
+    {
+      "episode": "episode-1792017999001122",
+      "mode": "policy",
+      "seed": 2,
+      "success": false,
+      "outcome": 3,
+      "elapsed_sim_s": 90.00000000000287,
+      "wall_s": 51.98127198219299,
+      "lift_m": 0.07060837671541553,
+      "contact_frames": 154,
+      "final_goal_xy_error_m": 0.20049977004266187,
+      "initial_distance_m": 0.3344510123001047,
+      "min_pelvis_z": 0.7484383951065395,
+      "final_cup": [
+        0.593507536037633,
+        0.05221018492425882,
+        0.7830532172380087
+      ],
+      "goal": [
+        0.4467791395820677,
+        0.18885181643068794,
+        0.75
+      ],
+      "error": null,
+      "inference_mean_s": 0.34512884156745777
+    },
+    {
+      "episode": "episode-1792018134901046",
+      "mode": "policy",
+      "seed": 0,
+      "success": false,
+      "outcome": 3,
+      "elapsed_sim_s": 90.00000000000287,
+      "wall_s": 45.5557701587677,
+      "lift_m": 0.09082483959688337,
+      "contact_frames": 44,
+      "final_goal_xy_error_m": 0.4348955814663513,
+      "initial_distance_m": 0.24224438177974833,
+      "min_pelvis_z": 0.7519555693716319,
+      "final_cup": [
+        0.7694235628386888,
+        0.3185776272284981,
+        0.7830535546736517
+      ],
+      "goal": [
+        0.45089916689787063,
+        0.022475658357143404,
+        0.75
+      ],
+      "error": null,
+      "inference_mean_s": 0.29173631835402103
+    },
+    {
+      "episode": "episode-1792018134901046",
+      "mode": "policy",
+      "seed": 1,
+      "success": false,
+      "outcome": 3,
+      "elapsed_sim_s": 90.00000000000287,
+      "wall_s": 57.517565965652466,
+      "lift_m": 0.040527312449674,
+      "contact_frames": 28,
+      "final_goal_xy_error_m": 0.33921656513811443,
+      "initial_distance_m": 0.24224438177974833,
+      "min_pelvis_z": 0.7535575801047499,
+      "final_cup": [
+        0.5871571050246505,
+        0.3331228092559393,
+        0.78305358462877
+      ],
+      "goal": [
+        0.45089916689787063,
+        0.022475658357143404,
+        0.75
+      ],
+      "error": null,
+      "inference_mean_s": 0.3701808954540052
+    },
+    {
+      "episode": "episode-1792018134901046",
+      "mode": "policy",
+      "seed": 2,
+      "success": false,
+      "outcome": 3,
+      "elapsed_sim_s": 90.00000000000287,
+      "wall_s": 46.82112407684326,
+      "lift_m": 0.04782129649117539,
+      "contact_frames": 26,
+      "final_goal_xy_error_m": 0.3447665488499312,
+      "initial_distance_m": 0.24224438177974833,
+      "min_pelvis_z": 0.7493946487919251,
+      "final_cup": [
+        0.5290647424915843,
+        0.3582644550701895,
+        0.7830536047998797
+      ],
+      "goal": [
+        0.45089916689787063,
+        0.022475658357143404,
+        0.75
+      ],
+      "error": null,
+      "inference_mean_s": 0.3218434902659634
+    }
+  ],
+  "independent_test_session": false,
+  "initialization": "Recorded first active qpos/qvel/mocap/userdata; reset native controller history, fresh control phase; task elapsed zero. No recorded future states/actions in learned rollout.",
+  "limitations": [
+    "Four validation episodes from same collection session, not new independent layouts.",
+    "Native controller history at recording start unavailable; positive control only 2/4. This is an initial-state protocol result, not a deployment success-rate estimate.",
+    "Renderer is MuJoCo training renderer, not Quest GLES.",
+    "Physics pauses while host inference runs; inference latency is measured but not applied as a live control delay."
+  ],
+  "camera_parity": [
+    {
+      "episode": "episode-1792015107773946",
+      "max_pixel_error": 1.0,
+      "mean_pixel_error": 6.64328231292517e-06
+    },
+    {
+      "episode": "episode-1792017633764131",
+      "max_pixel_error": 0.0,
+      "mean_pixel_error": 0.0
+    },
+    {
+      "episode": "episode-1792017999001122",
+      "max_pixel_error": 0.0,
+      "mean_pixel_error": 0.0
+    },
+    {
+      "episode": "episode-1792018134901046",
+      "max_pixel_error": 0.0,
+      "mean_pixel_error": 0.0
+    }
+  ],
+  "physics_hz": 1000,
+  "homie_hz": 50,
+  "visual_action_hz": 30,
+  "execution_steps": 48,
+  "model_horizon": 64,
+  "ddim_steps": 10
+}

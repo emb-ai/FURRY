@@ -1,0 +1,430 @@
+{
+  "schema": "native-homie50-action-contract-v1",
+  "fps": 50,
+  "sampling": "source step modulo20 equals0; pre-action native HOMIE ticks",
+  "source_raw_episodes_unchanged": true,
+  "ready_to_train": false,
+  "remaining": [
+    "Render matching causal RGB at selected frames and fit/export consistent observation statistics.",
+    "Use50Hz actions in inference; preserve physical durations when choosing chunk length.",
+    "Address missing full-reset demonstration prefix; these files do not create missing observations.",
+    "Retest complete model rollout from full reset."
+  ],
+  "episodes": [
+    {
+      "episode": "episode-1792058834151648",
+      "samples": 477,
+      "first_source_frame": 3,
+      "first_sim_time": 3.63999999999971,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792058853043058",
+      "samples": 602,
+      "first_source_frame": 3,
+      "first_sim_time": 0.9400000000000007,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792058872252501",
+      "samples": 643,
+      "first_source_frame": 3,
+      "first_sim_time": 1.1399999999999852,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792058891268205",
+      "samples": 449,
+      "first_source_frame": 3,
+      "first_sim_time": 2.579999999999827,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792058905480017",
+      "samples": 511,
+      "first_source_frame": 2,
+      "first_sim_time": 0.9600000000000007,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792058922652455",
+      "samples": 478,
+      "first_source_frame": 3,
+      "first_sim_time": 1.0799999999999919,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792058939435029",
+      "samples": 499,
+      "first_source_frame": 3,
+      "first_sim_time": 2.3399999999998533,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792058958764795",
+      "samples": 501,
+      "first_source_frame": 2,
+      "first_sim_time": 2.059999999999884,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792058974761240",
+      "samples": 399,
+      "first_source_frame": 2,
+      "first_sim_time": 0.7800000000000006,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792058989334921",
+      "samples": 431,
+      "first_source_frame": 3,
+      "first_sim_time": 1.8799999999999037,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059002004670",
+      "samples": 405,
+      "first_source_frame": 2,
+      "first_sim_time": 0.9000000000000007,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059014728941",
+      "samples": 411,
+      "first_source_frame": 3,
+      "first_sim_time": 1.559999999999939,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059026156239",
+      "samples": 362,
+      "first_source_frame": 2,
+      "first_sim_time": 0.8800000000000007,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059051056344",
+      "samples": 475,
+      "first_source_frame": 3,
+      "first_sim_time": 0.6600000000000005,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059068945238",
+      "samples": 318,
+      "first_source_frame": 3,
+      "first_sim_time": 1.0999999999999897,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059080082046",
+      "samples": 343,
+      "first_source_frame": 2,
+      "first_sim_time": 0.5800000000000004,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059112053736",
+      "samples": 396,
+      "first_source_frame": 3,
+      "first_sim_time": 1.259999999999972,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059125165932",
+      "samples": 409,
+      "first_source_frame": 3,
+      "first_sim_time": 0.8200000000000006,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059146292467",
+      "samples": 441,
+      "first_source_frame": 2,
+      "first_sim_time": 0.7400000000000005,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059159294932",
+      "samples": 454,
+      "first_source_frame": 3,
+      "first_sim_time": 0.44000000000000034,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059175076709",
+      "samples": 488,
+      "first_source_frame": 3,
+      "first_sim_time": 1.0399999999999963,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059205826193",
+      "samples": 524,
+      "first_source_frame": 3,
+      "first_sim_time": 0.6400000000000005,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059222732246",
+      "samples": 395,
+      "first_source_frame": 2,
+      "first_sim_time": 2.5999999999998247,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059237505575",
+      "samples": 493,
+      "first_source_frame": 3,
+      "first_sim_time": 0.9400000000000007,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059256525492",
+      "samples": 503,
+      "first_source_frame": 2,
+      "first_sim_time": 0.8000000000000006,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059271003370",
+      "samples": 388,
+      "first_source_frame": 3,
+      "first_sim_time": 0.48000000000000037,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059281946188",
+      "samples": 518,
+      "first_source_frame": 2,
+      "first_sim_time": 0.5400000000000004,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059298697703",
+      "samples": 423,
+      "first_source_frame": 3,
+      "first_sim_time": 0.8200000000000006,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059316831054",
+      "samples": 490,
+      "first_source_frame": 2,
+      "first_sim_time": 1.059999999999994,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059351364041",
+      "samples": 493,
+      "first_source_frame": 3,
+      "first_sim_time": 2.159999999999873,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059364849329",
+      "samples": 531,
+      "first_source_frame": 2,
+      "first_sim_time": 0.7400000000000005,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059380002841",
+      "samples": 467,
+      "first_source_frame": 3,
+      "first_sim_time": 1.7999999999999126,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059400651712",
+      "samples": 556,
+      "first_source_frame": 2,
+      "first_sim_time": 1.059999999999994,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059418003475",
+      "samples": 459,
+      "first_source_frame": 3,
+      "first_sim_time": 0.8400000000000006,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059456042831",
+      "samples": 622,
+      "first_source_frame": 3,
+      "first_sim_time": 0.9400000000000007,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059472765904",
+      "samples": 671,
+      "first_source_frame": 3,
+      "first_sim_time": 0.7600000000000006,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059504367237",
+      "samples": 411,
+      "first_source_frame": 2,
+      "first_sim_time": 0.9600000000000007,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059515750954",
+      "samples": 384,
+      "first_source_frame": 2,
+      "first_sim_time": 0.6600000000000005,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059540875476",
+      "samples": 488,
+      "first_source_frame": 3,
+      "first_sim_time": 0.6800000000000005,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059566297064",
+      "samples": 408,
+      "first_source_frame": 2,
+      "first_sim_time": 0.6400000000000005,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059578611258",
+      "samples": 433,
+      "first_source_frame": 3,
+      "first_sim_time": 0.5800000000000004,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059590200464",
+      "samples": 331,
+      "first_source_frame": 2,
+      "first_sim_time": 0.5200000000000004,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059602613266",
+      "samples": 361,
+      "first_source_frame": 3,
+      "first_sim_time": 0.8200000000000006,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059614094080",
+      "samples": 418,
+      "first_source_frame": 2,
+      "first_sim_time": 0.5200000000000004,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059637639898",
+      "samples": 425,
+      "first_source_frame": 3,
+      "first_sim_time": 0.6000000000000004,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059649817034",
+      "samples": 453,
+      "first_source_frame": 2,
+      "first_sim_time": 0.6000000000000004,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059662719648",
+      "samples": 395,
+      "first_source_frame": 2,
+      "first_sim_time": 0.5400000000000004,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059674649611",
+      "samples": 291,
+      "first_source_frame": 3,
+      "first_sim_time": 0.5200000000000004,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059683146607",
+      "samples": 415,
+      "first_source_frame": 3,
+      "first_sim_time": 0.7800000000000006,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059694167464",
+      "samples": 367,
+      "first_source_frame": 3,
+      "first_sim_time": 0.6400000000000005,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059704931688",
+      "samples": 446,
+      "first_source_frame": 2,
+      "first_sim_time": 1.0199999999999985,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059729109709",
+      "samples": 427,
+      "first_source_frame": 2,
+      "first_sim_time": 0.6600000000000005,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059755567594",
+      "samples": 438,
+      "first_source_frame": 3,
+      "first_sim_time": 0.7800000000000006,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059766900933",
+      "samples": 625,
+      "first_source_frame": 3,
+      "first_sim_time": 0.8800000000000007,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059782700516",
+      "samples": 421,
+      "first_source_frame": 2,
+      "first_sim_time": 0.6800000000000005,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059793964908",
+      "samples": 449,
+      "first_source_frame": 2,
+      "first_sim_time": 0.6400000000000005,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059807644358",
+      "samples": 401,
+      "first_source_frame": 2,
+      "first_sim_time": 0.7200000000000005,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059833869279",
+      "samples": 548,
+      "first_source_frame": 3,
+      "first_sim_time": 0.46000000000000035,
+      "body_commands_at_native_policy_ticks_exact": true
+    },
+    {
+      "episode": "episode-1792059849292471",
+      "samples": 353,
+      "first_source_frame": 2,
+      "first_sim_time": 0.7200000000000005,
+      "body_commands_at_native_policy_ticks_exact": true
+    }
+  ],
+  "n": 59,
+  "samples": 26713
+}

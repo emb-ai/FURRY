@@ -1,0 +1,174 @@
+{
+  "metrics": [
+    {
+      "episode": "episode-1791652593739690",
+      "feet": "on",
+      "start": "warm",
+      "samples": 3352,
+      "fell": false,
+      "min_height_m": 0.752135548849433,
+      "max_tilt_deg": 9.27829784474792,
+      "p95_tilt_deg": 6.691712790972551,
+      "force_weighted_slip_cm_s": 4.589620884325102,
+      "mean_contact_slip_cm_s": 4.436033978338856,
+      "joint_rmse_deg": 5.048537362936517,
+      "legs_rmse_deg": 6.625309621832819,
+      "ankles_rmse_deg": 7.420625890346722,
+      "root_height_mae_cm": 1.3917864185896467
+    },
+    {
+      "episode": "episode-1791652593739690",
+      "feet": "off",
+      "start": "warm",
+      "samples": 3352,
+      "fell": false,
+      "min_height_m": 0.754328499285211,
+      "max_tilt_deg": 10.829758920005737,
+      "p95_tilt_deg": 6.601082356137225,
+      "force_weighted_slip_cm_s": 4.51501297562162,
+      "mean_contact_slip_cm_s": 4.238314619917591,
+      "joint_rmse_deg": 4.982897645334544,
+      "legs_rmse_deg": 6.505419396324982,
+      "ankles_rmse_deg": 7.205654328105759,
+      "root_height_mae_cm": 0.9772407265390195
+    },
+    {
+      "episode": "episode-1791652593739690",
+      "feet": "ankles_only",
+      "start": "warm",
+      "samples": 3352,
+      "fell": false,
+      "min_height_m": 0.7497439631501617,
+      "max_tilt_deg": 7.828160580864435,
+      "p95_tilt_deg": 6.380623651580464,
+      "force_weighted_slip_cm_s": 4.588090704892003,
+      "mean_contact_slip_cm_s": 4.415420277162081,
+      "joint_rmse_deg": 4.925107679402225,
+      "legs_rmse_deg": 6.3858741703110935,
+      "ankles_rmse_deg": 7.151623113453339,
+      "root_height_mae_cm": 1.4208995088685359
+    },
+    {
+      "episode": "episode-1791652646384286",
+      "feet": "on",
+      "start": "warm",
+      "samples": 2496,
+      "fell": false,
+      "min_height_m": 0.750344300520278,
+      "max_tilt_deg": 10.984217333161729,
+      "p95_tilt_deg": 7.293002906215212,
+      "force_weighted_slip_cm_s": 4.062121877315746,
+      "mean_contact_slip_cm_s": 3.9738865687922806,
+      "joint_rmse_deg": 4.599903319962948,
+      "legs_rmse_deg": 5.83238901417063,
+      "ankles_rmse_deg": 6.525785419799695,
+      "root_height_mae_cm": 1.6397978121444081
+    },
+    {
+      "episode": "episode-1791652646384286",
+      "feet": "off",
+      "start": "warm",
+      "samples": 2496,
+      "fell": false,
+      "min_height_m": 0.7482927663328863,
+      "max_tilt_deg": 10.267249296392924,
+      "p95_tilt_deg": 6.857421965246493,
+      "force_weighted_slip_cm_s": 4.246646493333768,
+      "mean_contact_slip_cm_s": 4.168685440470111,
+      "joint_rmse_deg": 4.588747639355301,
+      "legs_rmse_deg": 5.826814781150296,
+      "ankles_rmse_deg": 6.216485805496546,
+      "root_height_mae_cm": 1.188088238852889
+    },
+    {
+      "episode": "episode-1791652646384286",
+      "feet": "ankles_only",
+      "start": "warm",
+      "samples": 2496,
+      "fell": false,
+      "min_height_m": 0.748762222913971,
+      "max_tilt_deg": 12.027941850205647,
+      "p95_tilt_deg": 7.061307098860247,
+      "force_weighted_slip_cm_s": 4.226107624030431,
+      "mean_contact_slip_cm_s": 4.117540442805435,
+      "joint_rmse_deg": 4.502176724136934,
+      "legs_rmse_deg": 5.604136001512228,
+      "ankles_rmse_deg": 6.020498356086415,
+      "root_height_mae_cm": 1.690815094414833
+    }
+  ],
+  "comparisons": [
+    {
+      "episode": "episode-1791652593739690",
+      "variant": "off",
+      "slip_change_vs_saved_on_pct": -1.6255789003900012
+    },
+    {
+      "episode": "episode-1791652593739690",
+      "variant": "ankles_only",
+      "slip_change_vs_saved_on_pct": -0.03333999630177331
+    },
+    {
+      "episode": "episode-1791652646384286",
+      "variant": "off",
+      "slip_change_vs_saved_on_pct": 4.5425671998782
+    },
+    {
+      "episode": "episode-1791652646384286",
+      "variant": "ankles_only",
+      "slip_change_vs_saved_on_pct": 4.036947971217608
+    }
+  ],
+  "policy": "quest-111586-500",
+  "policy_hz": 50,
+  "falls": 0,
+  "runs": 6,
+  "method": {
+    "on": "actual saved 35 command values, unchanged",
+    "off": "legacy foot mode regenerated offline on the same recorded body/HMD/calibration/physical states; no simulation feedback in command stream",
+    "ankles_only": "copy of exact saved commands with only indices 10,11,16,17 replaced from legacy stream; other 31 commands remain identical; diagnostic hybrid, not the full menu toggle",
+    "warmup": "1 second of identical saved observations/commands in each run; then freely evolving robot driven only by precomputed CSV; exclude first second from metrics",
+    "calibration": "historical snapshot used only for offline generation; first actual frame initializes dynamic robot",
+    "slip": "normal-force-weighted tangential foot contact-point speed, cm/s",
+    "validation": "all six complete without falls/numerical faults; identical warmup and fixed 31 commands checked exactly",
+    "limitations": "same two recordings, approximate common policy history; no exact reconstruction of headset hidden history or general gait acceptance"
+  },
+  "sensitivity_controls": [
+    {
+      "episode": "episode-1791652593739690",
+      "kind": "rebuilt",
+      "max_command_error": 1.7881393432617188e-07,
+      "max_state_difference": 1.6855033128898165,
+      "slip_cm_s": 4.685766748366505,
+      "original_slip_cm_s": 4.589620884325102,
+      "slip_change_pct": 2.094854160389792,
+      "log": "policy=quest-111586-500 hz=50 full_feet=0 warmup=1\nrows=3452 fell=0 min_height=0.751284\n"
+    },
+    {
+      "episode": "episode-1791652646384286",
+      "kind": "rebuilt",
+      "max_command_error": 5.960464477539063e-08,
+      "max_state_difference": 0.42732333811039425,
+      "slip_cm_s": 4.376856117201324,
+      "original_slip_cm_s": 4.062121877315746,
+      "slip_change_pct": 7.74802552437337,
+      "log": "policy=quest-111586-500 hz=50 full_feet=0 warmup=1\nrows=2596 fell=0 min_height=0.750344\n"
+    },
+    {
+      "episode": "episode-1791652646384286",
+      "kind": "repeat",
+      "max_command_error": 0.0,
+      "max_state_difference": 0.0,
+      "slip_cm_s": 4.062121877315746,
+      "original_slip_cm_s": 4.062121877315746,
+      "slip_change_pct": 0.0,
+      "log": "policy=quest-111586-500 hz=50 full_feet=0 warmup=1\nrows=2596 fell=0 min_height=0.750344\n"
+    }
+  ],
+  "total_runs_including_controls": 9,
+  "interpretation": "No robust evidence of worsening or improvement across these two clips. Exact saved commands reproduce identically on repeat; regenerated ON commands differ by <=1.79e-7 yet change contact-slip metrics by 2.09% and 7.75%. The prior categorical worsening conclusion is withdrawn.",
+  "source_sha256": {
+    "export_commands.cpp": "fcc77b88c54d8e5f96361c4e75d9aae8cae7131b03791e284bde8a2c0560ce0f",
+    "fixed_rollout.cpp": "459c9b1b12c3f867c5a948b6eec463428aa3e08630f9084c4c719b838b98af8c"
+  }
+}

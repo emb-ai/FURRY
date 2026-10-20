@@ -1,0 +1,14 @@
+{
+  "episodes": 20,
+  "sha256_verified_files": 400,
+  "accepted_cup_episodes": 14,
+  "accepted_seconds": 117.7,
+  "wb_dex_successful_episodes": 0,
+  "runtime_modified": false,
+  "limitations": [
+    "No policy training or real rollout acceptance performed",
+    "Accepted means current exporter validation; one recording session, no independent test",
+    "WB-Dex physical transfer reaches box, but no settled interval; false fall triggers on squat below 0.50m",
+    "Pregrasp jitter confirmed; root cause not isolated"
+  ]
+}

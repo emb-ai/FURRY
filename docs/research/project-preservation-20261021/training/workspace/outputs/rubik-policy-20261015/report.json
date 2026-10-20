@@ -1,0 +1,162 @@
+{
+  "objective": "Learn command-conditioned wrist and scalar-Grip control for random Rubik sequences",
+  "policy": "MLP initialized by BC, then standard Stable-Baselines3 PPO",
+  "actor_observation": "313 privileged simulator values; no vision model",
+  "action_dim": 14,
+  "control_hz": 20,
+  "lower_policy": "HOMIE Standing frozen",
+  "physics": "unchanged native grip-guard runtime",
+  "reset": "Exact recorded airborne grasp, including native policy history; reset only at episode boundaries",
+  "seed_scope": "Random command queue; physical initial scene fixed",
+  "random_pilot_commands": [
+    "F",
+    "U"
+  ],
+  "full_command_compiler": [
+    "R",
+    "R'",
+    "F",
+    "F'",
+    "U",
+    "U'"
+  ],
+  "inverse_compilation": "Three clockwise quarters, authorized by user; algebra verified, policy success not established",
+  "bc_updates": 1000,
+  "unique_demonstration_chains": 1,
+  "complete_demonstration_macros": 9,
+  "provisional_macros": 1,
+  "pilots": {
+    "pilot": {
+      "status": "completed",
+      "timesteps": 10240,
+      "completed_moves": 0,
+      "completed_episodes": 295,
+      "successful_episodes": 0
+    },
+    "conservative": {
+      "status": "completed",
+      "timesteps": 2048,
+      "completed_moves": 0,
+      "completed_episodes": 9,
+      "successful_episodes": 0
+    }
+  },
+  "environment_validation": {
+    "geometry_tests_passed": true,
+    "whole_cube_only_rejected": true,
+    "wrong_face_rejected": true,
+    "resampled_oracle_completed_moves": 1,
+    "oracle_info": {
+      "completed_moves": 1,
+      "requested_moves": 2,
+      "success": false,
+      "failure": null,
+      "metrics": {
+        "corner_position": 7.464977339491599e-05,
+        "corner_angle": 0.015474943913724216,
+        "center": 0.006394281170703906,
+        "grid_angle": 0.04182199935249309,
+        "hand_position": [
+          0.004145493979398832,
+          0.0057780138225386165
+        ],
+        "hand_angle": [
+          0.0654251387400859,
+          0.03899560462936085
+        ]
+      },
+      "released_and_withdrawn": true,
+      "completed_this_step": true,
+      "next_command": [
+        4,
+        -1
+      ]
+    },
+    "failure": null,
+    "native_warnings": 0,
+    "wall_seconds": 82.90484916704008,
+    "action_dim": 14,
+    "observation_dim": 313,
+    "native_resets_between_commands": 0,
+    "policy_tested": false,
+    "native_env_sha256": "fb64f0a413cd82762ca39536852bd4a02b2bfda0f58fadacf20afe8a396949e3",
+    "translation_step_m": 0.03,
+    "rotation_step_rad": 0.15000000000000002
+  },
+  "accepted_policy": null,
+  "headset_deployed": false,
+  "gpu_training_launched": false,
+  "running_training_jobs": [
+    {
+      "pid": 91056,
+      "run": "curriculum-v1",
+      "stage": "settle_grasp",
+      "status": "training",
+      "observed_unix": 1792073838.009686
+    }
+  ],
+  "limitations": [
+    "No successful learned full move or sequence yet",
+    "Training episodes are not independent held-out evaluations",
+    "Initial PPO pilot used 0.2 s no-contact grace; current environment rejects the first 100 Hz tick without either hand contact",
+    "High initial PPO learning rate caused large KL; conservative run uses documented target_kl and 1e-5 learning rate",
+    "Curriculum added; physical source remains one correlated deterministic chain.",
+    "Recoveries start from native replay snapshots only at episode boundaries; these are not complete-move successes.",
+    "Random sequences use F/U then R/F/U; inverse requests expand into three positive quarters.",
+    "Latest evaluation is only 0.6\u20131 second warm recovery, not a full return/move. Current stage did not pass both consecutive gates."
+  ],
+  "next_acceptance": "Autonomous complete moves with release/withdraw/regrasp, then new random sequences with no between-move resets",
+  "source_hashes": {
+    "native_env.py": "fb64f0a413cd82762ca39536852bd4a02b2bfda0f58fadacf20afe8a396949e3",
+    "train.py": "71cb3648e9f8b8f9198f6aaeecad2f95bdad28768deb5e94e1045b676fdaf796",
+    "prepare.py": "78392e10de0ea94d26f15eaee6036f2919c7a2a2836c83f4f4e2f4a2837232b5",
+    "commands.py": "26cd7b17dc6edbda4fae6876cec0ec661c8a8d8d79b3b03c372afe1532e1ad4e",
+    "validate_env.py": "755ed4d85e0b838a9c295c74cfe116b1efe341d8105637c6e3d62a1350557138"
+  },
+  "method_source": "https://stable-baselines3.readthedocs.io/en/master/modules/ppo.html",
+  "curriculum": {
+    "implemented": true,
+    "run": "curriculum-v1",
+    "status_file": "curriculum-v1/status.json",
+    "live_file": "curriculum-v1/live.json",
+    "launch_file": "curriculum-launch.json",
+    "validation": "curriculum-validation.json",
+    "training_device": "local CPU",
+    "workers": 2,
+    "automatic_stage_gates": true,
+    "within_sequence_reset": false,
+    "source_snapshots": 72,
+    "scripted_oracle_checks_passed": 16,
+    "policy_success_not_yet_measured": false,
+    "latest_observed_live": {
+      "status": "training",
+      "stage": 0,
+      "stage_name": "settle_grasp",
+      "optimizer_timesteps": 6784,
+      "ppo_update_epochs": 35,
+      "block_completed_quarters": 376,
+      "block_episodes": 380,
+      "block_successes": 376,
+      "wall_seconds": 62.8904130840092,
+      "updated_unix": 1792073836.744447,
+      "pid": 91056
+    },
+    "latest_evaluation": {
+      "stage": 0,
+      "training_success": 1.0,
+      "holdout_success": 0.75,
+      "warm_start": true,
+      "completed_full_moves": false
+    },
+    "verified_ppo_updates": {
+      "steps": 4096,
+      "action_head_max_change": 0.0002793624298647046
+    }
+  },
+  "updated_unix": 1792073838.010427,
+  "code_sha256": {
+    "native_env.py": "58a92d5d4f0a2af730643ac97a03ea604a3c9ab4ccaa0575efeb56496d2ba30d",
+    "curriculum_env.py": "7e086be43132e30320832674271bbbb8e55d75c315aad6c9c5d18617a420b3f2",
+    "train_curriculum.py": "410e91467de0ed4c12f79115671c5149bba6bc2ecf509d5d00069aa7643c7f6b"
+  }
+}

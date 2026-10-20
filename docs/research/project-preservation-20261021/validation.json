@@ -1,0 +1,498 @@
+{
+  "date": "2026-10-21",
+  "baseline_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c",
+  "reviewed_cup_dataset": {
+    "archives": 67,
+    "bytes": 1470437128,
+    "sha256": "all67matched index.json",
+    "zip_crc": "all67passed",
+    "accepted_seconds": 1120.6700000000044
+  },
+  "runtime_tests": {
+    "date": "2026-10-21",
+    "test_groups": [
+      {
+        "modules": [
+          "inference_logger.test_logger",
+          "test_skeleton_server",
+          "test_body2d",
+          "test_gmr_live"
+        ],
+        "passed": 23,
+        "duration_seconds": 6.505,
+        "environment": "project Python3.12 with pinned MuJoCo/Mink; loopback WebSocket test permitted"
+      },
+      {
+        "modules": [
+          "test_keypoints2d"
+        ],
+        "passed": 2,
+        "duration_seconds": 0.004,
+        "environment": "existing skeleton Python environment, OpenCV5.0.0"
+      }
+    ],
+    "quest_sync_patch_apply_check": "passed; unapplied",
+    "hardware": "no new camera capture, APK build, installation or headset validation"
+  },
+  "documentation": {
+    "markdown_lint": "passed90files",
+    "unit_tests": 16,
+    "unit_test_result": "passed",
+    "links": "passed90Markdownfiles",
+    "staged_whitespace": "passed; archived original byte streams use scoped -text/-whitespace attributes"
+  },
+  "artifacts": {
+    "original_files": 215,
+    "bytes": 29456077,
+    "sha256": "all matched",
+    "policies_recomputed": 8,
+    "metric_maximum_absolute_error": 0
+  },
+  "presentation": {
+    "path": "outputs/main-audit-20261021/furry-presentation-20261021.pptx",
+    "bytes": 110955203,
+    "sha256": "9df05457c018a73e8988b3906c13e4e2beb7b1c15c59580e29226de36a41909b",
+    "zip_crc": "passed",
+    "all_xml_parsed": 155,
+    "slide_count": 23,
+    "broken_internal_relationships": [],
+    "external_relationships": [],
+    "media": [
+      {
+        "file": "ppt/media/image14.png",
+        "bytes": 1830906
+      },
+      {
+        "file": "ppt/media/image27.png",
+        "bytes": 141199
+      },
+      {
+        "file": "ppt/media/image24.png",
+        "bytes": 237524
+      },
+      {
+        "file": "ppt/media/image1.png",
+        "bytes": 103658
+      },
+      {
+        "file": "ppt/media/image38.gif",
+        "bytes": 1610792
+      },
+      {
+        "file": "ppt/media/image39.gif",
+        "bytes": 9835636
+      },
+      {
+        "file": "ppt/media/image44.gif",
+        "bytes": 45921143
+      },
+      {
+        "file": "ppt/media/image21.png",
+        "bytes": 3839892
+      },
+      {
+        "file": "ppt/media/image29.png",
+        "bytes": 9046
+      },
+      {
+        "file": "ppt/media/image15.png",
+        "bytes": 124741
+      },
+      {
+        "file": "ppt/media/image32.png",
+        "bytes": 249073
+      },
+      {
+        "file": "ppt/media/image30.jpg",
+        "bytes": 159664
+      },
+      {
+        "file": "ppt/media/image33.png",
+        "bytes": 384076
+      },
+      {
+        "file": "ppt/media/image4.png",
+        "bytes": 138815
+      },
+      {
+        "file": "ppt/media/image34.png",
+        "bytes": 309666
+      },
+      {
+        "file": "ppt/media/image2.png",
+        "bytes": 92199
+      },
+      {
+        "file": "ppt/media/image12.png",
+        "bytes": 142531
+      },
+      {
+        "file": "ppt/media/image6.png",
+        "bytes": 8522
+      },
+      {
+        "file": "ppt/media/image35.png",
+        "bytes": 78418
+      },
+      {
+        "file": "ppt/media/image37.gif",
+        "bytes": 9825975
+      },
+      {
+        "file": "ppt/media/image17.png",
+        "bytes": 879657
+      },
+      {
+        "file": "ppt/media/image13.png",
+        "bytes": 301622
+      },
+      {
+        "file": "ppt/media/image40.gif",
+        "bytes": 9940940
+      },
+      {
+        "file": "ppt/media/image20.png",
+        "bytes": 269573
+      },
+      {
+        "file": "ppt/media/image5.png",
+        "bytes": 13504
+      },
+      {
+        "file": "ppt/media/image9.png",
+        "bytes": 153218
+      },
+      {
+        "file": "ppt/media/image7.png",
+        "bytes": 108241
+      },
+      {
+        "file": "ppt/media/image23.png",
+        "bytes": 384350
+      },
+      {
+        "file": "ppt/media/image22.png",
+        "bytes": 41763
+      },
+      {
+        "file": "ppt/media/image42.gif",
+        "bytes": 11880712
+      },
+      {
+        "file": "ppt/media/image41.png",
+        "bytes": 399338
+      },
+      {
+        "file": "ppt/media/image18.png",
+        "bytes": 3290
+      },
+      {
+        "file": "ppt/media/image8.png",
+        "bytes": 69766
+      },
+      {
+        "file": "ppt/media/image36.gif",
+        "bytes": 10520966
+      },
+      {
+        "file": "ppt/media/image25.jpg",
+        "bytes": 20209
+      },
+      {
+        "file": "ppt/media/image19.png",
+        "bytes": 352930
+      },
+      {
+        "file": "ppt/media/image28.png",
+        "bytes": 197948
+      },
+      {
+        "file": "ppt/media/image31.png",
+        "bytes": 500224
+      },
+      {
+        "file": "ppt/media/image43.jpg",
+        "bytes": 487606
+      },
+      {
+        "file": "ppt/media/image10.png",
+        "bytes": 34067
+      }
+    ],
+    "slides": [
+      {
+        "number": 1,
+        "part": "ppt/slides/slide1.xml",
+        "text": "VR teleop allows for egocentric view and is cheap\nAI Robotics needs lots of data to generalise to unseen tasks\nIndirect data collection is prone to non-transferability\nDuplicated setup is twice as costly, but joint data is native"
+      },
+      {
+        "number": 2,
+        "part": "ppt/slides/slide2.xml",
+        "text": "TWIST2: собираем данные для \nгуманоидов\n\n\n\n\n\n"
+      },
+      {
+        "number": 3,
+        "part": "ppt/slides/slide3.xml",
+        "text": "Двухуровневое управление роботом\n\n\nπ\nhigh\n - отвечает за цель и смысл движения\np\nt\n - интерфейс взаимодействия между уровнями\nπ\nlow\n - отвечает за физическое исполнение команды роботом"
+      },
+      {
+        "number": 4,
+        "part": "ppt/slides/slide4.xml",
+        "text": "π\nhigh\n\nТ\nелеуправление: p\nt\n = GMR(поза человека)\n\nАвтономный режим: p\nt\n = π\nhigh\n(o, s)\n\nОбучение - behavior cloning, модель - Diffusion Policy\n"
+      },
+      {
+        "number": 5,
+        "part": "ppt/slides/slide5.xml",
+        "text": "Ретаргетинг (GMR)\nЗадача: перенести позу человека на робота с другими пропорциями и другим набором суставов\n"
+      },
+      {
+        "number": 6,
+        "part": "ppt/slides/slide6.xml",
+        "text": "Ретаргетинг (GMR)\nПервое слагаемое: совпадение ориентаций всех ключевых звеньев, верхних и нижних\nВторое слагаемое: совпадение позиций только для нижних звеньев, в системе координат таза\n"
+      },
+      {
+        "number": 7,
+        "part": "ppt/slides/slide7.xml",
+        "text": "π\nlow\nКинематическая цель для всего тела p\nt\ns: ориентация корпуса и угловая скорость с IMU, текущие углы суставов и их скорости.\nq\ntarget\n = π\nlow\n(s, p\nt\n)\nЭто желаемые углы суставов.\nДальше их отрабатывает PD-регулятор\n"
+      },
+      {
+        "number": 8,
+        "part": "ppt/slides/slide8.xml",
+        "text": "Пайплайн с обученной Diffusion Policy"
+      },
+      {
+        "number": 9,
+        "part": "ppt/slides/slide9.xml",
+        "text": "Л\nучшая модель \nна 200 новых раскладках решает 82 из 200 (41 %)"
+      },
+      {
+        "number": 10,
+        "part": "ppt/slides/slide10.xml",
+        "text": "WB-Dex: пример работы политики\nЗадача робота\nЗахватить кружку на столе.\nПоднять и перенести к коробке.\nОпустить внутрь и отпустить.\nКак устроено управление\nDP получает изображение камеры\nи историю команд.\nПредсказывает движения рук,\nкорпуса и кистей.\nHOMIE управляет ногами и поясом.\nНаша DP в симуляторе\nУспешный автономный пример.\n"
+      },
+      {
+        "number": 11,
+        "part": "ppt/slides/slide11.xml",
+        "text": "Проблема: нет трекеров ног\nPICO Motion Tracker\n\nВ нашей сборке их нет\n\n\n\n\n\n\n\n\n\n\n\n\n≈ 7 000 ₽\nза пару · ориентир\n"
+      },
+      {
+        "number": 12,
+        "part": "ppt/slides/slide12.xml",
+        "text": "Так называемый Low-costing\nНужен реальный подъём стопы и сгиб колена\n\n\n\n\n\n\n\n\n\n\n\n\nRealSense D435i\n≈ 60 000 ₽\nAprilTag · печать\n≈ 50–100 ₽ / 5 шт."
+      },
+      {
+        "number": 13,
+        "part": "ppt/slides/slide13.xml",
+        "text": "Камерный скелет: что пробовали\nYOLO + RGB-D: 2D-суставы и глубина\nROMP · только RGB\nПосле INT8 ≈10 FPS\nДве камеры\nКалибровку не прошли\nОкклюзии и ошибки геометрии остаются\n\n\n\n\n\n\n\n\n\n\n\n"
+      },
+      {
+        "number": 14,
+        "part": "ppt/slides/slide14.xml",
+        "text": "AprilTag как опорные метки\nМетка → сустав\nПозиция + ориентация\n\nПовороты и подвижные крепления портят разметку\n\n\n\n\n\n\n\n\n\n\n\n"
+      },
+      {
+        "number": 15,
+        "part": "ppt/slides/slide15.xml",
+        "text": "Денойзеры: сгиб всё ещё теряется\nv0: 2D     →     v1: 3D + история кадров\nv1: отдельный блок марша, разметка по тегам\n\n\n\n\n\n\n\n\n\n\n\n"
+      },
+      {
+        "number": 16,
+        "part": "ppt/slides/slide16.xml",
+        "text": "Главные проблемы ретаргета ног\nШум и перекрытия\nКамера теряет суставы, метки смещаются.\n\n«Магнетизм» стоп\nНоги будто липнут к полу: теряются\nподъём стопы и сгиб колена.\n\nКонтакт с полом\nСтопы скользят и цепляются за пол.\n\nБаланс и перенос веса\nКонтроллер должен исполнить позу\nбез падения."
+      },
+      {
+        "number": 17,
+        "part": "ppt/slides/slide17.xml",
+        "text": "Симуляция и телеуправление на Quest 3\nТехнологический стек\nAndroid / C++\nOpenXR + OpenGL ES\nMuJoCo · физика 1 кГц\nGMR · ретаргетинг\nONNX Runtime · политики\nG1 · 29 + 14 приводов\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nОператор\nQuest 3\n\nСкелет\nMeta\n\n\nРеференс G1\nкинематика\n\n\nРобот G1\nMuJoCo\n\nтрекинг\nGMR\nTWIST2 + PD\n\nСимуляция и управление работают внутри шлема"
+      },
+      {
+        "number": 18,
+        "part": "ppt/slides/slide18.xml",
+        "text": "Среды для сбора демонстраций\nСцены симуляции\nСвободная площадка\nЧашка на столе\nWB-Dex: чашка в коробку\nДвуручная сортировка\nПеренос корзины\nPush-T / Kick-T\nНастольный теннис\nКубик Рубика 2×2\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nСлучайные раскладки и контактная физика.\nПроверка результата задачи.\n"
+      },
+      {
+        "number": 19,
+        "part": "ppt/slides/slide19.xml",
+        "text": "Virtual Legs: ноги без трекеров\nИдея\nQuest отслеживает верх тела.\nMeta достраивает ноги\nпо движению оператора.\n\nGMR переводит полный скелет\nв референс для TWIST2.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nОценённая поза ног не гарантирует правильный контакт стоп с полом\nHMD + контроллеры\nMeta: верх тела + Virtual Legs\nGMR + TWIST2"
+      },
+      {
+        "number": 20,
+        "part": "ppt/slides/slide20.xml",
+        "text": "Virtual Legs: эксперименты и оценка\nЧто проверяли\nРетаргетинг и длины сегментов\nВысота стоп и контактная геометрия\nЧастота политики: 100 → 50 Гц\nДогоняние позиции и поворота\n\nДообучение на движениях Quest\nШтраф за скольжение\nОслабление трекинга ног и yaw\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n8 запусков / 80 checkpoints\n0 прошли общий gait gate\n\nОтдельные метрики улучшались,\nсовместного улучшения нет\n\nВ TWIST2 нет отдельной численной оценки скольжения стоп.\nМы измеряли скольжение, зацепы, падения и tracking.\n"
+      },
+      {
+        "number": 21,
+        "part": "ppt/slides/slide21.xml",
+        "text": "Virtual Legs: эксперименты и оценка\n\n"
+      },
+      {
+        "number": 22,
+        "part": "ppt/slides/slide22.xml",
+        "text": "Pipeline сбора траекторий\n\nПоза\nоператора\n\n\nGMR: руки и корпус\n14 суставов рук в PD\n\nПозиция\nи поворот\n\nДогоняние\nvₓ, vᵧ, ω\n\nHOMIE\nноги + пояс\nКурки Grip\nПальцы: 14 приводов\nG1\n\nPD\nMuJoCo\n\nКонтакты\nс предметами\nДогоняние: ошибка позиции и поворота относительно цели HMD\nz, roll, pitch\nЗапись: RGB + состояние G1 + команды + результат задачи"
+      },
+      {
+        "number": 23,
+        "part": "ppt/slides/slide23.xml",
+        "text": "Спасибо за внимание"
+      }
+    ],
+    "comparison_to_20261016_1230": {
+      "bytes": 99163446,
+      "sha256": "e54203b35700fd8526efb14f7693be80c1a4c6db161c6b5dd3f1871e627885df",
+      "slide_count": 23,
+      "current_text_not_in_old": [
+        {
+          "number": 17,
+          "part": "ppt/slides/slide17.xml",
+          "text": "Симуляция и телеуправление на Quest 3\nТехнологический стек\nAndroid / C++\nOpenXR + OpenGL ES\nMuJoCo · физика 1 кГц\nGMR · ретаргетинг\nONNX Runtime · политики\nG1 · 29 + 14 приводов\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nОператор\nQuest 3\n\nСкелет\nMeta\n\n\nРеференс G1\nкинематика\n\n\nРобот G1\nMuJoCo\n\nтрекинг\nGMR\nTWIST2 + PD\n\nСимуляция и управление работают внутри шлема"
+        },
+        {
+          "number": 20,
+          "part": "ppt/slides/slide20.xml",
+          "text": "Virtual Legs: эксперименты и оценка\nЧто проверяли\nРетаргетинг и длины сегментов\nВысота стоп и контактная геометрия\nЧастота политики: 100 → 50 Гц\nДогоняние позиции и поворота\n\nДообучение на движениях Quest\nШтраф за скольжение\nОслабление трекинга ног и yaw\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n8 запусков / 80 checkpoints\n0 прошли общий gait gate\n\nОтдельные метрики улучшались,\nсовместного улучшения нет\n\nВ TWIST2 нет отдельной численной оценки скольжения стоп.\nМы измеряли скольжение, зацепы, падения и tracking.\n"
+        }
+      ],
+      "removed_or_changed_old_text": [
+        {
+          "number": 17,
+          "part": "ppt/slides/slide17.xml",
+          "text": "Симуляция и телеуправление на Quest 3\nТехнологический стек\nAndroid / C++\nOpenXR + OpenGL ES\nMuJoCo · физика 1 кГц\nGMR · ретаргетинг\nONNX Runtime · политики\nG1 · 29 + 14 приводов\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nОператор\nQuest 3\nСкелет\nMeta\n\nРеференс G1\nкинематика\n\nРобот G1\nMuJoCo\n\nтрекинг\nGMR\nTWIST2\n+ PD\n\nСимуляция и управление работают внутри шлема"
+        },
+        {
+          "number": 20,
+          "part": "ppt/slides/slide20.xml",
+          "text": "Virtual Legs: эксперименты и оценка\nЧто проверяли\nРетаргетинг и длины сегментов\nВысота стоп и контактная геометрия\nЧастота политики: 100 → 50 Гц\nДогоняние позиции и поворота\n\nДообучение на движениях Quest\nШтраф за скольжение\nОслабление tracking ног и yaw\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n8 запусков / 80 checkpoints\n0 прошли общий gait gate\n\nОтдельные метрики улучшались,\nсовместного улучшения нет\n\nВ TWIST2 нет отдельной численной оценки скольжения стоп.\nМы измеряли скольжение, зацепы, падения и tracking.\n"
+        }
+      ],
+      "changed_image_slides": [
+        9
+      ]
+    },
+    "media_type_counts": {
+      "png": 30,
+      "gif": 7,
+      "jpg": 3
+    },
+    "embedded_video_count": 0,
+    "playback_limitation": "The PPTX contains 7 GIF assets but no MP4/video parts or external media relationships. Google Slides video playback and links are not guaranteed to survive export; standalone MP4 files are published separately."
+  },
+  "secret_review": "No private keys, tokens, credential URLs, cookies or literal passwords detected in new files or text ZIP members; node_modules excluded",
+  "training_archive": {
+    "date": "2026-10-21",
+    "source_archive": {
+      "verified_files": 1223,
+      "parsed_python_sources": 401,
+      "zip_crc_checks": 10,
+      "action": "verify",
+      "group": null
+    },
+    "rubik_references": {
+      "verified_files": 756,
+      "parsed_python_sources": 173,
+      "zip_crc_checks": 5,
+      "action": "verify",
+      "group": "rubik"
+    },
+    "restore_smoke": {
+      "verified_files": 59,
+      "parsed_python_sources": 8,
+      "zip_crc_checks": 2,
+      "action": "restore",
+      "group": "rubik-policy"
+    },
+    "restore_independent_hash_check": {
+      "files": 59,
+      "byte_identical": true,
+      "relocation": false
+    },
+    "rubik_rebuild_and_prefix_replay": {
+      "frames": 100,
+      "full_rollout": false,
+      "qpos_max_error": 0.0,
+      "userdata_max_error": 0.0,
+      "warnings": 0,
+      "mujoco_version": "3.3.7",
+      "platform": "macOS-26.5.2-arm64-arm-64bit",
+      "control": "two wrist poses and two ordinary scalar Grip values"
+    },
+    "new_helpers_python_ast": "passed",
+    "new_task_performance_evaluation": false,
+    "new_headset_deployment": false,
+    "limits": [
+      "The new replay check covers100frames; the full28367frame exact replay is a preserved2026-10-15receipt.",
+      "GPU training and failed experiment evaluations were not rerun.",
+      "The source archive reuses570 byte-identical files from main; only Rubik references were all materialized and rehashed during the restore smoke."
+    ],
+    "summary": {
+      "files": 1793,
+      "archived_files": 1223,
+      "existing_main_references": 570,
+      "archived_bytes": 202895091,
+      "existing_main_bytes": 121297094,
+      "large_files": [
+        {
+          "workspace_path": "outputs/cup-state-il-20261015/dataset.npz",
+          "bytes": 20707180,
+          "sha256": "82ddbd5f40cd3a3c2c9d2edd7096a4ad605cd193990929e4e881c9e3c0c00857"
+        },
+        {
+          "workspace_path": "outputs/cup-state-il-20261015/run-bc-rnn/best.pt",
+          "bytes": 8424052,
+          "sha256": "ff4980e5439a2b78d7858d69fab15aad32a80281abaa119679435bfa8dee2bfb"
+        },
+        {
+          "workspace_path": "outputs/cup-state-il-20261015/run-diffusion/best.pt",
+          "bytes": 32209570,
+          "sha256": "05dddc517852dad8fc867332bc6bb0f19ee65af5e092f6c33c07f3b2002f11b7"
+        },
+        {
+          "workspace_path": "outputs/dexweave-cup-box-20261015/data/episode-1792020014648126.npz",
+          "bytes": 5175037,
+          "sha256": "f70bda0f17704d135b1c9cf8816721146a18383c549be75c68a16231a59e5b2a"
+        },
+        {
+          "workspace_path": "outputs/dexweave-cup-box-20261015/data/episode-1792020055691156.npz",
+          "bytes": 4017684,
+          "sha256": "bbf1ae5c8d669355ac2ce850bb856a7c36b97a18c496bad0150c57a28ba23499"
+        },
+        {
+          "workspace_path": "outputs/dexweave-cup-box-20261015/data/episode-1792020126135729.npz",
+          "bytes": 6769562,
+          "sha256": "00802bd919531908d6aee3196030f2d3fb188b453e50c2a2a36d936637f57ae8"
+        },
+        {
+          "workspace_path": "outputs/dexweave-cup-box-20261015/data/episode-1792020208393189.npz",
+          "bytes": 4611154,
+          "sha256": "34fe6c0bba4662878a4416c0e1b7ad40b813bbdcbd024a414fc7370d00d698c9"
+        },
+        {
+          "workspace_path": "outputs/rubik-feedback-20261015/second-other-face.npz",
+          "bytes": 54079976,
+          "sha256": "d6a5d326101a7c97fbf6c390937915e633135e2efe1ca1555f68488704a289f2"
+        },
+        {
+          "workspace_path": "outputs/rubik-policy-20261015/bc-policy.zip",
+          "bytes": 1214762,
+          "sha256": "c432b83a51cd5a2fcd3666c70c2a497be94bd367567aaa397a8c0026e56f4a80"
+        },
+        {
+          "workspace_path": "outputs/rubik-policy-20261015/demonstrations.npz",
+          "bytes": 3645843,
+          "sha256": "a56e4a53584933840a118bae014405d319262b7ce971e6944952996c9acfcded"
+        },
+        {
+          "workspace_path": "outputs/rubik-regrasp-20261015/four-cycles.npz",
+          "bytes": 22282698,
+          "sha256": "0f3af8115bad7957be417ec73e8ea89b359cccbd7b43f653c17ff821b6611dd2"
+        },
+        {
+          "workspace_path": "outputs/rubik-stable-20261015/five-cycles.npz",
+          "bytes": 26624912,
+          "sha256": "6b118ff619e858b32bd2ef3a9d331d3702ec1cb723c8632c97aa6cf1b0df8959"
+        }
+      ]
+    }
+  },
+  "headset_installed": false,
+  "new_hardware_acceptance": false
+}

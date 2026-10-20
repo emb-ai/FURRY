@@ -1,0 +1,139 @@
+{
+  "status": "stopped_before_gate",
+  "pid": 91056,
+  "arguments": {
+    "run": "curriculum-v1",
+    "envs": 2,
+    "block_steps": 4096,
+    "stage_steps": 65536,
+    "total_steps": 500000,
+    "bc_updates": 1500,
+    "start_stage": 0,
+    "load": "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs.nosync/rubik-policy-20261015/bc-policy.zip"
+  },
+  "code_sha256": {
+    "native_env.py": "58a92d5d4f0a2af730643ac97a03ea604a3c9ab4ccaa0575efeb56496d2ba30d",
+    "curriculum_env.py": "7e086be43132e30320832674271bbbb8e55d75c315aad6c9c5d18617a420b3f2",
+    "train_curriculum.py": "410e91467de0ed4c12f79115671c5149bba6bc2ecf509d5d00069aa7643c7f6b"
+  },
+  "started_unix": 1792073434.294585,
+  "stages": [
+    {
+      "name": "settle_grasp",
+      "offsets": [
+        0.6,
+        1.0
+      ],
+      "timeout": 5.0,
+      "length": 1,
+      "faces": [
+        3
+      ]
+    },
+    {
+      "name": "close_grasp",
+      "offsets": [
+        1.5,
+        2.0
+      ],
+      "timeout": 10.0,
+      "length": 1,
+      "faces": [
+        3
+      ]
+    },
+    {
+      "name": "approach_grasp",
+      "offsets": [
+        3.0,
+        5.0
+      ],
+      "timeout": 18.0,
+      "length": 1,
+      "faces": [
+        3
+      ]
+    },
+    {
+      "name": "release_withdraw_return",
+      "offsets": [
+        8.0,
+        "return_start"
+      ],
+      "timeout": 35.0,
+      "length": 1,
+      "faces": [
+        3
+      ]
+    },
+    {
+      "name": "complete_F",
+      "offsets": [],
+      "timeout": 55.0,
+      "length": 1,
+      "faces": [
+        3
+      ]
+    },
+    {
+      "name": "random_FU_2",
+      "offsets": [],
+      "timeout": 120.0,
+      "length": 2,
+      "faces": [
+        3,
+        4
+      ]
+    },
+    {
+      "name": "random_RFU_2",
+      "offsets": [],
+      "timeout": 120.0,
+      "length": 2,
+      "faces": [
+        0,
+        3,
+        4
+      ]
+    },
+    {
+      "name": "random_RFU_5",
+      "offsets": [],
+      "timeout": 120.0,
+      "length": 5,
+      "faces": [
+        0,
+        3,
+        4
+      ]
+    },
+    {
+      "name": "random_RFU_10",
+      "offsets": [],
+      "timeout": 120.0,
+      "length": 10,
+      "faces": [
+        0,
+        3,
+        4
+      ]
+    }
+  ],
+  "accepted_policy": null,
+  "actions": "two wrists (12 coordinates) + two ordinary scalar Grip",
+  "cube_in_hands": true,
+  "no_support": true,
+  "physics_modified": false,
+  "lower_policy": "frozen HOMIE Standing",
+  "initialization": "recorded native replay snapshots only at episode boundaries",
+  "device": "local CPU",
+  "headset_deployed": false,
+  "stage": 0,
+  "stage_name": "settle_grasp",
+  "updated_unix": 1792075185.825613,
+  "optimizer_timesteps": 65536,
+  "completed_stages": [],
+  "reason": "budget_or_stop",
+  "last_evaluation": 0.5,
+  "finished_unix": 1792075195.144761
+}

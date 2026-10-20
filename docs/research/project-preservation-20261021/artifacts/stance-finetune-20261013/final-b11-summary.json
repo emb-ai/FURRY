@@ -1,0 +1,3289 @@
+{
+  "method": "Common survival prefix across ALL completed actors/reference modes, after1s warmup; durations/falls always shown separately. No claim of improvement from a shorter prefix. Step amplitude=pelvis-heading-relative foot horizontal2D p95-p05 in full1s windows, not inferred contact phases. Also report common fully completed trials.",
+  "common_complete_trials": [
+    "stage09-run00-003000-part00__seed0",
+    "stage02-run00-000000-part00__seed0",
+    "stage14-run00-000000-part00__seed0",
+    "stage14-run01-003000-part01__seed1",
+    "stage14-run03-000000-part00__seed0",
+    "stage02-run01-000000-part00__seed1",
+    "stage14-run01-003000-part00__seed1",
+    "stage14-run03-000000-part00__seed1",
+    "stage02-run01-000000-part00__seed0",
+    "stage02-run02-000000-part00__seed0",
+    "stage14-run01-000000-part00__seed1",
+    "stage14-run01-003000-part01__seed0",
+    "stage09-run00-000000-part00__seed1",
+    "stage09-run00-003000-part00__seed1",
+    "stage02-run00-000000-part00__seed1",
+    "stage14-run03-000000-part01__seed0",
+    "stage09-run00-000000-part00__seed0",
+    "stage14-run01-000000-part00__seed0",
+    "stage14-run03-000000-part01__seed1",
+    "stage02-run02-003000-part00__seed0",
+    "stage02-run02-003000-part00__seed1",
+    "stage02-run02-000000-part00__seed1",
+    "stage14-run00-000000-part00__seed1"
+  ],
+  "matched_prefix_seconds": 348.22,
+  "runs": {
+    "initial-A": {
+      "falls": 0,
+      "trials": 24,
+      "executed_seconds": 348.44,
+      "requested_seconds": 348.44,
+      "completion_fraction": 1.0,
+      "matched_prefix": {
+        "seconds_after_1s_warmup": 324.22,
+        "xy_error_cm": 306.4247931854258,
+        "yaw_error_deg": 60.243954379480506,
+        "slip_cm_s": 7.402564520831141,
+        "slide_rate": 0.06059596796050436,
+        "root_path_m": 161.51933318674378,
+        "input_root_path_m": 176.81479153178148,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 32.23677801450669,
+          "original_foot": 31.203321886801657,
+          "input_foot": 31.203321886801657
+        }
+      },
+      "common_complete_trials": {
+        "seconds_after_1s_warmup": 323.09,
+        "xy_error_cm": 307.4585115609068,
+        "yaw_error_deg": 60.373693946766025,
+        "slip_cm_s": 7.414708408509902,
+        "slide_rate": 0.06074345232627199,
+        "root_path_m": 161.41618673279305,
+        "input_root_path_m": 176.75184769299833,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 32.32206435566437,
+          "original_foot": 31.296039403355195,
+          "input_foot": 31.296039403355195
+        }
+      },
+      "per_trial_survival": [
+        {
+          "trace_key": "stage02-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        }
+      ]
+    },
+    "initial-B": {
+      "falls": 0,
+      "trials": 24,
+      "executed_seconds": 348.44,
+      "requested_seconds": 348.44,
+      "completion_fraction": 1.0,
+      "matched_prefix": {
+        "seconds_after_1s_warmup": 324.22,
+        "xy_error_cm": 286.3692106906714,
+        "yaw_error_deg": 50.93439382577305,
+        "slip_cm_s": 5.988947755281125,
+        "slide_rate": 0.04286574679313126,
+        "root_path_m": 162.77497974133166,
+        "input_root_path_m": 176.81479153178148,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 32.63094960384392,
+          "original_foot": 31.203321886801657,
+          "input_foot": 31.57780506127349
+        }
+      },
+      "common_complete_trials": {
+        "seconds_after_1s_warmup": 323.09,
+        "xy_error_cm": 287.33384698881866,
+        "yaw_error_deg": 51.04392148870776,
+        "slip_cm_s": 5.999941767127391,
+        "slide_rate": 0.042985159811478026,
+        "root_path_m": 162.6713858599441,
+        "input_root_path_m": 176.75184769299833,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 32.71755749401738,
+          "original_foot": 31.296039403355195,
+          "input_foot": 31.670997800614572
+        }
+      },
+      "per_trial_survival": [
+        {
+          "trace_key": "stage02-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        }
+      ]
+    },
+    "A-s11-750-A": {
+      "falls": 0,
+      "trials": 24,
+      "executed_seconds": 348.44,
+      "requested_seconds": 348.44,
+      "completion_fraction": 1.0,
+      "matched_prefix": {
+        "seconds_after_1s_warmup": 324.22,
+        "xy_error_cm": 294.91105312481835,
+        "yaw_error_deg": 58.90716786385419,
+        "slip_cm_s": 8.56331705888988,
+        "slide_rate": 0.07099344955289442,
+        "root_path_m": 160.2693745138177,
+        "input_root_path_m": 176.81479153178148,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 32.45697352391571,
+          "original_foot": 31.203321886801657,
+          "input_foot": 31.203321886801657
+        }
+      },
+      "common_complete_trials": {
+        "seconds_after_1s_warmup": 323.09,
+        "xy_error_cm": 295.81376466681314,
+        "yaw_error_deg": 59.09036677170951,
+        "slip_cm_s": 8.531238466567343,
+        "slide_rate": 0.07075118860816418,
+        "root_path_m": 159.74994366871542,
+        "input_root_path_m": 176.75184769299833,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 32.51922788418345,
+          "original_foot": 31.296039403355195,
+          "input_foot": 31.296039403355195
+        }
+      },
+      "per_trial_survival": [
+        {
+          "trace_key": "stage02-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        }
+      ]
+    },
+    "A-s11-750-B": {
+      "falls": 0,
+      "trials": 24,
+      "executed_seconds": 348.44,
+      "requested_seconds": 348.44,
+      "completion_fraction": 1.0,
+      "matched_prefix": {
+        "seconds_after_1s_warmup": 324.22,
+        "xy_error_cm": 306.9015688245733,
+        "yaw_error_deg": 59.29423211768634,
+        "slip_cm_s": 7.110473198094147,
+        "slide_rate": 0.05449440088286913,
+        "root_path_m": 163.984289793342,
+        "input_root_path_m": 176.81479153178148,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 32.99748618820164,
+          "original_foot": 31.203321886801657,
+          "input_foot": 31.57780506127349
+        }
+      },
+      "common_complete_trials": {
+        "seconds_after_1s_warmup": 323.09,
+        "xy_error_cm": 307.89108379234136,
+        "yaw_error_deg": 59.471789498830475,
+        "slip_cm_s": 7.080280745959194,
+        "slide_rate": 0.0543085636397534,
+        "root_path_m": 163.5124487139566,
+        "input_root_path_m": 176.75184769299833,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 33.04368624166948,
+          "original_foot": 31.296039403355195,
+          "input_foot": 31.670997800614572
+        }
+      },
+      "per_trial_survival": [
+        {
+          "trace_key": "stage02-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        }
+      ]
+    },
+    "A-s11-1000-A": {
+      "falls": 0,
+      "trials": 24,
+      "executed_seconds": 348.44,
+      "requested_seconds": 348.44,
+      "completion_fraction": 1.0,
+      "matched_prefix": {
+        "seconds_after_1s_warmup": 324.22,
+        "xy_error_cm": 277.4571514153455,
+        "yaw_error_deg": 61.54286399594724,
+        "slip_cm_s": 8.75758104417596,
+        "slide_rate": 0.07353168126727826,
+        "root_path_m": 161.4497731965544,
+        "input_root_path_m": 176.81479153178148,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 32.962540323511504,
+          "original_foot": 31.203321886801657,
+          "input_foot": 31.203321886801657
+        }
+      },
+      "common_complete_trials": {
+        "seconds_after_1s_warmup": 323.09,
+        "xy_error_cm": 278.374530733689,
+        "yaw_error_deg": 61.74948878320745,
+        "slip_cm_s": 8.748220222649417,
+        "slide_rate": 0.07349898154830992,
+        "root_path_m": 161.19635422934564,
+        "input_root_path_m": 176.75184769299833,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 33.039149937728276,
+          "original_foot": 31.296039403355195,
+          "input_foot": 31.296039403355195
+        }
+      },
+      "per_trial_survival": [
+        {
+          "trace_key": "stage02-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        }
+      ]
+    },
+    "A-s11-1000-B": {
+      "falls": 0,
+      "trials": 24,
+      "executed_seconds": 348.44,
+      "requested_seconds": 348.44,
+      "completion_fraction": 1.0,
+      "matched_prefix": {
+        "seconds_after_1s_warmup": 324.22,
+        "xy_error_cm": 264.8002991355875,
+        "yaw_error_deg": 59.97262451792477,
+        "slip_cm_s": 7.5465206802927804,
+        "slide_rate": 0.05850265238274833,
+        "root_path_m": 165.28372362735382,
+        "input_root_path_m": 176.81479153178148,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 33.48147296734339,
+          "original_foot": 31.203321886801657,
+          "input_foot": 31.57780506127349
+        }
+      },
+      "common_complete_trials": {
+        "seconds_after_1s_warmup": 323.09,
+        "xy_error_cm": 265.66699044753045,
+        "yaw_error_deg": 60.137617885220834,
+        "slip_cm_s": 7.528962925449964,
+        "slide_rate": 0.05838946537538101,
+        "root_path_m": 164.94857179409604,
+        "input_root_path_m": 176.75184769299833,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 33.536024912995586,
+          "original_foot": 31.296039403355195,
+          "input_foot": 31.670997800614572
+        }
+      },
+      "per_trial_survival": [
+        {
+          "trace_key": "stage02-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        }
+      ]
+    },
+    "A-s11-1250-A": {
+      "falls": 0,
+      "trials": 24,
+      "executed_seconds": 348.44,
+      "requested_seconds": 348.44,
+      "completion_fraction": 1.0,
+      "matched_prefix": {
+        "seconds_after_1s_warmup": 324.22,
+        "xy_error_cm": 192.5281714663584,
+        "yaw_error_deg": 41.6191628530739,
+        "slip_cm_s": 9.294713414423358,
+        "slide_rate": 0.07260441524190053,
+        "root_path_m": 158.65896490104723,
+        "input_root_path_m": 176.81479153178148,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 32.503919396941825,
+          "original_foot": 31.203321886801657,
+          "input_foot": 31.203321886801657
+        }
+      },
+      "common_complete_trials": {
+        "seconds_after_1s_warmup": 323.09,
+        "xy_error_cm": 193.1181280676609,
+        "yaw_error_deg": 41.71918899961667,
+        "slip_cm_s": 9.265617310718584,
+        "slide_rate": 0.07240551770014585,
+        "root_path_m": 158.28269634772607,
+        "input_root_path_m": 176.75184769299833,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 32.57362374246524,
+          "original_foot": 31.296039403355195,
+          "input_foot": 31.296039403355195
+        }
+      },
+      "per_trial_survival": [
+        {
+          "trace_key": "stage02-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        }
+      ]
+    },
+    "A-s11-1250-B": {
+      "falls": 0,
+      "trials": 24,
+      "executed_seconds": 348.44,
+      "requested_seconds": 348.44,
+      "completion_fraction": 1.0,
+      "matched_prefix": {
+        "seconds_after_1s_warmup": 324.22,
+        "xy_error_cm": 166.9784918814387,
+        "yaw_error_deg": 36.843473078439416,
+        "slip_cm_s": 7.534782270194261,
+        "slide_rate": 0.05490717747058487,
+        "root_path_m": 166.0023244041456,
+        "input_root_path_m": 176.81479153178148,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 33.03076587829074,
+          "original_foot": 31.203321886801657,
+          "input_foot": 31.57780506127349
+        }
+      },
+      "common_complete_trials": {
+        "seconds_after_1s_warmup": 323.09,
+        "xy_error_cm": 167.50955645474343,
+        "yaw_error_deg": 36.944517070905185,
+        "slip_cm_s": 7.507372065612507,
+        "slide_rate": 0.05465063714853132,
+        "root_path_m": 165.67901376065828,
+        "input_root_path_m": 176.75184769299833,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 33.09106350653832,
+          "original_foot": 31.296039403355195,
+          "input_foot": 31.670997800614572
+        }
+      },
+      "per_trial_survival": [
+        {
+          "trace_key": "stage02-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        }
+      ]
+    },
+    "A-s11-1500-A": {
+      "falls": 0,
+      "trials": 24,
+      "executed_seconds": 348.44,
+      "requested_seconds": 348.44,
+      "completion_fraction": 1.0,
+      "matched_prefix": {
+        "seconds_after_1s_warmup": 324.22,
+        "xy_error_cm": 309.16737895180086,
+        "yaw_error_deg": 62.06669294755179,
+        "slip_cm_s": 8.83646933777155,
+        "slide_rate": 0.06641608039926836,
+        "root_path_m": 166.95611816442553,
+        "input_root_path_m": 176.81479153178148,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 33.66250813611226,
+          "original_foot": 31.203321886801657,
+          "input_foot": 31.203321886801657
+        }
+      },
+      "common_complete_trials": {
+        "seconds_after_1s_warmup": 323.09,
+        "xy_error_cm": 310.0771184071684,
+        "yaw_error_deg": 62.163648039882,
+        "slip_cm_s": 8.769233420097969,
+        "slide_rate": 0.06580499566583169,
+        "root_path_m": 166.24152964156204,
+        "input_root_path_m": 176.75184769299833,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 33.717151373848424,
+          "original_foot": 31.296039403355195,
+          "input_foot": 31.296039403355195
+        }
+      },
+      "per_trial_survival": [
+        {
+          "trace_key": "stage02-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        }
+      ]
+    },
+    "A-s11-1500-B": {
+      "falls": 0,
+      "trials": 24,
+      "executed_seconds": 348.44,
+      "requested_seconds": 348.44,
+      "completion_fraction": 1.0,
+      "matched_prefix": {
+        "seconds_after_1s_warmup": 324.22,
+        "xy_error_cm": 301.24774635510795,
+        "yaw_error_deg": 55.37387791656968,
+        "slip_cm_s": 7.601881971665486,
+        "slide_rate": 0.05726879904921128,
+        "root_path_m": 168.35649571852377,
+        "input_root_path_m": 176.81479153178148,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 34.02857312397225,
+          "original_foot": 31.203321886801657,
+          "input_foot": 31.57780506127349
+        }
+      },
+      "common_complete_trials": {
+        "seconds_after_1s_warmup": 323.09,
+        "xy_error_cm": 302.18095322216817,
+        "yaw_error_deg": 55.517726854410135,
+        "slip_cm_s": 7.540537320708799,
+        "slide_rate": 0.056694711310684986,
+        "root_path_m": 167.75913784184175,
+        "input_root_path_m": 176.75184769299833,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 34.0889845012575,
+          "original_foot": 31.296039403355195,
+          "input_foot": 31.670997800614572
+        }
+      },
+      "per_trial_survival": [
+        {
+          "trace_key": "stage02-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        }
+      ]
+    },
+    "B-s11-750-A": {
+      "falls": 0,
+      "trials": 24,
+      "executed_seconds": 348.44,
+      "requested_seconds": 348.44,
+      "completion_fraction": 1.0,
+      "matched_prefix": {
+        "seconds_after_1s_warmup": 324.22,
+        "xy_error_cm": 271.01660106479517,
+        "yaw_error_deg": 60.16005552353584,
+        "slip_cm_s": 8.939007440996924,
+        "slide_rate": 0.0664729019679035,
+        "root_path_m": 168.05749234217632,
+        "input_root_path_m": 176.81479153178148,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 33.192132576878365,
+          "original_foot": 31.203321886801657,
+          "input_foot": 31.203321886801657
+        }
+      },
+      "common_complete_trials": {
+        "seconds_after_1s_warmup": 323.09,
+        "xy_error_cm": 271.7936581609325,
+        "yaw_error_deg": 60.35191823398905,
+        "slip_cm_s": 8.854547264656544,
+        "slide_rate": 0.06565611369513956,
+        "root_path_m": 167.32876577657615,
+        "input_root_path_m": 176.75184769299833,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 33.24138979641406,
+          "original_foot": 31.296039403355195,
+          "input_foot": 31.296039403355195
+        }
+      },
+      "per_trial_survival": [
+        {
+          "trace_key": "stage02-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        }
+      ]
+    },
+    "B-s11-750-B": {
+      "falls": 0,
+      "trials": 24,
+      "executed_seconds": 348.44,
+      "requested_seconds": 348.44,
+      "completion_fraction": 1.0,
+      "matched_prefix": {
+        "seconds_after_1s_warmup": 324.22,
+        "xy_error_cm": 275.7613228518464,
+        "yaw_error_deg": 49.93111189154056,
+        "slip_cm_s": 6.8505299564660715,
+        "slide_rate": 0.04778510268857262,
+        "root_path_m": 170.9194215820939,
+        "input_root_path_m": 176.81479153178148,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 33.688771397582734,
+          "original_foot": 31.203321886801657,
+          "input_foot": 31.57780506127349
+        }
+      },
+      "common_complete_trials": {
+        "seconds_after_1s_warmup": 323.09,
+        "xy_error_cm": 276.595372995388,
+        "yaw_error_deg": 50.06331705759403,
+        "slip_cm_s": 6.784411977302628,
+        "slide_rate": 0.047067783484654006,
+        "root_path_m": 170.3691395239224,
+        "input_root_path_m": 176.75184769299833,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 33.74824078292259,
+          "original_foot": 31.296039403355195,
+          "input_foot": 31.670997800614572
+        }
+      },
+      "per_trial_survival": [
+        {
+          "trace_key": "stage02-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        }
+      ]
+    },
+    "B-s11-1000-A": {
+      "falls": 0,
+      "trials": 24,
+      "executed_seconds": 348.44,
+      "requested_seconds": 348.44,
+      "completion_fraction": 1.0,
+      "matched_prefix": {
+        "seconds_after_1s_warmup": 324.22,
+        "xy_error_cm": 303.5969839113957,
+        "yaw_error_deg": 56.82134044125053,
+        "slip_cm_s": 8.243009663667895,
+        "slide_rate": 0.0643109823009378,
+        "root_path_m": 166.19504042468554,
+        "input_root_path_m": 176.81479153178148,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 33.56166614673097,
+          "original_foot": 31.203321886801657,
+          "input_foot": 31.203321886801657
+        }
+      },
+      "common_complete_trials": {
+        "seconds_after_1s_warmup": 323.09,
+        "xy_error_cm": 304.473623068633,
+        "yaw_error_deg": 56.977743242908815,
+        "slip_cm_s": 8.157675037038596,
+        "slide_rate": 0.06343710527316762,
+        "root_path_m": 165.23122169392832,
+        "input_root_path_m": 176.75184769299833,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 33.6020545338584,
+          "original_foot": 31.296039403355195,
+          "input_foot": 31.296039403355195
+        }
+      },
+      "per_trial_survival": [
+        {
+          "trace_key": "stage02-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        }
+      ]
+    },
+    "B-s11-1000-B": {
+      "falls": 0,
+      "trials": 24,
+      "executed_seconds": 348.44,
+      "requested_seconds": 348.44,
+      "completion_fraction": 1.0,
+      "matched_prefix": {
+        "seconds_after_1s_warmup": 324.22,
+        "xy_error_cm": 271.68384961109234,
+        "yaw_error_deg": 49.74888062552442,
+        "slip_cm_s": 6.544121479453248,
+        "slide_rate": 0.048862257273994104,
+        "root_path_m": 170.4125636153665,
+        "input_root_path_m": 176.81479153178148,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 34.03703217861003,
+          "original_foot": 31.203321886801657,
+          "input_foot": 31.57780506127349
+        }
+      },
+      "common_complete_trials": {
+        "seconds_after_1s_warmup": 323.09,
+        "xy_error_cm": 272.4789062755679,
+        "yaw_error_deg": 49.902336299049736,
+        "slip_cm_s": 6.488897340243099,
+        "slide_rate": 0.04845280042536129,
+        "root_path_m": 169.72969761099674,
+        "input_root_path_m": 176.75184769299833,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 34.10065797797254,
+          "original_foot": 31.296039403355195,
+          "input_foot": 31.670997800614572
+        }
+      },
+      "per_trial_survival": [
+        {
+          "trace_key": "stage02-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        }
+      ]
+    },
+    "B-s11-1250-A": {
+      "falls": 1,
+      "trials": 24,
+      "executed_seconds": 348.22,
+      "requested_seconds": 348.44,
+      "completion_fraction": 0.9583333333333334,
+      "matched_prefix": {
+        "seconds_after_1s_warmup": 324.22,
+        "xy_error_cm": 312.6270809004119,
+        "yaw_error_deg": 58.7304304889429,
+        "slip_cm_s": 9.372661425949005,
+        "slide_rate": 0.07330270824177679,
+        "root_path_m": 174.998166265813,
+        "input_root_path_m": 176.81479153178148,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 35.02351617445033,
+          "original_foot": 31.203321886801657,
+          "input_foot": 31.203321886801657
+        }
+      },
+      "common_complete_trials": {
+        "seconds_after_1s_warmup": 323.09,
+        "xy_error_cm": 313.5447487319595,
+        "yaw_error_deg": 58.88390607183703,
+        "slip_cm_s": 9.282143507003376,
+        "slide_rate": 0.07201299145801826,
+        "root_path_m": 173.97423162694147,
+        "input_root_path_m": 176.75184769299833,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 34.97218457000726,
+          "original_foot": 31.296039403355195,
+          "input_foot": 31.296039403355195
+        }
+      },
+      "per_trial_survival": [
+        {
+          "trace_key": "stage02-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed0",
+          "fell": true,
+          "survived_seconds": 2.13,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        }
+      ]
+    },
+    "B-s11-1250-B": {
+      "falls": 0,
+      "trials": 24,
+      "executed_seconds": 348.44,
+      "requested_seconds": 348.44,
+      "completion_fraction": 1.0,
+      "matched_prefix": {
+        "seconds_after_1s_warmup": 324.22,
+        "xy_error_cm": 322.7663904780537,
+        "yaw_error_deg": 52.19616016541713,
+        "slip_cm_s": 7.475538196696496,
+        "slide_rate": 0.05112237573027267,
+        "root_path_m": 178.6907800849205,
+        "input_root_path_m": 176.81479153178148,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 35.30787581253273,
+          "original_foot": 31.203321886801657,
+          "input_foot": 31.57780506127349
+        }
+      },
+      "common_complete_trials": {
+        "seconds_after_1s_warmup": 323.09,
+        "xy_error_cm": 323.71109855570114,
+        "yaw_error_deg": 52.33952700947535,
+        "slip_cm_s": 7.405117335590399,
+        "slide_rate": 0.05061670518845763,
+        "root_path_m": 177.69542278412843,
+        "input_root_path_m": 176.75184769299833,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 35.3638302125759,
+          "original_foot": 31.296039403355195,
+          "input_foot": 31.670997800614572
+        }
+      },
+      "per_trial_survival": [
+        {
+          "trace_key": "stage02-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        }
+      ]
+    },
+    "B-s11-1500-A": {
+      "falls": 0,
+      "trials": 24,
+      "executed_seconds": 348.44,
+      "requested_seconds": 348.44,
+      "completion_fraction": 1.0,
+      "matched_prefix": {
+        "seconds_after_1s_warmup": 324.22,
+        "xy_error_cm": 320.78190488115433,
+        "yaw_error_deg": 57.25023417946206,
+        "slip_cm_s": 8.524698696126382,
+        "slide_rate": 0.06459917820149111,
+        "root_path_m": 167.1015154549779,
+        "input_root_path_m": 176.81479153178148,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 34.100228346280126,
+          "original_foot": 31.203321886801657,
+          "input_foot": 31.203321886801657
+        }
+      },
+      "common_complete_trials": {
+        "seconds_after_1s_warmup": 323.09,
+        "xy_error_cm": 321.8583469680128,
+        "yaw_error_deg": 57.41042805514691,
+        "slip_cm_s": 8.53209324654516,
+        "slide_rate": 0.06469865652257016,
+        "root_path_m": 166.90100220959215,
+        "input_root_path_m": 176.75184769299833,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 34.18845475518815,
+          "original_foot": 31.296039403355195,
+          "input_foot": 31.296039403355195
+        }
+      },
+      "per_trial_survival": [
+        {
+          "trace_key": "stage02-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        }
+      ]
+    },
+    "B-s11-1500-B": {
+      "falls": 0,
+      "trials": 24,
+      "executed_seconds": 348.44,
+      "requested_seconds": 348.44,
+      "completion_fraction": 1.0,
+      "matched_prefix": {
+        "seconds_after_1s_warmup": 324.22,
+        "xy_error_cm": 308.03255749621735,
+        "yaw_error_deg": 50.834036195676084,
+        "slip_cm_s": 6.928400159574622,
+        "slide_rate": 0.04929603248096739,
+        "root_path_m": 172.19378368567175,
+        "input_root_path_m": 176.81479153178148,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 34.630272163011206,
+          "original_foot": 31.203321886801657,
+          "input_foot": 31.57780506127349
+        }
+      },
+      "common_complete_trials": {
+        "seconds_after_1s_warmup": 323.09,
+        "xy_error_cm": 309.08408712757046,
+        "yaw_error_deg": 50.95100924149033,
+        "slip_cm_s": 6.938574468145638,
+        "slide_rate": 0.049418701846842265,
+        "root_path_m": 171.97493315791692,
+        "input_root_path_m": 176.75184769299833,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 34.70516443998861,
+          "original_foot": 31.296039403355195,
+          "input_foot": 31.670997800614572
+        }
+      },
+      "per_trial_survival": [
+        {
+          "trace_key": "stage02-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        }
+      ]
+    }
+  }
+}

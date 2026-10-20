@@ -1,0 +1,27 @@
+{
+  "status": "completed",
+  "source": "/home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020014648126",
+  "old_pid": 3077791,
+  "target": "/home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020014648126-gpu7-colleague-20261015",
+  "new_pid": 90464,
+  "checkpoint": "/home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020014648126/checkpoint-03500.pt",
+  "gpu": 7,
+  "source_last_step": 3578,
+  "resumed_step": 3500,
+  "new_step_verified": 3506,
+  "completed_at": 1792054231.1588197,
+  "resume_verification": {
+    "checkpoint": "/home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020014648126/checkpoint-03500.pt",
+    "sha256": "b5d1af48524fff3fe0ee05f8ea6d88c120d5aeda26f3614bbb0f614123d8fe86",
+    "iteration": 3500,
+    "policy_exact": true,
+    "optimizer_exact": true,
+    "normalizers_exact": true,
+    "learning_rate": 1.5000000000000005e-05,
+    "environment_restarted": true,
+    "sampler_statistics_restarted": true,
+    "rng_restarted": true,
+    "bitwise_continuation": false,
+    "limitation": "Original checkpoint omits simulator, RNG and adaptive phase-sampling counters."
+  }
+}

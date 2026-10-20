@@ -1,0 +1,1106 @@
+{
+  "user_objective": "Несколько произвольных ходов 2×2 подряд без сброса, с отпусканием, отходом и возвратом рук в повторяемый хват после каждого хода.",
+  "objective_achieved": false,
+  "trial_count": 94,
+  "all_saved_qpos_finite": true,
+  "best_single_cycle": {
+    "status": "single_cycle_only_arbitrary_sequences_not_achieved",
+    "policy": "HOMIE Standing",
+    "environment": "Unmodified installed Rubik model and native physics; desktop offline simulation.",
+    "scene_sha256": "b731d2e4cdd0fbc9660d0e437db833563ed4727f163a1be74354dd9e8bec1ce3",
+    "warmup_seconds": 2.5,
+    "command_hz": 100,
+    "physics_hz": 1000,
+    "policy_hz": 50,
+    "seed": 0,
+    "initial_pickup_end_s": 11.0,
+    "cycle_end_s": 27.97,
+    "cycle_metrics": {
+      "start_s": 10.99999999999981,
+      "end_s": 27.970000000001573,
+      "corner_position_max_error_m": 0.000708520039115011,
+      "corner_orientation_max_error_deg": 2.373566843824709,
+      "common_rotation_deg": 5.115187322138707,
+      "center_error_m": 0.0024226965653547108,
+      "wrist_position_error_m": [
+        0.028066297568365994,
+        0.016215976459881758
+      ],
+      "wrist_orientation_error_deg": [
+        12.27211226359239,
+        3.637858280419445
+      ],
+      "moving_corner_ids": [
+        7,
+        0,
+        6,
+        4
+      ]
+    },
+    "right_contact_free_longest_s": 1.2,
+    "right_max_geometry_clearance_m": 0.08675384420763596,
+    "non_hand_support_frames_during_cycle": 0,
+    "both_hands_in_contact_at_end": true,
+    "replay": {
+      "run": "macro-follow07",
+      "bridge": "bridge-original-snapshot.dylib",
+      "frames": 3196,
+      "qpos_max_error": 0.0,
+      "userdata_max_error": 0.0,
+      "first_divergent_frame": null,
+      "warnings": 0
+    },
+    "series_success": false,
+    "limitation": "Next physical move after this return loses the grasp. The cube pose returns closely, but wrist poses differ by 1.6–2.8 cm. This is not a reusable move basis."
+  },
+  "runs": [
+    {
+      "name": "adaptive0",
+      "frames": 3174,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 0.8674750026217741,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "adaptive05",
+      "frames": 3105,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 0.04242288931788163,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "adaptive1",
+      "frames": 1330,
+      "finite": true,
+      "final_counter": 0,
+      "final_cube_height_m": 0.9355852172440462,
+      "final_contacts": [
+        0,
+        81
+      ]
+    },
+    {
+      "name": "alternate",
+      "frames": 4300,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 0.8674486400067024,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "close10",
+      "frames": 1691,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 0.9386822577908078,
+      "final_contacts": [
+        98,
+        0
+      ]
+    },
+    {
+      "name": "close5",
+      "frames": 2600,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.1129645768699663,
+      "final_contacts": [
+        16,
+        211
+      ]
+    },
+    {
+      "name": "close8",
+      "frames": 1742,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 0.9282881248116517,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "detent-low",
+      "frames": 2794,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 0.9940798715552875,
+      "final_contacts": [
+        162,
+        194
+      ]
+    },
+    {
+      "name": "detent-return",
+      "frames": 5095,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 0.8674763391234965,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "fast",
+      "frames": 2125,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0432250654350947,
+      "final_contacts": [
+        28,
+        133
+      ]
+    },
+    {
+      "name": "faster",
+      "frames": 2055,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0565887934153866,
+      "final_contacts": [
+        28,
+        21
+      ]
+    },
+    {
+      "name": "faster4",
+      "frames": 3710,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 0.04242215834138345,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "fb1",
+      "frames": 2350,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0349826791120371,
+      "final_contacts": [
+        24,
+        85
+      ]
+    },
+    {
+      "name": "fb3",
+      "frames": 2350,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 0.8674129854806097,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "fb5fast",
+      "frames": 2125,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0495049825443754,
+      "final_contacts": [
+        13,
+        16
+      ]
+    },
+    {
+      "name": "fixed-return",
+      "frames": 4500,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 0.8674590859035538,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "follow-horizontal",
+      "frames": 3550,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 1.1140836918467159,
+      "final_contacts": [
+        45,
+        1
+      ]
+    },
+    {
+      "name": "forward",
+      "frames": 2350,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0318287862011453,
+      "final_contacts": [
+        60,
+        81
+      ]
+    },
+    {
+      "name": "forward4",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.098599143929385,
+      "final_contacts": [
+        9,
+        81
+      ]
+    },
+    {
+      "name": "grasp-0.11-0.0675",
+      "frames": 1800,
+      "finite": true,
+      "final_counter": 0,
+      "final_cube_height_m": 0.9992953885836859,
+      "final_contacts": [
+        6,
+        147
+      ]
+    },
+    {
+      "name": "grasp-0.12-0.0675",
+      "frames": 1800,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0294094141309764,
+      "final_contacts": [
+        46,
+        134
+      ]
+    },
+    {
+      "name": "grasp-0.12-0.075",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 0.867471167591265,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "grasp-0.13-0.0675",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0526988060196194,
+      "final_contacts": [
+        8,
+        4
+      ]
+    },
+    {
+      "name": "grasp-0.13-0.075",
+      "frames": 1800,
+      "finite": true,
+      "final_counter": 0,
+      "final_cube_height_m": 0.9864567815307002,
+      "final_contacts": [
+        43,
+        64
+      ]
+    },
+    {
+      "name": "grasp-0.14-0.06",
+      "frames": 4300,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 0.8674623598046615,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "grasp-0.14-0.08",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 0.8674626085687811,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "grasp-0.15-0.0675",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.075695299423509,
+      "final_contacts": [
+        1,
+        85
+      ]
+    },
+    {
+      "name": "grip-0-0",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 0.954150701383893,
+      "final_contacts": [
+        50,
+        0
+      ]
+    },
+    {
+      "name": "grip-0-1",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0987850336734533,
+      "final_contacts": [
+        9,
+        85
+      ]
+    },
+    {
+      "name": "grip-0-2",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 1.05153163548868,
+      "final_contacts": [
+        45,
+        81
+      ]
+    },
+    {
+      "name": "grip-0-3",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.1102388172168285,
+      "final_contacts": [
+        9,
+        85
+      ]
+    },
+    {
+      "name": "grip-1-0",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 0.9781070694401058,
+      "final_contacts": [
+        6,
+        144
+      ]
+    },
+    {
+      "name": "grip-1-1",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 0.04242188114696006,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "grip-1-2",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.1094254335785219,
+      "final_contacts": [
+        64,
+        87
+      ]
+    },
+    {
+      "name": "grip-1-3",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 0.04242279513711371,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "inward",
+      "frames": 2350,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0194175895602984,
+      "final_contacts": [
+        28,
+        65
+      ]
+    },
+    {
+      "name": "left-first-reset",
+      "frames": 4110,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.048289926908465,
+      "final_contacts": [
+        62,
+        20
+      ]
+    },
+    {
+      "name": "left-first",
+      "frames": 5920,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 0.8674690714137261,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "low-follow",
+      "frames": 3997,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 1.0792631517316569,
+      "final_contacts": [
+        46,
+        209
+      ]
+    },
+    {
+      "name": "macro-fixed",
+      "frames": 2300,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0111997779705382,
+      "final_contacts": [
+        2,
+        211
+      ]
+    },
+    {
+      "name": "macro-follow",
+      "frames": 1802,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 0.9314481577407312,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "macro-follow07",
+      "frames": 3196,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 0.9383610785820202,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "measured-actual",
+      "frames": 1800,
+      "finite": true,
+      "final_counter": 0,
+      "final_cube_height_m": 0.9747523625153693,
+      "final_contacts": [
+        162,
+        83
+      ]
+    },
+    {
+      "name": "measured-both",
+      "frames": 6720,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 0.8674657606468614,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "measured-nominal",
+      "frames": 3380,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.1498352631573259,
+      "final_contacts": [
+        0,
+        200
+      ]
+    },
+    {
+      "name": "measured-reset",
+      "frames": 5460,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 1.1377983091319004,
+      "final_contacts": [
+        0,
+        152
+      ]
+    },
+    {
+      "name": "measured-right",
+      "frames": 3380,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0056080438103125,
+      "final_contacts": [
+        150,
+        105
+      ]
+    },
+    {
+      "name": "mpc",
+      "frames": 2900,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 1.0579938829498412,
+      "final_contacts": [
+        9,
+        5
+      ]
+    },
+    {
+      "name": "nudge-0-0",
+      "frames": 3290,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0976035748235213,
+      "final_contacts": [
+        9,
+        85
+      ]
+    },
+    {
+      "name": "nudge-0-1",
+      "frames": 3290,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.1161043923861442,
+      "final_contacts": [
+        32,
+        219
+      ]
+    },
+    {
+      "name": "nudge-0-2",
+      "frames": 3290,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.1112488102561173,
+      "final_contacts": [
+        41,
+        17
+      ]
+    },
+    {
+      "name": "nudge-0-3",
+      "frames": 3290,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0558752655203554,
+      "final_contacts": [
+        44,
+        22
+      ]
+    },
+    {
+      "name": "nudge-1-0",
+      "frames": 3290,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 0.9657830096379678,
+      "final_contacts": [
+        2,
+        16
+      ]
+    },
+    {
+      "name": "nudge-1-1",
+      "frames": 3290,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.1124340238996016,
+      "final_contacts": [
+        9,
+        213
+      ]
+    },
+    {
+      "name": "nudge-1-2",
+      "frames": 3290,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 1.0258356212590225,
+      "final_contacts": [
+        42,
+        17
+      ]
+    },
+    {
+      "name": "nudge-1-3",
+      "frames": 3290,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0965350667989402,
+      "final_contacts": [
+        9,
+        85
+      ]
+    },
+    {
+      "name": "original-measured",
+      "frames": 3630,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0159440606108037,
+      "final_contacts": [
+        6,
+        201
+      ]
+    },
+    {
+      "name": "original-up",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0912589992997659,
+      "final_contacts": [
+        9,
+        86
+      ]
+    },
+    {
+      "name": "original-x13",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0526988060196194,
+      "final_contacts": [
+        8,
+        4
+      ]
+    },
+    {
+      "name": "overhead0",
+      "frames": 2600,
+      "finite": true,
+      "final_counter": 0,
+      "final_cube_height_m": 1.00247223420332,
+      "final_contacts": [
+        200,
+        199
+      ]
+    },
+    {
+      "name": "overhead10",
+      "frames": 2600,
+      "finite": true,
+      "final_counter": 0,
+      "final_cube_height_m": 0.0424224518389992,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "overhead5",
+      "frames": 3950,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 0.8674541047213425,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "physical-horizontal",
+      "frames": 3625,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 0.8674450593469365,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "physical-vertical",
+      "frames": 3005,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 0.867466623665738,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "pivot-bias",
+      "frames": 1800,
+      "finite": true,
+      "final_counter": 0,
+      "final_cube_height_m": 0.9892294343190576,
+      "final_contacts": [
+        36,
+        148
+      ]
+    },
+    {
+      "name": "pivot-core",
+      "frames": 1800,
+      "finite": true,
+      "final_counter": 0,
+      "final_cube_height_m": 0.983076578502418,
+      "final_contacts": [
+        6,
+        19
+      ]
+    },
+    {
+      "name": "pivot-forward",
+      "frames": 1800,
+      "finite": true,
+      "final_counter": 0,
+      "final_cube_height_m": 0.9934547654500687,
+      "final_contacts": [
+        6,
+        211
+      ]
+    },
+    {
+      "name": "pivot-up",
+      "frames": 1800,
+      "finite": true,
+      "final_counter": 0,
+      "final_cube_height_m": 0.9934547654500687,
+      "final_contacts": [
+        6,
+        211
+      ]
+    },
+    {
+      "name": "reset-follow",
+      "frames": 4247,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 1.0370313242857085,
+      "final_contacts": [
+        7,
+        225
+      ]
+    },
+    {
+      "name": "reset-low",
+      "frames": 3488,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 0.9369435090375915,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "servo10",
+      "frames": 1800,
+      "finite": true,
+      "final_counter": 0,
+      "final_cube_height_m": 1.1511813124138353,
+      "final_contacts": [
+        0,
+        97
+      ]
+    },
+    {
+      "name": "servo2",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 0.8674565018321926,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "servo5",
+      "frames": 1800,
+      "finite": true,
+      "final_counter": 0,
+      "final_cube_height_m": 1.1308120874695138,
+      "final_contacts": [
+        0,
+        97
+      ]
+    },
+    {
+      "name": "table-return",
+      "frames": 3830,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.042943593991168,
+      "final_contacts": [
+        12,
+        130
+      ]
+    },
+    {
+      "name": "thumb-0-0",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 0.8925602341546591,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "thumb-0-1",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 0.8674602877288278,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "thumb-0-2",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0923710876704922,
+      "final_contacts": [
+        8,
+        117
+      ]
+    },
+    {
+      "name": "thumb-1-0",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.110804839683995,
+      "final_contacts": [
+        44,
+        4
+      ]
+    },
+    {
+      "name": "thumb-1-1",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 1.0806070887250476,
+      "final_contacts": [
+        8,
+        16
+      ]
+    },
+    {
+      "name": "thumb-1-2",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0927698175401204,
+      "final_contacts": [
+        40,
+        23
+      ]
+    },
+    {
+      "name": "tilt-0-0",
+      "frames": 3300,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 1.027859401141099,
+      "final_contacts": [
+        63,
+        87
+      ]
+    },
+    {
+      "name": "tilt-0-1",
+      "frames": 3300,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 0.8674669360436088,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "tilt-0-2",
+      "frames": 3300,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0793250166714885,
+      "final_contacts": [
+        0,
+        85
+      ]
+    },
+    {
+      "name": "tilt-1-0",
+      "frames": 3300,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0952181232538323,
+      "final_contacts": [
+        9,
+        215
+      ]
+    },
+    {
+      "name": "tilt-1-1",
+      "frames": 3300,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0644678171871078,
+      "final_contacts": [
+        9,
+        84
+      ]
+    },
+    {
+      "name": "tilt-1-2",
+      "frames": 3300,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0720874423378657,
+      "final_contacts": [
+        64,
+        213
+      ]
+    },
+    {
+      "name": "tilt-2-0",
+      "frames": 3300,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 0.8674757867383586,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "tilt-2-1",
+      "frames": 3300,
+      "finite": true,
+      "final_counter": 2,
+      "final_cube_height_m": 1.014728216631201,
+      "final_contacts": [
+        50,
+        19
+      ]
+    },
+    {
+      "name": "tilt-2-2",
+      "frames": 3300,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0836632516048512,
+      "final_contacts": [
+        65,
+        21
+      ]
+    },
+    {
+      "name": "up",
+      "frames": 2350,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.0237863406203391,
+      "final_contacts": [
+        60,
+        81
+      ]
+    },
+    {
+      "name": "up4",
+      "frames": 3050,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 1.1019456382215804,
+      "final_contacts": [
+        0,
+        87
+      ]
+    },
+    {
+      "name": "vertical-latch",
+      "frames": 3680,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 0.8674614621654496,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "vertical-original",
+      "frames": 3680,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 0.8674614621654496,
+      "final_contacts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "vertical-slow",
+      "frames": 3680,
+      "finite": true,
+      "final_counter": 1,
+      "final_cube_height_m": 0.8674748621483561,
+      "final_contacts": [
+        0,
+        0
+      ]
+    }
+  ],
+  "second_turn_original_model": {
+    "run": "physical-horizontal",
+    "relative_layer_angle_after_hold_deg": 89.20762788172172,
+    "corner_orientation_max_error_deg": 5.579778493475141,
+    "cube_center_drift_m": 0.05954131913178349,
+    "next_regrip": "grasp lost"
+  },
+  "limits": [
+    "No composable move library, arbitrary R/F/U sequences, or reliable whole-cube reorientation primitives were obtained.",
+    "Only seed 0 deterministic replay is verified; no perturbation robustness claim.",
+    "Most initial sweeps used an experimental layer latch; the delivered macro-follow07 cycle uses the unmodified installed native mechanism.",
+    "The accepted flag in detent-return is a local search filter, not acceptance of the user objective.",
+    "No new APK was built or installed during this continuation."
+  ]
+}

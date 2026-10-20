@@ -1,0 +1,10 @@
+{
+  "accepted_episodes": 4,
+  "independent_poses_checked": 80,
+  "all_links_checked": 53,
+  "max_urdf_fk_position_error_m": 2.0513520854850178e-13,
+  "max_urdf_fk_rotation_error_rad": 3.7957088648418144e-13,
+  "hashes_verified": true,
+  "resampling_hz": 50,
+  "simulation_import_verified": false
+}

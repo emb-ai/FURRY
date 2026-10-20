@@ -1,0 +1,24 @@
+{
+  "policy_sha256": "fbc6a1785c9a80b5ce825c3de376c5e834420ccd3eb6de7d669580528e2d726b",
+  "policy_iteration": 2000,
+  "policy_experiment": "full15-stages-20261013",
+  "model_sha256": "06a70fa9bae1895e57037818d186a93beb781922b5d601e79af34ed94dc64a37",
+  "control_hz": 50,
+  "physics_hz": 1000,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "seconds": 12.75368945801165,
+  "source_code": {
+    "outputs/dexweave-stance-20261013/run.py": "7080cb3ab8f80d0cef84be44457860e33a864470288f68dc4abbc44a88ad12b6",
+    "outputs/dexweave-body-20261012/full15-stages-20261013/dexweave/evaluate_mujoco.py": "d665020b0393a74c64ed6eee3dbd696ce2cd15504812840e8692dc23be06d007",
+    "outputs/dexweave-body-20261012/full15-stages-20261013/dexweave/observations.py": "4803f1e750d10a0fc9b3a9a67d5541f13646aad9d1c29371cdc235b4e44ad561"
+  },
+  "method": "Same10Oct recordings, frozen GMR references before any root override. Variants: none, Meta width ratio50 with fixed hip/segment lengths, foot IK target reduction12cm after adapter before GMR. Same named robot scene and original DexWeave observation/action/PD contract. Natural direct torso-anchor tracking, no TWIST velocity servo. Paired1s baseline-reference teacher-forced recorded-state warmup; same q/qvel and applied-action history per seed at1s fork. Fixed seed joint noise .005rad for seeds1..4. Full recording, continue past tracking threshold, stop on physical fall (pelvis<.45m or tilt>1.2rad), no reset. Metrics before next action at matching source timestamp; forceweighted contact sliding and same ego-camera XY target point as earlier comparisons. Joint velocities offline centered finite differences at50Hz.",
+  "script_extension_note": "After initial30runs, run.py was extended with an optional reference-start control; initial3-item task path unchanged. Original executed script hashes above retained.",
+  "extended_script_sha256": "7b977d02b371821a59b892dcf09775128b3b95cb30b94701e6955827964302d4"
+}

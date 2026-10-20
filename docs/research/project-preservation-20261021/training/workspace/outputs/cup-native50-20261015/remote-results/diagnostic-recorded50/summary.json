@@ -1,0 +1,82 @@
+{
+  "protocol": "CONTINUATION after0.5s recorded state/control prefix; recorded observations for neural predictions; not full-reset policy performance",
+  "weights": "None",
+  "successes": 8,
+  "n": 8,
+  "errors": [],
+  "results": [
+    {
+      "episode": "episode-1792058834151648",
+      "success": true,
+      "outcome": 1,
+      "wall_s": 2.3213701248168945,
+      "arms_mae_deg": 0.0,
+      "final_distance_m": 0.02453087921271812,
+      "error": null
+    },
+    {
+      "episode": "episode-1792058974761240",
+      "success": true,
+      "outcome": 1,
+      "wall_s": 1.706789493560791,
+      "arms_mae_deg": 0.0,
+      "final_distance_m": 0.010402020146243892,
+      "error": null
+    },
+    {
+      "episode": "episode-1792059112053736",
+      "success": true,
+      "outcome": 1,
+      "wall_s": 1.799586534500122,
+      "arms_mae_deg": 0.0,
+      "final_distance_m": 0.020347465595619993,
+      "error": null
+    },
+    {
+      "episode": "episode-1792059256525492",
+      "success": true,
+      "outcome": 1,
+      "wall_s": 2.4525508880615234,
+      "arms_mae_deg": 0.0,
+      "final_distance_m": 0.0030140220553354696,
+      "error": null
+    },
+    {
+      "episode": "episode-1792059418003475",
+      "success": true,
+      "outcome": 1,
+      "wall_s": 2.0713043212890625,
+      "arms_mae_deg": 0.0,
+      "final_distance_m": 0.026500713916162197,
+      "error": null
+    },
+    {
+      "episode": "episode-1792059590200464",
+      "success": true,
+      "outcome": 1,
+      "wall_s": 1.5863981246948242,
+      "arms_mae_deg": 0.0,
+      "final_distance_m": 0.020483525540225457,
+      "error": null
+    },
+    {
+      "episode": "episode-1792059694167464",
+      "success": true,
+      "outcome": 1,
+      "wall_s": 1.785323143005371,
+      "arms_mae_deg": 0.0,
+      "final_distance_m": 0.003615841612493578,
+      "error": null
+    },
+    {
+      "episode": "episode-1792059849292471",
+      "success": true,
+      "outcome": 1,
+      "wall_s": 1.696500539779663,
+      "arms_mae_deg": 0.0,
+      "final_distance_m": 0.0315251098819851,
+      "error": null
+    }
+  ],
+  "horizon": "recorded trajectory duration plus3s holding final command"
+}

@@ -1,0 +1,114 @@
+[
+  {
+    "episode": "episode-1792015434582696",
+    "variant": "baseline",
+    "linear_median": 0.027312487571398814,
+    "linear_max": 0.030593700759506088,
+    "angular_median": 0.7968017915195913,
+    "angular_max": 0.8903216205302668,
+    "position_range": [
+      5.057118034379471e-05,
+      5.083779270079192e-05,
+      7.46465348969716e-05
+    ],
+    "warnings": 0
+  },
+  {
+    "episode": "episode-1792015434582696",
+    "variant": "multiccd",
+    "linear_median": 4.2508276378379445e-05,
+    "linear_max": 0.00011984993675889777,
+    "angular_median": 0.0011420629285720683,
+    "angular_max": 0.003210425857516404,
+    "position_range": [
+      2.581754998676189e-08,
+      1.916922395817089e-08,
+      4.9202549701199416e-08
+    ],
+    "warnings": 0
+  },
+  {
+    "episode": "episode-1792015434582696",
+    "variant": "noslip",
+    "linear_median": 0.030083429855781826,
+    "linear_max": 0.03346955138851108,
+    "angular_median": 0.7864946795212633,
+    "angular_max": 0.8745368230336099,
+    "position_range": [
+      8.771383317673909e-06,
+      8.972174003682443e-06,
+      6.979372581694676e-05
+    ],
+    "warnings": 0
+  },
+  {
+    "episode": "episode-1792015434582696",
+    "variant": "both",
+    "linear_median": 4.7078318692993936e-05,
+    "linear_max": 0.00013211704233676957,
+    "angular_median": 0.0012041688213847096,
+    "angular_max": 0.0033774594081414336,
+    "position_range": [
+      9.171345904945838e-10,
+      1.4098942846541007e-09,
+      1.133434248679066e-07
+    ],
+    "warnings": 0
+  },
+  {
+    "episode": "episode-1792015467386805",
+    "variant": "baseline",
+    "linear_median": 0.03804128141566483,
+    "linear_max": 0.05069412398112268,
+    "angular_median": 1.1055210159341204,
+    "angular_max": 1.460977425405587,
+    "position_range": [
+      0.00013270729990910723,
+      0.00013267501571464363,
+      0.0004235457602407289
+    ],
+    "warnings": 0
+  },
+  {
+    "episode": "episode-1792015467386805",
+    "variant": "multiccd",
+    "linear_median": 4.543241878519985e-05,
+    "linear_max": 9.876923000732787e-05,
+    "angular_median": 0.0012076626445518014,
+    "angular_max": 0.002642526730594701,
+    "position_range": [
+      1.1163255320134624e-08,
+      1.4351387453426234e-08,
+      4.882616744250612e-08
+    ],
+    "warnings": 0
+  },
+  {
+    "episode": "episode-1792015467386805",
+    "variant": "noslip",
+    "linear_median": 0.0505445813676028,
+    "linear_max": 0.06970726422692071,
+    "angular_median": 1.3107692303051364,
+    "angular_max": 1.7857213624639692,
+    "position_range": [
+      1.2109344966537705e-05,
+      1.307869377240034e-05,
+      0.0007704705342498341
+    ],
+    "warnings": 0
+  },
+  {
+    "episode": "episode-1792015467386805",
+    "variant": "both",
+    "linear_median": 2.6547282462300493e-05,
+    "linear_max": 5.2984289059505674e-05,
+    "angular_median": 0.0006670459397293828,
+    "angular_max": 0.001349211220791961,
+    "position_range": [
+      2.034448609578021e-09,
+      7.469747806410076e-10,
+      2.0357185270825084e-08
+    ],
+    "warnings": 0
+  }
+]

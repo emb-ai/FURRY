@@ -1,0 +1,98 @@
+{
+  "checked_at": 1792051532.907434,
+  "epsilon": {
+    "job": {
+      "kind": "epsilon",
+      "status": "training",
+      "gpu": "GPU-b23c212d-4adf-9e06-ee33-7bdc20932a44",
+      "pid": 1282520,
+      "updated": 1792051332.3760173,
+      "command": [
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/env-dp/bin/python",
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/train_dp.py",
+        "--data",
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/cup44-no-shadow-causal.hdf5",
+        "--weights",
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/r3m-resnet18-encoder.pt",
+        "--prediction-type",
+        "epsilon",
+        "--out",
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/dp-epsilon"
+      ]
+    },
+    "progress": {
+      "epoch": 11,
+      "step": 4092,
+      "train_loss": 0.028933388914439796,
+      "elapsed_s": 185.91969799995422,
+      "status": "running",
+      "best_validation_noise_mse": 0.042051744389309385
+    },
+    "checkpoints": [
+      "best.pt",
+      "ema-epoch000.pt",
+      "latest.pt",
+      "ema-epoch010.pt"
+    ]
+  },
+  "sample": {
+    "job": {
+      "kind": "sample",
+      "status": "training",
+      "gpu": "GPU-68d1fffd-2ea2-3f95-f100-38f39855bcdf",
+      "pid": 1349698,
+      "updated": 1792051395.292052,
+      "command": [
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/env-dp/bin/python",
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/train_dp.py",
+        "--data",
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/cup44-no-shadow-causal.hdf5",
+        "--weights",
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/r3m-resnet18-encoder.pt",
+        "--prediction-type",
+        "sample",
+        "--out",
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/dp-sample"
+      ]
+    },
+    "progress": {
+      "epoch": 7,
+      "step": 2728,
+      "train_loss": 0.005530191721925449,
+      "elapsed_s": 123.21495628356934,
+      "status": "running",
+      "best_validation_noise_mse": 0.03374404869245759
+    },
+    "checkpoints": [
+      "best.pt",
+      "ema-epoch000.pt",
+      "latest.pt"
+    ]
+  },
+  "act": {
+    "job": {
+      "kind": "act",
+      "status": "training",
+      "gpu": "GPU-2b647540-8cc6-f42e-0daf-b5d6f5ac548c",
+      "pid": 1282522,
+      "updated": 1792051329.0484452,
+      "command": [
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/env-act/bin/python",
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/train_act.py",
+        "--data",
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/cup44-no-shadow-causal.hdf5",
+        "--out",
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/act-run"
+      ]
+    },
+    "progress": {
+      "step": 5400,
+      "loss": 0.2048952430486679,
+      "elapsed_s": 194.88917541503906,
+      "status": "running"
+    },
+    "checkpoints": [
+      "step-005000.pt"
+    ]
+  }
+}

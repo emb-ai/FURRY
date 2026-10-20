@@ -1,0 +1,29 @@
+{
+  "apk": "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs.nosync/rubik-table-rest-20261015/g1-quest-rubik-table-rest.apk",
+  "sha256": "fdc079d6bf6ba44cef820844a88731cc9cdd42c87d191a490fddc558c91e2bd3",
+  "bytes": 850687381,
+  "zip_crc": true,
+  "assets_equal_to_prepared": 280,
+  "jni_libraries": 5,
+  "changed_scene_models": [
+    "assets/scene-rubik.xml",
+    "assets/scene-wb_dex.xml"
+  ],
+  "protected_policy_assets_unchanged": 19,
+  "baseline_apk_sha256": "3e25f5c17fad0f206dc584b34879b25d6eb7b5177481fd8c44c472caebfc8b30",
+  "changed_sources": {
+    "android/build_apk.sh": "64df510e7570aa96610dd4f294ec325d03884bf109e445882198db54d3653d89",
+    "android/native/collection_task.h": "7927ae21842552cbeefba27f864b1b6a7b75c3190da2da06c887c79639202b4e",
+    "android/native/simulation.cpp": "68e7bc18d871d882147ccab3cbba430789d3be3e86a2c51a523daf93bf36cb7b",
+    "g1_sim/collection_scenes.py": "a744b355f53cb9ff9f50d923405c4c34e692e56bc97bc890251dd03958ee4f42",
+    "g1_sim/rubik.py": "8668eb135235f6e2d4dea4bdfba2c3e0828a8e9eb971378117af6edd7245d0b3",
+    "g1_sim/scene.py": "a66f4b015c7f2f2bdac8e7a9dba4780906c2196c765e573e5e66060861808c98",
+    "scripts/scene_assets.py": "6c75281346d7f6fba51446039277c68fafecf0edb681937e1373f7e61fb212e6",
+    "tests/check_collection.cpp": "4644616fca8f0b3f51d78f5e59129b50014e586612db9c4a585f75c55cd4ea4b",
+    "tests/check_wb_dex.cpp": "e760a88ba38da196492c696bd4924aa1077c9360eb93c398ca7e20e8ddc7f6f4",
+    "tests/check_wb_dex_physics.cpp": "a70158ea649276308565d272de55d6900494858e7c56a3a5e638a8e75d7e582a",
+    "tests/test_wb_dex.py": "575605dff4441caf3c6b798c9061fbdcd3cec8cf27b667ca1322231964014232"
+  },
+  "installed": true,
+  "installation_receipt": "install/verification.json"
+}

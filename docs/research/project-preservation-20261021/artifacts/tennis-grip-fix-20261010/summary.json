@@ -1,0 +1,41 @@
+{
+  "apk": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs/tennis-grip-fix-20261010/g1-quest-tennis-grip.apk",
+  "apk_sha256": "3201955bcaed8dff0de315e279e878f216da41c9f80100408f23b285af17c726",
+  "package_checks": {
+    "scene-tennis.xml": "1810306d1ef225bd81d738fde85c014e77773d2be0006152adc0f5316b3fd010",
+    "visual_meshes-tennis.bin": "b0284cbf2bcfd3ba6849e8a8ce426cc11fab54b1392af9c9d21cc6ca9bf8e87c",
+    "recording_metadata-tennis.json": "4b86e7f4875f6eeeb1934e6f2e74b9ca6884c0ec6c779a9d44207fd507067f78",
+    "policy_catalog.json": "404628de84b52f012d8c0c63635f309826b2ad9d5b0ec93f247f1ea6c3dcfce4",
+    "source_provenance_verified": 83
+  },
+  "grip_radius_m": 0.12,
+  "grip_acquire": 0.65,
+  "grip_release": 0.25,
+  "racket_thickness_m": 0.012,
+  "installed": true,
+  "live_grasp_acceptance": false,
+  "unit_tests": {
+    "run": 85,
+    "passed": 84,
+    "skipped": 1
+  },
+  "policy_checks": {
+    "scenes": 4,
+    "policies": 7,
+    "passed": true,
+    "both_hands_hold_s_per_policy": 1
+  },
+  "native_grip_tests": "both hands, acquisition distance, hysteresis, release velocity, snapshot, elastic held collision",
+  "unpublished": true,
+  "replay": {
+    "cases": 20,
+    "passed": true,
+    "max_state_error": 0,
+    "max_command_error": 0
+  },
+  "device": "2G0YC5ZG7T05SR",
+  "launch_blocked": "LaunchCheckControllerRequiredDialogActivity",
+  "installed_apk_sha256": "3201955bcaed8dff0de315e279e878f216da41c9f80100408f23b285af17c726",
+  "installed_hash_verified": true,
+  "native_started": false
+}

@@ -1,0 +1,1 @@
+{"iteration": 1, "seconds": 1.2969008469954133, "elapsed_s": 1.2974763549864292, "reward_mean": -0.09987105174999063, "failed": 4, "completed_segments": 0, "object_error_m": 0.01175396131020534, "learning_rate": 1e-05, "losses": {"value_function": 0.47033480405807493, "surrogate": 0.16821951400488616, "entropy": 61.024803924560544}, "actor_changed": true}

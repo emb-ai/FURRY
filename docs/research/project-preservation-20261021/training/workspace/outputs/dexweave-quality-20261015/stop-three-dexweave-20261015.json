@@ -1,0 +1,32 @@
+{
+  "status": "stopped_by_user",
+  "jobs": [
+    {
+      "source": "/home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020055691156-gpu3-resume-20261015",
+      "pid": 2723122,
+      "checkpoint": "/home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020055691156-gpu3-resume-20261015/checkpoint-00600.pt",
+      "sha256": "a677132d2402ca49b0233d70669ca786f5a2aa0426bf104449c6edae0611b00a",
+      "last_iteration": 656,
+      "saved_iteration": 600,
+      "cmd": "/home/jovyan/vlad/FURRY/dexweave-body-20261012/env/bin/python -m dexcup.train_resume --reference data/episode-1792020055691156.npz --output /home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020055691156-gpu3-resume-20261015 --device cuda:0 --num-envs 4096 --iterations 12000 --resume /home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020055691156-gpu2-resume-20261015/checkpoint-00501.pt "
+    },
+    {
+      "source": "/home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020126135729",
+      "pid": 703180,
+      "checkpoint": "/home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020126135729/checkpoint-01200.pt",
+      "sha256": "77b94cd939bbf68bf48388af31b87e96da65cc8cde7c29ebc4f35096965a2bb9",
+      "last_iteration": 1273,
+      "saved_iteration": 1200,
+      "cmd": "/home/jovyan/vlad/FURRY/dexweave-body-20261012/env/bin/python -m dexcup.train --reference data/episode-1792020126135729.npz --output /home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020126135729 --device cuda:0 --num-envs 4096 --iterations 12000 "
+    },
+    {
+      "source": "/home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020208393189",
+      "pid": 703182,
+      "checkpoint": "/home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020208393189/checkpoint-01200.pt",
+      "sha256": "3c25fcd87efc44a08d1e532eed3ae83bcfb1c8be7a1e8637e28f92cd34e4e0d1",
+      "last_iteration": 1279,
+      "saved_iteration": 1200,
+      "cmd": "/home/jovyan/vlad/FURRY/dexweave-body-20261012/env/bin/python -m dexcup.train --reference data/episode-1792020208393189.npz --output /home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020208393189 --device cuda:0 --num-envs 4096 --iterations 12000 "
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "main_commit": "2ec1d626d493dbb8549d794fb344dbb6a6c912cb",
+  "policies": [
+    {
+      "id": "twist2-20k",
+      "title": "TWIST2: авторская 20k",
+      "note": "Основная",
+      "file": "policy.onnx",
+      "sha256": "2d1fb3a31e4e967f70ecfefc3ad1e7b2ac491677068b89f60b565a94e7735061"
+    },
+    {
+      "id": "twist2-25k",
+      "title": "TWIST2: авторская 25k",
+      "note": "Авторский checkpoint",
+      "file": "policy-twist2-25k.onnx",
+      "sha256": "126ab9089b6ca0be8b6582fc9ef17b0b6c6d6577378f9324a2e10d580fe48f2e"
+    },
+    {
+      "id": "quest-111260-500",
+      "title": "Quest: дообучение 500",
+      "note": "Эксперимент: 09.10 / 111260",
+      "file": "policy-quest-111260-500.onnx",
+      "sha256": "c83fdeb9747410c5e6b8b150d6d543966ed4024cd6111e9d94281e414c6bcfb6"
+    },
+    {
+      "id": "quest-111260-1000",
+      "title": "Quest: дообучение 1000",
+      "note": "Эксперимент: 09.10 / 111260",
+      "file": "policy-quest-111260-1000.onnx",
+      "sha256": "8d386bf94724d1dccc7050e1bb3dee40315e20e1bba20a31debb5d9b0b61cae3"
+    }
+  ],
+  "apk_sha256": "69f8d3051a660527c8b5832345702640051d6f9de40e8cdec6d66288054d3973",
+  "tests": {
+    "unittest": {
+      "run": 82,
+      "passed": 81,
+      "skipped": 1,
+      "skip_reason": "optional Torch training dependency"
+    },
+    "native_policy_scene_cases": 12,
+    "synthetic_replay_cases": 7,
+    "max_replay_state_error": 0,
+    "max_replay_reference_error": 0
+  },
+  "headset_installation": true,
+  "user_requested_no_install": false,
+  "installation": {
+    "device": "Quest 3 / 2G0YC5ZG7T05SR",
+    "verified_installed_apk_sha256": "69f8d3051a660527c8b5832345702640051d6f9de40e8cdec6d66288054d3973",
+    "method": "verified backup, reinstall for signature change, byte-for-byte restore",
+    "restored_files": 140,
+    "launch": "system controller-required dialog; native startup not yet confirmed",
+    "updated_utc": "2026-10-09T12:11:13.169847+00:00"
+  }
+}

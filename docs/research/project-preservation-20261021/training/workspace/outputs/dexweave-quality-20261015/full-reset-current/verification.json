@@ -1,0 +1,102 @@
+{
+  "checkpoint_iteration": 5900,
+  "checkpoint_sha256": "404957c94b9b542658b245f0f15fed8ed28a1a1e41f6760b21a53bde0a63db78",
+  "protocol": "Native DexWeave neutral reset mapped to IsaacLab training physics; no demo physical state; zero velocities and control buffers; reference retained only as policy input",
+  "n": 10,
+  "successes": 0,
+  "falls": 5,
+  "timeouts": 5,
+  "reset_checks_passed": true,
+  "wall_seconds": 1578.1243702829815,
+  "simulated_seconds": 90.0,
+  "results": [
+    {
+      "seed": 0,
+      "first_fall_s": null,
+      "max_lift_before_end_m": 0.04232593393325801,
+      "goal_samples": 0,
+      "candidate_goal_settle_s": null,
+      "outcome": "timeout"
+    },
+    {
+      "seed": 1,
+      "first_fall_s": null,
+      "max_lift_before_end_m": 0,
+      "goal_samples": 0,
+      "candidate_goal_settle_s": null,
+      "outcome": "timeout"
+    },
+    {
+      "seed": 2,
+      "first_fall_s": 29.12,
+      "max_lift_before_end_m": 0.048875232696533155,
+      "goal_samples": 1,
+      "candidate_goal_settle_s": null,
+      "outcome": "fall"
+    },
+    {
+      "seed": 3,
+      "first_fall_s": 20.02,
+      "max_lift_before_end_m": 0,
+      "goal_samples": 0,
+      "candidate_goal_settle_s": null,
+      "outcome": "fall"
+    },
+    {
+      "seed": 4,
+      "first_fall_s": 17.34,
+      "max_lift_before_end_m": 0.014590164184570265,
+      "goal_samples": 0,
+      "candidate_goal_settle_s": null,
+      "outcome": "fall"
+    },
+    {
+      "seed": 5,
+      "first_fall_s": 19.6,
+      "max_lift_before_end_m": 0.032680114269256544,
+      "goal_samples": 0,
+      "candidate_goal_settle_s": null,
+      "outcome": "fall"
+    },
+    {
+      "seed": 6,
+      "first_fall_s": 13.88,
+      "max_lift_before_end_m": 0,
+      "goal_samples": 0,
+      "candidate_goal_settle_s": null,
+      "outcome": "fall"
+    },
+    {
+      "seed": 7,
+      "first_fall_s": null,
+      "max_lift_before_end_m": 0.048870762348175,
+      "goal_samples": 0,
+      "candidate_goal_settle_s": null,
+      "outcome": "timeout"
+    },
+    {
+      "seed": 8,
+      "first_fall_s": null,
+      "max_lift_before_end_m": 0,
+      "goal_samples": 0,
+      "candidate_goal_settle_s": null,
+      "outcome": "timeout"
+    },
+    {
+      "seed": 9,
+      "first_fall_s": null,
+      "max_lift_before_end_m": 0,
+      "goal_samples": 0,
+      "candidate_goal_settle_s": null,
+      "outcome": "timeout"
+    }
+  ],
+  "rollout_sha256": "8e9542ff0064c5b7f9760ce1739eb114cb5031576b6d3eab65b964c9e260cfd9",
+  "success_proof": "No trial met necessary task-success conditions",
+  "rollout_errors": [],
+  "initialization_log_warning": {
+    "message": "ManagerBase callback AttributeError because cfg.events=None",
+    "scope": "Nonfatal initialization callback for disabled event manager; log subsequently confirms zero active event terms, all reset assertions passed, all4500 steps completed, results saved; no rollout exception."
+  },
+  "default_evaluator_fixed": true
+}

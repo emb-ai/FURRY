@@ -1,0 +1,8 @@
+{
+  "cube_weight_N_approx": 1.2,
+  "right_downward_force_peak_N": 18.411949457614842,
+  "phase": "open right-hand approach",
+  "culprit_body": "right_hand_thumb_2_link",
+  "source": "exact native replay, contact force summed in world axes",
+  "geometry_changed": false
+}

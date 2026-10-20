@@ -1,0 +1,53 @@
+{
+  "protocol": "mean policy, frozen normalization, frame-zero physical initialization, no automatic resets, full reference horizon",
+  "randomize": false,
+  "device": "cpu",
+  "num_envs": 1,
+  "reference_sha256": "f70bda0f17704d135b1c9cf8816721146a18383c549be75c68a16231a59e5b2a",
+  "results": [
+    {
+      "checkpoint": "/home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020014648126/checkpoint-03500.pt",
+      "sha256": "b5d1af48524fff3fe0ee05f8ea6d88c120d5aeda26f3614bbb0f614123d8fe86",
+      "iteration": 3500,
+      "duration_s": 28.82,
+      "elapsed_s": 29.33328467514366,
+      "initial_fk_error_m": 1.2781872271716566e-07,
+      "first_tracking_failure_s": [
+        12.34
+      ],
+      "full_reference_tracking_pass": [
+        false
+      ],
+      "final_cup_error_m": [
+        1.096315860748291
+      ],
+      "mean_cup_error_m": [
+        0.5233851891967286
+      ],
+      "max_cup_lift_m": [
+        0.011453032493591309
+      ],
+      "reference_max_lift_m": [
+        0.22299247980117798
+      ],
+      "final_cup_xyz": [
+        [
+          0.5800130367279053,
+          0.20227961242198944,
+          0.550000011920929
+        ]
+      ],
+      "final_reference_xyz": [
+        [
+          0.4859521687030792,
+          -0.7516300082206726,
+          0.017912203446030617
+        ]
+      ],
+      "min_root_z_m": [
+        0.06419306993484497
+      ],
+      "task_success_evaluated": false
+    }
+  ]
+}

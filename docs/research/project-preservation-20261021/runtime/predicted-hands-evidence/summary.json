@@ -1,0 +1,39 @@
+{
+  "apk": {
+    "apk": "g1-quest-lab-vlad-predicted-hands.apk",
+    "bytes": 832275683,
+    "sha256": "a3b7364147d5d02f4f8b4ca0b148fb6f616c356ce6c47702d77ea42080ce0722",
+    "zip_crc": true,
+    "source_and_asset_digest_checks": 107,
+    "model_digest_checks": 13,
+    "policy_count": 10,
+    "metadata_variants": 66,
+    "predicted_hand_orientation": true,
+    "controller_anatomical_frame": false,
+    "controller_stage_targets": true,
+    "soft_grip_preserved": true,
+    "all_scene_xml_unchanged": true,
+    "package": "org.g1lab.quest",
+    "label": "G1 Quest Lab-vlad",
+    "installed": false
+  },
+  "installed": false,
+  "installation_preference": "User: Пока только локально",
+  "headset_last_known_installed_sha256": "ffeea973b3b192d09e189104a2cafce59bfc09ab6fd664de4847bb131257de4f",
+  "validation": {
+    "unit_tests": 113,
+    "passed": 112,
+    "optional_skipped": 1,
+    "both_hand_axis_test": true,
+    "synthetic_replay_cases": 39,
+    "replay_max_error": 0,
+    "real_input_kinematic_comparison_episodes": 6,
+    "median_orientation_residual_deg_range": [
+      0.190553,
+      0.9415075
+    ]
+  },
+  "mode": "Meta predicted wrist bind frame; controller positions and Grip",
+  "new_live_acceptance": false,
+  "published": false
+}

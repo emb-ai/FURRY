@@ -1,0 +1,101 @@
+{
+  "status": "prototype_pending_bimanual_acceptance",
+  "scene": "rubik",
+  "operator": "Quest controllers + independent ordinary Grip",
+  "grasp_attachment": false,
+  "face_motor": false,
+  "magnetic_capture_deg": 15,
+  "external_load_face_test": {
+    "physical_rotation_deg": 90.0222,
+    "core_fixed_fixture": true,
+    "robot_hand_proof": false,
+    "qpos_overwrites_after_reset": false
+  },
+  "magnet_test": {
+    "initial_deg": 12,
+    "final_deg": 0.000203395,
+    "outside_window_initial_deg": 25,
+    "outside_window_final_deg": 25
+  },
+  "unit_tests": {
+    "total": 91,
+    "passed": 90,
+    "skipped": 1
+  },
+  "synthetic_replay_cases": 21,
+  "max_state_error": 0,
+  "max_command_error": 0,
+  "bimanual_controlled_face_turn_accepted": false,
+  "full_vr_solve_verified": false,
+  "installed": false,
+  "performance_on_quest_verified": false,
+  "mesh_max_triangles_per_eye": 96697,
+  "limitations": [
+    "Hand probes lose contact or select another axis. Stable controlled quarter-turn not demonstrated.",
+    "Internal retaining mechanism is idealized.",
+    "Desktop controller targets and physics tests do not prove VR usability."
+  ],
+  "apk": {
+    "apk": "g1-quest-rubik-prototype.apk",
+    "bytes": 49166590,
+    "sha256": "2fe539a92ff9c67ae09602126af07de43036a6e04642226ba21efa9830d3c969",
+    "zip_crc": true,
+    "model_digest": true,
+    "scene": {
+      "schema_version": 1,
+      "model": "2x2-magnetic-contact-v1",
+      "edge_m": 0.0628,
+      "total_mass_kg": 0.122,
+      "cubies": 8,
+      "faces": [
+        "R",
+        "L",
+        "B",
+        "F",
+        "U",
+        "D"
+      ],
+      "scramble": "R U' F R'",
+      "grip_assist": false,
+      "face_motor": false,
+      "state_file": "rubik.csv",
+      "state_values": 64,
+      "success": "six uniform color faces at a completed detent",
+      "magnetic_window_deg": 15,
+      "magnetic_stiffness_nm_rad": 0.24,
+      "hinge_armature_kg_m2": 1e-05,
+      "controller_wrists": true,
+      "table_height_m": 0.825,
+      "stand_top_m": 0.9,
+      "retaining_mechanism": "idealized switchable internal layer bindings",
+      "direct_arm_pd": true,
+      "control": "controller wrist poses and ordinary per-hand Grip; two loaded hands and relative wrist rotation select the free internal layer"
+    },
+    "installed": false,
+    "quest_live_acceptance": false
+  },
+  "free_g1_lift": {
+    "peak_center_lift_m": 0.06744943456068941,
+    "initial_cube_center": [
+      0.25,
+      0.0,
+      0.934
+    ],
+    "peak_cube_z_m": 1.0014494345606895,
+    "final_cube_center": [
+      0.3138593767170491,
+      0.01774229584264018,
+      0.9904942109795497
+    ],
+    "loaded_hand_contact_steps": 3119,
+    "minimum_robot_pelvis_z_m": 0.7839943581827408,
+    "warnings": 0,
+    "policy": "author twist2 20k",
+    "policy_hz": 100,
+    "physics_hz": 1000,
+    "robot_base_fixed": false,
+    "cube_attached": false,
+    "initial_arm_pose_fixture": true,
+    "arm_targets": "offline wrist IK; ordinary Grip and runtime-equivalent direct arm PD"
+  }
+}

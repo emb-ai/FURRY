@@ -1,0 +1,47 @@
+{
+  "recorded_utc": "2026-10-12T13:03:22.511516+00:00",
+  "scope": "Causal diagnostics only; no new training, runtime change, policy promotion or headset deployment.",
+  "findings": [
+    {
+      "claim": "Unchanged pose imitation competes with lifting a low reference foot.",
+      "evidence": "reward_counterfactual.json",
+      "strength": "Measured local reward tradeoff, not full dynamic return or causal explanation of all PPO outcomes.",
+      "details": "Real live-reference sequence26103..26125, left sole0.916..1.491mm. Fixed-root, fixed-foot-orientation IK lift to65mm; exact position formulas and resolved weights from actual v2 trainer. Clearance gain0.057..0.079, joint/local+global key imitation loss0.312..0.540. Other rewards/future dynamics omitted."
+    },
+    {
+      "claim": "Catch-up velocity/yaw correction alone does not reliably elicit coherent corrective footsteps under held leg references.",
+      "evidence": [
+        "leg_intervention_summary.json",
+        "verification.json"
+      ],
+      "strength": "Controlled six native rollouts, one installed policy and episode; no generalization claim to v2 candidates.",
+      "details": "Common exact fork qpos/qvel and teacher-forced history. Held stop:61cm→56cm error in6s despite0.4m/s command, last2s projected velocity-0.00077m/s, maximum leg torque35.85%cap. Replacing only leg references with recorded4..10s motion causes steps but position error grows88cm. Closed-loop correction subsequently responds to changed robot state. This shows leg-reference/velocity coupling; spliced motion is not a proposed fix."
+    },
+    {
+      "claim": "Foot morphology frame error already documented upstream of policy remains relevant.",
+      "evidence": "../walking-control-20261012/swing-audit/adapter-stage-trace.npz",
+      "strength": "Prior deterministic retarget audit, not a newly found error; correction improved reference clearance but degraded one physical slip comparison.",
+      "details": "Do not conclude that raising references alone fixes walking."
+    }
+  ],
+  "user_scope_correction": "Current legs are Meta Virtual/Generative Legs; there is no reliable intentional kick input to preserve. Focus on locomotion, turning and catch-up. Future direct leg-action modes are separate.",
+  "next_design": {
+    "status": "proposal, not implemented",
+    "flow": "GMR reference -> learned lower-body reference adapter conditioned on causal Meta history, robot state and catch-up intent -> TWIST2 -> physics",
+    "requirements": [
+      "Use the same corrected pose reference in policy observation and imitation objective.",
+      "Keep independent desired displacement/heading, temporal continuity, support and progress objectives so adapter cannot make standing still the new target.",
+      "Correct support/transfer trajectories, not a constant vertical lift of both feet.",
+      "First isolate adapter learning against a frozen tracker, then assess whether joint finetuning is needed.",
+      "Training must include stationary-operator catch-up and turning inputs used in deployment.",
+      "Fix deterministic coordinate/model issues separately rather than expect network to absorb them."
+    ]
+  },
+  "related_work": [
+    {
+      "title": "ReActor: Reinforcement Learning for Physics-Aware Motion Retargeting",
+      "url": "https://arxiv.org/html/2605.06593v1",
+      "relevance": "Joint retarget-parameter and tracking-policy optimization; evidence for feasibility, not ready Quest adapter. Constant-in-time retarget parameters; auxiliary root forces in retarget generation; downstream hardware controller trained separately."
+    }
+  ]
+}

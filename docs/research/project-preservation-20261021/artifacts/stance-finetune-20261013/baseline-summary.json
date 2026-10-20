@@ -1,0 +1,394 @@
+{
+  "method": "Common survival prefix across ALL completed actors/reference modes, after1s warmup; durations/falls always shown separately. No claim of improvement from a shorter prefix. Step amplitude=pelvis-heading-relative foot horizontal2D p95-p05 in full1s windows, not inferred contact phases. Also report common fully completed trials.",
+  "common_complete_trials": [
+    "stage14-run00-000000-part00__seed1",
+    "stage14-run00-000000-part00__seed0",
+    "stage09-run00-000000-part00__seed1",
+    "stage14-run01-000000-part00__seed1",
+    "stage02-run00-000000-part00__seed1",
+    "stage09-run00-003000-part00__seed0",
+    "stage14-run01-003000-part01__seed0",
+    "stage02-run01-000000-part00__seed0",
+    "stage02-run02-003000-part00__seed0",
+    "stage02-run02-003000-part00__seed1",
+    "stage02-run01-000000-part00__seed1",
+    "stage14-run03-000000-part01__seed1",
+    "stage14-run01-003000-part01__seed1",
+    "stage09-run00-003000-part00__seed1",
+    "stage02-run02-000000-part00__seed0",
+    "stage09-run00-000000-part00__seed0",
+    "stage14-run01-003000-part00__seed0",
+    "stage14-run03-000000-part00__seed1",
+    "stage14-run03-000000-part00__seed0",
+    "stage14-run03-000000-part01__seed0",
+    "stage14-run01-000000-part00__seed0",
+    "stage14-run01-003000-part00__seed1",
+    "stage02-run02-000000-part00__seed1",
+    "stage02-run00-000000-part00__seed0"
+  ],
+  "matched_prefix_seconds": 348.44,
+  "runs": {
+    "initial-A": {
+      "falls": 0,
+      "trials": 24,
+      "executed_seconds": 348.44,
+      "requested_seconds": 348.44,
+      "completion_fraction": 1.0,
+      "matched_prefix": {
+        "seconds_after_1s_warmup": 324.44,
+        "xy_error_cm": 306.2244605001532,
+        "yaw_error_deg": 60.22454032041445,
+        "slip_cm_s": 7.398711053944383,
+        "slide_rate": 0.06056552982133069,
+        "root_path_m": 161.56729079255948,
+        "input_root_path_m": 176.82175795953788,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 32.23677801450669,
+          "original_foot": 31.203321886801657,
+          "input_foot": 31.203321886801657
+        }
+      },
+      "common_complete_trials": {
+        "seconds_after_1s_warmup": 324.44,
+        "xy_error_cm": 306.2244605001532,
+        "yaw_error_deg": 60.22454032041445,
+        "slip_cm_s": 7.398711053944383,
+        "slide_rate": 0.06056552982133069,
+        "root_path_m": 161.56729079255948,
+        "input_root_path_m": 176.82175795953788,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 32.23677801450669,
+          "original_foot": 31.203321886801657,
+          "input_foot": 31.203321886801657
+        }
+      },
+      "per_trial_survival": [
+        {
+          "trace_key": "stage02-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        }
+      ]
+    },
+    "initial-B": {
+      "falls": 0,
+      "trials": 24,
+      "executed_seconds": 348.44,
+      "requested_seconds": 348.44,
+      "completion_fraction": 1.0,
+      "matched_prefix": {
+        "seconds_after_1s_warmup": 324.44,
+        "xy_error_cm": 286.1832767414805,
+        "yaw_error_deg": 50.914565655445784,
+        "slip_cm_s": 5.989618185689982,
+        "slide_rate": 0.04287145575590013,
+        "root_path_m": 162.82310617893768,
+        "input_root_path_m": 176.82175795953788,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 32.63094960384392,
+          "original_foot": 31.203321886801657,
+          "input_foot": 31.57780506127349
+        }
+      },
+      "common_complete_trials": {
+        "seconds_after_1s_warmup": 324.44,
+        "xy_error_cm": 286.1832767414805,
+        "yaw_error_deg": 50.914565655445784,
+        "slip_cm_s": 5.989618185689982,
+        "slide_rate": 0.04287145575590013,
+        "root_path_m": 162.82310617893768,
+        "input_root_path_m": 176.82175795953788,
+        "step_amplitude_xy_1s_p95_p05_cm": {
+          "actual_foot": 32.63094960384392,
+          "original_foot": 31.203321886801657,
+          "input_foot": 31.57780506127349
+        }
+      },
+      "per_trial_survival": [
+        {
+          "trace_key": "stage02-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.59,
+          "reference_seconds": 2.59
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.95,
+          "reference_seconds": 7.95
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage02-run02-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 19.38,
+          "reference_seconds": 19.38
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage09-run00-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 29.990000000000002,
+          "reference_seconds": 29.99
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run00-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 4.29,
+          "reference_seconds": 4.29
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 28.78,
+          "reference_seconds": 28.78
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 2.35,
+          "reference_seconds": 2.35
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run01-003000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.33,
+          "reference_seconds": 5.33
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed0",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part00__seed1",
+          "fell": false,
+          "survived_seconds": 7.75,
+          "reference_seconds": 7.75
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed0",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        },
+        {
+          "trace_key": "stage14-run03-000000-part01__seed1",
+          "fell": false,
+          "survived_seconds": 5.83,
+          "reference_seconds": 5.83
+        }
+      ]
+    }
+  }
+}

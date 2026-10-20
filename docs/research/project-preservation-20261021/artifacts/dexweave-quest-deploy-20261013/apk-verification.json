@@ -1,0 +1,54 @@
+{
+  "apk": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/dexweave-quest-deploy-20261013/project/android/build/g1-quest.apk",
+  "sha256": "6384e3f7a5239039b645261eaaa2ff29da5387ff518ea83c6673e731b15f84aa",
+  "bytes": 840367463,
+  "zip_crc": true,
+  "policies": [
+    {
+      "id": "dexweave-wide-2977",
+      "title": "DexWeave: широкая 2977",
+      "note": "Исходная · эксперимент · 50 Гц",
+      "file": "policy-dexweave-wide-2977.onnx",
+      "sha256": "9a24da67253426a779209e2f18f52259bfbef1b7bee146645cb81ba5858d54d2",
+      "policy_hz": 50,
+      "legacy_policy_hz": 50,
+      "backend": "dexweave_body_v1"
+    },
+    {
+      "id": "dexweave-B-4174",
+      "title": "DexWeave B: узкая стойка",
+      "note": "4174 · эксперимент · 50 Гц",
+      "file": "policy-dexweave-B-4174.onnx",
+      "sha256": "7bf8d82997c152c6c425ed0c715d0fc782905e9cb273bba764052eb48cc25761",
+      "policy_hz": 50,
+      "legacy_policy_hz": 50,
+      "backend": "dexweave_body_v1",
+      "input_patch": "stance_narrow12_v1"
+    }
+  ],
+  "policy": {
+    "id": "dexweave-B-4174",
+    "title": "DexWeave B: узкая стойка",
+    "note": "4174 · эксперимент · 50 Гц",
+    "file": "policy-dexweave-B-4174.onnx",
+    "sha256": "7bf8d82997c152c6c425ed0c715d0fc782905e9cb273bba764052eb48cc25761",
+    "policy_hz": 50,
+    "legacy_policy_hz": 50,
+    "backend": "dexweave_body_v1",
+    "input_patch": "stance_narrow12_v1"
+  },
+  "old_policies_unchanged": true,
+  "scenes_gmr_config_unchanged": true,
+  "installed_wrist_mode_preserved": true,
+  "metadata_variants": 84,
+  "source_asset_checks": 1296,
+  "contract_parity": {
+    "cases": 100,
+    "observation_max_abs": 0.0,
+    "target_max_abs": 0.0,
+    "applied_action_max_abs": 0.0
+  },
+  "native_menu_five_scenes": true,
+  "live_reference_limit": "causal GMR, backward finite difference, offline support projection not enabled; live walking acceptance pending",
+  "catch_up": "absolute anchor feedback through DexWeave; external TWIST velocity servo not applied"
+}

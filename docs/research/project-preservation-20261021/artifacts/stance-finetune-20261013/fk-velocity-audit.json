@@ -1,0 +1,1250 @@
+[
+  {
+    "branch": "A",
+    "id": "stage01-run01-000000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 3.9007747926668723,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage01-run01-003000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.358310552233646,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage02-run00-000000-part00",
+    "fk_root_frame_max_error_m": 2.55351295663786e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.856279842706558,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage02-run01-000000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 6.177427492928633,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage02-run02-000000-part00",
+    "fk_root_frame_max_error_m": 3.1086244689504383e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 6.793764594343199,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage02-run02-003000-part00",
+    "fk_root_frame_max_error_m": 2.8796409701214998e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 7.550012230614089,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage03-run01-000000-part00",
+    "fk_root_frame_max_error_m": 5.329070518200751e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.285229180026717,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage03-run01-003000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.766728711302726,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage03-run02-000000-part00",
+    "fk_root_frame_max_error_m": 1.7763568394002505e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.174646460969168,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage04-run00-000000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.176824151305259,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage04-run00-003000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 6.822462900224823,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage04-run01-000000-part00",
+    "fk_root_frame_max_error_m": 3.552713678800501e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.9666923549547155,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage05-run00-000000-part00",
+    "fk_root_frame_max_error_m": 3.552713678800501e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.447844559411229,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage05-run00-003000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.443227596724486,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage06-run00-000000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 2.79620209384569,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage06-run00-003000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 3.8747659873171525,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage07-run00-000000-part00",
+    "fk_root_frame_max_error_m": 1.3322676295501878e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 2.68732605564852,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage07-run01-000000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 6.9456694265205785,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage07-run01-003000-part00",
+    "fk_root_frame_max_error_m": 2.886579864025407e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.4851847717352324,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage07-run02-000000-part00",
+    "fk_root_frame_max_error_m": 1.6653345369377348e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 3.285484682758266,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage08-run00-000000-part00",
+    "fk_root_frame_max_error_m": 2.4980018054066022e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 0.6621530990469804,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage08-run01-000000-part00",
+    "fk_root_frame_max_error_m": 2.886579864025407e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.91391151514648,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage08-run01-003000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.73741437291978,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage09-run00-000000-part00",
+    "fk_root_frame_max_error_m": 2.886579864025407e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.685920947198985,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage09-run00-003000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.443413947429853,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage10-run00-000000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.718642901210136,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage10-run00-003000-part00",
+    "fk_root_frame_max_error_m": 3.1086244689504383e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.371148393785085,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage10-run01-000000-part00",
+    "fk_root_frame_max_error_m": 2.220446049250313e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.500430848756377,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage11-run00-000000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.911039522847221,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage11-run00-003000-part00",
+    "fk_root_frame_max_error_m": 2.4980018054066022e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 7.088747837678389,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage11-run00-003000-part01",
+    "fk_root_frame_max_error_m": 1.3322676295501878e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.675382114454751,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage12-run00-000000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 8.409438420669558,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage12-run01-000000-part00",
+    "fk_root_frame_max_error_m": 1.7763568394002505e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 7.843788030381327,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage12-run01-003000-part00",
+    "fk_root_frame_max_error_m": 1.3322676295501878e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 1.7944395577530379,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage13-run00-000000-part00",
+    "fk_root_frame_max_error_m": 1.7763568394002505e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.01384466250786,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage13-run01-000000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.872952274383669,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage13-run02-000000-part00",
+    "fk_root_frame_max_error_m": 3.1086244689504383e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 6.690439085234417,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage14-run00-000000-part00",
+    "fk_root_frame_max_error_m": 7.771561172376096e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.25937175492182,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage14-run01-000000-part00",
+    "fk_root_frame_max_error_m": 7.771561172376096e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 10.306116215800841,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage14-run01-003000-part00",
+    "fk_root_frame_max_error_m": 6.661338147750939e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 8.53883623663123,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage14-run01-003000-part01",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 15.567176937157884,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage14-run03-000000-part00",
+    "fk_root_frame_max_error_m": 8.881784197001252e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 14.846984173278077,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage14-run03-000000-part01",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 3.733361477291419,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage15-run00-000000-part00",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.9114895493596045,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage15-run01-000000-part00",
+    "fk_root_frame_max_error_m": 7.494005416219807e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 1.8082842255729286,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage01-run01-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 3.9007747926668723,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage01-run01-003000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.358310552233646,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage03-run01-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 8.326672684688674e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.285229180026717,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage03-run01-003000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.077671781985373e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.766728711302726,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage03-run02-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.632783294297951e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.174646460969168,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage04-run00-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.176824151305259,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage04-run00-003000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.147060721024445e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 6.822462900224823,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage04-run01-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.9666923549547155,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage05-run00-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.447844559411229,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage05-run00-003000-part00-mirror",
+    "fk_root_frame_max_error_m": 8.083811398051921e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.443227596724486,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage06-run00-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 8.118505867571457e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 2.79620209384569,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage06-run00-003000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 3.8747659873171525,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage07-run00-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.077671781985373e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 2.68732605564852,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage07-run01-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 6.9456694265205785,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage07-run01-003000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.4851847717352324,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage07-run02-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 6.938893903907228e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 3.285484682758266,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage08-run00-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 8.326672684688674e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 0.6621530990469804,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage08-run01-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.494005416219807e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.91391151514648,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage08-run01-003000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.73741437291978,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage10-run00-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.718642901210136,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage10-run00-003000-part00-mirror",
+    "fk_root_frame_max_error_m": 6.730727086790012e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.371148393785085,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage10-run01-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.147060721024445e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.500430848756377,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage11-run00-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.911039522847221,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage11-run00-003000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 7.088747837678389,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage11-run00-003000-part01-mirror",
+    "fk_root_frame_max_error_m": 6.800116025829084e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.675382114454751,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage12-run00-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 8.409438420669558,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage12-run01-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 7.843788030381327,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage12-run01-003000-part00-mirror",
+    "fk_root_frame_max_error_m": 6.938893903907228e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 1.7944395577530379,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage13-run00-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.01384466250786,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage13-run01-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.872952274383669,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage13-run02-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 6.690439085234417,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage15-run00-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.91033905045424e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.9114895493596045,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "A",
+    "id": "stage15-run01-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 1.8082842255729286,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage01-run01-000000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 3.9542009619674854,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage01-run01-003000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.446636197668713,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage02-run00-000000-part00",
+    "fk_root_frame_max_error_m": 2.220446049250313e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.88188157903543,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage02-run01-000000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 6.218649404072063,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage02-run02-000000-part00",
+    "fk_root_frame_max_error_m": 3.1086244689504383e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 6.944317017816326,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage02-run02-003000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 7.614520654586898,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage03-run01-000000-part00",
+    "fk_root_frame_max_error_m": 5.329070518200751e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.385185750637266,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage03-run01-003000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.865257995724869,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage03-run02-000000-part00",
+    "fk_root_frame_max_error_m": 1.3322676295501878e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.324328375322435,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage04-run00-000000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.285599304206473,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage04-run00-003000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 6.871175534715157,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage04-run01-000000-part00",
+    "fk_root_frame_max_error_m": 3.552713678800501e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.055933500997655,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage05-run00-000000-part00",
+    "fk_root_frame_max_error_m": 3.552713678800501e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.603573351223666,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage05-run00-003000-part00",
+    "fk_root_frame_max_error_m": 2.7478019859472624e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.577479787514194,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage06-run00-000000-part00",
+    "fk_root_frame_max_error_m": 3.552713678800501e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 2.8927607185288973,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage06-run00-003000-part00",
+    "fk_root_frame_max_error_m": 3.552713678800501e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.058379062852768,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage07-run00-000000-part00",
+    "fk_root_frame_max_error_m": 1.3322676295501878e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 2.8058206146597264,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage07-run01-000000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 6.945308395627736,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage07-run01-003000-part00",
+    "fk_root_frame_max_error_m": 2.220446049250313e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.490114432386026,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage07-run02-000000-part00",
+    "fk_root_frame_max_error_m": 1.3322676295501878e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 3.4417771189334534,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage08-run00-000000-part00",
+    "fk_root_frame_max_error_m": 2.373101715136272e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 0.6992528012169485,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage08-run01-000000-part00",
+    "fk_root_frame_max_error_m": 2.55351295663786e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.004081229397106,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage08-run01-003000-part00",
+    "fk_root_frame_max_error_m": 2.886579864025407e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.846893241037276,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage09-run00-000000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.770391268184438,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage09-run00-003000-part00",
+    "fk_root_frame_max_error_m": 2.886579864025407e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.55548756880741,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage10-run00-000000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.792318990091183,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage10-run00-003000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.469409455036211,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage10-run01-000000-part00",
+    "fk_root_frame_max_error_m": 1.7763568394002505e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.597910291993524,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage11-run00-000000-part00",
+    "fk_root_frame_max_error_m": 2.3314683517128287e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.064411115414746,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage11-run00-003000-part00",
+    "fk_root_frame_max_error_m": 2.4147350785597155e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 7.20521372762799,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage11-run00-003000-part01",
+    "fk_root_frame_max_error_m": 1.3322676295501878e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.680724256745594,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage12-run00-000000-part00",
+    "fk_root_frame_max_error_m": 2.220446049250313e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 8.303946166618854,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage12-run01-000000-part00",
+    "fk_root_frame_max_error_m": 1.7763568394002505e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 7.843123992674092,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage12-run01-003000-part00",
+    "fk_root_frame_max_error_m": 1.27675647831893e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 1.7891964326509384,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage13-run00-000000-part00",
+    "fk_root_frame_max_error_m": 1.7763568394002505e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.1763159808419275,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage13-run01-000000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.978708972457908,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage13-run02-000000-part00",
+    "fk_root_frame_max_error_m": 2.6645352591003757e-15,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 6.796846402159318,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage14-run00-000000-part00",
+    "fk_root_frame_max_error_m": 7.528699885739343e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.3512582554485535,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage14-run01-000000-part00",
+    "fk_root_frame_max_error_m": 8.326672684688674e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 10.376506800603158,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage14-run01-003000-part00",
+    "fk_root_frame_max_error_m": 6.661338147750939e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 8.59007449974687,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage14-run01-003000-part01",
+    "fk_root_frame_max_error_m": 7.771561172376096e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 15.451878291987942,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage14-run03-000000-part00",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 14.991052379859248,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage14-run03-000000-part01",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 3.739194352088293,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage15-run00-000000-part00",
+    "fk_root_frame_max_error_m": 7.771561172376096e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.91106002088868,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage15-run01-000000-part00",
+    "fk_root_frame_max_error_m": 8.291978215169138e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 1.8084615315419632,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage01-run01-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 3.9542009619674854,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage01-run01-003000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.563394355258879e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.446636197668713,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage03-run01-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.385185750637266,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage03-run01-003000-part00-mirror",
+    "fk_root_frame_max_error_m": 6.800116025829084e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.865257995724869,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage03-run02-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.077671781985373e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.324328375322435,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage04-run00-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.285599304206473,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage04-run00-003000-part00-mirror",
+    "fk_root_frame_max_error_m": 6.661338147750939e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 6.871175534715157,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage04-run01-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.055933500997655,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage05-run00-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.077671781985373e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.603573351223666,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage05-run00-003000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.577479787514194,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage06-run00-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.4593109467002705e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 2.8927607185288973,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage06-run00-003000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.058379062852768,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage07-run00-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 2.8058206146597264,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage07-run01-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 6.945308395627736,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage07-run01-003000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.771561172376096e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.490114432386026,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage07-run02-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 3.4417771189334534,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage08-run00-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 0.6992528012169485,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage08-run01-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.004081229397106,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage08-run01-003000-part00-mirror",
+    "fk_root_frame_max_error_m": 8.187894806610529e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.846893241037276,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage10-run00-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.792318990091183,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage10-run00-003000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.469409455036211,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage10-run01-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.597910291993524,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage11-run00-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.064411115414746,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage11-run00-003000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 7.20521372762799,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage11-run00-003000-part01-mirror",
+    "fk_root_frame_max_error_m": 7.494005416219807e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.680724256745594,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage12-run00-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 8.303946166618854,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage12-run01-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 7.843123992674092,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage12-run01-003000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.077671781985373e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 1.7891964326509384,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage13-run00-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.1763159808419275,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage13-run01-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.771561172376096e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 5.978708972457908,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage13-run02-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.147060721024445e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 6.796846402159318,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage15-run00-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.528699885739343e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 4.91106002088868,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  },
+  {
+    "branch": "B",
+    "id": "stage15-run01-000000-part00-mirror",
+    "fk_root_frame_max_error_m": 7.216449660063518e-16,
+    "joint_limit_check": true,
+    "max_dof_velocity_rad_s": 1.8084615315419632,
+    "velocity_convention": "backward difference 100Hz; initial sample zero; MuJoCo root angular velocity local; body velocities world. Training MotionLib independently recomputes its original derivative/smoothing."
+  }
+]

@@ -1,0 +1,50 @@
+{
+  "apk": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs/gait-capture-20261010/g1-quest-gait-capture.apk",
+  "apk_sha256": "8f6561d2e1fcbd0cabf66c3baca4311aa3481613b74f353e211ea76616e8585b",
+  "apk_bytes": 46707795,
+  "apk_signature_matches_full_body_build": true,
+  "policies_unchanged": {
+    "assets/policy-quest-111260-1000.onnx": "8d386bf94724d1dccc7050e1bb3dee40315e20e1bba20a31debb5d9b0b61cae3",
+    "assets/policy-quest-111260-500.onnx": "c83fdeb9747410c5e6b8b150d6d543966ed4024cd6111e9d94281e414c6bcfb6",
+    "assets/policy-quest-111586-200.onnx": "f7af32cacec3d697d902f5a19373895cba19cca04fb424d9664df11593a0c5ed",
+    "assets/policy-quest-111586-300.onnx": "a8fba7232e1d5079af5ce23c3c7fe40389c3965f7dde895ea07b45222b557c0d",
+    "assets/policy-quest-111586-500.onnx": "57d6ac4b2461ac8884afeac86d32bcc9a7b4b72f376e15b898af7ac3d8a5241d",
+    "assets/policy-twist2-25k.onnx": "126ab9089b6ca0be8b6582fc9ef17b0b6c6d6577378f9324a2e10d580fe48f2e",
+    "assets/policy.onnx": "2d1fb3a31e4e967f70ecfefc3ad1e7b2ac491677068b89f60b565a94e7735061"
+  },
+  "installed": false,
+  "headset_acceptance": false,
+  "source": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs/gait-capture-20261010/source",
+  "protocol": "quest_virtual_legs_gait_v3",
+  "train_seconds": 360,
+  "test_seconds": 180,
+  "raw_joints": 84,
+  "offline_hz": 50,
+  "tests": {
+    "full_suite": {
+      "run": 90,
+      "passed": 89,
+      "skipped": 1
+    },
+    "capture_suite": {
+      "run": 15,
+      "passed": 15
+    },
+    "final_gait_suite": {
+      "run": 3,
+      "passed": 3
+    }
+  },
+  "live_log_audit": {
+    "episodes": 5,
+    "frames": 4620,
+    "feet_valid_frames": 4620,
+    "repeated_body_timestamps": 184,
+    "max_noncalibration_gap_s": 0.028977
+  },
+  "limitations": [
+    "Generated legs, not measured foot contacts",
+    "Collection and 50 Hz raw export implemented; DexWeave support detector and IK constraints not implemented",
+    "New APK not installed or tested live"
+  ]
+}

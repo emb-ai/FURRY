@@ -1,0 +1,40 @@
+[
+  {
+    "cycle": 6,
+    "trials": [
+      {
+        "outward_m": 0,
+        "grip": 0.65,
+        "valid": true,
+        "reason": "predictive_stop",
+        "progress_deg": 88.04085301937937,
+        "dispersion_deg": 0.9033046052921564,
+        "max_progress_deg": 95.6996017831689,
+        "metric": {
+          "center_mm": 27.30765698852664,
+          "rotation_deg": 9.196744526970546,
+          "finger_rms_mm": [
+            14.336904098252575,
+            132.75598238935692
+          ],
+          "finger_max_mm": [
+            18.737276288219444,
+            195.08876950237928
+          ],
+          "wrist_mm": [
+            16.40524512000777,
+            45.713511124899576
+          ],
+          "finger_orientation_rms_deg": [
+            13.623635031864794,
+            93.19606414045549
+          ],
+          "finger_orientation_max_deg": [
+            18.03700412123888,
+            111.96025285712105
+          ]
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,3 @@
+file '/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/scene-selects-20261016/add-171304/new-0.mp4'
+file '/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/scene-selects-20261016/add-171304/new-1.mp4'
+file '/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/scene-selects-20261016/combined-v2/cup-kick-t-sixseven-tennis-no-captions.mp4'

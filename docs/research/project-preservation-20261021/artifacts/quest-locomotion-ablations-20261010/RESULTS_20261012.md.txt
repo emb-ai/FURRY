@@ -1,0 +1,38 @@
+# Результаты locomotion-абляций, 2026-10-12
+
+Проверено по сохранённым server artifacts: 2026-10-12T06:56:13Z (UTC; местное время МСК +3ч).
+
+Все8trainer завершили1000новыхactorupdates; все8pipelines завершены. Оценены80checkpoint(100..1000×8). По заранее заданному diagnostic gait gate accepted0/80. Это ранее использованный Quest validation12clips×2evaluationseeds, не независимый test и не живая приёмка Quest.
+
+| Вариант | Seed | Trips (baseline→candidate) | Braking trips | Sliding change | Window error | New falls |
+|---|---:|---:|---:|---:|---:|---:|
+| locomotion-v1-control-s11 | 11 | 73→93 | 16→29 | -1.7% | 8.73см | 0 |
+| locomotion-v1-control-s22 | 22 | 73→98 | 16→42 | +19.2% | 8.03см | 0 |
+| locomotion-v1-relax-s11 | 11 | 73→87 | 16→28 | +22.7% | 9.83см | 0 |
+| locomotion-v1-relax-s22 | 22 | 73→68 | 16→26 | +39.0% | 9.09см | 0 |
+| locomotion-v1-yaw-s11 | 11 | 73→90 | 16→41 | +23.2% | 9.41см | 0 |
+| locomotion-v1-yaw-s22 | 22 | 73→97 | 16→34 | +24.8% | 9.27см | 1 |
+| locomotion-v1-relax-yaw-s11 | 11 | 73→83 | 16→27 | +31.6% | 8.76см | 0 |
+| locomotion-v1-relax-yaw-s22 | 22 | 73→79 | 16→26 | +27.3% | 8.69см | 0 |
+
+Ослабление tracking ног уменьшило trips относительно контрольного дообучения в обоихtrainingseeds:93→87(seed11),98→68(seed22). Однако контактный sliding вырос относительно исходной политики на22.7%/39.0%,braking16→28/26; уseed22upper-markerRMSE+8.7%. Это частичный эффект, а не принятый gait result. Yaw-only отдельно не показал согласованного улучшения походки;seed22добавил падение stage14-run01-003000-part00__seed0. Combined не прошёл gait gate.
+
+Trip detector использует reference swing phase, которая может не совпадать с корректирующим шагом нового actor. Counts являются диагностическими событиями на одинаковых matched prefixes, не ручным подсчётом реальных зацепов. Дляyaw-s22prefix323.77с вместо324.44с из-за падения; исходные matched metrics сохранены отдельно для каждогоcomparison.
+
+Baseline directed progress ratio≈0.156;relaxfinal≈0.341/0.333. Нельзя трактовать этот ratio как долю успешно пройденного маршрута. Улучшение перемещения не компенсирует ухудшение контактной походки. Ни один кандидат не установлен на Quest.
+
+Clearance reward,contact-point sliding reward и recovery/action-noise curriculum этой серией ещё не проверены и не отклоняются на основании текущих результатов.
+
+Подробные показатели всех80checkpoint: results-summary-20261012.json; восьми отдельныхruns: results-summary-20261012-part0..7.json.
+
+## Промежуточные сигналы и время завершения
+
+Файлы final.pt датированы11октября00:36:45..00:40:49МСК; result.json —00:50:47..00:54:42МСК. Trainingwalltime60..64мин/run, полныйpipelineдольше из-за дополнительныхоценок. Этиtimestamps прочитаны изserverfilesystem и сохраненыв timing-20261012.json.
+
+- Yaw seed11/update200: trips73→61,braking16→15,sliding−2.86%,newfalls0. Отвергнут только поdirected_progress_regression:ratio−30.20%,0.1557→0.1087. Windowerror+4.75%,upperjoint+4.67%,uppermarkers+2.49% ещёврамкахзаданныхtolerances. Это уменьшениеcontactevents с потерей движения, а не принятаяходьба.
+- Yaw seed22/update300: trips73→68,braking16→14,progressratio+74.16%,newfalls0, ноslide+2.83%,windowerror+12.71%,upperjoint+6.54%.
+- Combined seed11/update100: trips73→63,braking16→14,progressratio+36.16%,newfalls0;slide+7.63%,windowerror+8.45%,upperjoint+8.24%.
+
+Итак,ранние отдельныеметрикиулучшаются, но устойчивогосовместногоулучшенияпока нет. Не следуетобобщатьfinal1000на всеcheckpoints илиотклонятьнепроверенныепунктыотчёта.
+
+Доступ получен через интерактивный `ssh -tt andrei_gpu` и командывPTYShell. Несколько non-interactive remote-command SSH попыток по-прежнему далиbanner timeout. Причина различия не установлена; это не свидетельство остановкиserver/training. РоднойTerminal черезcomputer-useнедоступен;использовалсяexec_commandсPTY.

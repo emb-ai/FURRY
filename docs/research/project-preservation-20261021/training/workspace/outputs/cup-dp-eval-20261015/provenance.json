@@ -1,0 +1,20 @@
+{
+  "source_sha256": {
+    "outputs/cup-dp-eval-20261015/bridge.cpp": "7b8b6d7dc2c5f459fe8300b5f3baa97a1b5b5e0f3c1ab4493071e00754473ad8",
+    "outputs/cup-dp-eval-20261015/bridge.dylib": "f86bf1ac282c78856875813c5826927c7f8503cf3d5627abcdd2ca618960dbe2",
+    "outputs/cup-dp-eval-20261015/evaluate.py": "d27f9ad6212f17088a5cea660103af99fd188ad2064a477993c8e22b76c5f9fe",
+    "outputs/cup-dp-eval-20261015/build.py": "4d7fabff7950c4165167252841469d549989fb805dedd409a0a9f9a488f2e5bf",
+    "outputs/cup-dp-eval-20261015/native/simulation.cpp": "de591599aab0e6bf8827f2c49f5a67b09146137821f9dd805bdf47f226d09efd",
+    "outputs/cup-dp-eval-20261015/native/simulation.h": "334c45beb7a18164e4e3d7a73df259117e8646e767b4e3566ff15f05f3dec91e",
+    "outputs/cup-dp-training-20261015/train.py": "c199feccae64fa908759ae5bb4c427f9a726a65f7880c035047356449eb53819",
+    "outputs/cup-dp-training-20261015/training_renderer.py": "e548c9e48a1e8d4ec55b83abc0069a0451faa0373e7ec221eb948cc37790d17e"
+  },
+  "python": "3.12.12 (main, Dec 17 2025, 21:07:08) [Clang 21.1.4 ]",
+  "torch": "2.14.1",
+  "mujoco": "3.3.7",
+  "onnxruntime": "1.31.0",
+  "checkpoint_sha256": "cd6c21082681d0dc22d8da1701fed75357288f64b8357933e6db3b8a1820e875",
+  "checkpoint_remote_hash_verified": true,
+  "source_runtime": "outputs/rubik-table-rest-20261015/project/android/native",
+  "runtime_changes": "Evaluation-only loading archived MJB rather than scene XML; C ABI for initial physical snapshot, stepping and state reads; access to initial controller targets. No production APK/source edits."
+}

@@ -1,0 +1,138 @@
+{
+  "installed": {
+    "time_utc": "2026-10-14T21:48:52.819106+00:00",
+    "serial": "2G0YC5ZG7T05SR",
+    "installed_sha256": "f753771a436a7c37afb7e22cadd703d9d8941770ea47b847a6119a3e47dff23e",
+    "device_apk": "/data/app/~~t0yvORfeIKDRNi2ud8EwdQ==/org.g1lab.quest-Y4-zF8dcohZZwrtPXzq2xQ==/base.apk",
+    "install_method": "adb install -r",
+    "completion_markers_preserved": 80,
+    "settings_sha256_preserved": true,
+    "live_task_acceptance": false,
+    "native_startup_confirmed": false,
+    "launch_blocker": "Quest LaunchCheckControllerRequiredDialogActivity"
+  },
+  "apk": {
+    "sha256": "f753771a436a7c37afb7e22cadd703d9d8941770ea47b847a6119a3e47dff23e",
+    "bytes": 850679189,
+    "unchanged_assets": [
+      "assets/gmr_model.xml",
+      "assets/policy-dexweave-B-4174.onnx",
+      "assets/policy-dexweave-wide-2977.onnx",
+      "assets/policy-homie-standing-balance.onnx",
+      "assets/policy-homie-standing-walk.onnx",
+      "assets/policy-homie-v2-balance.onnx",
+      "assets/policy-homie-v2-walk.onnx",
+      "assets/policy-quest-111260-1000.onnx",
+      "assets/policy-quest-111260-500.onnx",
+      "assets/policy-quest-111586-200.onnx",
+      "assets/policy-quest-111586-300.onnx",
+      "assets/policy-quest-111586-500-lift10.onnx",
+      "assets/policy-quest-111586-500.onnx",
+      "assets/policy-quest-stance12-B-s11.onnx",
+      "assets/policy-sonic-vr3-planner.onnx",
+      "assets/policy-sonic-vr3-sonic_decoder.onnx",
+      "assets/policy-sonic-vr3-sonic_encoder.onnx",
+      "assets/policy-twist2-25k.onnx",
+      "assets/policy.onnx",
+      "assets/policy_catalog.json",
+      "assets/scene-basket.xml",
+      "assets/scene-bimanual.xml",
+      "assets/scene-cup.xml",
+      "assets/scene-push_t.xml",
+      "assets/scene-rubik.xml",
+      "assets/scene-stand.xml",
+      "assets/scene-tennis.xml",
+      "assets/scene-wb_dex.xml",
+      "assets/scene.xml"
+    ],
+    "capture_schema": {
+      "schema": "furry-visual-capture-v1",
+      "rgb": "offline rendering of archived model/state/camera",
+      "action_schema": "body35_grip2_gaze2",
+      "fps": 30,
+      "not_quest_screen_video": true
+    },
+    "baseline_apk_sha256": "d2f0ad4e17d0ec84240e3c792d1a5f54d5901f00119c13266bb251c9fe3fa117"
+  },
+  "unit_tests": {
+    "run": 119,
+    "passed": 118,
+    "skipped": 1
+  },
+  "new_dataset_tests": 9,
+  "pipeline": {
+    "schema": "furry-visual-il-v1",
+    "accepted": [
+      {
+        "path": "../fixture/recordings/episode-1792014128720709",
+        "demo": "demo_0",
+        "samples": 73,
+        "split": "train",
+        "sha256": "ff3597b32752ada91a535fa7a18530d3a2b095d9d6cee59a6433eadfdc7980a1"
+      }
+    ],
+    "rejected": [
+      {
+        "path": "../fixture/recordings/episode-1792014128975186",
+        "reason": "Task did not succeed (outcome=0)"
+      },
+      {
+        "path": "../fixture/recordings/episode-1792014129212202",
+        "reason": "Reset, recalibration or pause inside the demonstration"
+      },
+      {
+        "path": "../fixture/recordings/episode-1792014129457082",
+        "reason": "Tracking/control gap inside the demonstration"
+      }
+    ],
+    "fps": 30,
+    "independent_test_session": false,
+    "allow_test_fixtures": true,
+    "dataset_sha256": "903c0b0a5b3e1809d6f3898c04efe82a05f3bc708c4e1cbf5ca0e8b71431799f",
+    "family": {
+      "policy_id": "twist2-20k",
+      "policy_backend": "twist2",
+      "policy_sha256": "2d1fb3a31e4e967f70ecfefc3ad1e7b2ac491677068b89f60b565a94e7735061",
+      "policy_secondary_sha256": null,
+      "input_patch": null,
+      "catch_up": false,
+      "scene": "cup",
+      "model_sha256": "a4fcb751d6e301d9c1937aa838523be25d300784675da4e989eae03833d87e71",
+      "camera_mode": "robot_head_pan_tilt_v1"
+    }
+  },
+  "optimizer_smoke": {
+    "schema": "furry-visual-dp-baseline-v1",
+    "dataset_sha256": "903c0b0a5b3e1809d6f3898c04efe82a05f3bc708c4e1cbf5ca0e8b71431799f",
+    "steps": 2,
+    "train_episodes": [
+      "demo_0"
+    ],
+    "samples": 73,
+    "action_dim": 39,
+    "obs_horizon": 2,
+    "prediction_horizon": 64,
+    "encoder": "ResNet18 from scratch (not R3M)",
+    "width": 32,
+    "seed": 0,
+    "loss_first": 1.5881909132003784,
+    "loss_last": 1.4785528182983398,
+    "autonomous_evaluation": false,
+    "deployed": false
+  },
+  "camera": {
+    "camera_position_error_m": 0,
+    "camera_direction_error": 1.1102230246251565e-16,
+    "rgb_shape": [
+      73,
+      224,
+      224,
+      3
+    ],
+    "image_change_mean": 0.5731026785714286,
+    "previous_command_causal": true
+  },
+  "source": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/training-capture-20261015/project",
+  "canonical_checkout_modified": false,
+  "new_human_successful_demonstrations_verified": 0
+}

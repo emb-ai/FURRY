@@ -1,0 +1,43 @@
+{
+  "status": "launched",
+  "remote": "/home/jovyan/vlad/FURRY/cup-native50-20261015",
+  "pipeline_pid": 2745328,
+  "baseline_pid": 2777554,
+  "gpu": 6,
+  "dataset": {
+    "episodes": 59,
+    "frames": 26713,
+    "hz": 50,
+    "aligned_native_step_modulo": 20,
+    "all_train": true
+  },
+  "source": "cup-homie-finetune-20261015/act-run/latest.pt at20000",
+  "new_updates": 10000,
+  "validation": {
+    "n": 10,
+    "protocol": "Native NewSceneTrial, reset physical robot and all controller history, qvel=0, gaze=0, no reference/demo prefix",
+    "same_seeds": "scenes.json",
+    "comparison": "old30 vs new50 sameLinux"
+  },
+  "checks": {
+    "gpu_export_max_abs": 3.4868717193603516e-06,
+    "smoke_reset_and_1_sim_second": "passed",
+    "reset_layout_parity_atol": 1e-12
+  },
+  "limitations": [
+    "New rendered images differ from Mac MAE6.6–7.6/255; both evaluation arms use Linux, but training rendering changes too.",
+    "10000 additional updates and64-frame horizon changes seconds; not a rate-only causal experiment.",
+    "No missing cold-start demonstration prefix fabricated.",
+    "Training losses do not prove task success."
+  ],
+  "proprio_variant": {
+    "pid": 2852500,
+    "new_updates": 10000,
+    "state_dim": 131,
+    "old_features": 39,
+    "measured_features": 92,
+    "same_source_data_and_scenes": true,
+    "initial_input_expansion": "old weights preserved; added columns zero; source Adam padded with zero new moments",
+    "excludes_object_state": true
+  }
+}

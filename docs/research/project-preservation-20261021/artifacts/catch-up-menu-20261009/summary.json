@@ -1,0 +1,21 @@
+{
+  "main_commit": "356fd9889aa63210a93ab186d990df6ac97e54e3",
+  "apk": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs/catch-up-menu-20261009/g1-quest-policy-catch-up.apk",
+  "apk_sha256": "c997ffee05c0a60e9310b5d3da8e794ca9d8d866d16277ce8566de11f133f3b1",
+  "default_catch_up": true,
+  "tests": {
+    "unit_run": 82,
+    "unit_passed": 81,
+    "unit_skipped": 1,
+    "native_menu_and_servo": "passed",
+    "synthetic_replay_cases": 13,
+    "max_reference_error": 0,
+    "max_state_error": 0
+  },
+  "headset_installation": true,
+  "installation_method": "adb install -r; preserved app data",
+  "live_acceptance": false,
+  "updated_utc": "2026-10-09T12:34:19.939547+00:00",
+  "verified_installed_apk_sha256": "c997ffee05c0a60e9310b5d3da8e794ca9d8d866d16277ce8566de11f133f3b1",
+  "launch": "Blocked by Quest controller-required system dialog; native startup not confirmed"
+}

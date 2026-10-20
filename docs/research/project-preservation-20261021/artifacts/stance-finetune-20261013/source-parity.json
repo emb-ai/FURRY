@@ -1,0 +1,14 @@
+{
+  "dagger_ppo.py": {
+    "sha256": "c8b3810ae895c048ede78b96d3c7877ddc83e8635bc1992c5f4448be992de598",
+    "matches_original_audited_upstream": true
+  },
+  "humanoid_mimic.py": {
+    "sha256": "b943a972d950d1a83511156acd5694535c3b0f016e2ecb8552b2a0c64b18346d",
+    "matches_original_audited_upstream": true
+  },
+  "humanoid_mimic_config.py": {
+    "sha256": "7c6dfd221b808d60478d6cdf86de7ac2a21fe74a5266747e95085cc2ac280cdb",
+    "matches_original_audited_upstream": true
+  }
+}

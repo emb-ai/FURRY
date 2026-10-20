@@ -1,0 +1,37 @@
+{
+  "kind": "bc-rnn",
+  "seed": 1510,
+  "dataset_sha256": "82ddbd5f40cd3a3c2c9d2edd7096a4ad605cd193990929e4e881c9e3c0c00857",
+  "train_episodes": 53,
+  "valid_episodes": 6,
+  "obs_dim": 169,
+  "history": 8,
+  "horizon": 16,
+  "execute": 4,
+  "fps": 50,
+  "parameters": 1051472,
+  "max_steps": 12000,
+  "max_seconds": 1800,
+  "device": "NVIDIA H100 80GB HBM3",
+  "gpu_uuid": "GPU-4ff902a0-d404-08b4-62da-92d04766ecb6",
+  "lower_policy": {
+    "policy_id": "homie-v2",
+    "policy_backend": "groot_decoupled_v1",
+    "policy_sha256": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+    "policy_secondary_sha256": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+    "input_patch": null,
+    "catch_up": true,
+    "scene": "cup",
+    "model_sha256": "52f0d60b9b09b882dde212ebac1434133172ff3b14335589a146a4674fee4181",
+    "camera_mode": "robot_head_pan_tilt_v1"
+  },
+  "source_sha256": {
+    "models.py": "c0ecf8f5e8ccd28a550b7b95c06401699a10401a853f0539ddf59176861f2f18",
+    "train.py": "257744d2f5c680aff5d58b5819c7d92b831510da523790c0ad7026c02446419b",
+    "state.py": "8d18dc6f1a01e9ae0016eee61ce9b370a2f8d3f5236d7f67f88186c794bb9505",
+    "export.py": "320d3a42b538aa0a699e963e4b6526208beed5cf69e8c1d5b991679b2c9b64db"
+  },
+  "normalization": "train-only mean/std, floor .05",
+  "checkpoint_selection": "EMA generated action normalized MSE on 256 fixed held-out windows, not denoising loss",
+  "deployed": false
+}

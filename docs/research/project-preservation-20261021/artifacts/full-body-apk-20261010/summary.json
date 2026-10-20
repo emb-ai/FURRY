@@ -1,0 +1,133 @@
+{
+  "apk": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs/full-body-apk-20261010/g1-quest-full-body-feet.apk",
+  "apk_sha256": "4d90171ec517d3d0b65e542fe32be4dd2ecc4d2a8c2bda535eedcf2c4e12848f",
+  "bytes": 46703699,
+  "base_commit": "9858d318262584b58a07b55abea83726281bca0b",
+  "source_includes_existing_uncommitted_changes": true,
+  "isolated_source": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs/full-body-apk-20261010/source",
+  "patch": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs/full-body-apk-20261010/full-body-feet.patch",
+  "changed_files": [
+    "android/native/quest_menu.h",
+    "android/native/operator_skeleton.h",
+    "android/native/retarget.h",
+    "android/native/recording.h",
+    "android/native/quest_runtime.cpp",
+    "android/native/world_skeleton.h",
+    "android/native/body_tracking.h",
+    "android/native/replay_gmr_dynamics.cpp",
+    "android/native/world_skeleton_gl.h",
+    "android/native/replay_gmr.cpp",
+    "android/native/episode_manifest.h",
+    "android/native/meta_retarget.cpp",
+    "android/native/meta_retarget.h",
+    "scripts/prepare_android.py",
+    "scripts/check_menu_replay.py",
+    "tests/check_replay_menu.cpp",
+    "tests/check_quest_menu.cpp",
+    "android/README.md",
+    "android/native/full_body_io.h",
+    "android/native/full_foot_targets.h",
+    "scripts/inspect_full_body.py",
+    "tests/check_full_body.cpp",
+    "tests/check_body_tracking.cpp",
+    "tests/test_full_body.py"
+  ],
+  "policies": [
+    {
+      "id": "twist2-20k",
+      "title": "TWIST2: авторская 20k",
+      "note": "Основная",
+      "file": "policy.onnx",
+      "sha256": "2d1fb3a31e4e967f70ecfefc3ad1e7b2ac491677068b89f60b565a94e7735061",
+      "policy_hz": 100
+    },
+    {
+      "id": "twist2-25k",
+      "title": "TWIST2: авторская 25k",
+      "note": "Авторский checkpoint",
+      "file": "policy-twist2-25k.onnx",
+      "sha256": "126ab9089b6ca0be8b6582fc9ef17b0b6c6d6577378f9324a2e10d580fe48f2e",
+      "policy_hz": 100
+    },
+    {
+      "id": "quest-111260-500",
+      "title": "Quest: дообучение 500",
+      "note": "Эксперимент: 09.10 / 111260",
+      "file": "policy-quest-111260-500.onnx",
+      "sha256": "c83fdeb9747410c5e6b8b150d6d543966ed4024cd6111e9d94281e414c6bcfb6",
+      "policy_hz": 100
+    },
+    {
+      "id": "quest-111260-1000",
+      "title": "Quest: дообучение 1000",
+      "note": "Эксперимент: 09.10 / 111260",
+      "file": "policy-quest-111260-1000.onnx",
+      "sha256": "8d386bf94724d1dccc7050e1bb3dee40315e20e1bba20a31debb5d9b0b61cae3",
+      "policy_hz": 100
+    },
+    {
+      "id": "quest-111586-200",
+      "title": "Quest: новое +200 / 50 Гц",
+      "note": "Продолжение 1000 · 09.10 / RTX",
+      "file": "policy-quest-111586-200.onnx",
+      "sha256": "f7af32cacec3d697d902f5a19373895cba19cca04fb424d9664df11593a0c5ed",
+      "policy_hz": 50
+    },
+    {
+      "id": "quest-111586-300",
+      "title": "Quest: новое +300 / 50 Гц",
+      "note": "Продолжение 1000 · 09.10 / RTX",
+      "file": "policy-quest-111586-300.onnx",
+      "sha256": "a8fba7232e1d5079af5ce23c3c7fe40389c3965f7dde895ea07b45222b557c0d",
+      "policy_hz": 50
+    },
+    {
+      "id": "quest-111586-500",
+      "title": "Quest: новое +500 / 50 Гц",
+      "note": "Продолжение 1000 · 09.10 / RTX",
+      "file": "policy-quest-111586-500.onnx",
+      "sha256": "57d6ac4b2461ac8884afeac86d32bcc9a7b4b72f376e15b898af7ac3d8a5241d",
+      "policy_hz": 50
+    }
+  ],
+  "recommended_control": "twist2-20k",
+  "default_full_foot_retarget": false,
+  "recording_joints": 84,
+  "record_bytes": 3072,
+  "policy_weights_changed": false,
+  "installed": true,
+  "hardware_acceptance": false,
+  "tests": {
+    "existing_unit": {
+      "total": 85,
+      "passed": 84,
+      "skipped": 1
+    },
+    "new_native_wrapped_tests": 3,
+    "menu_and_operator_skeleton": "passed",
+    "synthetic_replay_cases": 28,
+    "replay_max_command_error": 0,
+    "replay_max_state_error": 0,
+    "synthetic_duration_seconds_each": 1.6
+  },
+  "limitations": [
+    "No new complete-skeleton Quest recording yet",
+    "Estimated Meta lower body; extra joints are not independent measured trackers",
+    "Foot target change may worsen policy motion; no gait improvement claimed",
+    "Saved policy ID retained; select 20k explicitly for A/B",
+    "G1 rigid foot has no articulated toe joint"
+  ],
+  "installation": {
+    "device": "2G0YC5ZG7T05SR",
+    "transport": "USB",
+    "method": "adb install -r",
+    "result": "Success",
+    "installed_apk_sha256": "4d90171ec517d3d0b65e542fe32be4dd2ecc4d2a8c2bda535eedcf2c4e12848f",
+    "sha256_matches": true,
+    "saved_policy": "quest-111586-500",
+    "episode_manifest_paths_before_after_equal": true,
+    "native_startup_confirmed": false,
+    "launch_check_activity": "LaunchCheckControllerRequiredDialogActivity",
+    "verified_at": "2026-10-10T17:04:40.062630+00:00"
+  }
+}

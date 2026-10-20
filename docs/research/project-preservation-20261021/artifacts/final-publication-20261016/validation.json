@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-16",
+  "runtime_commit": "e29df941a0f238281f5021b688562aaea62db1e5",
+  "unit_tests": {
+    "run": 135,
+    "passed": 134,
+    "skipped": 1
+  },
+  "native_menu": "passed",
+  "capture_fov_rays": "passed",
+  "android_build": "passed",
+  "apk_sha256": "a9aba66cb5bcc3e67f4e97df18932ac54d0f1ac99a08e3d54dd992356d3aa14e",
+  "apk_zip_crc": "passed",
+  "policy_models": "all 18 policy entries verified",
+  "source_provenance_checks": 64,
+  "headset_installation": false,
+  "headset_acceptance": "No new hardware acceptance; prior isolated FOV fix passed a live recording on 2026-10-15"
+}

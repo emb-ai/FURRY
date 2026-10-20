@@ -1,0 +1,27 @@
+{
+  "source": "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs.nosync/cup-homie-finetune-20261015/fresh-start/finetuned/act-summary.json",
+  "protocol": "native full reset; no demo prefix",
+  "n": 10,
+  "successes": 1,
+  "sim_seconds": 90,
+  "speed": 2,
+  "fps": 15,
+  "frames": 676,
+  "resolution": [
+    2400,
+    930
+  ],
+  "method": "Render stored evaluated qpos with original model and per-scene goal; no new policy rollout. Finished trials freeze.",
+  "source_sha256": {
+    "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs.nosync/cup-homie-finetune-20261015/fresh-start/finetuned/act-1261690313.npz": "31ace82328e9dff67d4a0cad5c10c6626e1877fef84743ece239b0b42220e897",
+    "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs.nosync/cup-homie-finetune-20261015/fresh-start/finetuned/act-886437167.npz": "1d41dea2838f277d003d1bc7761a25bf08917b0fceefd8c4ac2b985b57a4e388",
+    "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs.nosync/cup-homie-finetune-20261015/fresh-start/finetuned/act-1019837660.npz": "15f56ece6dfb229a54c2d9009302481b534dbdf482f7e432382196af4e680172",
+    "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs.nosync/cup-homie-finetune-20261015/fresh-start/finetuned/act-603205921.npz": "c217f98fe447ede0bdb27eeb5463d1dd037795340f5fbdfb5e04c43807931a08",
+    "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs.nosync/cup-homie-finetune-20261015/fresh-start/finetuned/act-9722254.npz": "34b55d158212d679f381e7e4fd388ecde66ea91e06f1a817acfabc7d3c9dd5fd",
+    "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs.nosync/cup-homie-finetune-20261015/fresh-start/finetuned/act-856219333.npz": "1c53f985df2d43565b9422b775fb3f4a686df888a35047421433598d72e7e682",
+    "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs.nosync/cup-homie-finetune-20261015/fresh-start/finetuned/act-1714622801.npz": "135e3d3316989bab557cbdbf00c3af92ac27e889e636b749f88638ce3fe81b2a",
+    "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs.nosync/cup-homie-finetune-20261015/fresh-start/finetuned/act-1502896800.npz": "46f3c664cdaa76b2646d50586b462c9f53fdb7bbcfe71263014b3aca92a00e46",
+    "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs.nosync/cup-homie-finetune-20261015/fresh-start/finetuned/act-435361755.npz": "0bef6cfbc34e2b44e828999a5f8772f8f9e8cce5b5c860ce70b9b9e407bc2f41",
+    "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs.nosync/cup-homie-finetune-20261015/fresh-start/finetuned/act-1446583522.npz": "6b242ee71f36f2da41b22191f1f2ac76079290b6cc86a4fdbd15d24151ecd741"
+  }
+}

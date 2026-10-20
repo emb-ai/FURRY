@@ -1,0 +1,167 @@
+[
+  {
+    "episode": "episode-1792015107773946",
+    "warm_prefix_s": 0,
+    "success": true,
+    "outcome": 1,
+    "lift_m": 0.06352481521215503,
+    "final_xy_error_m": 0.017923678769595417,
+    "initial_error": 0.0,
+    "first_second_root_error_m": 0.04584028361587604,
+    "seconds": 7.3500000000000005
+  },
+  {
+    "episode": "episode-1792015107773946",
+    "warm_prefix_s": 0.2,
+    "success": true,
+    "outcome": 1,
+    "lift_m": 0.05944437521516599,
+    "final_xy_error_m": 0.026220879899853878,
+    "initial_error": 0.0,
+    "first_second_root_error_m": 3.7182643929924e-05,
+    "seconds": 6.67
+  },
+  {
+    "episode": "episode-1792015107773946",
+    "warm_prefix_s": 0.5,
+    "success": true,
+    "outcome": 1,
+    "lift_m": 0.05947941669616119,
+    "final_xy_error_m": 0.02652956800510399,
+    "initial_error": 0.0,
+    "first_second_root_error_m": 9.905460498182526e-08,
+    "seconds": 6.38
+  },
+  {
+    "episode": "episode-1792017633764131",
+    "warm_prefix_s": 0,
+    "success": false,
+    "outcome": 0,
+    "lift_m": 0.1191366053196794,
+    "final_xy_error_m": 0.05877255917057705,
+    "initial_error": 0.0,
+    "first_second_root_error_m": 0.01792485513740275,
+    "seconds": 30.0
+  },
+  {
+    "episode": "episode-1792017633764131",
+    "warm_prefix_s": 0.2,
+    "success": true,
+    "outcome": 1,
+    "lift_m": 0.11860224834426014,
+    "final_xy_error_m": 0.013576043117846433,
+    "initial_error": 0.0,
+    "first_second_root_error_m": 6.459668755121768e-05,
+    "seconds": 5.98
+  },
+  {
+    "episode": "episode-1792017633764131",
+    "warm_prefix_s": 0.5,
+    "success": true,
+    "outcome": 1,
+    "lift_m": 0.11865924664423233,
+    "final_xy_error_m": 0.013655670002456679,
+    "initial_error": 0.0,
+    "first_second_root_error_m": 8.881794462537787e-07,
+    "seconds": 5.7
+  },
+  {
+    "episode": "episode-1792017999001122",
+    "warm_prefix_s": 0,
+    "success": false,
+    "outcome": 0,
+    "lift_m": 0.06967375834801626,
+    "final_xy_error_m": 0.10153738677392475,
+    "initial_error": 0.0,
+    "first_second_root_error_m": 0.007961790104768647,
+    "seconds": 30.0
+  },
+  {
+    "episode": "episode-1792017999001122",
+    "warm_prefix_s": 0.2,
+    "success": false,
+    "outcome": 0,
+    "lift_m": 0.06995221302466459,
+    "final_xy_error_m": 0.06763332611644243,
+    "initial_error": 0.0,
+    "first_second_root_error_m": 0.0003226479440958701,
+    "seconds": 30.0
+  },
+  {
+    "episode": "episode-1792017999001122",
+    "warm_prefix_s": 0.5,
+    "success": false,
+    "outcome": 0,
+    "lift_m": 0.0696353255913219,
+    "final_xy_error_m": 0.16207697092407194,
+    "initial_error": 0.0,
+    "first_second_root_error_m": 1.5326667034764581e-06,
+    "seconds": 30.0
+  },
+  {
+    "episode": "episode-1792018134901046",
+    "warm_prefix_s": 0,
+    "success": true,
+    "outcome": 1,
+    "lift_m": 0.10751910808869625,
+    "final_xy_error_m": 0.016732884805808458,
+    "initial_error": 0.0,
+    "first_second_root_error_m": 0.007154681841319728,
+    "seconds": 8.28
+  },
+  {
+    "episode": "episode-1792018134901046",
+    "warm_prefix_s": 0.2,
+    "success": true,
+    "outcome": 1,
+    "lift_m": 0.10770879071938266,
+    "final_xy_error_m": 0.01867685457794454,
+    "initial_error": 0.0,
+    "first_second_root_error_m": 0.00017313095207049505,
+    "seconds": 8.08
+  },
+  {
+    "episode": "episode-1792018134901046",
+    "warm_prefix_s": 0.5,
+    "success": true,
+    "outcome": 1,
+    "lift_m": 0.1076728832031355,
+    "final_xy_error_m": 0.01875177750962354,
+    "initial_error": 0.0,
+    "first_second_root_error_m": 2.3047015421824712e-06,
+    "seconds": 7.78
+  },
+  {
+    "episode": "episode-1792014836827567",
+    "warm_prefix_s": 0,
+    "success": true,
+    "outcome": 1,
+    "lift_m": 0.05620234232560695,
+    "final_xy_error_m": 0.01739478489965217,
+    "initial_error": 0.0,
+    "first_second_root_error_m": 0.019212886743463078,
+    "seconds": 8.19
+  },
+  {
+    "episode": "episode-1792014836827567",
+    "warm_prefix_s": 0.2,
+    "success": true,
+    "outcome": 1,
+    "lift_m": 0.05576895417066219,
+    "final_xy_error_m": 0.02070959111682125,
+    "initial_error": 0.0,
+    "first_second_root_error_m": 9.765711911229848e-05,
+    "seconds": 8.03
+  },
+  {
+    "episode": "episode-1792014836827567",
+    "warm_prefix_s": 0.5,
+    "success": true,
+    "outcome": 1,
+    "lift_m": 0.05555851498210829,
+    "final_xy_error_m": 0.021198168326371006,
+    "initial_error": 0.0,
+    "first_second_root_error_m": 1.8911067406471434e-06,
+    "seconds": 7.7
+  }
+]

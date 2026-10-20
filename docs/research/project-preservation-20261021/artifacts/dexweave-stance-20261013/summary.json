@@ -1,0 +1,563 @@
+{
+  "policy": "New DexWeave full15 checkpoint2000",
+  "policy_sha256": "fbc6a1785c9a80b5ce825c3de376c5e834420ccd3eb6de7d669580528e2d726b",
+  "primary_model": "10Oct recorded Quest scene",
+  "control_model": "Original DexWeave evaluation scene; different foot colliders",
+  "metric_window": "Same fixed source elapsed [1,3) seconds,2seconds after common fork, before any fall. Report median of5 seed-specific p95 camera XY errors and contact force-weighted slip. Full-horizon survival/fall counts reported separately.",
+  "models": {
+    "recorded_scene": [
+      {
+        "episode": "episode-1791652593739690",
+        "variant": "baseline",
+        "falls": 3,
+        "trials": 5,
+        "completed": 2,
+        "camera_xy_p95_cm_median": 22.588504716330668,
+        "slip_cm_s_median": 12.39150493199532,
+        "full_horizon_or_fall_postfork_median_s": 22.0,
+        "fall_source_times_s": [
+          9.200000000010384,
+          null,
+          22.98000000007618,
+          9.420000000011434,
+          null
+        ],
+        "seed_metrics": [
+          {
+            "seed": 0,
+            "camera_xy_p95_cm": 22.588504716330668,
+            "slip_cm_s": 22.276936488779814
+          },
+          {
+            "seed": 1,
+            "camera_xy_p95_cm": 20.772111486371276,
+            "slip_cm_s": 9.40630779137924
+          },
+          {
+            "seed": 2,
+            "camera_xy_p95_cm": 24.34435821270786,
+            "slip_cm_s": 12.39150493199532
+          },
+          {
+            "seed": 3,
+            "camera_xy_p95_cm": 22.99752023755922,
+            "slip_cm_s": 18.726116358477594
+          },
+          {
+            "seed": 4,
+            "camera_xy_p95_cm": 21.33826071233571,
+            "slip_cm_s": 9.102334578762704
+          }
+        ]
+      },
+      {
+        "episode": "episode-1791652593739690",
+        "variant": "meta50",
+        "falls": 5,
+        "trials": 5,
+        "completed": 0,
+        "camera_xy_p95_cm_median": 76.6268307855589,
+        "slip_cm_s_median": 20.674234272028173,
+        "full_horizon_or_fall_postfork_median_s": 6.68,
+        "fall_source_times_s": [
+          8.06000000000494,
+          7.180000000000739,
+          7.460000000002076,
+          7.660000000003031,
+          7.980000000004559
+        ],
+        "seed_metrics": [
+          {
+            "seed": 0,
+            "camera_xy_p95_cm": 76.84581098822437,
+            "slip_cm_s": 14.362204036933973
+          },
+          {
+            "seed": 1,
+            "camera_xy_p95_cm": 91.92354753591856,
+            "slip_cm_s": 26.41447890653807
+          },
+          {
+            "seed": 2,
+            "camera_xy_p95_cm": 76.6268307855589,
+            "slip_cm_s": 20.738339073525268
+          },
+          {
+            "seed": 3,
+            "camera_xy_p95_cm": 75.77007200092257,
+            "slip_cm_s": 18.87317811353239
+          },
+          {
+            "seed": 4,
+            "camera_xy_p95_cm": 67.72495154222288,
+            "slip_cm_s": 20.674234272028173
+          }
+        ]
+      },
+      {
+        "episode": "episode-1791652593739690",
+        "variant": "retarget12",
+        "falls": 5,
+        "trials": 5,
+        "completed": 0,
+        "camera_xy_p95_cm_median": 110.20634133385512,
+        "slip_cm_s_median": 19.763054824884374,
+        "full_horizon_or_fall_postfork_median_s": 2.92,
+        "fall_source_times_s": [
+          3.799999999991144,
+          3.959999999990771,
+          3.8999999999909107,
+          3.7199999999913302,
+          6.659999999998256
+        ],
+        "seed_metrics": [
+          {
+            "seed": 0,
+            "camera_xy_p95_cm": 110.69307791616316,
+            "slip_cm_s": 19.763054824884374
+          },
+          {
+            "seed": 1,
+            "camera_xy_p95_cm": 107.3748235434197,
+            "slip_cm_s": 21.611708684941103
+          },
+          {
+            "seed": 2,
+            "camera_xy_p95_cm": 110.20634133385512,
+            "slip_cm_s": 20.521865222793153
+          },
+          {
+            "seed": 3,
+            "camera_xy_p95_cm": 111.2931210094079,
+            "slip_cm_s": 18.38957937796589
+          },
+          {
+            "seed": 4,
+            "camera_xy_p95_cm": 101.08574027236554,
+            "slip_cm_s": 19.49841275508259
+          }
+        ]
+      },
+      {
+        "episode": "episode-1791652646384286",
+        "variant": "baseline",
+        "falls": 3,
+        "trials": 5,
+        "completed": 2,
+        "camera_xy_p95_cm_median": 13.214844392820446,
+        "slip_cm_s_median": 12.390299536046216,
+        "full_horizon_or_fall_postfork_median_s": 23.82,
+        "fall_source_times_s": [
+          null,
+          18.080000000001988,
+          null,
+          24.540000000009883,
+          24.8000000000102
+        ],
+        "seed_metrics": [
+          {
+            "seed": 0,
+            "camera_xy_p95_cm": 11.668524205668657,
+            "slip_cm_s": 8.361845560011956
+          },
+          {
+            "seed": 1,
+            "camera_xy_p95_cm": 13.214844392820446,
+            "slip_cm_s": 14.455002127315861
+          },
+          {
+            "seed": 2,
+            "camera_xy_p95_cm": 13.4584584761167,
+            "slip_cm_s": 7.061092700339144
+          },
+          {
+            "seed": 3,
+            "camera_xy_p95_cm": 9.735425320566174,
+            "slip_cm_s": 12.390299536046216
+          },
+          {
+            "seed": 4,
+            "camera_xy_p95_cm": 14.163033269136971,
+            "slip_cm_s": 13.427869302220156
+          }
+        ]
+      },
+      {
+        "episode": "episode-1791652646384286",
+        "variant": "meta50",
+        "falls": 5,
+        "trials": 5,
+        "completed": 0,
+        "camera_xy_p95_cm_median": 19.772432728474328,
+        "slip_cm_s_median": 13.558580088469055,
+        "full_horizon_or_fall_postfork_median_s": 8.34,
+        "fall_source_times_s": [
+          11.839999999997772,
+          9.359999999999147,
+          8.359999999999701,
+          5.360000000001008,
+          9.319999999999169
+        ],
+        "seed_metrics": [
+          {
+            "seed": 0,
+            "camera_xy_p95_cm": 19.772432728474328,
+            "slip_cm_s": 14.257704118095019
+          },
+          {
+            "seed": 1,
+            "camera_xy_p95_cm": 19.59503047261573,
+            "slip_cm_s": 13.558580088469055
+          },
+          {
+            "seed": 2,
+            "camera_xy_p95_cm": 26.683192988361704,
+            "slip_cm_s": 8.5193261771935
+          },
+          {
+            "seed": 3,
+            "camera_xy_p95_cm": 29.883907978135444,
+            "slip_cm_s": 14.947856533794798
+          },
+          {
+            "seed": 4,
+            "camera_xy_p95_cm": 18.72994185947902,
+            "slip_cm_s": 12.057773555784594
+          }
+        ]
+      },
+      {
+        "episode": "episode-1791652646384286",
+        "variant": "retarget12",
+        "falls": 5,
+        "trials": 5,
+        "completed": 0,
+        "camera_xy_p95_cm_median": 33.68779350775043,
+        "slip_cm_s_median": 13.089508195718114,
+        "full_horizon_or_fall_postfork_median_s": 5.0600000000000005,
+        "fall_source_times_s": [
+          7.9999999999999,
+          6.040000000000986,
+          5.340000000001002,
+          7.959999999999922,
+          5.5400000000010685
+        ],
+        "seed_metrics": [
+          {
+            "seed": 0,
+            "camera_xy_p95_cm": 41.519849040530424,
+            "slip_cm_s": 11.51652978629356
+          },
+          {
+            "seed": 1,
+            "camera_xy_p95_cm": 51.6479692333765,
+            "slip_cm_s": 14.55340450935938
+          },
+          {
+            "seed": 2,
+            "camera_xy_p95_cm": 32.757188615615625,
+            "slip_cm_s": 13.089508195718114
+          },
+          {
+            "seed": 3,
+            "camera_xy_p95_cm": 22.548184599734626,
+            "slip_cm_s": 12.591306746849899
+          },
+          {
+            "seed": 4,
+            "camera_xy_p95_cm": 33.68779350775043,
+            "slip_cm_s": 13.803878819043886
+          }
+        ]
+      }
+    ],
+    "dexweave_original_scene": [
+      {
+        "episode": "episode-1791652593739690",
+        "variant": "baseline",
+        "falls": 5,
+        "trials": 5,
+        "completed": 0,
+        "camera_xy_p95_cm_median": 22.37080993476975,
+        "slip_cm_s_median": 13.728898956347422,
+        "full_horizon_or_fall_postfork_median_s": 8.38,
+        "fall_source_times_s": [
+          8.720000000008092,
+          10.980000000018883,
+          9.360000000011148,
+          22.340000000073125,
+          9.04000000000962
+        ],
+        "seed_metrics": [
+          {
+            "seed": 0,
+            "camera_xy_p95_cm": 23.42277351070289,
+            "slip_cm_s": 13.058476483179025
+          },
+          {
+            "seed": 1,
+            "camera_xy_p95_cm": 18.04322303882588,
+            "slip_cm_s": 13.728898956347422
+          },
+          {
+            "seed": 2,
+            "camera_xy_p95_cm": 22.37080993476975,
+            "slip_cm_s": 11.575920652238523
+          },
+          {
+            "seed": 3,
+            "camera_xy_p95_cm": 27.423621118539916,
+            "slip_cm_s": 15.68460503732981
+          },
+          {
+            "seed": 4,
+            "camera_xy_p95_cm": 18.484686545243232,
+            "slip_cm_s": 14.221031295025302
+          }
+        ]
+      },
+      {
+        "episode": "episode-1791652593739690",
+        "variant": "meta50",
+        "falls": 5,
+        "trials": 5,
+        "completed": 0,
+        "camera_xy_p95_cm_median": 84.4537954225372,
+        "slip_cm_s_median": 20.77478831477845,
+        "full_horizon_or_fall_postfork_median_s": 5.82,
+        "fall_source_times_s": [
+          8.160000000005418,
+          6.799999999998924,
+          3.759999999991237,
+          5.539999999992908,
+          9.000000000009429
+        ],
+        "seed_metrics": [
+          {
+            "seed": 0,
+            "camera_xy_p95_cm": 74.32550171624771,
+            "slip_cm_s": 20.77478831477845
+          },
+          {
+            "seed": 1,
+            "camera_xy_p95_cm": 94.25423899995018,
+            "slip_cm_s": 24.920324193347415
+          },
+          {
+            "seed": 2,
+            "camera_xy_p95_cm": 120.50134407817717,
+            "slip_cm_s": 18.36130940864604
+          },
+          {
+            "seed": 3,
+            "camera_xy_p95_cm": 84.4537954225372,
+            "slip_cm_s": 15.449505623128129
+          },
+          {
+            "seed": 4,
+            "camera_xy_p95_cm": 59.113965239222054,
+            "slip_cm_s": 21.17971108107236
+          }
+        ]
+      },
+      {
+        "episode": "episode-1791652593739690",
+        "variant": "retarget12",
+        "falls": 5,
+        "trials": 5,
+        "completed": 0,
+        "camera_xy_p95_cm_median": 105.59559919177669,
+        "slip_cm_s_median": 20.1658065392714,
+        "full_horizon_or_fall_postfork_median_s": 3.1,
+        "fall_source_times_s": [
+          4.079999999990491,
+          4.979999999990234,
+          3.5399999999917497,
+          3.699999999991377,
+          4.119999999990398
+        ],
+        "seed_metrics": [
+          {
+            "seed": 0,
+            "camera_xy_p95_cm": 104.95286373606278,
+            "slip_cm_s": 20.1658065392714
+          },
+          {
+            "seed": 1,
+            "camera_xy_p95_cm": 111.49116074814556,
+            "slip_cm_s": 23.540972216482785
+          },
+          {
+            "seed": 2,
+            "camera_xy_p95_cm": 105.59559919177669,
+            "slip_cm_s": 17.054237969555754
+          },
+          {
+            "seed": 3,
+            "camera_xy_p95_cm": 108.63591044699778,
+            "slip_cm_s": 25.052379027565525
+          },
+          {
+            "seed": 4,
+            "camera_xy_p95_cm": 90.89535711727422,
+            "slip_cm_s": 17.45411085181577
+          }
+        ]
+      },
+      {
+        "episode": "episode-1791652646384286",
+        "variant": "baseline",
+        "falls": 5,
+        "trials": 5,
+        "completed": 0,
+        "camera_xy_p95_cm_median": 14.475786984592764,
+        "slip_cm_s_median": 14.177073717994803,
+        "full_horizon_or_fall_postfork_median_s": 23.06,
+        "fall_source_times_s": [
+          23.200000000008245,
+          9.199999999999235,
+          25.640000000011227,
+          25.260000000010763,
+          24.04000000000927
+        ],
+        "seed_metrics": [
+          {
+            "seed": 0,
+            "camera_xy_p95_cm": 18.40053380523489,
+            "slip_cm_s": 18.256765783518762
+          },
+          {
+            "seed": 1,
+            "camera_xy_p95_cm": 14.475786984592764,
+            "slip_cm_s": 14.177073717994803
+          },
+          {
+            "seed": 2,
+            "camera_xy_p95_cm": 19.188487762240587,
+            "slip_cm_s": 14.594239314233725
+          },
+          {
+            "seed": 3,
+            "camera_xy_p95_cm": 11.417977275476199,
+            "slip_cm_s": 12.061667379573844
+          },
+          {
+            "seed": 4,
+            "camera_xy_p95_cm": 12.776125428187852,
+            "slip_cm_s": 12.924633820688566
+          }
+        ]
+      },
+      {
+        "episode": "episode-1791652646384286",
+        "variant": "meta50",
+        "falls": 5,
+        "trials": 5,
+        "completed": 0,
+        "camera_xy_p95_cm_median": 32.298619235659224,
+        "slip_cm_s_median": 13.543815875530338,
+        "full_horizon_or_fall_postfork_median_s": 6.62,
+        "fall_source_times_s": [
+          4.320000000000661,
+          7.600000000000121,
+          9.159999999999258,
+          7.8000000000000105,
+          6.920000000000498
+        ],
+        "seed_metrics": [
+          {
+            "seed": 0,
+            "camera_xy_p95_cm": 26.3594803081933,
+            "slip_cm_s": 14.328279180356516
+          },
+          {
+            "seed": 1,
+            "camera_xy_p95_cm": 37.649270109189764,
+            "slip_cm_s": 13.543815875530338
+          },
+          {
+            "seed": 2,
+            "camera_xy_p95_cm": 32.298619235659224,
+            "slip_cm_s": 12.385530754359849
+          },
+          {
+            "seed": 3,
+            "camera_xy_p95_cm": 33.41324324392893,
+            "slip_cm_s": 17.918678799640666
+          },
+          {
+            "seed": 4,
+            "camera_xy_p95_cm": 29.101059270524388,
+            "slip_cm_s": 12.135245542089876
+          }
+        ]
+      },
+      {
+        "episode": "episode-1791652646384286",
+        "variant": "retarget12",
+        "falls": 5,
+        "trials": 5,
+        "completed": 0,
+        "camera_xy_p95_cm_median": 35.49350302950217,
+        "slip_cm_s_median": 14.044156404741424,
+        "full_horizon_or_fall_postfork_median_s": 2.7,
+        "fall_source_times_s": [
+          5.260000000000975,
+          3.7200000000004607,
+          3.3600000000003405,
+          3.2200000000002937,
+          3.6800000000004474
+        ],
+        "seed_metrics": [
+          {
+            "seed": 0,
+            "camera_xy_p95_cm": 31.161169159703896,
+            "slip_cm_s": 17.370819858972645
+          },
+          {
+            "seed": 1,
+            "camera_xy_p95_cm": 44.96674202340752,
+            "slip_cm_s": 12.755623737115803
+          },
+          {
+            "seed": 2,
+            "camera_xy_p95_cm": 32.573752878428394,
+            "slip_cm_s": 13.720324012108362
+          },
+          {
+            "seed": 3,
+            "camera_xy_p95_cm": 56.26352690275523,
+            "slip_cm_s": 14.044156404741424
+          },
+          {
+            "seed": 4,
+            "camera_xy_p95_cm": 35.49350302950217,
+            "slip_cm_s": 16.033650662228837
+          }
+        ]
+      }
+    ]
+  },
+  "known_reference_sanity": {
+    "seed": 0,
+    "steps": 500,
+    "seconds": 10.0,
+    "horizon_steps": 500,
+    "completed": true,
+    "fell": false,
+    "anchor_error_m": 0.05627374808422676,
+    "root_xy_error_m": 0.05373167976446632,
+    "body_aligned_error_m": 0.03316465808819699,
+    "wrist_world_error_m": 0.06904414361801633,
+    "contact_slip_m_s": 0.0947037261279702,
+    "actual_path_m": 3.4846817801049976,
+    "reference_path_m": 3.214788004148429
+  },
+  "limitations": [
+    "Only2 unseen raw live GMR recordings and5 initial perturbations; not independent subjects/sessions.",
+    "DexWeave contract uses direct torso-anchor tracking and its own PD/action-rate limits, no TWIST catch-up velocity servo.",
+    "These raw GMR targets are not the contact-projected references used during training; distribution shift is a possible cause, not proven.",
+    "One-second recorded-state teacherforcing gives exactly shared initial physical/action-history state among variants. Reference-start control on recorded scene also falls sooner when narrowed.",
+    "Numbers are offline simulation; no Quest deployment or validation."
+  ]
+}

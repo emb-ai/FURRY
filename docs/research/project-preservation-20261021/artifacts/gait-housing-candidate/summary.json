@@ -1,0 +1,81 @@
+{
+  "meta": {
+    "max_tilt_deg": 59.10083435743929,
+    "min_height_m": 0.3712,
+    "max_contacts": 12,
+    "falls": 1,
+    "segments": [
+      {
+        "segment": 1,
+        "first_wall_s": 0.0,
+        "last_wall_s": 6.67,
+        "duration_sim_s": 6.670000000000562,
+        "net_displacement_xy_m": [
+          1.6830119005949291,
+          2.9443919344916067
+        ],
+        "net_displacement_m": 3.3914558704844415,
+        "path_m": 3.667951813540714,
+        "fell": true,
+        "min_height_m": 0.3712
+      }
+    ],
+    "path_m": 3.667951813540714,
+    "fall_times": [],
+    "samples": 368,
+    "p95_tilt_deg": 44.67064360105759,
+    "loaded_foot_slip_p95_m_s": 1.3321802979158581,
+    "legs_tracking_rmse_rad": 0.21710654051456682,
+    "legs_common_ref_rmse_rad": 0.21710654051456682,
+    "legs_velocity_above6Hz_rms_rad_s": 3.0705218940658248,
+    "legs_retarget_truth_rmse_rad": 1.527864630136189e-06,
+    "legs_physics_truth_rmse_rad": 0.21710656953727436,
+    "arms_tracking_rmse_rad": 0.25105928676683487,
+    "arms_common_ref_rmse_rad": 0.25105928676683487,
+    "arms_velocity_above6Hz_rms_rad_s": 1.5226538038066733,
+    "arms_retarget_truth_rmse_rad": 0.00016681084089000312,
+    "arms_physics_truth_rmse_rad": 0.25107452093476473,
+    "root_shared_xy_trajectory_rmse_m": 1.6093809893974003,
+    "root_retarget_shared_xy_trajectory_rmse_m": 9.961164132906554e-08,
+    "wrist_common_target_rms_m": 0.09274610851034039,
+    "wrist_retarget_target_rms_m": 6.715713467881271e-06,
+    "wrist_common_target_orientation_rms_deg": 41.712724444663294,
+    "wrist_retarget_target_orientation_rms_deg": 0.0001739601241350554,
+    "matched_baseline": {
+      "samples": 368,
+      "p95_tilt_deg": 39.130493924384105,
+      "loaded_foot_slip_p95_m_s": 1.5424294344162768,
+      "legs_tracking_rmse_rad": 0.216304728501375,
+      "legs_common_ref_rmse_rad": 0.216304728501375,
+      "legs_velocity_above6Hz_rms_rad_s": 3.0735329407366163,
+      "legs_retarget_truth_rmse_rad": 1.527864630136189e-06,
+      "legs_physics_truth_rmse_rad": 0.21630476112854563,
+      "arms_tracking_rmse_rad": 0.2251809493941554,
+      "arms_common_ref_rmse_rad": 0.2251809493941554,
+      "arms_velocity_above6Hz_rms_rad_s": 1.3877394256228597,
+      "arms_retarget_truth_rmse_rad": 0.00016681084089000312,
+      "arms_physics_truth_rmse_rad": 0.22519689494159922,
+      "root_shared_xy_trajectory_rmse_m": 1.6492447699955104,
+      "root_retarget_shared_xy_trajectory_rmse_m": 9.961164132906554e-08,
+      "wrist_common_target_rms_m": 0.08707030438288517,
+      "wrist_retarget_target_rms_m": 6.715713467881271e-06,
+      "wrist_common_target_orientation_rms_deg": 37.5848019703441,
+      "wrist_retarget_target_orientation_rms_deg": 0.0001739601241350554
+    },
+    "paired_windows": [
+      {
+        "segment": 1,
+        "samples": 368,
+        "first_wall_s": 3.0,
+        "last_wall_s": 6.67
+      }
+    ],
+    "limitations": [
+      "Offline replay; no hardware validation or human foot ground truth.",
+      "Full outcomes and paired metrics use different horizons; inspect falls and paired_windows together.",
+      "Synthetic truth is a robot FK round-trip, not independent human tracking validation.",
+      "Above-6 Hz velocity measures roughness and can include intended motion harmonics.",
+      "Root-relative wrists omit global base drift, reported separately as XY trajectory error."
+    ]
+  }
+}

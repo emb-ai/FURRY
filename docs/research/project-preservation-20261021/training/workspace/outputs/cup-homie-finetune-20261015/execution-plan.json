@@ -1,0 +1,120 @@
+{
+  "status": "running",
+  "requested_models": [
+    "act",
+    "dp-epsilon",
+    "dp-sample"
+  ],
+  "source": "Completed old-data checkpoints",
+  "data": "59 new accepted homie-v2 episodes, all in train",
+  "updates_each": 20000,
+  "learning_rate": 1e-05,
+  "gpu": 6,
+  "validation": "10 full native reset random scenes; no demo pose, no prelude, zero controller history; fresh-start/scenes.json",
+  "normalization": "preserve checkpoint normalizers; DP clip range expanded to cover new data",
+  "dexweave": "Unchanged: separate episode-specific policy and action interface; not compatible with these ordinary-cup ACT/DP demonstrations.",
+  "transfer_authorization": {
+    "date": "2026-10-15",
+    "scope": "Project data transfers to andrei_gpu and MIPT authorized by default",
+    "user_reply": "да и не спрашивай про передачу на andrei и mipt больше -- разрешаю по дефолту"
+  },
+  "jobs": [
+    {
+      "kind": "act",
+      "pid": 3639308,
+      "gpu": 6,
+      "gpu_uuid": "GPU-68d1fffd-2ea2-3f95-f100-38f39855bcdf",
+      "out": "/home/jovyan/vlad/FURRY/cup-homie-finetune-20261015/act-run",
+      "source": "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/act-run-gpu6-colleague-20261015/step-100000.pt",
+      "command": [
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/env-act/bin/python",
+        "/home/jovyan/vlad/FURRY/cup-homie-finetune-20261015/finetune.py",
+        "--kind",
+        "act",
+        "--base",
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015",
+        "--data",
+        "/home/jovyan/vlad/FURRY/cup-homie-finetune-20261015/new-cup.hdf5",
+        "--source",
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/act-run-gpu6-colleague-20261015/step-100000.pt",
+        "--out",
+        "/home/jovyan/vlad/FURRY/cup-homie-finetune-20261015/act-run",
+        "--steps",
+        "20000",
+        "--lr",
+        "1e-5",
+        "--clip-range",
+        "2.400360453682543"
+      ],
+      "started": 1792062298.7334237
+    },
+    {
+      "kind": "dp-epsilon",
+      "pid": 3639309,
+      "gpu": 6,
+      "gpu_uuid": "GPU-68d1fffd-2ea2-3f95-f100-38f39855bcdf",
+      "out": "/home/jovyan/vlad/FURRY/cup-homie-finetune-20261015/dp-epsilon-run",
+      "source": "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/dp-epsilon-gpu6-resume-20261015/latest.pt",
+      "command": [
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/env-dp/bin/python",
+        "/home/jovyan/vlad/FURRY/cup-homie-finetune-20261015/finetune.py",
+        "--kind",
+        "dp-epsilon",
+        "--base",
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015",
+        "--data",
+        "/home/jovyan/vlad/FURRY/cup-homie-finetune-20261015/new-cup.hdf5",
+        "--source",
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/dp-epsilon-gpu6-resume-20261015/latest.pt",
+        "--out",
+        "/home/jovyan/vlad/FURRY/cup-homie-finetune-20261015/dp-epsilon-run",
+        "--steps",
+        "20000",
+        "--lr",
+        "1e-5",
+        "--clip-range",
+        "2.400360453682543"
+      ],
+      "started": 1792062298.7364686
+    },
+    {
+      "kind": "dp-sample",
+      "pid": 3639310,
+      "gpu": 6,
+      "gpu_uuid": "GPU-68d1fffd-2ea2-3f95-f100-38f39855bcdf",
+      "out": "/home/jovyan/vlad/FURRY/cup-homie-finetune-20261015/dp-sample-run",
+      "source": "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/dp-sample/latest.pt",
+      "command": [
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/env-dp/bin/python",
+        "/home/jovyan/vlad/FURRY/cup-homie-finetune-20261015/finetune.py",
+        "--kind",
+        "dp-sample",
+        "--base",
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015",
+        "--data",
+        "/home/jovyan/vlad/FURRY/cup-homie-finetune-20261015/new-cup.hdf5",
+        "--source",
+        "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/dp-sample/latest.pt",
+        "--out",
+        "/home/jovyan/vlad/FURRY/cup-homie-finetune-20261015/dp-sample-run",
+        "--steps",
+        "20000",
+        "--lr",
+        "1e-5",
+        "--clip-range",
+        "2.400360453682543"
+      ],
+      "started": 1792062298.7416553
+    }
+  ],
+  "upload_verification": {
+    "verified": true,
+    "sha256": "05376522259b4eb9091a80d41a31b0a768b3933349a231d69de5580fdb32b9cd",
+    "episodes": 59,
+    "frames": 16042,
+    "all_train": true,
+    "verified_at": 1792062289.3011632
+  },
+  "all_three_optimizer_checks_passed": true,
+  "superseded_validation": "Snapshot-start and warm-prefix diagnostics are historical and not requested acceptance protocol"
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "episode": "episode-1792015434582696",
+    "variant": "original",
+    "outcome": 0,
+    "first_success_s": null,
+    "last_second_linear_max": 0.08590609564433488,
+    "last_second_angular_max": 2.4014270039190557,
+    "final_cup_xyz": [
+      0.566278534378458,
+      -0.6794172005138657,
+      0.017983925928957832
+    ],
+    "boundary": "Recorded final robot pose held fixed; free cup physics; outcome cleared only in this separate counterfactual fixture"
+  },
+  {
+    "episode": "episode-1792015434582696",
+    "variant": "fixed",
+    "outcome": 1,
+    "first_success_s": 0.9900000000000008,
+    "last_second_linear_max": 0.00012352701737507657,
+    "last_second_angular_max": 0.003307039462255366,
+    "final_cup_xyz": [
+      0.5662777248359224,
+      -0.6795119540047028,
+      0.0179117136398596
+    ],
+    "boundary": "Recorded final robot pose held fixed; free cup physics; outcome cleared only in this separate counterfactual fixture"
+  },
+  {
+    "episode": "episode-1792015467386805",
+    "variant": "original",
+    "outcome": 2,
+    "first_success_s": null,
+    "last_second_linear_max": 0.05976213385706561,
+    "last_second_angular_max": 1.7130631373532206,
+    "final_cup_xyz": [
+      0.48610593776803895,
+      -0.7458125708670342,
+      0.016949263092196493
+    ],
+    "boundary": "Recorded final robot pose held fixed; free cup physics; outcome cleared only in this separate counterfactual fixture"
+  },
+  {
+    "episode": "episode-1792015467386805",
+    "variant": "fixed",
+    "outcome": 1,
+    "first_success_s": 0.8200000000000006,
+    "last_second_linear_max": 0.0001124752798909237,
+    "last_second_angular_max": 0.003011597364664584,
+    "final_cup_xyz": [
+      0.4862331517139889,
+      -0.745808535792395,
+      0.017912372780459047
+    ],
+    "boundary": "Recorded final robot pose held fixed; free cup physics; outcome cleared only in this separate counterfactual fixture"
+  }
+]

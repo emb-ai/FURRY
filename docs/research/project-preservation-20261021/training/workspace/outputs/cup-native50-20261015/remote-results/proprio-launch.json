@@ -1,0 +1,7 @@
+{
+  "pid": 2852500,
+  "gpu": 6,
+  "new_updates": 10000,
+  "state_dim": 131,
+  "same_dataset_and_validation_as_base": true
+}

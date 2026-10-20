@@ -1,0 +1,90 @@
+{
+  "checked_at": 1792062367.8314588,
+  "runs": {
+    "act": {
+      "status.json": {
+        "status": "running",
+        "kind": "act",
+        "pid": 3639308,
+        "step": 1100,
+        "source_step": 100000,
+        "target_steps": 20000,
+        "loss": 0.15696483850479126,
+        "elapsed_s": 53.3740553855896
+      },
+      "initialization-verification.json": {
+        "model_exact": true,
+        "optimizer_loaded": true,
+        "normalization_exact": true,
+        "ema_loaded": false,
+        "source_step": 100000
+      },
+      "optimizer-check.json": {
+        "step": 10,
+        "parameter_max_abs_change": 0.00034946948289871216
+      },
+      "checkpoint": {
+        "bytes": 620195092,
+        "mtime": 1792062314.815309
+      },
+      "log_tail": "\": \"running\", \"kind\": \"act\", \"pid\": 3639308, \"step\": 500, \"source_step\": 100000, \"target_steps\": 20000, \"loss\": 0.19903415441513062, \"elapsed_s\": 26.6840877532959}\n{\"status\": \"running\", \"kind\": \"act\", \"pid\": 3639308, \"step\": 600, \"source_step\": 100000, \"target_steps\": 20000, \"loss\": 0.1782492697238922, \"elapsed_s\": 31.553037643432617}\n{\"status\": \"running\", \"kind\": \"act\", \"pid\": 3639308, \"step\": 700, \"source_step\": 100000, \"target_steps\": 20000, \"loss\": 0.16316214203834534, \"elapsed_s\": 35.8579204082489}\n{\"status\": \"running\", \"kind\": \"act\", \"pid\": 3639308, \"step\": 800, \"source_step\": 100000, \"target_steps\": 20000, \"loss\": 0.1876516044139862, \"elapsed_s\": 40.20665764808655}\n{\"status\": \"running\", \"kind\": \"act\", \"pid\": 3639308, \"step\": 900, \"source_step\": 100000, \"target_steps\": 20000, \"loss\": 0.1658620983362198, \"elapsed_s\": 44.52281475067139}\n{\"status\": \"running\", \"kind\": \"act\", \"pid\": 3639308, \"step\": 1000, \"source_step\": 100000, \"target_steps\": 20000, \"loss\": 0.15728414058685303, \"elapsed_s\": 48.98699331283569}\n{\"status\": \"running\", \"kind\": \"act\", \"pid\": 3639308, \"step\": 1100, \"source_step\": 100000, \"target_steps\": 20000, \"loss\": 0.15696483850479126, \"elapsed_s\": 53.3740553855896}\n"
+    },
+    "dp-epsilon": {
+      "status.json": {
+        "status": "running",
+        "kind": "dp-epsilon",
+        "pid": 3639309,
+        "step": 100,
+        "source_step": 102641,
+        "target_steps": 20000,
+        "loss": 0.03014981560409069,
+        "elapsed_s": 46.590490102767944
+      },
+      "initialization-verification.json": {
+        "model_exact": true,
+        "optimizer_loaded": true,
+        "normalization_exact": true,
+        "ema_loaded": true,
+        "source_step": 102641
+      },
+      "optimizer-check.json": {
+        "step": 10,
+        "parameter_max_abs_change": 0.0002613067626953125
+      },
+      "checkpoint": {
+        "bytes": 1440830942,
+        "mtime": 1792062316.3219671
+      },
+      "log_tail": "{\"status\": \"running\", \"kind\": \"dp-epsilon\", \"pid\": 3639309, \"step\": 1, \"source_step\": 102641, \"target_steps\": 20000, \"loss\": 0.6147317290306091, \"elapsed_s\": 1.0786492824554443}\n{\"status\": \"running\", \"kind\": \"dp-epsilon\", \"pid\": 3639309, \"step\": 100, \"source_step\": 102641, \"target_steps\": 20000, \"loss\": 0.03014981560409069, \"elapsed_s\": 46.590490102767944}\n"
+    },
+    "dp-sample": {
+      "status.json": {
+        "status": "running",
+        "kind": "dp-sample",
+        "pid": 3639310,
+        "step": 100,
+        "source_step": 102641,
+        "target_steps": 20000,
+        "loss": 0.018034635111689568,
+        "elapsed_s": 47.21275281906128
+      },
+      "initialization-verification.json": {
+        "model_exact": true,
+        "optimizer_loaded": true,
+        "normalization_exact": true,
+        "ema_loaded": true,
+        "source_step": 102641
+      },
+      "optimizer-check.json": {
+        "step": 10,
+        "parameter_max_abs_change": 0.00021772831678390503
+      },
+      "checkpoint": {
+        "bytes": 1440830942,
+        "mtime": 1792062318.070964
+      },
+      "log_tail": "{\"status\": \"running\", \"kind\": \"dp-sample\", \"pid\": 3639310, \"step\": 1, \"source_step\": 102641, \"target_steps\": 20000, \"loss\": 0.10835033655166626, \"elapsed_s\": 1.5858345031738281}\n{\"status\": \"running\", \"kind\": \"dp-sample\", \"pid\": 3639310, \"step\": 100, \"source_step\": 102641, \"target_steps\": 20000, \"loss\": 0.018034635111689568, \"elapsed_s\": 47.21275281906128}\n"
+    }
+  },
+  "gpu": "gpu_uuid, pid, used_gpu_memory [MiB]\nGPU-9d79e8fc-4895-171e-768c-f63ec6f58f47, 845146, 8816 MiB\nGPU-2b647540-8cc6-f42e-0daf-b5d6f5ac548c, 303653, 5756 MiB\nGPU-05d66b51-2ff2-88b4-6ad3-d9a62ff2edc1, 2466708, 7028 MiB\nGPU-155dccab-a2eb-fa75-e708-04360ff896fe, 1219378, 13586 MiB\nGPU-68d1fffd-2ea2-3f95-f100-38f39855bcdf, 3639308, 3090 MiB\nGPU-68d1fffd-2ea2-3f95-f100-38f39855bcdf, 3639309, 4786 MiB\nGPU-68d1fffd-2ea2-3f95-f100-38f39855bcdf, 3639310, 4786 MiB\nGPU-68d1fffd-2ea2-3f95-f100-38f39855bcdf, 3653832, 1678 MiB\nGPU-5f5fd13a-a0c9-1525-e752-3f0137a267ea, 90464, 17638 MiB\n"
+}

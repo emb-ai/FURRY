@@ -1,0 +1,774 @@
+{
+  "source_revision": "b06178f19a22f2138cbd31f60c6d494bc263f67d",
+  "resolved_dof_weights": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "source_scale_subset": {
+    "tracking_joint_dof": 2.0,
+    "tracking_keybody_pos": 2.0,
+    "tracking_keybody_pos_global": 2.0
+  },
+  "method": "Exact pinned source position-reward formulas: dof scale2 exp(-.15 weighted squared difference), local and global keybody scale2 each exp(-10 summed squared distance). One leg IK vertical ankle translation, unchanged orientation, root, opposite leg, arms. All tracking errors start zero. Holding sole XY speed fixed at measured reference FD; qvel, root pose/velocity, action/force/contact terms not modeled. Compare reward rates; training multiplies every term by common dt=.02.",
+  "limitations": [
+    "Local objective slice; not complete rollout return or proof of PPO convergence",
+    "Not all feasible ways to lift a foot: fixed root and foot orientation",
+    "Real policy may already deviate from reference, changing marginal incentives",
+    "Airtime/contact-force/slip and future stability gains may offset this static penalty; not calculated here"
+  ],
+  "results": [
+    {
+      "elapsed": 4.43,
+      "source_sequence": 26103,
+      "foot": "left",
+      "reference_sole_m": 0.0010665962343548068,
+      "reference_centroid_xy_speed_m_s": 1.0010466938702556,
+      "clearance_cost_initial": 0.07579460000721372,
+      "variants": [
+        {
+          "sole_height_m": 0.0010665962343548068,
+          "ankle_ik_error": 1.2358003197362412e-17,
+          "tracking_joint_reward_loss": 0.0,
+          "tracking_local_plus_global_key_reward_loss": 0.0,
+          "clearance_reward_gain": 0.0,
+          "net_reward_rate_change": 0.0
+        },
+        {
+          "sole_height_m": 0.010000000000004842,
+          "ankle_ik_error": 5.707657006625683e-14,
+          "tracking_joint_reward_loss": 0.0017820064148770707,
+          "tracking_local_plus_global_key_reward_loss": 0.0060038363247607385,
+          "clearance_reward_gain": 0.019130743090112867,
+          "net_reward_rate_change": 0.01134490035047506
+        },
+        {
+          "sole_height_m": 0.019999999999999993,
+          "ankle_ik_error": 4.1769444590814745e-16,
+          "tracking_joint_reward_loss": 0.007482669965173459,
+          "tracking_local_plus_global_key_reward_loss": 0.025852976100456875,
+          "clearance_reward_gain": 0.03749809330280718,
+          "net_reward_rate_change": 0.004162447237176844
+        },
+        {
+          "sole_height_m": 0.02999999999999996,
+          "ankle_ik_error": 1.29096251287947e-16,
+          "tracking_joint_reward_loss": 0.0164258209291719,
+          "tracking_local_plus_global_key_reward_loss": 0.05804700179998302,
+          "clearance_reward_gain": 0.052449130387442144,
+          "net_reward_rate_change": -0.022023692341712774
+        },
+        {
+          "sole_height_m": 0.04000000000000014,
+          "ankle_ik_error": 2.4878849260672417e-16,
+          "tracking_joint_reward_loss": 0.02808423169001549,
+          "tracking_local_plus_global_key_reward_loss": 0.10127240501559626,
+          "clearance_reward_gain": 0.06381474697983447,
+          "net_reward_rate_change": -0.06554188972577728
+        },
+        {
+          "sole_height_m": 0.04999999999999769,
+          "ankle_ik_error": 2.601790716595855e-15,
+          "tracking_joint_reward_loss": 0.0420485302658566,
+          "tracking_local_plus_global_key_reward_loss": 0.15439062243806465,
+          "clearance_reward_gain": 0.07146521063397226,
+          "net_reward_rate_change": -0.12497394206994898
+        },
+        {
+          "sole_height_m": 0.06499999999983615,
+          "ankle_ik_error": 1.9550221395279865e-13,
+          "tracking_joint_reward_loss": 0.06662042881816814,
+          "tracking_local_plus_global_key_reward_loss": 0.25040411616819463,
+          "clearance_reward_gain": 0.07579460000721372,
+          "net_reward_rate_change": -0.24122994497914907
+        }
+      ]
+    },
+    {
+      "elapsed": 4.46,
+      "source_sequence": 26105,
+      "foot": "left",
+      "reference_sole_m": 0.001250947831878753,
+      "reference_centroid_xy_speed_m_s": 1.192594434125074,
+      "clearance_cost_initial": 0.07680277259861501,
+      "variants": [
+        {
+          "sole_height_m": 0.001250947831878753,
+          "ankle_ik_error": 1.3487626383956061e-17,
+          "tracking_joint_reward_loss": 0.0,
+          "tracking_local_plus_global_key_reward_loss": 0.0,
+          "clearance_reward_gain": 0.0,
+          "net_reward_rate_change": 0.0
+        },
+        {
+          "sole_height_m": 0.010000000000005744,
+          "ankle_ik_error": 4.440858833412158e-14,
+          "tracking_joint_reward_loss": 0.001606267652271843,
+          "tracking_local_plus_global_key_reward_loss": 0.005650316239349137,
+          "clearance_reward_gain": 0.01905443381301708,
+          "net_reward_rate_change": 0.011797849921396101
+        },
+        {
+          "sole_height_m": 0.02000000000000023,
+          "ankle_ik_error": 2.1928872033403368e-16,
+          "tracking_joint_reward_loss": 0.006930389507523502,
+          "tracking_local_plus_global_key_reward_loss": 0.024977308236838885,
+          "clearance_reward_gain": 0.03776601451995798,
+          "net_reward_rate_change": 0.0058583167755955935
+        },
+        {
+          "sole_height_m": 0.030000000000000016,
+          "ankle_ik_error": 3.296558214480205e-16,
+          "tracking_joint_reward_loss": 0.015382354334197646,
+          "tracking_local_plus_global_key_reward_loss": 0.05665496112750186,
+          "clearance_reward_gain": 0.05300246564000688,
+          "net_reward_rate_change": -0.019034849821692623
+        },
+        {
+          "sole_height_m": 0.03999999999999992,
+          "ankle_ik_error": 3.369548521908123e-16,
+          "tracking_joint_reward_loss": 0.026484083387993407,
+          "tracking_local_plus_global_key_reward_loss": 0.09945449273707534,
+          "clearance_reward_gain": 0.06458813237449534,
+          "net_reward_rate_change": -0.0613504437505734
+        },
+        {
+          "sole_height_m": 0.04999999999999937,
+          "ankle_ik_error": 1.343333510268852e-15,
+          "tracking_joint_reward_loss": 0.03985833453671692,
+          "tracking_local_plus_global_key_reward_loss": 0.1522867964299678,
+          "clearance_reward_gain": 0.07238819887278658,
+          "net_reward_rate_change": -0.11975693209389815
+        },
+        {
+          "sole_height_m": 0.06499999999991894,
+          "ankle_ik_error": 1.1037158085940271e-13,
+          "tracking_joint_reward_loss": 0.06352803828744406,
+          "tracking_local_plus_global_key_reward_loss": 0.24818861530162553,
+          "clearance_reward_gain": 0.07680277259861501,
+          "net_reward_rate_change": -0.23491388099045457
+        }
+      ]
+    },
+    {
+      "elapsed": 4.49,
+      "source_sequence": 26107,
+      "foot": "left",
+      "reference_sole_m": 0.0013924103584030722,
+      "reference_centroid_xy_speed_m_s": 1.8295099976758264,
+      "clearance_cost_initial": 0.07763218913231684,
+      "variants": [
+        {
+          "sole_height_m": 0.0013924103584030722,
+          "ankle_ik_error": 2.8162536333675835e-18,
+          "tracking_joint_reward_loss": 0.0,
+          "tracking_local_plus_global_key_reward_loss": 0.0,
+          "clearance_reward_gain": 0.0,
+          "net_reward_rate_change": 0.0
+        },
+        {
+          "sole_height_m": 0.010000000000008478,
+          "ankle_ik_error": 3.8557966410887456e-14,
+          "tracking_joint_reward_loss": 0.00154860705600198,
+          "tracking_local_plus_global_key_reward_loss": 0.005574066916920811,
+          "clearance_reward_gain": 0.01900147703182653,
+          "net_reward_rate_change": 0.011878803058903738
+        },
+        {
+          "sole_height_m": 0.01999999999999984,
+          "ankle_ik_error": 1.8124657350358592e-16,
+          "tracking_joint_reward_loss": 0.006806264682078812,
+          "tracking_local_plus_global_key_reward_loss": 0.025097180646392235,
+          "clearance_reward_gain": 0.03799292817930644,
+          "net_reward_rate_change": 0.006089482850835392
+        },
+        {
+          "sole_height_m": 0.029999999999999836,
+          "ankle_ik_error": 3.471974889210495e-16,
+          "tracking_joint_reward_loss": 0.015200248931896407,
+          "tracking_local_plus_global_key_reward_loss": 0.057271095622112494,
+          "clearance_reward_gain": 0.05346158033029713,
+          "net_reward_rate_change": -0.01900976422371177
+        },
+        {
+          "sole_height_m": 0.04000000000000025,
+          "ankle_ik_error": 2.440271314740928e-16,
+          "tracking_joint_reward_loss": 0.026257492446765382,
+          "tracking_local_plus_global_key_reward_loss": 0.10085409128760936,
+          "clearance_reward_gain": 0.06522635939322574,
+          "net_reward_rate_change": -0.061885224341149
+        },
+        {
+          "sole_height_m": 0.04999999999999943,
+          "ankle_ik_error": 1.6153453451805925e-15,
+          "tracking_joint_reward_loss": 0.03960341087139851,
+          "tracking_local_plus_global_key_reward_loss": 0.1547381781910874,
+          "clearance_reward_gain": 0.0731482393805204,
+          "net_reward_rate_change": -0.12119334968196552
+        },
+        {
+          "sole_height_m": 0.06499999999996287,
+          "ankle_ik_error": 5.6243468701885964e-14,
+          "tracking_joint_reward_loss": 0.06326336037729355,
+          "tracking_local_plus_global_key_reward_loss": 0.2526698345446525,
+          "clearance_reward_gain": 0.07763218913231684,
+          "net_reward_rate_change": -0.23830100578962923
+        }
+      ]
+    },
+    {
+      "elapsed": 4.5200000000000005,
+      "source_sequence": 26109,
+      "foot": "left",
+      "reference_sole_m": 0.0014699556882442804,
+      "reference_centroid_xy_speed_m_s": 1.9623034986227545,
+      "clearance_cost_initial": 0.07749121777564483,
+      "variants": [
+        {
+          "sole_height_m": 0.0014699556882442804,
+          "ankle_ik_error": 5.297905773784678e-18,
+          "tracking_joint_reward_loss": 0.0,
+          "tracking_local_plus_global_key_reward_loss": 0.0,
+          "clearance_reward_gain": 0.0,
+          "net_reward_rate_change": 0.0
+        },
+        {
+          "sole_height_m": 0.010000000000010587,
+          "ankle_ik_error": 3.715539461927911e-14,
+          "tracking_joint_reward_loss": 0.001587915320078973,
+          "tracking_local_plus_global_key_reward_loss": 0.005747431017891662,
+          "clearance_reward_gain": 0.01882939682817164,
+          "net_reward_rate_change": 0.011494050490201007
+        },
+        {
+          "sole_height_m": 0.019999999999999758,
+          "ankle_ik_error": 3.144256934965844e-16,
+          "tracking_joint_reward_loss": 0.007032213720281044,
+          "tracking_local_plus_global_key_reward_loss": 0.026091749340256692,
+          "clearance_reward_gain": 0.03783071164789964,
+          "net_reward_rate_change": 0.004706748587361902
+        },
+        {
+          "sole_height_m": 0.030000000000000363,
+          "ankle_ik_error": 4.609333186648183e-16,
+          "tracking_joint_reward_loss": 0.015721988666636707,
+          "tracking_local_plus_global_key_reward_loss": 0.0596375132603523,
+          "clearance_reward_gain": 0.053307549888172545,
+          "net_reward_rate_change": -0.022051952038816464
+        },
+        {
+          "sole_height_m": 0.04000000000000017,
+          "ankle_ik_error": 4.1423722648966857e-16,
+          "tracking_joint_reward_loss": 0.02715379214705642,
+          "tracking_local_plus_global_key_reward_loss": 0.10504892967039509,
+          "clearance_reward_gain": 0.06507864488782356,
+          "net_reward_rate_change": -0.06712407692962795
+        },
+        {
+          "sole_height_m": 0.05000000000000041,
+          "ankle_ik_error": 1.5854713683845159e-15,
+          "tracking_joint_reward_loss": 0.04093171923953349,
+          "tracking_local_plus_global_key_reward_loss": 0.16114134770764946,
+          "clearance_reward_gain": 0.0730048210127614,
+          "net_reward_rate_change": -0.12906824593442154
+        },
+        {
+          "sole_height_m": 0.06499999999999881,
+          "ankle_ik_error": 5.182359670649969e-14,
+          "tracking_joint_reward_loss": 0.06531444882737475,
+          "tracking_local_plus_global_key_reward_loss": 0.26295628022663614,
+          "clearance_reward_gain": 0.07749121777564483,
+          "net_reward_rate_change": -0.25077951127836606
+        }
+      ]
+    },
+    {
+      "elapsed": 4.55,
+      "source_sequence": 26111,
+      "foot": "left",
+      "reference_sole_m": 0.0014910816997573033,
+      "reference_centroid_xy_speed_m_s": 0.594550335104827,
+      "clearance_cost_initial": 0.06478453505871651,
+      "variants": [
+        {
+          "sole_height_m": 0.0014910816997573033,
+          "ankle_ik_error": 6.895146740995749e-18,
+          "tracking_joint_reward_loss": 0.0,
+          "tracking_local_plus_global_key_reward_loss": 0.0,
+          "clearance_reward_gain": 0.0,
+          "net_reward_rate_change": 0.0
+        },
+        {
+          "sole_height_m": 0.009999999999994489,
+          "ankle_ik_error": 3.580631007888292e-14,
+          "tracking_joint_reward_loss": 0.0017020158390543552,
+          "tracking_local_plus_global_key_reward_loss": 0.006123200469271695,
+          "clearance_reward_gain": 0.015792221051625477,
+          "net_reward_rate_change": 0.007967004743299427
+        },
+        {
+          "sole_height_m": 0.02000000000000009,
+          "ankle_ik_error": 1.2619448763928048e-16,
+          "tracking_joint_reward_loss": 0.0075235825803044035,
+          "tracking_local_plus_global_key_reward_loss": 0.027779094871458503,
+          "clearance_reward_gain": 0.03171650313522534,
+          "net_reward_rate_change": -0.003586174316537568
+        },
+        {
+          "sole_height_m": 0.030000000000000016,
+          "ankle_ik_error": 2.917462283620938e-16,
+          "tracking_joint_reward_loss": 0.016769794540864063,
+          "tracking_local_plus_global_key_reward_loss": 0.06336633961522473,
+          "clearance_reward_gain": 0.04464770095163839,
+          "net_reward_rate_change": -0.0354884332044504
+        },
+        {
+          "sole_height_m": 0.04000000000000036,
+          "ankle_ik_error": 4.099756540608458e-16,
+          "tracking_joint_reward_loss": 0.02887934441549064,
+          "tracking_local_plus_global_key_reward_loss": 0.11138916357774434,
+          "clearance_reward_gain": 0.05445946161450266,
+          "net_reward_rate_change": -0.08580904637873232
+        },
+        {
+          "sole_height_m": 0.050000000000000384,
+          "ankle_ik_error": 1.5685177774539277e-15,
+          "tracking_joint_reward_loss": 0.04341714057629311,
+          "tracking_local_plus_global_key_reward_loss": 0.17054098812285068,
+          "clearance_reward_gain": 0.0610551576807683,
+          "net_reward_rate_change": -0.1529029710183755
+        },
+        {
+          "sole_height_m": 0.06500000000000976,
+          "ankle_ik_error": 6.333251145259757e-14,
+          "tracking_joint_reward_loss": 0.06903538482827799,
+          "tracking_local_plus_global_key_reward_loss": 0.2775749746241389,
+          "clearance_reward_gain": 0.06478453505871651,
+          "net_reward_rate_change": -0.28182582439370035
+        }
+      ]
+    },
+    {
+      "elapsed": 4.58,
+      "source_sequence": 26113,
+      "foot": "left",
+      "reference_sole_m": 0.0014627060140966945,
+      "reference_centroid_xy_speed_m_s": 0.5913968353024639,
+      "clearance_cost_initial": 0.06469182052134925,
+      "variants": [
+        {
+          "sole_height_m": 0.0014627060140966945,
+          "ankle_ik_error": 7.421780848046362e-18,
+          "tracking_joint_reward_loss": 0.0,
+          "tracking_local_plus_global_key_reward_loss": 0.0,
+          "clearance_reward_gain": 0.0,
+          "net_reward_rate_change": 0.0
+        },
+        {
+          "sole_height_m": 0.009999999999964041,
+          "ankle_ik_error": 5.4086427375063614e-14,
+          "tracking_joint_reward_loss": 0.0018863008342739599,
+          "tracking_local_plus_global_key_reward_loss": 0.006692304698377597,
+          "clearance_reward_gain": 0.01581281625653219,
+          "net_reward_rate_change": 0.007234210723880636
+        },
+        {
+          "sole_height_m": 0.019999999999999938,
+          "ankle_ik_error": 3.247526959529293e-16,
+          "tracking_joint_reward_loss": 0.008253565337977479,
+          "tracking_local_plus_global_key_reward_loss": 0.03009999460804403,
+          "clearance_reward_gain": 0.03170090916948054,
+          "net_reward_rate_change": -0.0066526507765409665
+        },
+        {
+          "sole_height_m": 0.0300000000000001,
+          "ankle_ik_error": 1.6258537209026046e-16,
+          "tracking_joint_reward_loss": 0.01827630316559516,
+          "tracking_local_plus_global_key_reward_loss": 0.06830108057581086,
+          "clearance_reward_gain": 0.044602262767914236,
+          "net_reward_rate_change": -0.04197512097349178
+        },
+        {
+          "sole_height_m": 0.0400000000000001,
+          "ankle_ik_error": 3.771958576313886e-16,
+          "tracking_joint_reward_loss": 0.031310199139904,
+          "tracking_local_plus_global_key_reward_loss": 0.11957663116054514,
+          "clearance_reward_gain": 0.054391108906950314,
+          "net_reward_rate_change": -0.09649572139349882
+        },
+        {
+          "sole_height_m": 0.050000000000000426,
+          "ankle_ik_error": 1.5696176521240611e-15,
+          "tracking_joint_reward_loss": 0.04686596518171463,
+          "tracking_local_plus_global_key_reward_loss": 0.18245785541925863,
+          "clearance_reward_gain": 0.06097127178204664,
+          "net_reward_rate_change": -0.1683525488189266
+        },
+        {
+          "sole_height_m": 0.06500000000001505,
+          "ankle_ik_error": 6.05348949670002e-14,
+          "tracking_joint_reward_loss": 0.07410899336926838,
+          "tracking_local_plus_global_key_reward_loss": 0.29571306335832875,
+          "clearance_reward_gain": 0.06469182052134925,
+          "net_reward_rate_change": -0.3051302362062479
+        }
+      ]
+    },
+    {
+      "elapsed": 4.61,
+      "source_sequence": 26116,
+      "foot": "left",
+      "reference_sole_m": 0.0013864021255087554,
+      "reference_centroid_xy_speed_m_s": 0.5740070817610445,
+      "clearance_cost_initial": 0.06399139791632336,
+      "variants": [
+        {
+          "sole_height_m": 0.0013864021255087554,
+          "ankle_ik_error": 1.0043982354535316e-17,
+          "tracking_joint_reward_loss": 0.0,
+          "tracking_local_plus_global_key_reward_loss": 0.0,
+          "clearance_reward_gain": 0.0,
+          "net_reward_rate_change": 0.0
+        },
+        {
+          "sole_height_m": 0.010000000000023008,
+          "ankle_ik_error": 3.0276130144918135e-14,
+          "tracking_joint_reward_loss": 0.0021710847688788766,
+          "tracking_local_plus_global_key_reward_loss": 0.0075698981184764485,
+          "clearance_reward_gain": 0.01575912679403113,
+          "net_reward_rate_change": 0.006018143906675805
+        },
+        {
+          "sole_height_m": 0.019999999999999966,
+          "ankle_ik_error": 2.3473798503204734e-16,
+          "tracking_joint_reward_loss": 0.009320409870748022,
+          "tracking_local_plus_global_key_reward_loss": 0.033474871266424365,
+          "clearance_reward_gain": 0.031440606209471644,
+          "net_reward_rate_change": -0.011354674927700745
+        },
+        {
+          "sole_height_m": 0.029999999999999933,
+          "ankle_ik_error": 2.729097856493193e-16,
+          "tracking_joint_reward_loss": 0.020420744315455184,
+          "tracking_local_plus_global_key_reward_loss": 0.07528867829860011,
+          "clearance_reward_gain": 0.044171613240807095,
+          "net_reward_rate_change": -0.0515378093732482
+        },
+        {
+          "sole_height_m": 0.039999999999998974,
+          "ankle_ik_error": 1.0300083113950171e-15,
+          "tracking_joint_reward_loss": 0.03470901412060697,
+          "tracking_local_plus_global_key_reward_loss": 0.1309689868914674,
+          "clearance_reward_gain": 0.05382969120850911,
+          "net_reward_rate_change": -0.11184830980356528
+        },
+        {
+          "sole_height_m": 0.04999999999999968,
+          "ankle_ik_error": 1.6876776482868705e-15,
+          "tracking_joint_reward_loss": 0.05162189669258987,
+          "tracking_local_plus_global_key_reward_loss": 0.1988214483766172,
+          "clearance_reward_gain": 0.06032122138963214,
+          "net_reward_rate_change": -0.19012212367957493
+        },
+        {
+          "sole_height_m": 0.06499999999998572,
+          "ankle_ik_error": 2.979681473062588e-14,
+          "tracking_joint_reward_loss": 0.0809916370597695,
+          "tracking_local_plus_global_key_reward_loss": 0.32023770044052374,
+          "clearance_reward_gain": 0.06399139791632336,
+          "net_reward_rate_change": -0.33723793958396986
+        }
+      ]
+    },
+    {
+      "elapsed": 4.64,
+      "source_sequence": 26118,
+      "foot": "left",
+      "reference_sole_m": 0.0013016931291505484,
+      "reference_centroid_xy_speed_m_s": 0.544121271148399,
+      "clearance_cost_initial": 0.06257087670107953,
+      "variants": [
+        {
+          "sole_height_m": 0.0013016931291505484,
+          "ankle_ik_error": 1.2287598648172677e-17,
+          "tracking_joint_reward_loss": 0.0,
+          "tracking_local_plus_global_key_reward_loss": 0.0,
+          "clearance_reward_gain": 0.0,
+          "net_reward_rate_change": 0.0
+        },
+        {
+          "sole_height_m": 0.01000000000489364,
+          "ankle_ik_error": 4.9702723098418964e-12,
+          "tracking_joint_reward_loss": 0.002513602853570206,
+          "tracking_local_plus_global_key_reward_loss": 0.008548351874864723,
+          "clearance_reward_gain": 0.015540485525790682,
+          "net_reward_rate_change": 0.004478530797355752
+        },
+        {
+          "sole_height_m": 0.019999999999999924,
+          "ankle_ik_error": 2.5935273699879423e-16,
+          "tracking_joint_reward_loss": 0.010560429973730627,
+          "tracking_local_plus_global_key_reward_loss": 0.037071128162254774,
+          "clearance_reward_gain": 0.030837734777838466,
+          "net_reward_rate_change": -0.016793823358146935
+        },
+        {
+          "sole_height_m": 0.03000000000000024,
+          "ankle_ik_error": 3.426716446432545e-16,
+          "tracking_joint_reward_loss": 0.022860911977551607,
+          "tracking_local_plus_global_key_reward_loss": 0.08251974146949467,
+          "clearance_reward_gain": 0.04325214502343355,
+          "net_reward_rate_change": -0.06212850842361273
+        },
+        {
+          "sole_height_m": 0.04000000000000293,
+          "ankle_ik_error": 3.823640626143397e-15,
+          "tracking_joint_reward_loss": 0.038514244945272426,
+          "tracking_local_plus_global_key_reward_loss": 0.14248640359415016,
+          "clearance_reward_gain": 0.05266729587613883,
+          "net_reward_rate_change": -0.12833335266328375
+        },
+        {
+          "sole_height_m": 0.050000000000003215,
+          "ankle_ik_error": 3.3514603341724823e-15,
+          "tracking_joint_reward_loss": 0.05687606826580373,
+          "tracking_local_plus_global_key_reward_loss": 0.21503865747069698,
+          "clearance_reward_gain": 0.05899422710827995,
+          "net_reward_rate_change": -0.21292049862822077
+        },
+        {
+          "sole_height_m": 0.0650000000000026,
+          "ankle_ik_error": 3.804837766552245e-15,
+          "tracking_joint_reward_loss": 0.08847122484840383,
+          "tracking_local_plus_global_key_reward_loss": 0.3439259549635455,
+          "clearance_reward_gain": 0.06257087670107953,
+          "net_reward_rate_change": -0.36982630311086984
+        }
+      ]
+    },
+    {
+      "elapsed": 4.67,
+      "source_sequence": 26120,
+      "foot": "left",
+      "reference_sole_m": 0.0012106859933175328,
+      "reference_centroid_xy_speed_m_s": 1.687330276701353,
+      "clearance_cost_initial": 0.07798247630891753,
+      "variants": [
+        {
+          "sole_height_m": 0.0012106859933175328,
+          "ankle_ik_error": 1.0396808373771308e-17,
+          "tracking_joint_reward_loss": 0.0,
+          "tracking_local_plus_global_key_reward_loss": 0.0,
+          "clearance_reward_gain": 0.0,
+          "net_reward_rate_change": 0.0
+        },
+        {
+          "sole_height_m": 0.010000000000000262,
+          "ankle_ik_error": 3.985767436762463e-16,
+          "tracking_joint_reward_loss": 0.002928521878439596,
+          "tracking_local_plus_global_key_reward_loss": 0.009701969613640636,
+          "clearance_reward_gain": 0.019409548300729718,
+          "net_reward_rate_change": 0.006779056808649486
+        },
+        {
+          "sole_height_m": 0.0200000000000008,
+          "ankle_ik_error": 9.105137869074528e-16,
+          "tracking_joint_reward_loss": 0.01201149517367513,
+          "tracking_local_plus_global_key_reward_loss": 0.04116181436581076,
+          "clearance_reward_gain": 0.03838267724846789,
+          "net_reward_rate_change": -0.014790632291018003
+        },
+        {
+          "sole_height_m": 0.03000000000005554,
+          "ankle_ik_error": 5.855460532648086e-14,
+          "tracking_joint_reward_loss": 0.02565504257038396,
+          "tracking_local_plus_global_key_reward_loss": 0.09055562078075151,
+          "clearance_reward_gain": 0.053836123828650106,
+          "net_reward_rate_change": -0.06237453952248537
+        },
+        {
+          "sole_height_m": 0.040000000000607334,
+          "ankle_ik_error": 6.216407291866076e-13,
+          "tracking_joint_reward_loss": 0.042800615618014994,
+          "tracking_local_plus_global_key_reward_loss": 0.1550563605714199,
+          "clearance_reward_gain": 0.065589171371917,
+          "net_reward_rate_change": -0.13226780481751788
+        },
+        {
+          "sole_height_m": 0.05000000000301135,
+          "ankle_ik_error": 3.0625073177714763e-12,
+          "tracking_joint_reward_loss": 0.06271682183138165,
+          "tracking_local_plus_global_key_reward_loss": 0.23247446852366138,
+          "clearance_reward_gain": 0.0735030716368914,
+          "net_reward_rate_change": -0.22168821871815164
+        },
+        {
+          "sole_height_m": 0.06500000000000015,
+          "ankle_ik_error": 2.4876280156680137e-16,
+          "tracking_joint_reward_loss": 0.09665366544447117,
+          "tracking_local_plus_global_key_reward_loss": 0.36891999421331756,
+          "clearance_reward_gain": 0.07798247630891753,
+          "net_reward_rate_change": -0.3875911833488712
+        }
+      ]
+    },
+    {
+      "elapsed": 4.7,
+      "source_sequence": 26122,
+      "foot": "left",
+      "reference_sole_m": 0.0011131866628764408,
+      "reference_centroid_xy_speed_m_s": 0.45088438998055264,
+      "clearance_cost_initial": 0.05686134144197741,
+      "variants": [
+        {
+          "sole_height_m": 0.0011131866628764408,
+          "ankle_ik_error": 6.753123586553615e-18,
+          "tracking_joint_reward_loss": 0.0,
+          "tracking_local_plus_global_key_reward_loss": 0.0,
+          "clearance_reward_gain": 0.0,
+          "net_reward_rate_change": 0.0
+        },
+        {
+          "sole_height_m": 0.010000000000000096,
+          "ankle_ik_error": 2.6724735005217056e-16,
+          "tracking_joint_reward_loss": 0.0034501468837284032,
+          "tracking_local_plus_global_key_reward_loss": 0.011102930357487455,
+          "clearance_reward_gain": 0.014401075799277185,
+          "net_reward_rate_change": -0.00015200144193867372
+        },
+        {
+          "sole_height_m": 0.020000000000035035,
+          "ankle_ik_error": 3.627531710751784e-14,
+          "tracking_joint_reward_loss": 0.013770329646306617,
+          "tracking_local_plus_global_key_reward_loss": 0.04593756219519896,
+          "clearance_reward_gain": 0.02823419011217465,
+          "net_reward_rate_change": -0.03147370172933093
+        },
+        {
+          "sole_height_m": 0.03000000000239528,
+          "ankle_ik_error": 2.4569895480417636e-12,
+          "tracking_joint_reward_loss": 0.028963876453209112,
+          "tracking_local_plus_global_key_reward_loss": 0.09969120014801859,
+          "clearance_reward_gain": 0.03944442861963615,
+          "net_reward_rate_change": -0.08921064798159155
+        },
+        {
+          "sole_height_m": 0.040000000000000153,
+          "ankle_ik_error": 5.043638650858824e-16,
+          "tracking_joint_reward_loss": 0.047788884796238135,
+          "tracking_local_plus_global_key_reward_loss": 0.16905166509723063,
+          "clearance_reward_gain": 0.04793692718825526,
+          "net_reward_rate_change": -0.1689036227052135
+        },
+        {
+          "sole_height_m": 0.04999999999999997,
+          "ankle_ik_error": 4.540623398210967e-16,
+          "tracking_joint_reward_loss": 0.06942013697995482,
+          "tracking_local_plus_global_key_reward_loss": 0.2515526844026032,
+          "clearance_reward_gain": 0.053639332159208686,
+          "net_reward_rate_change": -0.2673334892233493
+        },
+        {
+          "sole_height_m": 0.06500000000347471,
+          "ankle_ik_error": 3.559664710750193e-12,
+          "tracking_joint_reward_loss": 0.10588958995105605,
+          "tracking_local_plus_global_key_reward_loss": 0.3956749974677235,
+          "clearance_reward_gain": 0.05686134144197741,
+          "net_reward_rate_change": -0.4447032459768021
+        }
+      ]
+    },
+    {
+      "elapsed": 4.73,
+      "source_sequence": 26124,
+      "foot": "left",
+      "reference_sole_m": 0.0010102712023087783,
+      "reference_centroid_xy_speed_m_s": 2.4167117147379824,
+      "clearance_cost_initial": 0.07862055269653134,
+      "variants": [
+        {
+          "sole_height_m": 0.0010102712023087783,
+          "ankle_ik_error": 4.33896003822096e-18,
+          "tracking_joint_reward_loss": 0.0,
+          "tracking_local_plus_global_key_reward_loss": 0.0,
+          "clearance_reward_gain": 0.0,
+          "net_reward_rate_change": 0.0
+        },
+        {
+          "sole_height_m": 0.00999999999999988,
+          "ankle_ik_error": 1.535013525904936e-16,
+          "tracking_joint_reward_loss": 0.004089717896904458,
+          "tracking_local_plus_global_key_reward_loss": 0.012777332043517843,
+          "clearance_reward_gain": 0.01992153655085871,
+          "net_reward_rate_change": 0.0030544866104364066
+        },
+        {
+          "sole_height_m": 0.020000000001027998,
+          "ankle_ik_error": 1.0506100817119621e-12,
+          "tracking_joint_reward_loss": 0.015837682110593596,
+          "tracking_local_plus_global_key_reward_loss": 0.0514016109641643,
+          "clearance_reward_gain": 0.03893464453742346,
+          "net_reward_rate_change": -0.028304648537334436
+        },
+        {
+          "sole_height_m": 0.029999999999999836,
+          "ankle_ik_error": 5.633650423144296e-16,
+          "tracking_joint_reward_loss": 0.03275307986187712,
+          "tracking_local_plus_global_key_reward_loss": 0.10985132647334148,
+          "clearance_reward_gain": 0.054421270416214584,
+          "net_reward_rate_change": -0.08818313591900401
+        },
+        {
+          "sole_height_m": 0.040000000000000056,
+          "ankle_ik_error": 4.574074217172568e-16,
+          "tracking_joint_reward_loss": 0.05339379514430466,
+          "tracking_local_plus_global_key_reward_loss": 0.18428442666636713,
+          "clearance_reward_gain": 0.06619991715138729,
+          "net_reward_rate_change": -0.1714783046592845
+        },
+        {
+          "sole_height_m": 0.05000000000000027,
+          "ankle_ik_error": 9.511460126322362e-16,
+          "tracking_joint_reward_loss": 0.07684092799146253,
+          "tracking_local_plus_global_key_reward_loss": 0.27195595959752616,
+          "clearance_reward_gain": 0.07413123007403788,
+          "net_reward_rate_change": -0.2746656575149508
+        },
+        {
+          "sole_height_m": 0.06499999999999968,
+          "ankle_ik_error": 4.045543751510863e-16,
+          "tracking_joint_reward_loss": 0.11593708111142811,
+          "tracking_local_plus_global_key_reward_loss": 0.4236739627545496,
+          "clearance_reward_gain": 0.07862055269653134,
+          "net_reward_rate_change": -0.46099049116944635
+        }
+      ]
+    }
+  ]
+}

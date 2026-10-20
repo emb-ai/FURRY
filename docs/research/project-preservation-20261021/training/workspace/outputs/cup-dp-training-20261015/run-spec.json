@@ -1,0 +1,86 @@
+{
+  "status": "RUNNING",
+  "task": "cup",
+  "episodes": 44,
+  "train_episodes": 40,
+  "validation_episodes": 4,
+  "independent_test_session": false,
+  "author_basis": {
+    "repository": "https://github.com/YanjieZe/Improved-3D-Diffusion-Policy",
+    "commit": "f5b27faabbb8952672dd3d6a21d0ba762d5dfabb",
+    "paper": "https://arxiv.org/html/2511.02832v1",
+    "exact_twist2_learner": false
+  },
+  "architecture": {
+    "vision": "R3M pretrained ResNet18, finetuned, BatchNorm as upstream",
+    "temporal": "unmodified upstream ConditionalUnet1D",
+    "down_dims": [
+      256,
+      512,
+      1024
+    ],
+    "condition_type": "film",
+    "horizon": 64,
+    "observation_steps": 2,
+    "execution_steps": 48,
+    "action_hz": 30,
+    "action_dim": 39,
+    "ddim_train_steps": 50,
+    "ddim_inference_steps": 10
+  },
+  "training": {
+    "epochs": 301,
+    "batch_size": 32,
+    "optimizer": "AdamW",
+    "lr": 0.0001,
+    "betas": [
+      0.95,
+      0.999
+    ],
+    "weight_decay": 1e-06,
+    "lr_schedule": "cosine, 500 warmup steps",
+    "ema_power": 0.75,
+    "seed": 0
+  },
+  "explicit_adaptations": [
+    "Two audited cup model families, per-episode archived state and provenance",
+    "Native FURRY 39-dimensional command/history, lower HOMIE policy frozen",
+    "Train-only limit normalization for action and command history separately",
+    "Proprio noise standard deviation = 10% of each raw channel training std; exact TWIST2 scale not published",
+    "No shadow maps; archived physical camera origin + previous sampled gaze; archived initial gaze",
+    "Validation uses held-out episodes, fixed diffusion noise and EMA weights; augmentation disabled in eval",
+    "Copy BatchNorm running statistics to EMA; upstream EMA only copies parameters",
+    "Standalone HDF5 adapter/training loop; no zarr/workspace dependency",
+    "PyTorch2.14/CUDA13 runtime instead of old iDP3 environment"
+  ],
+  "autonomous_evaluation": false,
+  "quest_vision_inference": false,
+  "apk_changed": false,
+  "upload_explicitly_authorized": true,
+  "sequence_sampling": "iDP3 pad_before=1, pad_after=47, horizon=64: max(0,N-15) windows per episode",
+  "source_sha256": {
+    "train.py": "c199feccae64fa908759ae5bb4c427f9a726a65f7880c035047356449eb53819",
+    "train.slurm": "a60332af95e7298055eba3e80a40fe4179a8a4f958ee2625c3dd8c6d5e369237",
+    "smoke.slurm": "a630134efba0c09d7c3507770735dd9088cab1878f55b26d8127a10eeeb4bf90",
+    "test_training.py": "2153334e40dd76e10cfd5bce338037ea8768692d619b18d4c59bb5635863dd84"
+  },
+  "gpu_smoke": "3 optimizer steps at full batch32 on two real episodes, then independent main run on all40/4",
+  "gpu_smoke_job": 118172,
+  "gpu_smoke_result": {
+    "job": 118172,
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "elapsed_seconds": 17,
+    "optimizer_steps": 3,
+    "encoder_max_abs_update": 6.034970283508301e-07,
+    "unet_max_abs_update": 6.007030606269836e-07,
+    "validation_noise_mse": 1.1508442362149556,
+    "parameters": 90022119
+  },
+  "main_job": 118174,
+  "main_node": "node211-22",
+  "main_observed_step": 682,
+  "completed_epochs_observed": 2,
+  "first_validation_noise_mse": 0.5926143949213181,
+  "checkpoint_saved": true
+}

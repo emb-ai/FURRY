@@ -1,0 +1,21 @@
+{
+  "destination": "mipt-stud:~/furry/cup-dp-20261015",
+  "files": {
+    "code-and-weights.tar.gz": {
+      "bytes": 41649803,
+      "sha256": "8982dd62a3402917f92c557a5e7f3a1cd3f9e85b2097aa68ec0295a3283fde2d"
+    },
+    "cup44-no-shadow-causal.hdf5.gz": {
+      "bytes": 728571260,
+      "sha256": "ab37d09d738020d46579ffeae2fe3b3a1da28949f2465b5f2f552ec0e9131bcc"
+    }
+  },
+  "remote_verified": true,
+  "decompressed_dataset_sha256": "6f0cd24a85e68a9a5ca140418e7edf784e4f2cf43a8698afbb9ac39b0b9ccd39",
+  "source_updates": {
+    "train.py": "c199feccae64fa908759ae5bb4c427f9a726a65f7880c035047356449eb53819",
+    "train.slurm": "a60332af95e7298055eba3e80a40fe4179a8a4f958ee2625c3dd8c6d5e369237",
+    "smoke.slurm": "a630134efba0c09d7c3507770735dd9088cab1878f55b26d8127a10eeeb4bf90",
+    "test_training.py": "2153334e40dd76e10cfd5bce338037ea8768692d619b18d4c59bb5635863dd84"
+  }
+}

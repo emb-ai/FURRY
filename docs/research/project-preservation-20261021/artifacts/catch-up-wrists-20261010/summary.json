@@ -1,0 +1,122 @@
+{
+  "status": "installed_verified",
+  "apk": "g1-quest-catch-up-wrists.apk",
+  "apk_sha256": "8d1b86eb220b1fbe77b6bb82f7c17e36582884fb2fcdd0a466829faa9b2134e7",
+  "changes": {
+    "catch_up": "reference-local velocity rotated into actual robot frame before correction",
+    "yaw_gain": 3,
+    "yaw_correction_limit_rad_s": 1,
+    "total_yaw_command_limit_rad_s": 1.2,
+    "wrists": "calibration-relative forearm/wrist articulation directly mapped to G1 wrist joints; intentional wrist motion retained",
+    "travel_gain": 1.0,
+    "procedural_gait": false
+  },
+  "tests": {
+    "unit_suite": "84 tests; 83 passed, 1 optional Torch skipped (before manifest parser patch)",
+    "manifest_after_patch": "passed including legacy defaults/new fields/invalid values",
+    "synthetic_menu_replay_cases": 19,
+    "replay_max_reference_and_state_error": 0,
+    "camera_servo_and_coordinate_tests": "passed",
+    "meta_retarget_calibration_and_articulation": "passed",
+    "diff_check": "passed"
+  },
+  "counterfactual_rollouts": [
+    {
+      "name": "old-m0-l0",
+      "exit": 0,
+      "seconds": 38.544873632,
+      "xy_mean": 0.44276551319358887,
+      "xy_max": 0.93666600365,
+      "yaw_mean_deg": 19.886511193230586,
+      "height_min": 0.739687542964,
+      "xy_24_26": 0.8451843003004549,
+      "error": ""
+    },
+    {
+      "name": "wrists-m1-l0",
+      "exit": 0,
+      "seconds": 38.544873632,
+      "xy_mean": 0.40225530901169865,
+      "xy_max": 0.993406366329,
+      "yaw_mean_deg": 20.93642703714398,
+      "height_min": 0.747275091679,
+      "xy_24_26": 0.84072890468074,
+      "error": ""
+    },
+    {
+      "name": "wrists-m6-l0",
+      "exit": 0,
+      "seconds": 38.544873632,
+      "xy_mean": 0.37710499686153165,
+      "xy_max": 0.924643415674,
+      "yaw_mean_deg": 15.868405949638115,
+      "height_min": 0.746734272114,
+      "xy_24_26": 0.709580585406665,
+      "error": ""
+    },
+    {
+      "name": "wrists-m7-l0",
+      "exit": 0,
+      "seconds": 38.544873632,
+      "xy_mean": 0.29964715086900684,
+      "xy_max": 0.741363778195,
+      "yaw_mean_deg": 14.313950792624768,
+      "height_min": 0.742198918559,
+      "xy_24_26": 0.51727492851222,
+      "error": ""
+    },
+    {
+      "name": "scale90-m6-l0",
+      "exit": 0,
+      "seconds": 38.544873632,
+      "xy_mean": 0.2716842264981399,
+      "xy_max": 0.808310514545,
+      "yaw_mean_deg": 17.125661443311458,
+      "height_min": 0.746194430099,
+      "xy_24_26": 0.3230766787060099,
+      "error": ""
+    }
+  ],
+  "second_recording_rollouts": [
+    {
+      "mode": 1,
+      "exit": 0,
+      "seconds": 39.992648619,
+      "xy_mean": 0.22714303050916956,
+      "yaw_mean": 11.275671825483427,
+      "min_height": 0.741583592243,
+      "error": ""
+    },
+    {
+      "mode": 6,
+      "exit": 0,
+      "seconds": 39.992648619,
+      "xy_mean": 0.214499048893876,
+      "yaw_mean": 8.899716616455729,
+      "min_height": 0.74127037936,
+      "error": ""
+    },
+    {
+      "mode": 7,
+      "exit": 0,
+      "seconds": 39.992648619,
+      "xy_mean": 0.18854085731319323,
+      "yaw_mean": 7.543870079307741,
+      "min_height": 0.736326957194,
+      "error": ""
+    }
+  ],
+  "limitations": [
+    "Counterfactual rollouts start with zero actor history; recordings began mid-session, so they are not exact live dynamic replay.",
+    "Live behavior with updated APK not yet evaluated.",
+    "Smaller travel scale tested offline only; not enabled because first-person rendering must stay consistent.",
+    "Position catch-up still has residual lag with static leg references.",
+    "Faster-than-limit operator turns necessarily accumulate heading lag."
+  ],
+  "device": "2G0YC5ZG7T05SR",
+  "installed_sha256": "8d1b86eb220b1fbe77b6bb82f7c17e36582884fb2fcdd0a466829faa9b2134e7",
+  "settings_preserved": true,
+  "selected_policy": "quest-111586-500",
+  "startup": "blocked_by_LaunchCheckControllerRequiredDialogActivity",
+  "live_behavior_verified": false
+}

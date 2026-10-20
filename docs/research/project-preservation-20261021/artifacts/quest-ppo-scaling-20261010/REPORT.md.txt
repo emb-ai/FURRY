@@ -1,0 +1,23 @@
+# TWIST2 PPO scaling, 2026-10-10
+
+Fixed global batch: 4096 environments × 24 steps = 98,304 samples; source DaggerPPO, 4 minibatches × 5 epochs = 20 optimizer updates. Two warmup iterations and five measured iterations. CPU allocation: 6 cores, one Torch thread per rank. TF32 disabled, source train-mode dropout retained.
+
+## Verified timings
+
+| Device | PPO seconds | Speedup against one TITAN |
+|---|---:|---:|
+| 1 GTX TITAN X | 2.903 | 1.00× |
+| 2 GTX TITAN X | 1.571 | 1.85× |
+| 4 GTX TITAN X | 1.018 | 2.85× |
+| 8 GTX TITAN X | 1.299 | 2.23× |
+| 1 A100 80 GB PCIe | 0.755 | 3.84× |
+
+Full single-A100 training iteration: 3.625 s, including rollout 2.855 s and PPO 0.751 s. PPO accounts for 20.7% of iteration time. Even zero-cost PPO would yield at most 1.26× total speedup if rollout remains on this A100. Four TITANs are slower than one A100 for PPO; eight are slower than four in this six-core allocation. Extra CPU cores might change the eight-GPU result, but do not solve simulator compatibility. No inter-host rollout transfer cost is included.
+
+GTX TITAN X here is Maxwell. Isaac Gym GPU PhysX emitted `no kernel image is available for execution on the device`; these GPUs cannot run the current simulation binary. Full-physics TITAN results are invalid and excluded. NVIDIA's official Isaac Gym requirements start at Pascal: https://developer.nvidia.com/isaac-gym/download .
+
+The valid network test uses a saved, verified actual A100 rollout (`ppo-real-a100-rollout.pt`), not synthetic input. Global normalized advantages are shared; gradients and KL are averaged across ranks, before source gradient clipping and adaptive LR. Independent gradient averaging check and synchronized-replica check passed (maximum model difference <1e-6). This proves a timing prototype, not learning-quality or full-trainer distributed parity: production rollout curricula, RNG, resumption and evaluation still need coordinated handling.
+
+Valid job identities: full A100 112058, verified A100 rollout export 112070, TITAN network test 112071, A100 network test 112072. Earlier failed/export-contaminated trials are excluded. Raw verified network reports are `ppo-titan-1gpu.json`, `ppo-titan-2gpu.json`, `ppo-titan-4gpu.json`, `ppo-titan-8gpu.json`, `ppo-a100-1gpu.json`. Main 5k control/fault jobs 112053/112054 were not interrupted.
+
+No policy candidate, headset deployment, or change to the active training code was produced by this timing experiment.

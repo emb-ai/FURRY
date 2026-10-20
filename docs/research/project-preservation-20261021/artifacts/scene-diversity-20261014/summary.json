@@ -1,0 +1,88 @@
+{
+  "date": "2026-10-14",
+  "base": "outputs/dexweave-quest-deploy-20261013/project; installed APK 6384e3f7a5239039b645261eaaa2ff29da5387ff518ea83c6673e731b15f84aa",
+  "source_project": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/scene-diversity-20261014/project",
+  "apk": {
+    "apk": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/scene-diversity-20261014/project/android/build/g1-quest.apk",
+    "sha256": "d0a61acd2aa97d6f41d9894d7c52d8adb28e397516bae79b6514cde7aecec245",
+    "bytes": 846778687,
+    "zip_crc": true,
+    "policy_catalog_equal_to_installed_base": true,
+    "policies": 13,
+    "source_hashes_verified": 53,
+    "metadata_files_verified": 125,
+    "triangle_budgets": {
+      "stand": 99325,
+      "cup": 99601,
+      "push_t": 99373,
+      "tennis": 98837,
+      "rubik": 96697,
+      "wb_dex": 94601,
+      "bimanual": 94429,
+      "basket": 94801
+    },
+    "installed": false,
+    "signature_verified": true,
+    "delivered_apk": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/scene-diversity-20261014/g1-quest-scenes.apk"
+  },
+  "changes": [
+    "seeded cup placement and yaw on reset",
+    "WB-Dex shelf to floor box",
+    "two-object color sorting",
+    "basket transfer to shelf",
+    "mobile feeder with aiming head",
+    "slower higher varied tennis serves",
+    "seed/task/mocap recording and reset replay"
+  ],
+  "paper": "https://arxiv.org/html/2511.02832v1#S4",
+  "paper_fidelity": "Task-level adaptation; dimensions, masses, randomization and numerical success thresholds are FURRY choices. Basket omits door. No source assets copied.",
+  "tests": {
+    "seeded_layouts": 512,
+    "tennis_seeded_shots": 64,
+    "net_center_height_m": [
+      1.11634,
+      1.3275
+    ],
+    "apex_m": [
+      1.34754,
+      1.44901
+    ],
+    "return_height_at_near_edge_m": [
+      1.14024,
+      1.17682
+    ],
+    "native_menu": "passed",
+    "initial_full_suite": {
+      "total": 115,
+      "passed": 112,
+      "errors": 2,
+      "skipped": 1,
+      "errors_reason": "policy test fixtures missing three new scene metadata files"
+    },
+    "corrected_final_subset": {
+      "tests": 12,
+      "passed": 12,
+      "log": "final-scene-tests.log"
+    },
+    "aim_timing_snapshot_test": "passed; aim-tests.log",
+    "synthetic_replays": {
+      "scenes": 5,
+      "modes_per_scene": 2,
+      "max_reference_error": 0,
+      "max_qpos_error": 0,
+      "seed": 734821,
+      "log": "replay-tests.log"
+    }
+  },
+  "preview": "scenes-preview.jpg; local desktop render, not Quest capture",
+  "installed": false,
+  "live_acceptance": false,
+  "committed": false,
+  "pushed": false,
+  "limitations": [
+    "No successful live grasp/placement/return demonstrations of the new scenes yet",
+    "Preserves installed forearm-neutral wrist behavior; does not merge the uninstalled predicted-hands experiment",
+    "Legacy DexWeave dynamic replay limitation remains; qpos and absolute references recorded",
+    "Synthetic replay starts from reset, not unknown actor state mid-session"
+  ]
+}

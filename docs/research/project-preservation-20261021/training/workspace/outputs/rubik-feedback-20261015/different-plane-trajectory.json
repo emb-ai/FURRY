@@ -1,0 +1,35 @@
+{
+  "policy": "HOMIE Standing",
+  "source": "other-face.npz",
+  "initial_unrecorded_native_warmup_s": 2.5,
+  "rate_hz": 100,
+  "control": "two world wrist poses (quaternion wxyz) and original scalar Grip per hand",
+  "segments": [
+    {
+      "start_s": 180.98,
+      "end_s": 197.29,
+      "action": "ninth turn of the original face and canonical return"
+    },
+    {
+      "start_s": 197.29,
+      "end_s": 203.29,
+      "action": "whole cube X rotation"
+    },
+    {
+      "start_s": 203.29,
+      "end_s": 227.29,
+      "action": "right then left regrasp; canonical accuracy not achieved"
+    },
+    {
+      "start_s": 227.29,
+      "end_s": 232.6,
+      "action": "quarter turn of an adjacent physical face"
+    }
+  ],
+  "trajectory_starts_from_native_scene_reset": true,
+  "no_external_support_after_s": 40.5,
+  "fingers_individually_commanded": false,
+  "physics_modified": false,
+  "headset_tested": false,
+  "reusable_arbitrary_move_basis": false
+}

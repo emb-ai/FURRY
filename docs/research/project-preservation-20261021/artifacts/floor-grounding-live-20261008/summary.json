@@ -1,0 +1,216 @@
+{
+  "episodes": {
+    "1791458472343296": {
+      "validation": {
+        "finalized": true,
+        "input_rows": 123,
+        "state_rows": 170,
+        "invalid_input_rows": 0,
+        "stale_or_invalid_control_rows": 0,
+        "calibration_events": 0,
+        "reset_events": 0,
+        "max_source_gap_ms": 13.891077,
+        "replayable_state_rows": 0,
+        "replay_ready": false,
+        "warning": null
+      },
+      "duration_s": 1.687796678000268,
+      "floor_guard_enabled_event": true,
+      "active_samples": 0,
+      "feet": {},
+      "robot_prop_contact_samples": 0,
+      "simulation_fault_event": false,
+      "limitations": [
+        "Geometry is from recorded live state, without re-simulating dynamics.",
+        "Collision contact counts do not establish loaded contacts; original recording lacks per-foot normal forces.",
+        "A reference clearance/contact mismatch can include policy lag; it does not independently label a human swing phase.",
+        "Snapshots are 10 ms apart; contacts between snapshots are not recorded."
+      ],
+      "note": "No active reference samples; this episode is not a gait trial."
+    },
+    "1791458504162610": {
+      "validation": {
+        "finalized": true,
+        "input_rows": 1690,
+        "state_rows": 2019,
+        "invalid_input_rows": 0,
+        "stale_or_invalid_control_rows": 0,
+        "calibration_events": 0,
+        "reset_events": 0,
+        "max_source_gap_ms": 13.903917,
+        "replayable_state_rows": 0,
+        "replay_ready": false,
+        "warning": null
+      },
+      "duration_s": 20.179269614999612,
+      "floor_guard_enabled_event": true,
+      "active_samples": 2019,
+      "feet": {
+        "left": {
+          "ref_penetration_gt_1mm_fraction": 0.0,
+          "ref_clearance_p05_p50_p95_mm": [
+            3.217880248978836,
+            15.994933221636392,
+            23.81218522599014
+          ],
+          "ref_above_15mm_fraction": 0.6111936602278356,
+          "ref_above_15mm_actual_contact_fraction": 0.271421495789995,
+          "actual_floor_depth_p95_max_mm": [
+            9.627619883975125,
+            37.66072122097749
+          ],
+          "contact_ankle_speed_p95_m_s": 2.4955033840539946
+        },
+        "right": {
+          "ref_penetration_gt_1mm_fraction": 0.0,
+          "ref_clearance_p05_p50_p95_mm": [
+            3.5654901222564077,
+            14.25112649091278,
+            16.105881898601503
+          ],
+          "ref_above_15mm_fraction": 0.1976225854383358,
+          "ref_above_15mm_actual_contact_fraction": 0.15205547300643882,
+          "actual_floor_depth_p95_max_mm": [
+            7.986636092359817,
+            25.395014128492647
+          ],
+          "contact_ankle_speed_p95_m_s": 1.9737423884406997
+        }
+      },
+      "robot_prop_contact_samples": 545,
+      "simulation_fault_event": true,
+      "limitations": [
+        "Geometry is from recorded live state, without re-simulating dynamics.",
+        "Collision contact counts do not establish loaded contacts; original recording lacks per-foot normal forces.",
+        "A reference clearance/contact mismatch can include policy lag; it does not independently label a human swing phase.",
+        "Snapshots are 10 ms apart; contacts between snapshots are not recorded."
+      ],
+      "lab_counterfactual_log": "fall wall=14.8971 sim=14.907\nsegment=1 fell=1 minz=0.349689 rows=2019 snapshot_starts=1",
+      "no_props_counterfactual_log": "segment=1 fell=0 minz=0.758547 rows=2019 snapshot_starts=1"
+    },
+    "1791458528331401": {
+      "validation": {
+        "finalized": true,
+        "input_rows": 136,
+        "state_rows": 0,
+        "invalid_input_rows": 0,
+        "stale_or_invalid_control_rows": 0,
+        "calibration_events": 0,
+        "reset_events": 0,
+        "max_source_gap_ms": 13.889,
+        "replayable_state_rows": 0,
+        "replay_ready": false,
+        "warning": null
+      },
+      "duration_s": 0.0,
+      "floor_guard_enabled_event": true,
+      "active_samples": 0,
+      "feet": {},
+      "robot_prop_contact_samples": 0,
+      "simulation_fault_event": false,
+      "limitations": [
+        "Geometry is from recorded live state, without re-simulating dynamics.",
+        "Collision contact counts do not establish loaded contacts; original recording lacks per-foot normal forces.",
+        "A reference clearance/contact mismatch can include policy lag; it does not independently label a human swing phase.",
+        "Snapshots are 10 ms apart; contacts between snapshots are not recorded."
+      ],
+      "note": "No active reference samples; this episode is not a gait trial."
+    },
+    "1791458536846595": {
+      "validation": {
+        "finalized": true,
+        "input_rows": 976,
+        "state_rows": 1168,
+        "invalid_input_rows": 0,
+        "stale_or_invalid_control_rows": 0,
+        "calibration_events": 1,
+        "reset_events": 0,
+        "max_source_gap_ms": 13.897544,
+        "replayable_state_rows": 1069,
+        "replay_ready": true,
+        "warning": null
+      },
+      "duration_s": 11.669330173000162,
+      "floor_guard_enabled_event": true,
+      "active_samples": 1069,
+      "feet": {
+        "left": {
+          "ref_penetration_gt_1mm_fraction": 0.0,
+          "ref_clearance_p05_p50_p95_mm": [
+            4.060589756821658,
+            12.231214397254924,
+            26.46522120017954
+          ],
+          "ref_above_15mm_fraction": 0.39943872778297473,
+          "ref_above_15mm_actual_contact_fraction": 0.3863423760523854,
+          "actual_floor_depth_p95_max_mm": [
+            2.3744373768255866,
+            24.436293765685395
+          ],
+          "contact_ankle_speed_p95_m_s": 0.4480278262919081
+        },
+        "right": {
+          "ref_penetration_gt_1mm_fraction": 0.0,
+          "ref_clearance_p05_p50_p95_mm": [
+            0.060666291380211984,
+            12.214562456882641,
+            16.223306966905596
+          ],
+          "ref_above_15mm_fraction": 0.17305893358278765,
+          "ref_above_15mm_actual_contact_fraction": 0.16744621141253507,
+          "actual_floor_depth_p95_max_mm": [
+            2.9023248182141557,
+            18.068507934199623
+          ],
+          "contact_ankle_speed_p95_m_s": 0.4707223353661038
+        }
+      },
+      "robot_prop_contact_samples": 85,
+      "simulation_fault_event": true,
+      "limitations": [
+        "Geometry is from recorded live state, without re-simulating dynamics.",
+        "Collision contact counts do not establish loaded contacts; original recording lacks per-foot normal forces.",
+        "A reference clearance/contact mismatch can include policy lag; it does not independently label a human swing phase.",
+        "Snapshots are 10 ms apart; contacts between snapshots are not recorded."
+      ],
+      "lab_counterfactual_log": "fall wall=11.6394 sim=11.647\nsegment=1 fell=1 minz=0.35 rows=1168 snapshot_starts=1",
+      "no_props_counterfactual_log": "segment=1 fell=0 minz=0.762163 rows=1168 snapshot_starts=1"
+    }
+  },
+  "counterfactual_limitations": [
+    "Initial qpos/qvel restored; policy history starts cold.",
+    "Same recorded mimic commands in each paired scene variant.",
+    "Only prop collision masks disabled; floor, robot geometry, gains and policy unchanged.",
+    "Rollout success is limited to each recorded duration.",
+    "Removing props also removes possible hand support; contact geometry does not establish loaded forces or the initiating trip."
+  ],
+  "latest_foot_examples": [
+    {
+      "wall_s": 7.0,
+      "left_ankle_height_mm": 107.7,
+      "left_ref_sole_height_mm": 11.3,
+      "left_target_pitch_toe_down_deg": 31.2
+    },
+    {
+      "wall_s": 9.0,
+      "left_ankle_height_mm": 109.8,
+      "left_ref_sole_height_mm": 8.7,
+      "left_target_pitch_toe_down_deg": 34.3
+    }
+  ],
+  "latest_table_contact_intervals_s": {
+    "right_index_tip": [
+      8.399,
+      9.779
+    ],
+    "right_hip": [
+      8.768,
+      9.009
+    ],
+    "right_palm": [
+      9.19,
+      9.698
+    ]
+  },
+  "interpretation": "Reference penetration removed; toe-down swing limits sole clearance. Removing props changes both obstacles and hand support; the initiating fall cause is not established."
+}

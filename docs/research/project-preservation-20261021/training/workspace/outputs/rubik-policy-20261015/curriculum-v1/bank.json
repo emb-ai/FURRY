@@ -1,0 +1,11 @@
+{
+  "states": 72,
+  "max_qpos_error": 0.0,
+  "source_sha256": "714a59bb746ccf6066abbfae49f16e7c9818a029f2488e50cbdd350fc3953932",
+  "snapshot_restore_only_at_episode_reset": true,
+  "validation_macros": [
+    3,
+    7
+  ],
+  "independent_demonstrations": false
+}

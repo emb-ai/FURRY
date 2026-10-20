@@ -1,0 +1,75 @@
+{
+  "dimensions": [
+    {
+      "nq": 57,
+      "nv": 55,
+      "nu": 43,
+      "nbody": 58,
+      "ngeom": 206,
+      "nmocap": 0,
+      "nuserdata": 8
+    },
+    {
+      "nq": 57,
+      "nv": 55,
+      "nu": 43,
+      "nbody": 59,
+      "ngeom": 206,
+      "nmocap": 1,
+      "nuserdata": 8
+    }
+  ],
+  "differences": [
+    {
+      "type": "body",
+      "name": "cup_goal_marker",
+      "change": "added"
+    }
+  ],
+  "options": {
+    "timestep": [
+      0.001,
+      0.001
+    ],
+    "solver": [
+      2,
+      2
+    ],
+    "iterations": [
+      50,
+      50
+    ],
+    "noslip_iterations": [
+      2,
+      2
+    ],
+    "enableflags": [
+      16,
+      16
+    ],
+    "disableflags": [
+      0,
+      0
+    ],
+    "gravity": [
+      [
+        0.0,
+        0.0,
+        -9.81
+      ],
+      [
+        0.0,
+        0.0,
+        -9.81
+      ]
+    ],
+    "integrator": [
+      0,
+      0
+    ]
+  },
+  "family_ids": [
+    "4981fd79a7e1",
+    "9bb0ab4b87f9"
+  ]
+}

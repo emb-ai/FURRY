@@ -1,0 +1,10 @@
+{
+  "pid": 2745328,
+  "gpu": 6,
+  "source": "cup-homie-finetune-20261015/act-run/latest.pt",
+  "new_steps": 10000,
+  "all_train_episodes": 59,
+  "action_hz": 50,
+  "validation": "same10 full resets; old ACT30 comparison sameLinux",
+  "renderer_caveat": "Mesa rendering differs from Mac; comparison not a rate-only ablation"
+}

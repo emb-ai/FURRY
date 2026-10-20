@@ -1,0 +1,62 @@
+{
+  "pair_checks": [
+    {
+      "scenario": "trajectory",
+      "intervention": "frozen_legs",
+      "warmup_max_difference": 0.0,
+      "fork_state_max_difference": 0.0,
+      "height_roll_pitch_waist_arms_command_max_difference": 0.0
+    },
+    {
+      "scenario": "stop",
+      "intervention": "recorded_moving_legs",
+      "warmup_max_difference": 0.0,
+      "fork_state_max_difference": 0.0,
+      "height_roll_pitch_waist_arms_command_max_difference": 0.0
+    },
+    {
+      "scenario": "yaw_only",
+      "intervention": "recorded_moving_legs",
+      "warmup_max_difference": 0.0,
+      "fork_state_max_difference": 0.0,
+      "height_roll_pitch_waist_arms_command_max_difference": 0.0
+    }
+  ],
+  "reward_lift_65mm_summary": {
+    "clearance_gain_range": [
+      0.05686134144197741,
+      0.07862055269653134
+    ],
+    "tracking_loss_range": [
+      0.3117166535890696,
+      0.5396110438659777
+    ],
+    "net_change_range": [
+      -0.46099049116944635,
+      -0.23491388099045457
+    ]
+  },
+  "limitations": [
+    "One episode and fork state for interventions; installed quest111586500 policy, not newly trained v2 candidates",
+    "Closed-loop catchup unchanged in both branches: velocity/yaw commands may subsequently differ as a consequence of physical state changes",
+    "Moving leg targets are a recorded 4..10s segment deliberately spliced into held-operator input. They are a sensitivity test, not a coherent gait solution",
+    "Zero falls in these short probes is not walking acceptance",
+    "Reward counterfactual fixes root, orientation and horizontal speed; omits dynamic/contact/airtime benefits and future return"
+  ],
+  "sha256": {
+    "yaw_only-original.csv": "87ae78a7d40e71a85cd1e90836fb6601f104429f4c9ac73fd74fbab339092364",
+    "trajectory-frozen_legs.csv": "4750246065fdb26ab3db81f85e159164c0aab2cf675d85c17d81fb4869848faa",
+    "trajectory-original.csv": "f34bfb9a321c9a4d77bb046bc300a7c7d8e6c64cf303d1fbec303574832065bb",
+    "leg_intervention_summary.json": "fab7276582d47d49cb422de0de848eaee0f7c9caa271a880ca45b88565a81ec5",
+    "source-rewards.json": "002a86e1b1558cc85abf2b003601c404255147cabe397e4a5c75fce10ec28f7f",
+    "leg_intervention.cpp": "09b3a32949f6f408c15e960357f02da5f25015cc02d89ff96c7f3071cdcb8959",
+    "verify_intervention.py": "a880df35cbec1dec2541eff3ba289e486f6a52fb7e05473382537625033e8443",
+    "reward_counterfactual.json": "3a73287d582b729508fe658f943bba67cecc56165df910e319ea58d8b201280d",
+    "leg_intervention_runs.json": "5e9179edb77a6aa5e6fdbb9d46356513fc97d1d8ba0ccd9356554743857aeebe",
+    "stop-original.csv": "b6b33e8b12adbfac8df356e0ae904f8e5f71bbb1267d9f7bd1a8d58ea302fd7a",
+    "yaw_only-recorded_moving_legs.csv": "94fecc5ab2ee0818b4e022cbb8689353b1022244c52c7305d95bb5e755da8877",
+    "run_leg_intervention.py": "ea0c03305befb3e280a03910a1f3a296f75fd3582f42eba68d76012cc2cdcf27",
+    "stop-recorded_moving_legs.csv": "692064e381db466a3b522fedd6c850524bd962a206a9877296a297de9b9895d6",
+    "reward_counterfactual.py": "1837e8e17625fb2f56dfda1332bcb2db05a93922cd34d6ec26793970a43b0b89"
+  }
+}

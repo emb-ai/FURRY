@@ -1,0 +1,86 @@
+[
+  {
+    "execution_steps": 48,
+    "label": "latest",
+    "episode": "episode-1792017633764131",
+    "mode": "policy",
+    "seed": 0,
+    "success": false,
+    "outcome": 3,
+    "elapsed_sim_s": 90.00000000000287,
+    "wall_s": 104.1142520904541,
+    "lift_m": 0.03383393084829156,
+    "contact_frames": 10,
+    "final_goal_xy_error_m": 0.2741253167979239,
+    "initial_distance_m": 0.32413819231674706,
+    "min_pelvis_z": 0.7557002354435958,
+    "final_cup": [
+      0.5263422844424013,
+      -0.03148252706078269,
+      0.7830533161245
+    ],
+    "goal": [
+      0.45824597113998605,
+      0.23405011015012864,
+      0.75
+    ],
+    "error": null,
+    "inference_mean_s": 0.6438699019582648
+  },
+  {
+    "execution_steps": 48,
+    "label": "latest",
+    "episode": "episode-1792017999001122",
+    "mode": "policy",
+    "seed": 0,
+    "success": false,
+    "outcome": 3,
+    "elapsed_sim_s": 90.00000000000287,
+    "wall_s": 73.89752078056335,
+    "lift_m": 0.03477766329595566,
+    "contact_frames": 308,
+    "final_goal_xy_error_m": 0.27713492960420255,
+    "initial_distance_m": 0.3344510123001047,
+    "min_pelvis_z": 0.7482399239327181,
+    "final_cup": [
+      0.5123443298805924,
+      -0.08041566216233592,
+      0.783053239077481
+    ],
+    "goal": [
+      0.4467791395820677,
+      0.18885181643068794,
+      0.75
+    ],
+    "error": null,
+    "inference_mean_s": 0.464394489924113
+  },
+  {
+    "execution_steps": 48,
+    "label": "latest",
+    "episode": "episode-1792018134901046",
+    "mode": "policy",
+    "seed": 0,
+    "success": false,
+    "outcome": 3,
+    "elapsed_sim_s": 90.00000000000287,
+    "wall_s": 97.24668717384338,
+    "lift_m": 0.08575435610852022,
+    "contact_frames": 81,
+    "final_goal_xy_error_m": 0.05479921779440357,
+    "initial_distance_m": 0.24224438177974833,
+    "min_pelvis_z": 0.7495125435795358,
+    "final_cup": [
+      0.4004653383234383,
+      0.04390888504383823,
+      0.7830527699313439
+    ],
+    "goal": [
+      0.45089916689787063,
+      0.022475658357143404,
+      0.75
+    ],
+    "error": null,
+    "inference_mean_s": 0.5896275378110116
+  }
+]

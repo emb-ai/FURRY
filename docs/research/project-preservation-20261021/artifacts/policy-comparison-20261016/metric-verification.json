@@ -1,0 +1,62 @@
+{
+  "independent_scipy_heading_check": true,
+  "common_timestamps_verified": true,
+  "results": [
+    {
+      "policy": "twist2-20k",
+      "samples": 2000,
+      "min_pelvis_height_m": 0.7592335027068888,
+      "mean_xy_cm": 51.95279022830849,
+      "mean_yaw_deg": 13.638836526580453
+    },
+    {
+      "policy": "quest-111586-500",
+      "samples": 2000,
+      "min_pelvis_height_m": 0.7498458327462277,
+      "mean_xy_cm": 36.00929465156482,
+      "mean_yaw_deg": 14.270131969006062
+    },
+    {
+      "policy": "quest-111586-500-lift10",
+      "samples": 2000,
+      "min_pelvis_height_m": 0.7446232138450044,
+      "mean_xy_cm": 35.45475520222174,
+      "mean_yaw_deg": 15.596469372152749
+    },
+    {
+      "policy": "quest-stance12-B-s11",
+      "samples": 2000,
+      "min_pelvis_height_m": 0.7474630180266993,
+      "mean_xy_cm": 23.16128518462395,
+      "mean_yaw_deg": 9.476859322896551
+    },
+    {
+      "policy": "homie-v2",
+      "samples": 2000,
+      "min_pelvis_height_m": 0.7473243978136823,
+      "mean_xy_cm": 11.307339866155813,
+      "mean_yaw_deg": 5.250159039494893
+    },
+    {
+      "policy": "dexweave-wide-2977",
+      "samples": 2000,
+      "min_pelvis_height_m": 0.7522856650514399,
+      "mean_xy_cm": 4.149170334042224,
+      "mean_yaw_deg": 3.6783314071896567
+    },
+    {
+      "policy": "dexweave-B-4174",
+      "samples": 2000,
+      "min_pelvis_height_m": 0.7566286184008766,
+      "mean_xy_cm": 3.9137585126284193,
+      "mean_yaw_deg": 3.1667122863472885
+    },
+    {
+      "policy": "sonic-vr3",
+      "samples": 2000,
+      "min_pelvis_height_m": 0.7213758709596773,
+      "mean_xy_cm": 27.34570983649478,
+      "mean_yaw_deg": 11.902509384095186
+    }
+  ]
+}

@@ -49,13 +49,43 @@
         }
       },
       "full_decode": "passed"
+    },
+    {
+      "file": "furry-presentation.pptx",
+      "bytes": 110955203,
+      "sha256": "9df05457c018a73e8988b3906c13e4e2beb7b1c15c59580e29226de36a41909b",
+      "source": "https://docs.google.com/presentation/d/1hyqIzdS8b-cYbUaeu4GaNDoR_Sctr1FrsqFfs4joNZQ/edit",
+      "kind": "unchanged Google Slides PPTX export",
+      "exported_on": "2026-10-21",
+      "slides": 23,
+      "zip_crc": "passed",
+      "parsed_xml_parts": 155,
+      "broken_internal_relationships": 0,
+      "media_types": {
+        "png": 30,
+        "gif": 7,
+        "jpg": 3
+      },
+      "embedded_video_count": 0,
+      "external_media_relationships": 0,
+      "playback_limitation": "The PPTX contains 7 GIF assets but no MP4/video parts or external media relationships. Google Slides video playback and links are not guaranteed to survive export; standalone MP4 files are published separately.",
+      "comparison_to_20261016_1230": {
+        "changed_text_slides": [
+          17,
+          20
+        ],
+        "changed_image_slides": [
+          9
+        ]
+      }
     }
   ],
-  "presentation_status": "Fresh PPTX export pending: Google returned truncated ZIP archives; the earlier 12:30 export omits later edits and is not included.",
+  "presentation_status": "Fresh complete Google Slides PPTX export retrieved on 2026-10-21; preserved unchanged. ZIP CRC, XML parsing and internal relationships passed.",
   "validation": {
     "runtime_ci": "https://github.com/emb-ai/FURRY/actions/runs/38931337126",
     "runtime_ci_result": "success",
     "documentation_ci": "https://github.com/emb-ai/FURRY/actions/runs/38931336795",
     "documentation_ci_result": "success"
-  }
+  },
+  "updated_date": "2026-10-21"
 }

@@ -1,0 +1,82 @@
+[
+  {
+    "seed": 1019837660,
+    "cup_y": 0.18870910869911314,
+    "expected_hand": "left",
+    "max_left_grip": 0.009849980473518372,
+    "max_right_grip": 0.004181042313575745,
+    "mean_last2s_arms_command_std_deg": 0.161162331700325
+  },
+  {
+    "seed": 1261690313,
+    "cup_y": -0.1530118396319449,
+    "expected_hand": "right",
+    "max_left_grip": 0.009849980473518372,
+    "max_right_grip": 0.09819725900888443,
+    "mean_last2s_arms_command_std_deg": 0.38306131958961487
+  },
+  {
+    "seed": 1446583522,
+    "cup_y": 0.24282410128042103,
+    "expected_hand": "left",
+    "max_left_grip": 1.011495590209961,
+    "max_right_grip": 0.005798421800136566,
+    "mean_last2s_arms_command_std_deg": 0.2806023061275482
+  },
+  {
+    "seed": 1502896800,
+    "cup_y": 0.16281740346923473,
+    "expected_hand": "left",
+    "max_left_grip": 1.0163078308105469,
+    "max_right_grip": 0.023423485457897186,
+    "mean_last2s_arms_command_std_deg": 0.3728056252002716
+  },
+  {
+    "seed": 1714622801,
+    "cup_y": 0.2628297946602106,
+    "expected_hand": "left",
+    "max_left_grip": 1.0337551832199097,
+    "max_right_grip": 0.00426822155714035,
+    "mean_last2s_arms_command_std_deg": 0.8611558675765991
+  },
+  {
+    "seed": 435361755,
+    "cup_y": -0.24243825951591136,
+    "expected_hand": "right",
+    "max_left_grip": 0.009849980473518372,
+    "max_right_grip": 1.0501409769058228,
+    "mean_last2s_arms_command_std_deg": 0.26794156432151794
+  },
+  {
+    "seed": 603205921,
+    "cup_y": 0.24782968381419782,
+    "expected_hand": "left",
+    "max_left_grip": 0.3312792181968689,
+    "max_right_grip": 0.06714228540658951,
+    "mean_last2s_arms_command_std_deg": 0.527363657951355
+  },
+  {
+    "seed": 856219333,
+    "cup_y": -0.23431737352162602,
+    "expected_hand": "right",
+    "max_left_grip": 0.009849980473518372,
+    "max_right_grip": 1.0389320850372314,
+    "mean_last2s_arms_command_std_deg": 0.38238880038261414
+  },
+  {
+    "seed": 886437167,
+    "cup_y": 0.24252238258719447,
+    "expected_hand": "left",
+    "max_left_grip": 0.03511723875999451,
+    "max_right_grip": 0.006744720041751862,
+    "mean_last2s_arms_command_std_deg": 0.29595980048179626
+  },
+  {
+    "seed": 9722254,
+    "cup_y": 0.012010867670178414,
+    "expected_hand": "left",
+    "max_left_grip": 0.0560353547334671,
+    "max_right_grip": 0.9588700532913208,
+    "mean_last2s_arms_command_std_deg": 0.28022050857543945
+  }
+]

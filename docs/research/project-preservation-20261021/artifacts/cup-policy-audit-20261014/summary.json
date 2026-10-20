@@ -1,0 +1,141 @@
+{
+  "episodes": 30,
+  "verified_files": 460,
+  "accepted_seconds": 537.0700000000118,
+  "all_scenes": [
+    "cup"
+  ],
+  "unique_seeds": 30,
+  "automatic_successes": 0,
+  "end_inside_xy_goal": 11,
+  "ever_inside_xy_goal": 16,
+  "max_recorded_settled_seconds": 0.25100000000000017,
+  "runtime_modified": false,
+  "policy_summary": {
+    "homie-v2": {
+      "episodes": 2,
+      "accepted_seconds": 53.820000000000334,
+      "end_inside_xy_goal": 1,
+      "moved_at_least_10cm": 2,
+      "recorded_faults": 0
+    },
+    "quest-111586-500": {
+      "episodes": 3,
+      "accepted_seconds": 69.7300000000025,
+      "end_inside_xy_goal": 2,
+      "moved_at_least_10cm": 3,
+      "recorded_faults": 0
+    },
+    "sonic-vr3": {
+      "episodes": 2,
+      "accepted_seconds": 0,
+      "end_inside_xy_goal": 0,
+      "moved_at_least_10cm": 0,
+      "recorded_faults": 0
+    },
+    "quest-stance12-B-s11": {
+      "episodes": 23,
+      "accepted_seconds": 413.5200000000089,
+      "end_inside_xy_goal": 8,
+      "moved_at_least_10cm": 15,
+      "recorded_faults": 1
+    }
+  },
+  "candidate_placements": [
+    {
+      "episode": "episode-1791963535383572",
+      "policy": "quest-111586-500",
+      "goal_error_cm": 2.00054713658522,
+      "lift_flag": 1,
+      "auto_success": false,
+      "note": "Candidate for manual review, not a labeled successful demonstration"
+    },
+    {
+      "episode": "episode-1791963558853579",
+      "policy": "quest-111586-500",
+      "goal_error_cm": 2.7313144904375584,
+      "lift_flag": 0,
+      "auto_success": false,
+      "note": "Candidate for manual review, not a labeled successful demonstration"
+    },
+    {
+      "episode": "episode-1791964059641556",
+      "policy": "quest-stance12-B-s11",
+      "goal_error_cm": 0.9670824597322334,
+      "lift_flag": 0,
+      "auto_success": false,
+      "note": "Candidate for manual review, not a labeled successful demonstration"
+    },
+    {
+      "episode": "episode-1791964126590975",
+      "policy": "quest-stance12-B-s11",
+      "goal_error_cm": 4.541937184754034,
+      "lift_flag": 1,
+      "auto_success": false,
+      "note": "Candidate for manual review, not a labeled successful demonstration"
+    },
+    {
+      "episode": "episode-1791964195142580",
+      "policy": "quest-stance12-B-s11",
+      "goal_error_cm": 3.450188578604971,
+      "lift_flag": 0,
+      "auto_success": false,
+      "note": "Candidate for manual review, not a labeled successful demonstration"
+    },
+    {
+      "episode": "episode-1791964508982637",
+      "policy": "quest-stance12-B-s11",
+      "goal_error_cm": 2.1383520936730163,
+      "lift_flag": 1,
+      "auto_success": false,
+      "note": "Candidate for manual review, not a labeled successful demonstration"
+    },
+    {
+      "episode": "episode-1791964553739556",
+      "policy": "quest-stance12-B-s11",
+      "goal_error_cm": 1.8267308497645962,
+      "lift_flag": 1,
+      "auto_success": false,
+      "note": "Candidate for manual review, not a labeled successful demonstration"
+    },
+    {
+      "episode": "episode-1791964580185651",
+      "policy": "quest-stance12-B-s11",
+      "goal_error_cm": 1.51373102491149,
+      "lift_flag": 1,
+      "auto_success": false,
+      "note": "Candidate for manual review, not a labeled successful demonstration"
+    },
+    {
+      "episode": "episode-1791964644573658",
+      "policy": "quest-stance12-B-s11",
+      "goal_error_cm": 0.9702344118710895,
+      "lift_flag": 1,
+      "auto_success": false,
+      "note": "Candidate for manual review, not a labeled successful demonstration"
+    },
+    {
+      "episode": "episode-1791964685513697",
+      "policy": "quest-stance12-B-s11",
+      "goal_error_cm": 1.3951549803547503,
+      "lift_flag": 0,
+      "auto_success": false,
+      "note": "Candidate for manual review, not a labeled successful demonstration"
+    },
+    {
+      "episode": "episode-1791964772364260",
+      "policy": "homie-v2",
+      "goal_error_cm": 4.475503380450503,
+      "lift_flag": 1,
+      "auto_success": false,
+      "note": "Candidate for manual review, not a labeled successful demonstration"
+    }
+  ],
+  "limitations": [
+    "Unequal numbers of trials and user-selected resets; not a policy benchmark.",
+    "Circle placement alone is not success: release, lift, velocity, orientation and 0.5 second settling are required.",
+    "HOMIE height comparison uses applied whole-body reference, not directly the raw controller world position.",
+    "No DexWeave episodes in the 30 new recordings.",
+    "Telemetry omits SONIC PlannerPending cycles; successful-cycle timing underestimates total waiting."
+  ]
+}

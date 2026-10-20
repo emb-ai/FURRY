@@ -1,0 +1,2292 @@
+diff --git a/prototypes/quest_g1/android/AndroidManifest.xml b/prototypes/quest_g1/android/AndroidManifest.xml
+index 2cc285b..dddb6b3 100644
+--- a/prototypes/quest_g1/android/AndroidManifest.xml
++++ b/prototypes/quest_g1/android/AndroidManifest.xml
+@@ -14,7 +14,7 @@
+     <provider android:authorities="org.khronos.openxr.runtime_broker;org.khronos.openxr.system_runtime_broker"/>
+     <intent><action android:name="org.khronos.openxr.OpenXRRuntimeService"/></intent>
+   </queries>
+-  <application android:label="G1 Quest Lab" android:hasCode="false" android:debuggable="true" android:allowBackup="false" android:extractNativeLibs="true">
++  <application android:label="G1 Quest Lab-vlad" android:hasCode="false" android:debuggable="true" android:allowBackup="false" android:extractNativeLibs="true">
+     <meta-data android:name="com.oculus.supportedDevices" android:value="quest3"/>
+     <activity android:name="android.app.NativeActivity" android:exported="true" android:launchMode="singleTask" android:screenOrientation="landscape" android:configChanges="orientation|keyboardHidden|screenSize|screenLayout|navigation|uiMode|density" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+       <meta-data android:name="android.app.lib_name" android:value="g1_quest"/>
+diff --git a/prototypes/quest_g1/android/README.md b/prototypes/quest_g1/android/README.md
+index 7f57ce4..4c0b5ca 100644
+--- a/prototypes/quest_g1/android/README.md
++++ b/prototypes/quest_g1/android/README.md
+@@ -1,6 +1,6 @@
+ # Автономная симуляция на Quest 3
+ 
+-Приложение **G1 Quest Lab**, пакет `org.g1lab.quest`. NativeActivity, C++17, OpenXR 1.1.49, OpenGL ES 3.2, MuJoCo 3.3.7, ONNX Runtime 1.23.2. Модели и политика находятся в APK; основной runtime работает автономно без Unity и компьютера. Разрешение Internet используется для необязательного внешнего RGB-D потока. [Подключение камеры](CAMERA_STREAM.md).
++Приложение **G1 Quest Lab-vlad**, пакет `org.g1lab.quest`. NativeActivity, C++17, OpenXR 1.1.49, OpenGL ES 3.2, MuJoCo 3.3.7, ONNX Runtime 1.23.2. Модели и политика находятся в APK; основной runtime работает автономно без Unity и компьютера. Разрешение Internet используется для необязательного внешнего RGB-D потока. [Подключение камеры](CAMERA_STREAM.md).
+ 
+ ## Запуск
+ 
+@@ -10,9 +10,9 @@
+ ./android/install_quest.sh
+ ```
+ 
+-Нужен подключённый Quest с разрешённой USB-отладкой. Наденьте шлем и активируйте контроллеры: системный запрос о контроллерах может блокировать запуск. После установки USB можно отсоединить. Для последующих запусков найдите **G1 Quest Lab** в библиотеке установленных приложений из неизвестных источников.
++Нужен подключённый Quest с разрешённой USB-отладкой. Наденьте шлем и активируйте контроллеры: системный запрос о контроллерах может блокировать запуск. После установки USB можно отсоединить. Для последующих запусков найдите **G1 Quest Lab-vlad** в библиотеке установленных приложений из неизвестных источников.
+ 
+-G1 имеет 29 приводов тела и 14 приводов пальцев. Меню выбирает одну из трёх отдельных физических сцен: **«Пустая»** — робот и пол; **«Стол и чашка»** — стол с динамической чашкой; **«Push-T»** — динамическая T-коробка и целевая разметка. Системный passthrough показывает реальную комнату; виртуальный пол скрыт, пока включена «Реальная комната». Физический пол остаётся в MuJoCo на уровне OpenXR Stage. Сканирование геометрии комнаты и её коллизии не подключены.
++G1 имеет 29 приводов тела и 14 приводов пальцев. Меню выбирает одну из четырёх отдельных физических сцен: **«Пустая»** — робот и пол; **«Стол и чашка»** — стол с динамической чашкой; **«Push-T»** — динамическая T-коробка и целевая разметка; **«Настольный теннис»** — стол, свободная ракетка и робот-подаватель мячей. [Условия и физика тенниса](TENNIS.md). Системный passthrough показывает реальную комнату; виртуальный пол скрыт, пока включена «Реальная комната». Физический пол остаётся в MuJoCo на уровне OpenXR Stage. Сканирование геометрии комнаты и её коллизии не подключены.
+ 
+ При первом размещении и смене сцены робот находится в 3 м перед направлением взгляда и остаётся привязанным к этому месту. «Вид → Поставить перед собой» меняет расположение отдельно от сброса робота; во время записи эта команда недоступна.
+ 
+@@ -292,3 +292,64 @@ assets в каталоге приложения и заменяется при 
+ В меню добавлена вкладка «Управление»: авторские TWIST2 20k/25k и кандидаты,
+ включённые через `G1_POLICY_CONFIG`. Выбор сбрасывает симуляцию и калибровку;
+ запись сохраняет ID, SHA256 и выбранные веса. См. [POLICIES.md](POLICIES.md).
++
++## Сцена с чашкой: лаборатория v1
++
++В «Сессия → Сцена → Чашка» используется рабочий стол со скруглённой
++столешницей и полая керамическая кружка массой 240 г с открытой ручкой.
++Кольцо PLACE отмечает место переноса. Оно становится зелёным, когда кружка
++находится в пределах 5,5 см от центра, стоит вертикально на столе и почти
++не движется. Это визуальная обратная связь; прежний критерий pickup не меняется.
++Захват остаётся физическим, без автоматического прикрепления к кисти.
++
++При выключенном passthrough видны стены, окно и фоновое хранение. Эти элементы
++декоративные, без коллизий. При включённом passthrough они скрываются вместе
++с полом; рабочий стол, кружка и метка остаются. Материалы и освещение работают
++в нативном GLES-рендерере. Мягкие контактные затемнения аналитические;
++полноценная карта теней в Quest-рендерер не добавлена.
++
++Для размещения сцены в бюджете 100 000 треугольников на глаз используются
++облегчённые визуальные оболочки головы и корпуса только в сцене с чашкой.
++Массы, инерции, суставы, приводы и коллайдеры G1 сохранены. Бюджет вместе
++с резервом интерфейса и скелета — 99 601 треугольник на глаз.
++
++```sh
++.venv/bin/python -m unittest discover -s tests -p 'test_cup_lab.py'
++.venv/bin/python scripts/render_cup_lab.py /tmp/cup-lab-preview
++./android/build_apk.sh
++```
++
++Превью компилирует те же шейдеры с desktop GLSL preamble и использует тот же
++поток мешей. Это настольная проверка внешнего вида; FPS и взаимодействие
++в шлеме требуют отдельной живой проверки.
++
++## Кубик Рубика 2×2
++
++Ручная сборка контроллерами и обычным Grip: [устройство сцены и ограничения](RUBIK.md).
++
++
++## Контроллеры, переключение и повторный запуск — локальный фикс 2026-10-13
++
++В первом лице цели ладоней задают контроллеры во всех сценах. Привязка использует тот же фиксированный STAGE-transform, что и рендер; контроллер соответствует центру визуального меша ладони. Калибровка A задаёт постоянное преобразование поворота контроллер → запястье; Pause/возврат трекинга не пересчитывают его из оценок кистей Meta. GMR получает ненулевые позиционные цели запястий; положения достигаются суставами, без перемещения мешей или прикрепления рук. Исторические записи без controller_stage_targets используют прежний адаптер.
++
++Целиком нажимаются название и подпись режима. Выбранная строка захватывается при начале движения курка; фокус, смена страницы и большой сдвиг луча отменяют захват. Повторные запросы во время загрузки не накапливаются. При записи или human-only capture меню объясняет запрет переключения.
++
++Если asynchronous planner SONIC не успевает, симуляционное время ждёт его результат, интерфейс продолжает рисоваться. Ожидание исключено из физических/GMR кадров демонстрации; веса, входы encoder/decoder и параметры приводов сохранены. Это предотвращает воспроизводимый trajectory-exhausted fault, но не ускоряет сам inference и не гарантирует realtime на Quest.
++
++GPU-кэши сцены/HUD/меню/скелетов инвалидируются по поколению EGL-контекста. Повторная NativeActivity начинает с чистых очередей кликов, фокуса и калибровки. Живая приёмка этого изменения, управления руками и ожидания SONIC в новой сборке ещё не проведена.
++
++
++## Калибровка поднятых рук — 2026-10-13
++
++`controller_anatomical_frame=true`: калибровочная нейтраль кисти вычисляется из текущего предплечья Meta и bind forearm→hand G1, вместо физической позы стоящего робота. Оператору можно калибровать поднятые руки; нейтральный поворот кисти учитывается относительно его предплечья. Контроллер задаёт последующие вращения, GMR решает всю цепочку с joint limits. Pause/возврат трекинга сохраняют регистрацию. При изменении положения руки и контроллера совместным вращением регистрация не меняется. SDK-предплечье остаётся оценкой, поэтому живую точность нужно проверять отдельно.
++
++Исторический manifest без `controller_anatomical_frame` использует прежнюю регистрацию; manifest reader явно сохраняет это поле и `controller_stage_targets`. Native regression сравнивает калибровку поднятых/опущенных рук на одной последующей позе и отдельно меняет физическую wrist pose. Подробности и четыре проверенных Quest-эпизода — outputs/wrist-raised-calibration-20261013 в папке проекта.
++
++
++## Предсказанные кисти Meta — локальный фикс 2026-10-13
++
++В новом режиме `predicted_hand_orientation=true` GMR получает абсолютную ориентацию Meta wrist (raw84 joints19/45), переведённую через bind-frame в анатомический frame G1. Эти wrist quaternion уже входят в14 selected poses; раньше controller calibration заменяла их после получения. При A ориентация кисти больше не обнуляется относительно текущего предплечья или стоящего робота. SDK wrist flexion/twist сохраняется каждый кадр. Контроллеры продолжают задавать абсолютную позицию центра ладони и Grip, а GMR решает реальные суставы с joint limits. Все84 независимые IK задачи не добавлялись.
++
++Этот флаг имеет приоритет над legacy `neutral_wrists`, `wrist_frame_v2` и controller rotation offset. Live runtime и66 scene/policy metadata вариантов включают его; `controller_anatomical_frame=false`. Старый manifest без нового флага воспроизводит прежнюю physical/forearm registration. Недействительная SDK orientation не используется; Pause/возврат трекинга не задают новую нейтраль. Сгиб кисти в момент A не превращается в постоянную поправку для последующих поз.
++
++Проверки: обе кисти ×3 оси ×±поворот, raised/down/bent calibration invariance, controller-orientation independence, invalid SDK wrist/recovery;113 unit(112pass/1optional skip),39 synthetic recording/replay cases с нулевыми ошибками. На6сохранённых inputs пересчитан кинематический GMR(reference,не новыйphysicalrollout);median orientation residual<1°. Локальный APK иотчётв outputs/predicted-hands-20261013 папки проекта. Пользователь выбрал пока только локально; наQuestэтотвариантнеустанавливался.
+diff --git a/prototypes/quest_g1/android/native/capture_hud.h b/prototypes/quest_g1/android/native/capture_hud.h
+index dad4beb..3ab2750 100644
+--- a/prototypes/quest_g1/android/native/capture_hud.h
++++ b/prototypes/quest_g1/android/native/capture_hud.h
+@@ -1,4 +1,5 @@
+ #pragma once
++#include "graphics_epoch.h"
+ #include "guided_capture.h"
+ #include "retarget.h"
+ #include <GLES3/gl32.h>
+@@ -10,6 +11,7 @@ inline int DrawCaptureHud(const float* vp,const std::string& assets,const Guided
+                           bool focused,bool fresh,int recording,int exportStatus,
+                           const TrackingFrame& raw,double rawAgeMs){
+     static GLuint program=0,texture=0,vao=0,vbo=0;
++    static uint64_t generation=0;g1graphics::ForgetStale(generation,program,texture,vao,vbo);
+     if(!program){
+         auto shader=[](GLenum type,const char* src){GLuint s=glCreateShader(type);glShaderSource(s,1,&src,nullptr);glCompileShader(s);GLint ok;glGetShaderiv(s,GL_COMPILE_STATUS,&ok);if(!ok)throw std::runtime_error("Capture shader failed");return s;};
+         GLuint v=shader(GL_VERTEX_SHADER,R"(#version 320 es
+@@ -122,7 +124,7 @@ void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
+             batch(first,bodyFresh?(group?std::array<float,4>{1.f,.65f,.25f,1.f}:std::array<float,4>{.3f,.85f,1.f,1.f}):std::array<float,4>{.5f,.5f,.5f,.65f});
+         }
+     }
+-    glDisable(GL_DEPTH_TEST);glEnable(GL_BLEND);glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
++    glDisable(GL_DEPTH_TEST);glEnable(GL_BLEND);glBlendFuncSeparate(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA,GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
+     glUseProgram(program);glUniformMatrix4fv(glGetUniformLocation(program,"vp"),1,GL_FALSE,vp);
+     glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,texture);glUniform1i(glGetUniformLocation(program,"atlas"),0);
+     glBindVertexArray(vao);glBindBuffer(GL_ARRAY_BUFFER,vbo);glBufferData(GL_ARRAY_BUFFER,vertices.size()*sizeof(float),vertices.data(),GL_STREAM_DRAW);
+diff --git a/prototypes/quest_g1/android/native/episode_manifest.h b/prototypes/quest_g1/android/native/episode_manifest.h
+index 36dc370..a3fca78 100644
+--- a/prototypes/quest_g1/android/native/episode_manifest.h
++++ b/prototypes/quest_g1/android/native/episode_manifest.h
+@@ -126,7 +126,7 @@ class JsonFields {
+                 Space();
+                 size_t start = pos;
+                 Value();
+-                if (collect && (key == "scene" || key == "nq" || key == "nv" || key == "nu" || key == "policy_file" || key == "policy_sha256" || key == "policy_backend" || key == "input_patch" || key == "policy_secondary_file" || key == "policy_secondary_sha256" || key == "policy_planner_file" || key == "policy_planner_sha256" || key == "body_motor_profile" || key == "body_motor_profile_sha256" || key == "catch_up" || key == "first_person" || key == "catch_up_v2" || key == "neutral_wrists" || key == "wrist_frame_v2" || key == "policy_hz" || key == "travel_gain_percent")) {
++                if (collect && (key == "scene" || key == "nq" || key == "nv" || key == "nu" || key == "policy_file" || key == "policy_sha256" || key == "policy_backend" || key == "input_patch" || key == "policy_secondary_file" || key == "policy_secondary_sha256" || key == "policy_planner_file" || key == "policy_planner_sha256" || key == "body_motor_profile" || key == "body_motor_profile_sha256" || key == "catch_up" || key == "first_person" || key == "catch_up_v2" || key == "neutral_wrists" || key == "wrist_frame_v2" || key == "controller_stage_targets" || key == "controller_anatomical_frame" || key == "predicted_hand_orientation" || key == "policy_hz" || key == "travel_gain_percent")) {
+                     if (!out.emplace(key, text.substr(start, pos - start)).second)
+                         throw std::runtime_error("Duplicate episode manifest field: " + key);
+                 }
+@@ -229,7 +229,7 @@ struct Manifest {
+     std::string bodyMotorProfile,bodyMotorProfileSha256;
+     std::string inputPatch;
+     bool catchUp=false,firstPerson=false;
+-    bool catchUpV2=false,neutralWrists=false,wristFrameV2=false;
++    bool catchUpV2=false,neutralWrists=false,wristFrameV2=false,controllerStageTargets=false,controllerAnatomicalFrame=false,predictedHandOrientation=false;
+     int policyHz=0; // Missing field: retain archived ONNX metadata/default cadence.
+     int travelGainPercent=100;
+     std::string PolicyPath(const std::string& assets,const std::string& folder) const {
+@@ -281,7 +281,7 @@ inline Manifest LoadManifest(const std::string &folder) {
+         out.scene = reader.String();
+         reader.End();
+     }
+-    if (out.scene != "lab" && out.scene != "stand" && out.scene != "cup" && out.scene != "push_t")
++    if (out.scene != "lab" && out.scene != "stand" && out.scene != "cup" && out.scene != "push_t" && out.scene != "tennis" && out.scene != "rubik")
+         throw std::runtime_error("Unknown episode scene: " + out.scene);
+     auto readString=[&](const std::string& key){detail::JsonFields reader(fields.at(key));auto value=reader.String();reader.End();return value;};
+     auto readBool=[&](const std::string& key){
+@@ -290,7 +290,7 @@ inline Manifest LoadManifest(const std::string &folder) {
+         return fields.at(key)=="true";
+     };
+     out.catchUp=readBool("catch_up");out.firstPerson=readBool("first_person");
+-    out.catchUpV2=readBool("catch_up_v2");out.neutralWrists=readBool("neutral_wrists");out.wristFrameV2=readBool("wrist_frame_v2");
++    out.catchUpV2=readBool("catch_up_v2");out.neutralWrists=readBool("neutral_wrists");out.wristFrameV2=readBool("wrist_frame_v2");out.controllerStageTargets=readBool("controller_stage_targets");out.controllerAnatomicalFrame=readBool("controller_anatomical_frame");out.predictedHandOrientation=readBool("predicted_hand_orientation");
+     if(fields.count("policy_hz")){
+         out.policyHz=detail::Dimension(fields.at("policy_hz"));
+         if(out.policyHz!=50 && out.policyHz!=100)throw std::runtime_error("Unsupported episode policy frequency");
+diff --git a/prototypes/quest_g1/android/native/gmr.cpp b/prototypes/quest_g1/android/native/gmr.cpp
+index eee064a..60e8dff 100644
+--- a/prototypes/quest_g1/android/native/gmr.cpp
++++ b/prototypes/quest_g1/android/native/gmr.cpp
+@@ -49,6 +49,7 @@ GmrRetargeter::GmrRetargeter(const std::string& assets){
+     cameraLocal.position={.08,0,.43};
+     double cameraRotation[9]={0,0,-1,-1,0,0,0,1,0};
+     mju_mat2Quat(cameraLocal.quaternion.data(),cameraRotation);
++    for(const auto& task:tasks_)sourceCosts.push_back(task.costs);
+     targets.resize(count);Reset();
+ }
+ GmrRetargeter::~GmrRetargeter(){mj_deleteData(data_);mj_deleteModel(model_);}
+@@ -153,6 +154,15 @@ void GmrRetargeter::Step(int stage){
+     if(mju_boxQP(dq,factor,index,H,g,n,lower,upper)<0)throw std::runtime_error("GMR QP failed");
+     mj_integratePos(model_,data_->qpos,dq,1.);mj_kinematics(model_,data_);mj_comPos(model_,data_);iterations++;
+ }
++void GmrRetargeter::EnableControllerHands(bool value){
++    for(size_t i=0;i<tasks_.size();i++)tasks_[i].costs=sourceCosts[i];
++    if(!value)return;
++    // Controller end effectors need position objectives: the author body-pose
++    // configuration has zero wrist position cost. Use the same position weight
++    // as its feet; SDK shoulder/elbow orientations remain soft posture hints.
++    for(size_t i=8;i<12&&i<tasks_.size();i++)for(int stage=0;stage<2;stage++)tasks_[i].costs[2*stage+1]*=.2;
++    for(size_t i=12;i<14&&i<tasks_.size();i++)for(int stage=0;stage<2;stage++)tasks_[i].costs[2*stage]=100;
++}
+ void GmrRetargeter::Solve(){
+     iterations=0;
+     for(int stage=0;stage<2;stage++){
+diff --git a/prototypes/quest_g1/android/native/gmr.h b/prototypes/quest_g1/android/native/gmr.h
+index 5a5bd50..514c522 100644
+--- a/prototypes/quest_g1/android/native/gmr.h
++++ b/prototypes/quest_g1/android/native/gmr.h
+@@ -13,6 +13,7 @@ struct GmrTask {
+ class GmrRetargeter {
+     mjModel* model_=nullptr; mjData* data_=nullptr;
+     std::vector<GmrTask> tasks_;
++    std::vector<std::array<double,4>> sourceCosts;
+     double assumedHeight=1.8,ground=0;
+     bool cameraEnabled=false;
+     int cameraBody=-1;
+@@ -44,6 +45,7 @@ public:
+     TrackedPose CameraPose()const;
+     const TrackedPose& CameraTarget()const{return cameraTarget;}
+     bool HasCameraTarget()const{return cameraEnabled;}
++    void EnableControllerHands(bool value);
+     void Solve();
+     double error=0,positionRms=0,orientationRms=0;
+     int iterations=0;
+diff --git a/prototypes/quest_g1/android/native/graphics.cpp b/prototypes/quest_g1/android/native/graphics.cpp
+index 3ac137e..989ca7d 100644
+--- a/prototypes/quest_g1/android/native/graphics.cpp
++++ b/prototypes/quest_g1/android/native/graphics.cpp
+@@ -40,6 +40,7 @@ public:
+         const EGLint surfaceAttributes[]={EGL_WIDTH,16,EGL_HEIGHT,16,EGL_NONE};
+         surface=eglCreatePbufferSurface(display,config,surfaceAttributes);
+         if(context==EGL_NO_CONTEXT||surface==EGL_NO_SURFACE||!eglMakeCurrent(display,surface,surface,context))throw std::runtime_error("EGL context failed");
++        G1GraphicsContextCreated();
+         binding.display=display;binding.config=config;binding.context=context;
+         glGenFramebuffers(1,&framebuffer);
+     }
+@@ -67,6 +68,7 @@ public:
+         glFramebufferTexture2D(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_TEXTURE_2D,it->second,0);
+         if(glCheckFramebufferStatus(GL_FRAMEBUFFER)!=GL_FRAMEBUFFER_COMPLETE)throw std::runtime_error("Incomplete XR framebuffer");
+         glViewport(rect.offset.x,rect.offset.y,rect.extent.width,rect.extent.height);
++        // Framebuffer stores premultiplied RGB/alpha for the OpenXR projection layer.
+         if(G1PassthroughVisible())glClearColor(0,0,0,0);else glClearColor(.06f,.07f,.06f,1);
+         glClearDepthf(1);glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+         XrMatrix4x4f projection,toView,viewMatrix,vp;
+diff --git a/prototypes/quest_g1/android/native/meta_retarget.cpp b/prototypes/quest_g1/android/native/meta_retarget.cpp
+index 340ed78..d6facdc 100644
+--- a/prototypes/quest_g1/android/native/meta_retarget.cpp
++++ b/prototypes/quest_g1/android/native/meta_retarget.cpp
+@@ -3,6 +3,7 @@
+ #include <algorithm>
+ #include <stdexcept>
+ #include <limits>
++#include <memory>
+ namespace {
+ double Distance(const TrackedPose&a,const TrackedPose&b){double d[3];mju_sub3(d,a.position.data(),b.position.data());return mju_norm3(d);}
+ void Normalize(double* v){if(mju_normalize3(v)<1e-6)throw std::runtime_error("Degenerate body skeleton");}
+@@ -83,6 +84,53 @@ void MetaRetargeter::Calibrate(const mjModel* model,const mjData* data,const Tra
+         if(source<0)throw std::runtime_error("GMR/physics joint mapping mismatch");initial[gm->jnt_qposadr[j]]=data->qpos[model->jnt_qposadr[source]];
+     }
+     gmr.Reset(initial.data());translationOrigin=input.body.joints[0].position;rootOrigin={data->qpos[0],data->qpos[1],data->qpos[2]};
++    // mj_step leaves body transforms from before its final integration.
++    // Anchor controllers to FK of the saved/current qpos, also in replay.
++    std::unique_ptr<mjData,decltype(&mj_deleteData)> controllerData(nullptr,mj_deleteData);
++    if(controllerWrists){
++        controllerData.reset(mj_makeData(model));
++        std::copy_n(data->qpos,model->nq,controllerData->qpos);
++        mj_kinematics(model,controllerData.get());
++    }
++    if(controllerWrists)for(int h=0;h<2;h++){
++        if(!input.hand_active[h]||(input.location_flags[h+1]&3)!=3)throw std::runtime_error("Both controllers required for hand calibration");
++        int body=mj_name2id(model,mjOBJ_BODY,h==0?"left_wrist_yaw_link":"right_wrist_yaw_link");
++        mju_sub3(controllerRelativeOrigin[h].data(),input.hands[h].position.data(),input.body.joints[0].position.data());
++        mju_sub3(controllerRobotOffset[h].data(),controllerData->xpos+3*body,data->qpos);
++        double aligned[4],inverse[4],robotQuat[4];mju_mulQuat(aligned,basisQuat,input.hands[h].quaternion.data());
++        mju_negQuat(inverse,aligned);mju_mat2Quat(robotQuat,controllerData->xmat+9*body);
++        if(controllerAnatomicalFrame){
++            // A registers controller->anatomical hand axes, not controller->
++            // the lagging physical wrist. In particular an elevated human arm
++            // must not acquire the standing robot's downward hand direction.
++            // The forearm frame already carries the Meta lower-arm rotation;
++            // wristRest is the neutral G1 forearm->hand frame from bind FK.
++            double source[4],forearm[4];
++            mju_mulQuat(source,basisQuat,input.body.joints[10+h].quaternion.data());
++            mju_mulQuat(forearm,source,offsets[10+h].quaternion.data());
++            mju_mulQuat(robotQuat,forearm,wristRest[h].data());
++        }
++        mju_mulQuat(controllerRotationOffset[h].data(),inverse,robotQuat);
++    }
++    // Match the tracked controller grip to the centre of the rendered palm,
++    // rather than the wrist joint pivot several centimetres behind it.
++    for(int h=0;h<2;h++){
++        controllerGripOffset[h]={};
++        const std::string side=h==0?"left":"right";
++        int wrist=mj_name2id(model,mjOBJ_BODY,(side+"_wrist_yaw_link").c_str());
++        int palm=mj_name2id(model,mjOBJ_MESH,(side+"_hand_palm_link").c_str());
++        if(palm<0)continue;
++        for(int g=0;g<model->ngeom;g++)if(model->geom_bodyid[g]==wrist&&model->geom_type[g]==mjGEOM_MESH&&model->geom_dataid[g]==palm){
++            double low[3]={mjMAXVAL,mjMAXVAL,mjMAXVAL},high[3]={-mjMAXVAL,-mjMAXVAL,-mjMAXVAL},centre[3],rotated[3];
++            for(int v=0;v<model->mesh_vertnum[palm];v++)for(int k=0;k<3;k++){
++                double value=model->mesh_vert[3*(model->mesh_vertadr[palm]+v)+k];low[k]=std::min(low[k],value);high[k]=std::max(high[k],value);
++            }
++            for(int k=0;k<3;k++)centre[k]=(low[k]+high[k])*.5;
++            mju_rotVecQuat(rotated,centre,model->geom_quat+4*g);
++            for(int k=0;k<3;k++)controllerGripOffset[h][k]=model->geom_pos[3*g+k]+rotated[k];
++            break;
++        }
++    }
+     cameraOrigin=gmr.CameraPose();cameraHeadOrigin=input.head;
+     double eyeHeight=input.head.position[1];
+     if(!std::isfinite(eyeHeight) || eyeHeight<.7 || eyeHeight>2.4)
+@@ -99,7 +147,8 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& source){
+     if(!calibrated || !input.body.valid)throw std::runtime_error("No calibrated full body sample");
+     if(!Compatible(input)){calibrated=false;throw std::runtime_error("Body proportions changed: press A to recalibrate");}
+     skeletonVersion=input.body.skeleton_version;
+-    if(lastTime && input.body.time_ns<=lastTime)return mimic;
++    const int64_t referenceTime=controllerWrists&&input.xr_time_ns>0?input.xr_time_ns:input.body.time_ns;
++    if(lastTime && referenceTime<=lastTime)return mimic;
+     // Clearance must not contaminate the next source solve or the velocity
+     // finite difference. Restore the previous unmodified source warm start.
+     if(swingClearance>0 && baselinePoseStored){
+@@ -121,12 +170,36 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& source){
+     double floor=std::min(input.body.joints[6].position[1],input.body.joints[7].position[1]);
+     root[2]=footHeight+rootScale*(input.body.joints[0].position[1]-floor);
+     for(int i=0;i<14;i++){
++        if(predictedHandOrientation&&i>=12&&(input.body.flags[i]&3)!=3)
++            throw std::runtime_error("Predicted wrist tracking lost");
+         double alignedQ[4],rel[3],mapped[3],offset[3];mju_mulQuat(alignedQ,basisQuat,input.body.joints[i].quaternion.data());mju_mulQuat(targets[i].quaternion.data(),alignedQ,offsets[i].quaternion.data());
+         mju_sub3(rel,input.body.joints[i].position.data(),input.body.joints[0].position.data());mju_mulMatVec(mapped,basis,rel,3,3);mju_rotVecQuat(offset,offsets[i].position.data(),targets[i].quaternion.data());
+         for(int a=0;a<3;a++)targets[i].position[a]=root[a]+scales[i]*mapped[a]+offset[a];
+     }
+     std::array<std::array<double,3>,2> wristAngles{};
+-    if(neutralWrists)for(int h=0;h<2;h++){
++    if(controllerWrists)for(int h=0;h<2;h++){
++        if(!input.hand_active[h]||(input.location_flags[h+1]&3)!=3)throw std::runtime_error("Controller tracking lost");
++        double relative[3],delta[3],mapped[3],aligned[4];
++        mju_sub3(relative,input.hands[h].position.data(),input.body.joints[0].position.data());
++        mju_sub3(delta,relative,controllerRelativeOrigin[h].data());mju_mulMatVec(mapped,basis,delta,3,3);
++        if(controllerStageTargets&&cameraTracking){
++            mju_sub3(delta,input.hands[h].position.data(),cameraHeadOrigin.position.data());
++            mju_mulMatVec(mapped,basis,delta,3,3);
++            for(int k=0;k<3;k++)targets[12+h].position[k]=cameraOrigin.position[k]+cameraScale*mapped[k];
++        }else for(int k=0;k<3;k++)targets[12+h].position[k]=root[k]+controllerRobotOffset[h][k]+scales[12+h]*mapped[k];
++        if(!predictedHandOrientation){
++            mju_mulQuat(aligned,basisQuat,input.hands[h].quaternion.data());
++            mju_mulQuat(targets[12+h].quaternion.data(),aligned,controllerRotationOffset[h].data());
++        }
++        // Otherwise retain B * Meta_wrist(t) * bind_offset from above.
++        // These absolute wrist poses are selected directly from raw84 (19/45),
++        // so wrist flexion/twist is neither dropped nor re-zeroed at A.
++        if(controllerStageTargets&&cameraTracking){
++            double palm[3];mju_rotVecQuat(palm,controllerGripOffset[h].data(),targets[12+h].quaternion.data());
++            for(int k=0;k<3;k++)targets[12+h].position[k]-=palm[k];
++        }
++    }
++    if(neutralWrists&&!controllerWrists&&!predictedHandOrientation)for(int h=0;h<2;h++){
+         double inverse[4],relative[4],delta[4],corrected[4];
+         mju_negQuat(inverse,targets[10+h].quaternion.data());mju_mulQuat(relative,inverse,targets[12+h].quaternion.data());
+         if(wristFrameV2){
+@@ -175,10 +248,15 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& source){
+         // Use the achieved reference camera, not the lagging physical robot:
+         // adding its tracking error here would count world travel twice.
+         gmr.ClearCameraTarget();gmr.Solve();
+-        gmr.AlignTargetsToCameraXY(camera);gmr.SetCameraTarget(camera);
++        gmr.AlignTargetsToCameraXY(camera);
++        if(controllerStageTargets){
++            auto alignedTargets=gmr.Targets();
++            alignedTargets[12]=targets[12];alignedTargets[13]=targets[13];gmr.SetTargets(alignedTargets);
++        }
++        gmr.SetCameraTarget(camera);
+     }else gmr.ClearCameraTarget();
+     gmr.Solve();error=gmr.error;
+-    if(neutralWrists&&!wristFrameV2){
++    if(neutralWrists&&!wristFrameV2&&!controllerWrists&&!predictedHandOrientation){
+         for(int h=0;h<2;h++)for(int k=0;k<3;k++){
+             const char* part[]={"wrist_roll_joint","wrist_pitch_joint","wrist_yaw_joint"};
+             std::string name=std::string(h?"right_":"left_")+part[k];int j=mj_name2id(gmr.model(),mjOBJ_JOINT,name.c_str());
+@@ -193,12 +271,12 @@ const std::array<float,35>& MetaRetargeter::Solve(const TrackingFrame& source){
+         if(swing.lastLift[0]>0 || swing.lastLift[1]>0){gmr.SetTargets(raised);gmr.Solve();error=gmr.error;}
+     }
+     const double* q=gmr.data()->qpos;double delta[35]={},worldVel[3]={},localVel[3]={},R[9];mju_quat2Mat(R,q+3);
+-    double dt=lastTime?(input.body.time_ns-lastTime)*1e-9:0;
++    double dt=lastTime?(referenceTime-lastTime)*1e-9:0;
+     if(dt>0 && dt<=.2){mj_differentiatePos(gmr.model(),delta,dt,lastQ.data(),sourceQ.data());std::copy_n(delta,3,worldVel);mju_quat2Mat(R,sourceQ.data()+3);mju_mulMatTVec(localVel,R,worldVel,3,3);}
+     mimic[0]=localVel[0];mimic[1]=localVel[1];mimic[2]=q[2];
+     double w=q[3],x=q[4],y=q[5],z=q[6];mimic[3]=std::atan2(2*(w*x+y*z),1-2*(x*x+y*y));mimic[4]=std::asin(std::clamp(2*(w*y-z*x),-1.,1.));mimic[5]=delta[5];
+     for(int i=0;i<29;i++)mimic[6+i]=q[7+i];
+-    lastQ=sourceQ;baselinePoseStored=true;lastTime=input.body.time_ns;return mimic;
++    lastQ=sourceQ;baselinePoseStored=true;lastTime=referenceTime;return mimic;
+ }
+ 
+ bool MetaRetargeter::Compatible(const TrackingFrame& f)const{
+diff --git a/prototypes/quest_g1/android/native/meta_retarget.h b/prototypes/quest_g1/android/native/meta_retarget.h
+index 82c7187..724338e 100644
+--- a/prototypes/quest_g1/android/native/meta_retarget.h
++++ b/prototypes/quest_g1/android/native/meta_retarget.h
+@@ -18,6 +18,10 @@ class MetaRetargeter {
+     bool cameraTracking=false;
+     bool neutralWrists=false;
+     bool wristFrameV2=false;
++    bool controllerWrists=false,controllerStageTargets=false,controllerAnatomicalFrame=false;
++    bool predictedHandOrientation=false;
++    std::array<std::array<double,3>,2> controllerRelativeOrigin{},controllerRobotOffset{},controllerGripOffset{};
++    std::array<std::array<double,4>,2> controllerRotationOffset{};
+     double travelGain=1;
+     std::array<std::array<double,4>,2> wristNeutralInverse{},wristRest{};
+     bool twistGrounding=false,toeClamp=true;
+@@ -47,6 +51,17 @@ public:
+     void EnableNeutralWrists(bool value){neutralWrists=value;}
+     // Correct rigid-frame calibration; retain the legacy adapter for replay.
+     void EnableWristFrameV2(bool value){wristFrameV2=value;}
++    bool UsesControllerWrists()const{return controllerWrists;}
++    void EnableControllerWrists(bool value){controllerWrists=value;}
++    // Neutral hand follows the source forearm at A, independent of the
++    // physical robot's current arm pose. Missing legacy manifest flag is false.
++    void EnableControllerAnatomicalFrame(bool value){controllerAnatomicalFrame=value;}
++    // Preserve Meta's predicted wrist articulation through its bind frame.
++    // A places the scene; it does not turn the current hand pose into neutral.
++    void EnablePredictedHandOrientation(bool value){predictedHandOrientation=value;}
++    // In first person, controller positions use the inverse of the same fixed
++    // calibrated STAGE transform as rendering, without anatomical arm scaling.
++    void EnableControllerStageTargets(bool value){controllerStageTargets=value;gmr.EnableControllerHands(value);if(value)controllerWrists=true;}
+     // Offline ablation only; the device always clamps toe targets.
+     void EnableToeClamp(bool value){toeClamp=value;}
+     void EnableTwistGrounding(bool value){
+@@ -59,6 +74,7 @@ public:
+         if(metres>0 && twistGrounding)throw std::runtime_error("Choose TWIST2 grounding or swing correction");
+         swingClearance=metres;
+     }
++    const std::array<double,3>& ControllerGripOffset(int side)const{return controllerGripOffset.at(side);}
+     double VisualScale()const{return 1/cameraScale;}
+     const double* StageToRobotRotation()const{return basis;}
+     const TrackedPose& CameraCalibrationPose()const{return cameraOrigin;}
+diff --git a/prototypes/quest_g1/android/native/operator_skeleton_draw.h b/prototypes/quest_g1/android/native/operator_skeleton_draw.h
+index 47cd2aa..ace5764 100644
+--- a/prototypes/quest_g1/android/native/operator_skeleton_draw.h
++++ b/prototypes/quest_g1/android/native/operator_skeleton_draw.h
+@@ -1,4 +1,5 @@
+ #pragma once
++#include "graphics_epoch.h"
+ #include "operator_skeleton.h"
+ #include <GLES3/gl32.h>
+ #include <stdexcept>
+@@ -50,6 +51,7 @@ inline int DrawOperatorSkeleton(const float* vp, const TrackingFrame& raw, doubl
+         throw std::runtime_error("Operator skeleton exceeds triangle budget");
+     operatorskeleton_detail::StateGuard guard;
+     static GLuint program = 0, vao = 0, vbo = 0;
++    static uint64_t generation=0;g1graphics::ForgetStale(generation,program,vao,vbo);
+     if (!program) {
+         auto compile = [](GLenum type, const char* source) {
+             GLuint shader = glCreateShader(type);
+diff --git a/prototypes/quest_g1/android/native/quest_menu.h b/prototypes/quest_g1/android/native/quest_menu.h
+index 786c6e6..72593f9 100644
+--- a/prototypes/quest_g1/android/native/quest_menu.h
++++ b/prototypes/quest_g1/android/native/quest_menu.h
+@@ -12,13 +12,13 @@ namespace questmenu {
+ 
+ enum class Page { Session, View, Debug, Policy };
+ enum class Mode { Simulation, Trajectories };
+-enum class Scene { Empty, Cup, PushT };
++enum class Scene { Empty, Cup, PushT, Tennis, Rubik };
+ enum class Capture { Robot, Human };
+ enum class Plan { Train, Test };
+ enum class Action {
+     None, Close, Start, Save, Reset, QuickReset, ToggleRecording, Calibrate, Place,
+     ModeSimulation, ModeTrajectories, CaptureRobot, CaptureHuman, PlanTrain, PlanTest,
+-    SceneEmpty, SceneCup, ScenePushT, ViewObserver, ViewFirstPerson, Passthrough,
++    SceneEmpty, SceneCup, ScenePushT, SceneTennis, SceneRubik, ViewObserver, ViewFirstPerson, Passthrough,
+     DebugEnabled, DebugStats, DebugMeta, DebugCamera, DebugTargets, DebugContacts,
+     PageSession, PageView, PageDebug, PagePolicy, CatchUp, PolicyPrevious, PolicyNext,
+     PolicySelect0, PolicySelect1, PolicySelect2, PolicySelect3
+@@ -32,11 +32,12 @@ struct State {
+     Capture capture = Capture::Robot;
+     Plan plan = Plan::Train;
+     bool open = true, paused = true, recording = false;
++    bool plannerWaiting = false,policyLoading=false;
+     bool calibrated = false, trackingValid = false, faulted = false;
+     bool firstPerson = false, passthrough = true;
+     bool debugEnabled = false, debugStats = true, debugMeta = false;
+     bool debugCamera = false, debugTargets = false, debugContacts = false;
+-    std::string notice, recordingInfo, cameraInfo;
++    std::string notice, recordingInfo, cameraInfo, tennisInfo, rubikInfo;
+     int exportStatus = 0;
+     std::vector<questpolicy::Entry> policies;
+     int policyIndex = 0, policyPage = 0;
+@@ -63,6 +64,11 @@ struct Widget {
+     bool enabled = true, selected = false;
+     Kind kind = Kind::Text;
+ };
++inline Rect HitRect(const Widget& w){
++    auto r=w.rect;
++    if(PolicyRow(w.action)>=0){r.y-=.020f;r.h+=.020f;}
++    return r;
++}
+ struct Pointer {
+     float x = 0, y = 0;
+     bool valid = false, hover = false;
+@@ -83,6 +89,39 @@ public:
+     }
+ };
+ 
++// Capture the pointed row when the trigger starts moving, before the user's
++// finger pulls the aim ray away. A small motion tolerance cancels large drags;
++// focus/menu/layout changes require a new neutral trigger before clicking.
++class MenuPressLatch {
++    bool armed=false,captured=false;
++    Action target=Action::None,hover=Action::None;
++    float originX=0,originY=0,hoverX=0,hoverY=0,neutralTrigger=0;
++    int context=-1;
++public:
++    struct Click {bool pressed=false;Action action=Action::None;};
++    Click Update(bool active,float trigger,Action action,float x,float y,int revision){
++        if(!active||!std::isfinite(trigger)||!std::isfinite(x)||!std::isfinite(y)){
++            armed=false;captured=false;hover=Action::None;context=revision;return {};
++        }
++        if(revision!=context){armed=false;captured=false;hover=Action::None;context=revision;}
++        if(!armed){
++            if(trigger<=.55f){armed=true;captured=false;neutralTrigger=trigger;hover=action;hoverX=x;hoverY=y;}
++            return {};
++        }
++        if(trigger<.15f){captured=false;neutralTrigger=trigger;hover=action;hoverX=x;hoverY=y;return {};}
++        if(!captured){
++            neutralTrigger=std::min(neutralTrigger,trigger);
++            if(trigger<=.55f&&trigger-neutralTrigger<.10f){hover=action;hoverX=x;hoverY=y;return {};}
++            captured=true;target=action;originX=x;originY=y;
++            if(target==Action::None&&hover!=Action::None&&std::hypot(x-hoverX,y-hoverY)<.03f){target=hover;originX=hoverX;originY=hoverY;}
++        }
++        if(target==Action::None&&action!=Action::None){target=action;originX=x;originY=y;}
++        if(trigger<=.55f)return {};
++        armed=false;captured=false;
++        return {true,std::hypot(x-originX,y-originY)<=.03f?target:Action::None};
++    }
++};
++
+ inline constexpr float PanelWidth = .76f;
+ inline constexpr float PanelHeight = .86f;
+ inline constexpr Rect PanelRect { -PanelWidth / 2, -PanelHeight / 2, PanelWidth, PanelHeight };
+@@ -92,6 +131,8 @@ inline const char* SceneName(Scene scene) {
+     case Scene::Empty: return "stand";
+     case Scene::Cup: return "cup";
+     case Scene::PushT: return "push_t";
++    case Scene::Tennis: return "tennis";
++    case Scene::Rubik: return "rubik";
+     }
+     return "stand";
+ }
+@@ -100,6 +141,8 @@ inline const char* SceneTitle(Scene scene) {
+     case Scene::Empty: return "Пустая";
+     case Scene::Cup: return "Стол и чашка";
+     case Scene::PushT: return "Push-T";
++    case Scene::Tennis: return "Настольный теннис";
++    case Scene::Rubik: return "Кубик Рубика 2×2";
+     }
+     return "Пустая";
+ }
+@@ -108,6 +151,8 @@ inline bool HumanCapture(const State& s) {
+ }
+ inline std::string StatusText(const State& s) {
+     if (s.faulted) return "Ошибка симуляции";
++    if(s.policyLoading)return "Загрузка режима";
++    if(s.plannerWaiting)return "Ожидание плана SONIC";
+     if (s.recording) return s.paused ? "Запись на паузе" : "Идёт запись";
+     if (!s.trackingValid) return "Нет трекинга";
+     if (!s.calibrated) return "Нужна калибровка";
+@@ -168,9 +213,9 @@ inline std::vector<Widget> BuildLayout(const State& s) {
+             y -= .069f;
+         } else {
+             label(y, "Сцена");
+-            const Scene scenes[] = {Scene::Empty, Scene::Cup, Scene::PushT};
+-            const Action actions[] = {Action::SceneEmpty, Action::SceneCup, Action::ScenePushT};
+-            for (int i = 0; i != 3; ++i) {
++            const Scene scenes[] = {Scene::Empty, Scene::Cup, Scene::PushT, Scene::Tennis, Scene::Rubik};
++            const Action actions[] = {Action::SceneEmpty, Action::SceneCup, Action::ScenePushT, Action::SceneTennis, Action::SceneRubik};
++            for (int i = 0; i != 5; ++i) {
+                 add({-.192f, y, .544f, .055f}, SceneTitle(scenes[i]), actions[i],
+                     !s.recording, s.scene == scenes[i], Kind::Radio);
+                 y -= .056f;
+@@ -181,8 +226,10 @@ inline std::vector<Widget> BuildLayout(const State& s) {
+         add({-.192f, y, .24f, .054f}, s.calibrated ? "Готова" : "Нужна калибровка");
+         add({.061f, y, .291f, .054f}, "Калибровать", Action::Calibrate, s.paused, false, Kind::Button);
+         y -= .064f;
+-        label(y, "Трекинг");
+-        text(y, s.trackingValid ? "Meta: трекинг есть" : "Meta: нет свежего трекинга");
++        if(human || s.mode == Mode::Simulation){
++            label(y, "Трекинг");
++            text(y, s.trackingValid ? "Meta: трекинг есть" : "Meta: нет свежего трекинга");
++        }
+     } else if (s.page == Page::View) {
+         label(.214f, "Камера");
+         segments(.214f, "Наблюдатель", "От первого лица", Action::ViewObserver,
+@@ -201,13 +248,13 @@ inline std::vector<Widget> BuildLayout(const State& s) {
+         const int count=int(s.policies.size());
+         const int pages=std::max(1,(count+PoliciesPerPage-1)/PoliciesPerPage);
+         const int page=std::clamp(s.policyPage,0,pages-1);
+-        check(.211f,"Догоняние позиции и поворота",Action::CatchUp,s.catchUp,!s.recording&&!human);
+-        add({-.352f,.160f,.704f,.032f}, "Изменение сбросит робота и калибровку", Action::None,true,false,Kind::MutedText);
++        check(.211f,"Догоняние позиции и поворота",Action::CatchUp,s.catchUp,!s.recording&&!human&&!s.policyLoading);
++        add({-.352f,.160f,.704f,.032f}, s.policyLoading?"Дождитесь завершения загрузки":s.recording?"Сохраните запись, чтобы сменить режим":human?"Выберите симуляцию или запись робота":"Изменение сбросит робота и калибровку", Action::None,true,false,Kind::MutedText);
+         for(int row=0;row<PoliciesPerPage;row++){
+             int index=page*PoliciesPerPage+row;if(index>=count)break;
+             float y=.100f-row*.072f;const auto& policy=s.policies[index];
+             add({-.352f,y,.704f,.052f},policy.title,Action(int(Action::PolicySelect0)+row),
+-                !s.recording&&!human,s.policyIndex==index,Kind::Radio);
++                !s.recording&&!human&&!s.policyLoading,s.policyIndex==index,Kind::Radio);
+             add({-.312f,y-.020f,.664f,.018f},policy.note,Action::None,true,false,Kind::MutedText);
+         }
+         if(pages>1){
+@@ -247,10 +294,18 @@ inline std::vector<Widget> BuildLayout(const State& s) {
+ inline Action HitTest(const std::vector<Widget>& layout, float x, float y) {
+     // Last drawn widget wins, if a future page adds an overlapping popover.
+     for (auto i = layout.rbegin(); i != layout.rend(); ++i)
+-        if (i->enabled && i->action != Action::None && i->rect.Contains(x, y)) return i->action;
++        if (i->enabled && i->action != Action::None && HitRect(*i).Contains(x, y)) return i->action;
+     return Action::None;
+ }
+ 
++// Disabled policy rows still explain the lock on a deliberate click. The
++// worker enforces it; HitTest remains the enabled-action/hover predicate.
++inline Action ClickAction(const std::vector<Widget>& layout,float x,float y){
++    auto action=HitTest(layout,x,y);if(action!=Action::None)return action;
++    for(auto i=layout.rbegin();i!=layout.rend();++i)
++        if(!i->enabled&&(PolicyRow(i->action)>=0||i->action==Action::CatchUp)&&HitRect(*i).Contains(x,y))return i->action;
++    return Action::None;
++}
+ inline bool RayHit(const float* menuWorld, const float origin[3], const float dir[3],
+                    float& x, float& y, float& distance) {
+     // A rigid column-major transform permits transpose inversion without an
+diff --git a/prototypes/quest_g1/android/native/quest_menu_gl.h b/prototypes/quest_g1/android/native/quest_menu_gl.h
+index e7df616..33d0c30 100644
+--- a/prototypes/quest_g1/android/native/quest_menu_gl.h
++++ b/prototypes/quest_g1/android/native/quest_menu_gl.h
+@@ -1,4 +1,5 @@
+ #pragma once
++#include "graphics_epoch.h"
+ 
+ #include "quest_menu.h"
+ #include <GLES3/gl32.h>
+@@ -99,11 +100,13 @@ inline int Cell(unsigned c) {
+ 
+ class Renderer {
+     GLuint program = 0, texture = 0, vao = 0, vbo = 0;
++    uint64_t generation=0;
+     GLint matrixUniform = -1;
+     std::array<uint8_t, 162> widths {};
+ public:
+     std::vector<Vertex> vertices;
+     void Initialize(const std::string& assets) {
++        g1graphics::ForgetStale(generation,program,texture,vao,vbo);
+         if (program) return;
+         // Verify the assets before creating GL objects: a missing atlas should
+         // leave initialization retryable and the enclosing render state intact.
+@@ -263,7 +266,7 @@ inline int DrawQuestMenu(const float* vp, const float* menuWorld, const std::str
+     for (const auto& w : layout) {
+         bool hovered = false;
+         for (const auto& p : pointers)
+-            if (p.valid && w.enabled && w.action != Action::None && w.rect.Contains(p.x, p.y)) hovered = true;
++            if (p.valid && w.enabled && w.action != Action::None && HitRect(w).Contains(p.x, p.y)) hovered = true;
+         glmenu::Color text = w.kind == Kind::MutedText ? glmenu::Muted : glmenu::Text;
+         if (!w.enabled) { text[0] *= .52f; text[1] *= .52f; text[2] *= .52f; }
+         if (w.kind == Kind::Divider) { draw.Quad(w.rect, glmenu::Border); continue; }
+@@ -278,7 +281,7 @@ inline int DrawQuestMenu(const float* vp, const float* menuWorld, const std::str
+             draw.RoundRect({w.rect.x + .001f, w.rect.y + .001f, w.rect.w - .002f, w.rect.h - .002f}, .002f, fill);
+             draw.Label(w.rect, w.text, text, .032f, true, .008f);
+         } else if (w.kind == Kind::Radio) {
+-            if (w.selected || hovered) draw.Quad(w.rect, w.selected ? glmenu::Selected : glmenu::Control);
++            if (w.selected || hovered) draw.Quad(HitRect(w), w.selected ? glmenu::Selected : glmenu::Control);
+             float cx = w.rect.x + .024f, cy = w.rect.y + w.rect.h / 2;
+             draw.Circle(cx, cy, .009f, w.enabled ? glmenu::Muted : glmenu::Border);
+             draw.Circle(cx, cy, .007f, w.selected || hovered ? glmenu::Selected : glmenu::Background);
+@@ -331,7 +334,9 @@ inline int DrawMinimalStatus(const float* headVP, const std::string& assetsPath,
+     const char* exportText = state.exportStatus == 1 ? "Архив копируется" :
+         state.exportStatus == 2 ? "Архив сохранён в Download/G1Quest" :
+         state.exportStatus == 3 ? "Ошибка экспорта. Исходники в очках" : "Menu: меню     B: пауза";
+-    draw.Label({-.35f, bottom + .005f, .70f, .034f}, exportText,
++    draw.Label({-.35f, bottom + .005f, .70f, .034f},
++               !HumanCapture(state)&&state.scene==Scene::Tennis?state.tennisInfo:
++               !HumanCapture(state)&&state.scene==Scene::Rubik?state.rubikInfo:std::string(exportText),
+                state.exportStatus == 3 ? glmenu::Warning : glmenu::Muted, .027f);
+     const float local[16] = {1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,-1.3f,1};
+     float matrix[16]; glmenu::Multiply(headVP, local, matrix);
+diff --git a/prototypes/quest_g1/android/native/quest_runtime.cpp b/prototypes/quest_g1/android/native/quest_runtime.cpp
+index 800e44e..d7e5bd1 100644
+--- a/prototypes/quest_g1/android/native/quest_runtime.cpp
++++ b/prototypes/quest_g1/android/native/quest_runtime.cpp
+@@ -1,6 +1,10 @@
+ #include "view_frames.h"
+ #include "quest_runtime.h"
+ #include "simulation.h"
++#include "render_geom.h"
++#include "camera_fade.h"
++#include "cup_lab_shaders.h"
++#include "cup_placement_cue.h"
+ #include "meta_retarget.h"
+ #ifdef G1_ENABLE_FOOT_FLOOR_GUARD
+ #include "foot_floor.h"
+@@ -50,7 +54,7 @@ struct MenuCommand { questmenu::Action action; int policyIndex=-1; };
+ std::deque<MenuCommand> pendingMenuActions;
+ questmenu::State menuState;
+ std::vector<questpolicy::Entry> policyCatalog;
+-std::atomic<int> selectedPolicy{0};
++std::atomic<int> selectedPolicy{0},loadingPolicy{-1};
+ std::atomic<bool> catchUpEnabled{true};
+ std::atomic<int> sessionMode{0},sessionCapture{0},sessionPlan{0},sessionScene{1},requestedScene{-1};
+ std::atomic<bool> menuOpen{true},userPaused{true},calibrationReady{false},anchorMenu{true};
+@@ -61,7 +65,7 @@ std::atomic<double> recordedSeconds{0};
+ XrMatrix4x4f menuWorld{};
+ struct MenuRay {TrackedPose pose;bool valid=false,active=false;float trigger=0;};
+ std::array<MenuRay,2> menuRays;
+-std::array<questmenu::TriggerLatch,2> menuTrigger;
++std::array<questmenu::MenuPressLatch,2> menuTrigger;
+ std::vector<questmenu::Pointer> framePointers;
+ std::string menuNotice;
+ bool SessionPaused(){return menuOpen.load()||userPaused.load();}
+@@ -98,7 +102,7 @@ bool recordingShortcut=false,restartAfterCalibration=false;
+ std::chrono::steady_clock::time_point trackingTime;
+ std::atomic<bool> calibrate{false};
+ bool trackingEnabled=false;
+-std::atomic<bool> faulted{false};
++std::atomic<bool> faulted{false},plannerWaiting{false};
+ std::ofstream trace;
+ size_t traceRows=0;
+ std::array<float,29> lastReference{};
+@@ -125,7 +129,11 @@ double frameAgeMs=0,frameDrawMs=0,frameNow=0;
+ int frameStatus=0,frameExportStatus=0;
+ std::atomic<bool> firstPerson{false};
+ std::atomic<bool> refreshEgoAnchor{true};
+-int egoCamera=-1,headBody=-1;
++int egoCamera=-1;
++std::string publishedTennis;
++std::string publishedRubik;
++std::array<float,4> publishedCupShade{},frameCupShade{};
++std::array<float,2> publishedRobotPosition{},frameRobotPosition{};
+ void PublishGeometry(){
+     mjvOption option;mjv_defaultOption(&option);option.geomgroup[3]=debugEnabled&&debugContacts;
+     // Collision inspection replaces the exterior shell so contacts remain
+@@ -142,6 +150,22 @@ void PublishGeometry(){
+     }
+     std::lock_guard<std::mutex> guard(geometryMutex);
+     publishedGeometry.assign(workerScene.geoms,workerScene.geoms+workerScene.ngeom);
++    publishedRobotPosition={float(sim->data->qpos[0]),float(sim->data->qpos[1])};
++    publishedCupShade=CupPlacementCue(sim->model,sim->data);
++    if(sim->scene_name=="rubik"){
++        int core=mj_name2id(sim->model,mjOBJ_BODY,"rubik_core");
++        const auto* p=sim->data->xpos+core*3;float bottom=1e6f;
++        for(int i=0;i<workerScene.ngeom;i++){
++            const auto& g=workerScene.geoms[i];
++            const char* name=g.objtype==mjOBJ_GEOM&&g.objid>=0?mj_id2name(sim->model,mjOBJ_GEOM,g.objid):nullptr;
++            if(name&&std::string(name).rfind("rubik_block_",0)==0){
++                float z=g.pos[2];for(int j=0;j<3;j++)z-=std::abs(g.mat[6+j])*g.size[j];bottom=std::min(bottom,z);
++            }
++        }
++        publishedCupShade={float(p[0]),float(p[1]),bottom,sim->RubikSolved()?1.f:0.f};
++    }
++    publishedTennis=sim->TennisStatus();
++    publishedRubik=sim->RubikStatus();
+     publishedTargets={};
+     if(retarget->calibrated&&debugEnabled&&debugTargets){
+         auto* gm=retarget->solver().model();auto* gd=retarget->solver().data();
+@@ -163,10 +187,13 @@ void PublishGeometry(){
+     }
+ }
+ GLuint program=0;
+-struct Mesh {GLuint vao=0,vbo=0; GLsizei count=0;};
++struct Mesh {GLuint vao=0,vbo=0; GLsizei count=0;camerafade::Bounds bounds;};
+ std::map<int,Mesh> meshes;
+ std::vector<std::vector<float>> visualMeshes;
+ GLint vpLocation, modelLocation, colorLocation;
++GLint sceneModelLocation,normalLocation,eyeLocation,keyLocation,upLocation,
++      materialLocation,cupShadeLocation,cupGoalLocation,surfaceLocation,labStyleLocation;
++GLint robotPositionLocation;
+ 
+ void CloseFailedRecordingStreams()noexcept{
+     for(auto* stream:{&cameraRecording,&captureTimeline}){
+@@ -235,27 +262,18 @@ GLuint Shader(GLenum type,const char* source){
+ }
+ void InitGraphics(){
+     if(program) return;
+-    const char* vs=R"(#version 320 es
+-layout(location=0) in vec3 position;
+-layout(location=1) in vec3 normal;
+-uniform mat4 vp;
+-uniform mat4 model;
+-out vec3 worldNormal;
+-void main(){gl_Position=vp*model*vec4(position,1);worldNormal=normalize(mat3(model)*normal);}
+-)";
+-    const char* fs=R"(#version 320 es
+-precision mediump float;
+-in vec3 worldNormal;
+-uniform vec4 color;
+-out vec4 fragColor;
+-void main(){float light=.4+.6*max(dot(normalize(worldNormal),normalize(vec3(.5,1,.4))),0.);fragColor=vec4(color.rgb*light,color.a);}
+-)";
+-    GLuint v=Shader(GL_VERTEX_SHADER,vs),f=Shader(GL_FRAGMENT_SHADER,fs);
++    GLuint v=Shader(GL_VERTEX_SHADER,cuplab::VertexShader),f=Shader(GL_FRAGMENT_SHADER,cuplab::FragmentShader);
+     program=glCreateProgram();glAttachShader(program,v);glAttachShader(program,f);glLinkProgram(program);
+     GLint linked;glGetProgramiv(program,GL_LINK_STATUS,&linked);
+     if(!linked) throw std::runtime_error("G1 shader link failed");
+     glDeleteShader(v);glDeleteShader(f);
+     vpLocation=glGetUniformLocation(program,"vp"); modelLocation=glGetUniformLocation(program,"model");colorLocation=glGetUniformLocation(program,"color");
++    sceneModelLocation=glGetUniformLocation(program,"sceneModel");normalLocation=glGetUniformLocation(program,"normalMatrix");
++    eyeLocation=glGetUniformLocation(program,"eyePosition");keyLocation=glGetUniformLocation(program,"keyDirection");
++    upLocation=glGetUniformLocation(program,"upDirection");materialLocation=glGetUniformLocation(program,"materialParams");
++    cupShadeLocation=glGetUniformLocation(program,"cupShade");cupGoalLocation=glGetUniformLocation(program,"cupGoal");
++    surfaceLocation=glGetUniformLocation(program,"surfaceKind");labStyleLocation=glGetUniformLocation(program,"labStyle");
++    robotPositionLocation=glGetUniformLocation(program,"robotPosition");
+ }
+ void Triangle(std::vector<float>& out,const std::array<float,3>& a,const std::array<float,3>& b,const std::array<float,3>& c){
+     float u[3]={b[0]-a[0],b[1]-a[1],b[2]-a[2]},v[3]={c[0]-a[0],c[1]-a[1],c[2]-a[2]};
+@@ -264,7 +282,7 @@ void Triangle(std::vector<float>& out,const std::array<float,3>& a,const std::ar
+     for(auto p:{a,b,c}){for(float x:p)out.push_back(x);for(float x:n)out.push_back(length>1e-10?x/length:0);}
+ }
+ Mesh Upload(const std::vector<float>& verts){
+-    Mesh out; out.count=verts.size()/6;
++    Mesh out; out.count=verts.size()/6;out.bounds=camerafade::VertexBounds(verts.data(),out.count);
+     glGenVertexArrays(1,&out.vao);glBindVertexArray(out.vao);
+     glGenBuffers(1,&out.vbo);glBindBuffer(GL_ARRAY_BUFFER,out.vbo);
+     glBufferData(GL_ARRAY_BUFFER,verts.size()*sizeof(float),verts.data(),GL_STATIC_DRAW);
+@@ -317,7 +335,7 @@ void LoadPreferences(){
+     selectedPolicy=0;catchUpEnabled=true;
+     std::ifstream input(assetsPath+"/menu_settings.txt");
+     int version,mode,sc,kind,plan,view,pass,enabled,ds,dm,dc,dt,dcontacts;
+-    if(input>>version>>mode>>sc>>kind>>plan>>view>>pass>>enabled>>ds>>dm>>dc>>dt>>dcontacts && version==1 && mode>=0&&mode<2 && sc>=0&&sc<3 && kind>=0&&kind<2 && plan>=0&&plan<2){
++    if(input>>version>>mode>>sc>>kind>>plan>>view>>pass>>enabled>>ds>>dm>>dc>>dt>>dcontacts && version==1 && mode>=0&&mode<2 && sc>=0&&sc<5 && kind>=0&&kind<2 && plan>=0&&plan<2){
+         sessionMode=mode;sessionScene=sc;sessionCapture=kind;sessionPlan=plan;firstPerson=view!=0;passthroughVisible=pass!=0;
+         debugEnabled=enabled!=0;debugStats=ds!=0;debugMeta=dm!=0;debugCamera=dc!=0;debugTargets=dt!=0;debugContacts=dcontacts!=0;
+     }
+@@ -351,22 +369,25 @@ void ApplyMenuAction(questmenu::Action action,bool fresh,uint64_t sequence,int p
+     using A=questmenu::Action;
+     if(action==A::CatchUp){
+         if(recorder.active){Notice("Сначала сохраните запись.");return;}
+-        if(HumanCapture())return;
++        if(HumanCapture()){Notice("Выберите симуляцию или запись робота.");return;}
+         catchUpEnabled=!catchUpEnabled.load();settingsDirty=true;restartAfterCalibration=false;
+         reset=true;userPaused=true;menuOpen=true;return;
+     }
+     int policyRow=questmenu::PolicyRow(action);
+     if(policyRow>=0){
++        struct LoadingComplete {~LoadingComplete(){loadingPolicy=-1;}} loadingComplete;
+         if(recorder.active){Notice("Сначала сохраните запись.");return;}
+-        if(HumanCapture())return;
++        if(HumanCapture()){Notice("Выберите симуляцию или запись робота.");return;}
+         // Selection carries the catalog index from the UI, including page.
+         int index=policyIndex;
+-        if(index<0||index>=int(policyCatalog.size())||index==selectedPolicy.load())return;
++        __android_log_print(ANDROID_LOG_INFO,"G1Quest","Policy request index=%d selected=%d count=%zu recording=%d human=%d",index,selectedPolicy.load(),policyCatalog.size(),int(recorder.active),int(HumanCapture()));
++        if(index<0||index>=int(policyCatalog.size())){Notice("Режим недоступен. Откройте вкладку заново.");return;}
++        if(index==selectedPolicy.load()){Notice("Этот режим уже выбран.");return;}
+         userPaused=true;menuOpen=true;restartAfterCalibration=false;
+         try{
+             sim->SelectPolicy(questpolicy::VerifiedPolicy(assetsPath,policyCatalog[index]));
+             retarget->EnableVirtualLegLift(policyCatalog[index].inputPatch=="virtual_leg_lift10_v1");
+-            selectedPolicy=index;settingsDirty=true;
++            selectedPolicy=index;plannerWaiting=false;settingsDirty=true;
+             calibrationSnapshot.reset();retarget->calibrated=false;retarget->Pause();calibrationReady=false;
+             trackingEnabled=false;wasApplying=false;faulted=false;lastReference={};grip[0]=0;grip[1]=0;
+             calibrate=false;toggleRecording=false;cameraFusion.Reset();capture.Invalidate();trackingStatus=0;pauseReason=0;
+@@ -378,9 +399,9 @@ void ApplyMenuAction(questmenu::Action action,bool fresh,uint64_t sequence,int p
+         return;
+     }
+     if(action==A::ModeSimulation||action==A::ModeTrajectories||action==A::CaptureRobot||action==A::CaptureHuman||action==A::PlanTrain||action==A::PlanTest){ChangeConfiguration(action);return;}
+-    if(action==A::SceneEmpty||action==A::SceneCup||action==A::ScenePushT){
++    if(action==A::SceneEmpty||action==A::SceneCup||action==A::ScenePushT||action==A::SceneTennis||action==A::SceneRubik){
+         if(recorder.active){Notice("Сначала сохраните запись.");return;}
+-        int selected=action==A::SceneEmpty?0:action==A::SceneCup?1:2;
++        int selected=action==A::SceneEmpty?0:action==A::SceneCup?1:action==A::ScenePushT?2:action==A::SceneTennis?3:4;
+         if(selected!=sessionScene.load()){restartAfterCalibration=false;requestedScene=selected;userPaused=true;menuOpen=true;Notice("Загрузка сцены...");}
+         return;
+     }
+@@ -431,12 +452,13 @@ void ReloadScene(){
+         if(nextCamera<0)throw std::runtime_error("Missing ego camera");
+         mjv_freeScene(&scene);mjv_freeScene(&workerScene);
+         for(auto& entry:meshes){glDeleteBuffers(1,&entry.second.vbo);glDeleteVertexArrays(1,&entry.second.vao);}meshes.clear();
+-        calibrationSnapshot.reset();sim=std::move(nextSim);visualMeshes=std::move(nextVisuals);egoCamera=nextCamera;headBody=mj_name2id(sim->model,mjOBJ_BODY,"head_link");
++        calibrationSnapshot.reset();sim=std::move(nextSim);visualMeshes=std::move(nextVisuals);egoCamera=nextCamera;
+         mjv_defaultScene(&scene);mjv_makeScene(sim->model,&scene,2048);mjv_defaultScene(&workerScene);mjv_makeScene(sim->model,&workerScene,2048);
+ #ifdef G1_ENABLE_FOOT_FLOOR_GUARD
+         floorGuard=std::make_unique<FootFloorGuard>(sim->model,retarget->solver().model());
+ #endif
+         retarget->calibrated=false;retarget->Pause();trackingEnabled=false;wasApplying=false;calibrationReady=false;faulted=false;
++        retarget->EnableControllerStageTargets(true);retarget->EnableControllerAnatomicalFrame(false);retarget->EnablePredictedHandOrientation(true);
+         cameraFusion.Reset();lastReference={};grip[0]=0;grip[1]=0;trackingStatus=0;pauseReason=0;calibrate=false;
+         sessionScene=selected;settingsDirty=true;placeScene=true;refreshEgoAnchor=true;PublishGeometry();
+         {std::lock_guard<std::mutex> statsGuard(statsMutex);stats={};stats.physicsWorkers=sim->physics_workers;}
+@@ -445,7 +467,18 @@ void ReloadScene(){
+ }
+ }
+ 
++void G1GraphicsContextCreated(){
++    const auto generation=g1graphics::NewContext();
++    program=0;meshes.clear();
++    __android_log_print(ANDROID_LOG_INFO,"G1Quest","Created graphics context generation %llu",static_cast<unsigned long long>(generation));
++}
+ void G1Initialize(android_app* app){
++    // The native library can survive NativeActivity/context recreation.
++    // Never carry old pending clicks, focus, calibration or controller input.
++    {std::lock_guard<std::mutex> guard(inputMutex);pendingInputs.clear();pendingEvents.clear();pendingMenuActions.clear();latestTracking={};menuNotice.clear();}
++    menuState={};menuRays={};menuTrigger={};menuOpen=true;userPaused=true;active=false;calibrationReady=false;faulted=false;plannerWaiting=false;loadingPolicy=-1;
++    reset=false;calibrate=false;toggleRecording=false;recordingShortcut=false;restartAfterCalibration=false;settingsDirty=false;refreshGeometry=false;
++    anchorMenu=true;placeScene=true;requestedScene=-1;refreshEgoAnchor=true;grip[0]=grip[1]=0;recordingStatus=0;recordingStarted=0;
+     std::string assets=std::string(app->activity->internalDataPath)+"/g1";
+     assetsPath=assets;
+     CopyAssets(app->activity->assetManager,"",assets);
+@@ -467,6 +500,7 @@ void G1Initialize(android_app* app){
+     retarget->EnableVirtualLegLift(policyCatalog.at(selectedPolicy.load()).inputPatch=="virtual_leg_lift10_v1");
+     retarget->EnableNeutralWrists(true);
+     retarget->EnableWristFrameV2(true);
++    retarget->EnableControllerStageTargets(true);retarget->EnableControllerAnatomicalFrame(false);retarget->EnablePredictedHandOrientation(true);
+ #ifdef G1_ENABLE_TWIST_GROUNDING
+     retarget->EnableTwistGrounding(true);
+ #endif
+@@ -483,12 +517,15 @@ void G1Initialize(android_app* app){
+     for(int i=0;i<29;i++)trace<<",reference_"<<i;
+     trace<<",tracking_valid,mode,ik_error,limited,height,root_qw,root_qx,root_qy,root_qz";
+     for(auto name:{"head","left","right"})for(int i=0;i<7;i++)trace<<","<<name<<"_"<<i;
++    trace<<",scene,policy,calibrated,holder,root_x,root_y";
++    for(int i=0;i<6;i++)trace<<",whole_"<<i;
++    for(int i=0;i<29;i++)trace<<",actual_"<<i;
++    for(int h=0;h<2;h++)for(auto kind:{"target_wrist","actual_wrist"})for(int k=0;k<4;k++)trace<<","<<kind<<"_"<<h<<"_"<<k;
+     trace<<"\n"<<std::setprecision(9);
+     visualMeshes=LoadVisualMeshes(sim->scene_name,sim->model);
+     mjv_defaultScene(&scene);mjv_makeScene(sim->model,&scene,2048);
+     mjv_defaultScene(&workerScene);mjv_makeScene(sim->model,&workerScene,2048);
+     egoCamera=mj_name2id(sim->model,mjOBJ_CAMERA,"ego");
+-    headBody=mj_name2id(sim->model,mjOBJ_BODY,"head_link");
+     if(egoCamera<0)throw std::runtime_error("Missing ego camera");
+     publishedGeometry.reserve(2048);PublishGeometry();
+     telemetry.open(assets+"/runtime_stats.csv",std::ios::trunc);
+@@ -524,7 +561,7 @@ void G1Initialize(android_app* app){
+                 }
+                 for(const auto& command:actions)ApplyMenuAction(command.action,fresh,input.sequence,command.policyIndex);
+                 if(reset.exchange(false)){
+-                    cameraFusion.Reset();pauseReason=0;sim->Reset();wasApplying=false;trackingEnabled=false;retarget->calibrated=false;
++                    cameraFusion.Reset();pauseReason=0;plannerWaiting=false;sim->Reset();wasApplying=false;trackingEnabled=false;retarget->calibrated=false;
+                     trackingStatus=0;calibrate=restartAfterCalibration;faulted=false;lastReference={};grip[0]=0;grip[1]=0;capture.Invalidate();refreshGeometry=true;
+                     Record([&]{recorder.Event("reset",input.sequence);});Notice("");
+                 }
+@@ -534,7 +571,9 @@ void G1Initialize(android_app* app){
+                 }
+                 // Calibration must work while the menu freezes physics, also
+                 // after recenter in the middle of a paused recording.
+-                if(calibrate.load()&&fresh&&active){
++                // A model load or scene replacement can outlive the input
++                // snapshot. Keep A pending until a new controller frame arrives.
++                if(calibrate.load()&&fresh&&active&&(!retarget->UsesControllerWrists()||ControllerPosesValid(input))&&std::chrono::steady_clock::now()-receivedAt<std::chrono::milliseconds(50)){
+                     calibrate=false;
+                     try{
+                         retarget->Calibrate(sim->model,sim->data,input);
+@@ -661,6 +700,9 @@ void G1Initialize(android_app* app){
+                 // The render thread can open the menu or replace a scene while
+                 // this worker waits for the lock. Recheck before any Step.
+                 if(!active||SessionPaused()||faulted||requestedScene>=0)continue;
++                // Wait before solving/recording a new GMR frame. Hidden solves
++                // during a stalled planner would make recorded replay diverge.
++                if(!sim->PrepareStep())throw sonic::PlannerPending{};
+                 const bool resetNow=false;
+                 bool valid=input.body.valid && (input.location_flags[0]&3)==3 && std::abs(input.xr_time_ns-input.body.time_ns)<200000000LL && std::chrono::steady_clock::now()-receivedAt<std::chrono::milliseconds(200);
+                 bool calibratedNow=calibratedThisCycle;
+@@ -668,7 +710,8 @@ void G1Initialize(android_app* app){
+                     trackingEnabled=false;retarget->calibrated=false;pauseReason=2;
+                     Record([&]{recorder.Event("body_skeleton_changed",input.sequence);});
+                 }
+-                bool applyReference=trackingEnabled && valid && retarget->calibrated;
++                const bool handsValid=!retarget->UsesControllerWrists()||ControllerPosesValid(input);
++                bool applyReference=trackingEnabled && valid && handsValid && retarget->calibrated;
+                 retarget->EnableCameraTracking(firstPerson.load());
+                 float leftGrip=grip[0].load(),rightGrip=grip[1].load();
+                 // Camera registration belongs to Quest STAGE, not to robot
+@@ -708,7 +751,8 @@ void G1Initialize(android_app* app){
+                 }else{sample.gmrMs=0;sim->PauseWholeBodyReference();retarget->Pause();}
+                 wasApplying=applyReference;
+                 bool poseMismatch=retarget->solver().positionRms>.10 || retarget->solver().orientationRms>.78539816339;
+-                trackingStatus=!valid?3:retarget->calibrated?(trackingEnabled?(valid?(poseMismatch?5:1):3):2):0;
++                trackingStatus=(!valid||!handsValid)?3:retarget->calibrated?(trackingEnabled?(valid?(poseMismatch?5:1):3):2):0;
++                if(plannerWaiting.exchange(false))__android_log_print(ANDROID_LOG_INFO,"G1Quest","SONIC planner ready; simulation resumed at %.3fs",sim->data->time);
+                 Record([&]{recorder.Frame(sim->model,sim->data,sim->steps,input,resetNow,calibratedNow,applyReference,valid,
+                     leftGrip,rightGrip,trackingStatus,retarget->error,(poseMismatch),lastReference);});
+                 Record([&]{recorder.Mimic(input,sim->steps,sim->data->time,sim->WholeBodyReference());});
+@@ -721,10 +765,20 @@ void G1Initialize(android_app* app){
+                     for(const auto& pose:{input.head,input.hands[0],input.hands[1]}){
+                         for(auto p:pose.position)trace<<","<<p;for(auto q:pose.quaternion)trace<<","<<q;
+                     }
++                    trace<<","<<sim->scene_name<<","<<policyCatalog.at(selectedPolicy.load()).id<<","<<calibratedNow<<","<<(sim->scene_name=="tennis"?sim->data->userdata[TennisTask::Holder]:0)<<","<<sim->data->qpos[0]<<","<<sim->data->qpos[1];
++                    for(int k=0;k<6;k++)trace<<","<<sim->WholeBodyReference()[k];
++                    auto* gm=retarget->solver().model();
++                    for(int j=1;j<gm->njnt;j++){int source=mj_name2id(sim->model,mjOBJ_JOINT,mj_id2name(gm,mjOBJ_JOINT,j));trace<<","<<sim->data->qpos[sim->model->jnt_qposadr[source]];}
++                    for(int h=0;h<2;h++){
++                        int targetWrist=retarget->solver().tasks()[12+h].body;
++                        for(int k=0;k<4;k++)trace<<","<<retarget->solver().data()->xquat[4*targetWrist+k];
++                        int w=mj_name2id(sim->model,mjOBJ_BODY,h?"right_wrist_yaw_link":"left_wrist_yaw_link");
++                        for(int k=0;k<4;k++)trace<<","<<sim->data->xquat[4*w+k];
++                    }
+                     trace<<"\n";if(sim->steps%1000==0)trace.flush();
+                 }
+                 double physicsStart=ClockSeconds();
+-                for(int i=0;i<10;i++)sim->Step(false,leftGrip,rightGrip);
++                for(int i=0;i<10;i++)if(!sim->Step(false,leftGrip,rightGrip))throw sonic::PlannerPending{};
+                 if(recorder.active&&applyReference)acceptedRecordingSeconds=acceptedRecordingSeconds.load()+.01;
+                 PublishGeometry();
+                 sample.physicsMs=std::max(0.,(ClockSeconds()-physicsStart)*1000-sim->inference_ms);
+@@ -788,7 +842,15 @@ void G1Initialize(android_app* app){
+                 }
+                 if(sim->steps%5000==0)__android_log_print(ANDROID_LOG_INFO,"G1Quest","sim=%.2fs height=%.3f inference=%.3fms",sim->data->time,sim->data->qpos[2],sim->inference_ms);
+                 if(sim->steps%5000==0)__android_log_print(ANDROID_LOG_INFO,"G1Quest","tracking state=%d GMR task residual=%.3f",trackingStatus.load(),retarget->error);
++            }catch(const sonic::PlannerPending&){
++                std::lock_guard<std::mutex> guard(mutex);
++                if(!plannerWaiting.exchange(true))__android_log_print(ANDROID_LOG_INFO,"G1Quest","SONIC waiting without advancing physics at %.3fs, plan_age=%.3f",sim->data->time,sim->PlanAge());
++                sample.published=ClockSeconds();sample.simTime=sim->data->time;sample.cycleMs=(sample.published-cycleStart)*1000;sample.realTimeFactor=0;
++                {std::lock_guard<std::mutex> statsGuard(statsMutex);stats=sample;}
+             }catch(const std::exception& e){
++                plannerWaiting=false;
++                Notice(std::string("Симуляция остановлена: ")+e.what());
++                std::ofstream(assetsPath+"/last_simulation_error.txt")<<e.what()<<'\n';
+                 __android_log_print(ANDROID_LOG_ERROR,"G1Quest","Simulation paused at %.3fs: %s; trace saved",sim->data->time,e.what());
+                 std::lock_guard<std::mutex> guard(mutex);trace.flush();Record([&]{recorder.Event("simulation_fault",input.sequence);recorder.Flush();});faulted=true;trackingEnabled=false;calibrate=false;trackingStatus=4;pauseReason=3;
+                 {std::lock_guard<std::mutex> statsGuard(statsMutex);stats.status=4;stats.reason=3;}
+@@ -807,6 +869,10 @@ void G1Shutdown(bool interrupted){
+         else FinishRecording(latestTracking.sequence,"app_shutdown");
+     });
+     exporter.reset();cameraStream.reset();
++    // RuntimeGuard is destroyed before the owning Graphics/EGL context. Drop
++    // scene resources also when a runtime restarts inside that same context.
++    for(auto& entry:meshes){glDeleteBuffers(1,&entry.second.vbo);glDeleteVertexArrays(1,&entry.second.vao);}meshes.clear();
++    if(program)glDeleteProgram(program);program=0;
+     CloseFailedRecordingStreams();telemetry.close();trace.close();mjv_freeScene(&scene);mjv_freeScene(&workerScene);calibrationSnapshot.reset();retarget.reset();sim.reset();
+ }
+ void G1SetActive(bool value){
+@@ -886,12 +952,12 @@ void G1PrepareFrame(){
+         }
+     }else optical={};
+     frameOperatorCamera=optical;
+-    menuState.policyIndex=selectedPolicy;menuState.catchUp=catchUpEnabled;
++    menuState.policyLoading=loadingPolicy.load()>=0;menuState.policyIndex=selectedPolicy;menuState.catchUp=catchUpEnabled;
+     menuState.mode=questmenu::Mode(sessionMode.load());menuState.scene=questmenu::Scene(sessionScene.load());
+     menuState.capture=questmenu::Capture(sessionCapture.load());menuState.plan=questmenu::Plan(sessionPlan.load());
+-    menuState.open=menuOpen;menuState.paused=SessionPaused()||!active;menuState.recording=recordingStatus==1;
++    menuState.plannerWaiting=plannerWaiting;menuState.open=menuOpen;menuState.paused=SessionPaused()||!active;menuState.recording=recordingStatus==1;
+     menuState.calibrated=calibrationReady;menuState.faulted=faulted;menuState.firstPerson=firstPerson;menuState.passthrough=G1PassthroughVisible();
+-    menuState.trackingValid=frameTracking.body.valid&&(frameTracking.location_flags[0]&3)==3&&frameAgeMs<200&&std::abs(frameTracking.xr_time_ns-frameTracking.body.time_ns)<200000000LL;
++    menuState.trackingValid=frameTracking.body.valid&&ControllerPosesValid(frameTracking)&&(frameTracking.location_flags[0]&3)==3&&frameAgeMs<200&&std::abs(frameTracking.xr_time_ns-frameTracking.body.time_ns)<200000000LL;
+     menuState.debugEnabled=debugEnabled;menuState.debugStats=debugStats;menuState.debugMeta=debugMeta;menuState.debugCamera=debugCamera;
+     menuState.debugTargets=debugTargets;menuState.debugContacts=debugContacts;menuState.exportStatus=frameExportStatus;
+     menuState.cameraInfo=!cameraStream||!cameraStream->connected?"Не подключена":!cameraStream->clockSynced?"Синхронизация часов":"Подключена";
+@@ -912,13 +978,22 @@ void G1PrepareFrame(){
+         double rotation[9];mju_quat2Mat(rotation,ray.pose.quaternion.data());
+         float origin[3],direction[3];for(int a=0;a<3;a++){origin[a]=float(ray.pose.position[a]);direction[a]=float(-rotation[a*3+2]);}
+         float x=0,y=0,distance=1.4f;bool hit=valid&&menuState.open&&questmenu::RayHit(menuWorld.m,origin,direction,x,y,distance);
+-        auto action=hit?questmenu::HitTest(layout,x,y):questmenu::Action::None;
++        auto action=hit?questmenu::ClickAction(layout,x,y):questmenu::Action::None;
+         framePointers.push_back({x,y,hit,action!=questmenu::Action::None});
+         if(menuState.open&&valid){
+             std::array<double,3> end;for(int a=0;a<3;a++)end[a]=origin[a]+(hit?distance:1.4f)*direction[a];
+             frameMenuRays.bones.push_back({ray.pose.position,end,.001f,{.8f,.85f,.75f,.85f}});
+         }
+-        if(menuTrigger[hand].Update(valid,ray.trigger>.55f)&&hit){
++        const bool pressed=ray.trigger>.55f;
++        static std::array<bool,2> previousPressed{};
++        if(menuState.open&&pressed!=previousPressed[hand])
++            __android_log_print(ANDROID_LOG_INFO,"G1Quest","Menu trigger hand=%d value=%.3f valid=%d focus=%d aim=%d input=%d hit=%d action=%d page=%d policy_page=%d x=%.3f y=%.3f",hand,ray.trigger,int(valid),int(active.load()),int(ray.valid),int(ray.active),int(hit),int(action),int(menuState.page),menuState.policyPage,x,y);
++        previousPressed[hand]=pressed;
++        const int menuRevision=int(menuState.page)*256+menuState.policyPage*8+int(menuState.recording)*4+int(questmenu::HumanCapture(menuState))*2+int(menuState.policyLoading);
++        const auto click=menuTrigger[hand].Update(menuState.open&&valid,ray.trigger,action,x,y,menuRevision);
++        if(click.pressed&&hit){
++            action=click.action;
++            __android_log_print(ANDROID_LOG_INFO,"G1Quest","Menu click hand=%d action=%d policy_row=%d page=%d",hand,int(action),questmenu::PolicyRow(action),menuState.policyPage);
+             using A=questmenu::Action;
+             if(action==A::PageSession)menuState.page=questmenu::Page::Session;
+             else if(action==A::PageView)menuState.page=questmenu::Page::View;
+@@ -927,7 +1002,15 @@ void G1PrepareFrame(){
+             else if(action==A::PolicyPrevious)menuState.policyPage=std::max(0,menuState.policyPage-1);
+             else if(action==A::PolicyNext)menuState.policyPage=std::min((int(policyCatalog.size())-1)/questmenu::PoliciesPerPage,menuState.policyPage+1);
+             else if(action==A::Close)G1ToggleMenu();
+-            else if(action!=A::None)QueueMenuAction(action,questmenu::PolicyRow(action)<0?-1:menuState.policyPage*questmenu::PoliciesPerPage+questmenu::PolicyRow(action));
++            else if(action!=A::None){
++                int row=questmenu::PolicyRow(action);
++                if((row>=0||action==A::CatchUp)&&loadingPolicy.load()>=0){Notice("Дождитесь завершения загрузки.");continue;}
++                const int index=row<0?-1:menuState.policyPage*questmenu::PoliciesPerPage+row;
++                if(row>=0&&!menuState.recording&&!questmenu::HumanCapture(menuState)){
++                    loadingPolicy=index;Notice("Загрузка режима...");
++                }
++                QueueMenuAction(action,index);
++            }
+         }
+     }
+ 
+@@ -935,7 +1018,8 @@ void G1PrepareFrame(){
+     if(!guard.owns_lock()){skippedSceneUpdates++;return;}
+     scene.ngeom=std::min(int(publishedGeometry.size()),scene.maxgeom);
+     std::copy_n(publishedGeometry.begin(),scene.ngeom,scene.geoms);frameCamera=publishedCamera;
+-    frameTargets=publishedTargets;
++    frameTargets=publishedTargets;menuState.tennisInfo=publishedTennis;frameCupShade=publishedCupShade;frameRobotPosition=publishedRobotPosition;
++    menuState.rubikInfo=publishedRubik;
+     if(publishedEgoCalibrated){frameEgoRotation=publishedEgoRotation;frameEgoScale=publishedEgoScale;frameEgoWorld=publishedEgoWorld;refreshEgoAnchor=false;}
+     else if(refreshEgoAnchor && (frameTracking.location_flags[0]&3)==3){
+         frameEgoRotation=LevelEgoRotation(frameCamera,headMatrix);
+@@ -965,13 +1049,31 @@ void G1Render(const float* vp,const float* projection){
+     // MuJoCo +Z up -> XR +Y up, anchored ahead of the initial headset pose.
+     XrMatrix4x4f world{};std::copy(sceneTransform.begin(),sceneTransform.end(),world.m);
+     if(firstPerson)world=frameEgoWorld;
++    bool labStyle=sim->scene_name=="cup"||sim->scene_name=="rubik";
++    glUniform1i(labStyleLocation,labStyle);
++    glUniform3fv(eyeLocation,1,headMatrix.m+12);
++    float key[3],up[3];
++    for(int r=0;r<3;r++){key[r]=-2.f*world.m[r]-3.f*world.m[4+r]+4.f*world.m[8+r];up[r]=world.m[8+r];}
++    glUniform3fv(keyLocation,1,key);glUniform3fv(upLocation,1,up);
++    glUniform4fv(cupShadeLocation,1,frameCupShade.data());
++    glUniform2fv(robotPositionLocation,1,frameRobotPosition.data());
++    int goalId=mj_name2id(sim->model,mjOBJ_NUMERIC,"cup_lab_goal");
++    float goal[4]={};if(goalId>=0&&sim->model->numeric_size[goalId]==4)for(int j=0;j<4;j++)goal[j]=float(sim->model->numeric_data[sim->model->numeric_adr[goalId]+j]);
++    glUniform4fv(cupGoalLocation,1,goal);
++    int room=mj_name2id(sim->model,mjOBJ_BODY,"cup_lab_room"),storage=mj_name2id(sim->model,mjOBJ_BODY,"cup_lab_storage");
++    struct DrawItem {const mjvGeom* geom;Mesh* mesh;XrMatrix4x4f local,model;int body;float alpha,distance;};
++    std::vector<DrawItem> draws;draws.reserve(scene.ngeom);
++    int robotRoot=mj_name2id(sim->model,mjOBJ_BODY,"pelvis");
++    auto robotBody=[&](int body){for(int b=body;b>0;b=sim->model->body_parentid[b])if(b==robotRoot)return true;return false;};
+     int renderedTriangles=2;
+     for(int i=0;i<scene.ngeom;i++){
+         const mjvGeom& g=scene.geoms[i];if(g.rgba[3]<.01)continue;
+-        if(firstPerson && g.objtype==mjOBJ_GEOM && g.objid>=0 &&
+-           sim->model->geom_bodyid[g.objid]==headBody)continue;
+         // The physical floor remains, but real surroundings are visible through it.
+         if(g.type==mjGEOM_PLANE&&G1PassthroughVisible())continue;
++        if(G1PassthroughVisible()&&g.objtype==mjOBJ_GEOM&&g.objid>=0){
++            int body=sim->model->geom_bodyid[g.objid];
++            if(body==room||body==storage)continue;
++        }
+         if(g.type!=mjGEOM_MESH && g.type!=mjGEOM_BOX && g.type!=mjGEOM_PLANE && g.type!=mjGEOM_SPHERE && g.type!=mjGEOM_ELLIPSOID && g.type!=mjGEOM_CYLINDER && g.type!=mjGEOM_CAPSULE)continue;
+         bool collision=debugEnabled&&debugContacts&&g.objtype==mjOBJ_GEOM&&g.objid>=0&&sim->model->geom_group[g.objid]==3;
+         auto& mesh=Geometry(g,collision);
+@@ -980,19 +1082,56 @@ void G1Render(const float* vp,const float* projection){
+         // stats counter still reports every physical contact.
+         if(g.category==mjCAT_DECOR&&renderedTriangles+mesh.count/3>100000-8192-2048)continue;
+         renderedTriangles+=mesh.count/3;
+-        float size[3]={g.size[0],g.size[1],g.size[2]};
+-        if(g.type==mjGEOM_MESH)size[0]=size[1]=size[2]=1;
+-        if(g.type==mjGEOM_SPHERE)size[1]=size[2]=size[0];
+-        if(g.type==mjGEOM_CYLINDER || g.type==mjGEOM_CAPSULE){size[2]=size[1];size[1]=size[0];}
+-        if(g.type==mjGEOM_PLANE){size[0]=size[1]=15;size[2]=.005;}
++        const auto size=RenderGeomSize(g);
+         XrMatrix4x4f local{};local.m[15]=1;
+         for(int row=0;row<3;row++)for(int col=0;col<3;col++)local.m[col*4+row]=g.mat[row*3+col]*size[col];
+         for(int j=0;j<3;j++)local.m[12+j]=g.pos[j];
+         if(g.type==mjGEOM_PLANE)local.m[14]-=.005f;
+         XrMatrix4x4f model;XrMatrix4x4f_Multiply(&model,&world,&local);
++        int body=g.objtype==mjOBJ_GEOM&&g.objid>=0?sim->model->geom_bodyid[g.objid]:-1;
++        // Head and torso meshes share torso_link in the source model. Fade
++        // individual rendered segments rather than their physical body owner.
++        float alpha=g.rgba[3];
++        if(body>=0&&robotBody(body))alpha*=camerafade::Alpha(model.m,mesh.bounds,headMatrix.m+12);
++        float distance=0;for(int r=0;r<3;r++){float d=model.m[12+r]-headMatrix.m[12+r];distance+=d*d;}
++        draws.push_back({&g,&mesh,local,model,body,alpha,distance});
++    }
++    // Opaque first, then transparent objects back-to-front without depth writes.
++    std::stable_sort(draws.begin(),draws.end(),[](const DrawItem& a,const DrawItem& b){
++        bool at=a.alpha<.999f,bt=b.alpha<.999f;
++        if(at!=bt)return !at;
++        return at?a.distance>b.distance:false;
++    });
++    glDisable(GL_BLEND);glDepthMask(GL_TRUE);bool blending=false;
++    for(const auto& item:draws){
++        if(item.alpha<.01f)continue;
++        if(!blending&&item.alpha<.999f){
++            glEnable(GL_BLEND);glBlendFuncSeparate(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA,GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
++            glDepthMask(GL_FALSE);blending=true;
++        }
++        const auto& g=*item.geom;const auto& mesh=*item.mesh;const auto& model=item.model;const auto& local=item.local;
+         glUniformMatrix4fv(modelLocation,1,GL_FALSE,model.m);
+-        glUniform4fv(colorLocation,1,g.rgba);glBindVertexArray(mesh.vao);glDrawArrays(GL_TRIANGLES,0,mesh.count);
++        glUniformMatrix4fv(sceneModelLocation,1,GL_FALSE,local.m);
++        // Inverse transpose for orthogonal TRS; nonuniform thin slabs must
++        // not distort their lighting normals. No per-vertex matrix inversion.
++        float normal[9];
++        for(int c=0;c<3;c++){
++            float length2=0;for(int r=0;r<3;r++)length2+=model.m[4*c+r]*model.m[4*c+r];
++            for(int r=0;r<3;r++)normal[3*c+r]=model.m[4*c+r]/std::max(length2,1e-12f);
++        }
++        glUniformMatrix3fv(normalLocation,1,GL_FALSE,normal);
++        glUniform3f(materialLocation,g.specular,g.shininess,g.emission);
++        int surface=0;
++        if(labStyle&&g.objtype==mjOBJ_GEOM&&g.objid>=0){
++            int mat=sim->model->geom_matid[g.objid];
++            const char* name=mat>=0?mj_id2name(sim->model,mjOBJ_MATERIAL,mat):nullptr;
++            if(name){std::string m(name);surface=m=="lab_floor"?1:m=="lab_wood"?2:m=="lab_ceramic"?3:m=="lab_goal"?4:m=="lab_window"?5:0;}
++        }
++        glUniform1i(surfaceLocation,surface);
++        float color[4]={g.rgba[0],g.rgba[1],g.rgba[2],item.alpha};
++        glUniform4fv(colorLocation,1,color);glBindVertexArray(mesh.vao);glDrawArrays(GL_TRIANGLES,0,mesh.count);
+     }
++    glDepthMask(GL_TRUE);glDisable(GL_BLEND);
+     if(renderedTriangles>100000)throw std::runtime_error("Rendered scene exceeds 100000 triangle budget");
+     static bool reported=false;
+     if(!reported){__android_log_print(ANDROID_LOG_INFO,"G1Quest","Rendered scene: %d triangles per eye",renderedTriangles);reported=true;}
+diff --git a/prototypes/quest_g1/android/native/quest_runtime.h b/prototypes/quest_g1/android/native/quest_runtime.h
+index 00d1c71..29025be 100644
+--- a/prototypes/quest_g1/android/native/quest_runtime.h
++++ b/prototypes/quest_g1/android/native/quest_runtime.h
+@@ -2,6 +2,7 @@
+ #include <cstdint>
+ #include "retarget.h"
+ struct android_app;
++void G1GraphicsContextCreated();
+ void G1Initialize(android_app* app);
+ void G1Shutdown(bool interrupted=false);
+ void G1SetActive(bool active);
+diff --git a/prototypes/quest_g1/android/native/recording.h b/prototypes/quest_g1/android/native/recording.h
+index 4aeab67..6df63a4 100644
+--- a/prototypes/quest_g1/android/native/recording.h
++++ b/prototypes/quest_g1/android/native/recording.h
+@@ -12,7 +12,7 @@
+ // Caller serializes access. Files stay local to the application; no participant identifiers.
+ // A missing complete.json means interrupted/unfinalized, never a successful episode.
+ class EpisodeRecorder {
+-    std::ofstream input, frames, events, body, mimic;
++    std::ofstream input, frames, events, body, mimic, tennis, rubik;
+     fullbody::Recorder fullBody;
+     std::filesystem::path directory;
+     uint64_t inputs=0, samples=0;
+@@ -55,7 +55,7 @@ public:
+             }
+             if(!policyFile.empty())std::filesystem::copy_file(std::filesystem::path(root)/policyFile,directory/"policy.onnx");
+             if(!secondaryPolicyFile.empty())std::filesystem::copy_file(std::filesystem::path(root)/secondaryPolicyFile,directory/"policy-secondary.onnx");
+-            for(auto* f:{&input,&frames,&events,&body,&mimic})f->exceptions(std::ios::badbit|std::ios::failbit);
++            for(auto* f:{&input,&frames,&events,&body,&mimic,&tennis,&rubik})f->exceptions(std::ios::badbit|std::ios::failbit);
+             input.open(directory/"input.csv");frames.open(directory/"frames.csv");events.open(directory/"events.csv");
+             input<<"sequence,xr_time_ns,receive_ns,valid,head_flags,left_flags,right_flags,left_active,right_active,grip_left,grip_right";
+             for(auto name:{"head","left","right"})for(auto c:{"x","y","z","qw","qx","qy","qz"})input<<','<<name<<'_'<<c;
+@@ -73,6 +73,17 @@ public:
+             body<<'\n'<<std::setprecision(17);
+             mimic<<"sequence,step,sim_time";for(int k=0;k<35;k++)mimic<<",mimic_"<<k;mimic<<'\n'<<std::setprecision(17);
+             fullBody.Start(directory);
++            if((model->nuserdata==8||model->nuserdata==9) && mj_name2id(model,mjOBJ_BODY,"tennis_ball")>=0){
++                tennis.open(directory/"tennis.csv");
++                tennis<<"sequence,step,sim_time,armed,next_serve_s,active,racket_hit,own_bounces,serves,returns,misses";
++                if(model->nuserdata==9)tennis<<",holding_hand";
++                tennis<<'\n'<<std::setprecision(17);
++            }
++            if(model->nuserdata==64&&mj_name2id(model,mjOBJ_BODY,"rubik_core")>=0){
++                rubik.open(directory/"rubik.csv");rubik<<"sequence,step,sim_time";
++                for(int i=0;i<64;i++)rubik<<",state_"<<i;
++                rubik<<'\n'<<std::setprecision(17);
++            }
+             active=true;Event("start",0);Flush();
+         }catch(...){Abort();throw;}
+     }
+@@ -98,17 +109,21 @@ public:
+         frames<<Now()<<','<<f.sequence<<','<<steps<<','<<d->time<<','<<reset<<','<<calibrated<<','<<apply<<','<<valid<<','<<left<<','<<right<<','<<mode<<','<<error<<','<<limited;
+         Values(frames,reference.data(),29);Values(frames,d->qpos,m->nq);Values(frames,d->qvel,m->nv);Values(frames,d->ctrl,m->nu);
+         frames<<'\n';samples++;
++        if(tennis.is_open()){
++            tennis<<f.sequence<<','<<steps<<','<<d->time;Values(tennis,d->userdata,m->nuserdata);tennis<<'\n';
++        }
++        if(rubik.is_open()){rubik<<f.sequence<<','<<steps<<','<<d->time;Values(rubik,d->userdata,m->nuserdata);rubik<<'\n';}
+     }
+     void Mimic(const TrackingFrame& f,int step,double time,const std::array<float,35>& value){
+         if(!active)return;
+         mimic<<f.sequence<<','<<step<<','<<time;Values(mimic,value.data(),35);mimic<<'\n';
+     }
+-    void Flush(){if(active){fullBody.Flush();input.flush();frames.flush();events.flush();body.flush();mimic.flush();lastFlush=Now();}}
++    void Flush(){if(active){fullBody.Flush();input.flush();frames.flush();events.flush();body.flush();mimic.flush();if(tennis.is_open())tennis.flush();if(rubik.is_open())rubik.flush();lastFlush=Now();}}
+     void Tick(){if(active && Now()-lastFlush>1000000000LL)Flush();}
+     void Stop(const char* reason="user_stop"){
+         if(!active)return;
+         try{
+-            Event(reason,0);Flush();fullBody.Close();input.close();frames.close();events.close();body.close();mimic.close();
++            Event(reason,0);Flush();fullBody.Close();input.close();frames.close();events.close();body.close();mimic.close();if(tennis.is_open())tennis.close();if(rubik.is_open())rubik.close();
+             std::ofstream done;done.exceptions(std::ios::badbit|std::ios::failbit);
+             done.open(directory/"complete.tmp");
+             done<<"{\"schema_version\":1,\"reason\":\""<<reason<<"\",\"input_rows\":"<<inputs<<",\"frame_rows\":"<<samples<<"}\n";
+@@ -117,6 +132,6 @@ public:
+     }
+     void Abort()noexcept{
+         active=false;failed=true;fullBody.Abort();
+-        for(auto* f:{&input,&frames,&events,&body,&mimic}){f->exceptions(std::ios::goodbit);if(f->is_open())f->close();f->clear();}
++        for(auto* f:{&input,&frames,&events,&body,&mimic,&tennis,&rubik}){f->exceptions(std::ios::goodbit);if(f->is_open())f->close();f->clear();}
+     }
+ };
+diff --git a/prototypes/quest_g1/android/native/replay_gmr.cpp b/prototypes/quest_g1/android/native/replay_gmr.cpp
+index 3482d3a..55f8c6e 100644
+--- a/prototypes/quest_g1/android/native/replay_gmr.cpp
++++ b/prototypes/quest_g1/android/native/replay_gmr.cpp
+@@ -13,7 +13,7 @@ int main(int argc,char**argv){
+     if(argc!=3)return 2;
+     try{
+         std::string folder=argv[2];auto manifest=episodereplay::LoadManifest(folder);
+-        Simulation sim(argv[1],2,manifest.scene,manifest.Policy(argv[1],folder),manifest.policyHz);manifest.ValidateDimensions(sim.model->nq,sim.model->nv,sim.model->nu);MetaRetargeter meta(argv[1]);meta.EnableVirtualLegLift(manifest.inputPatch=="virtual_leg_lift10_v1");meta.EnableNeutralWrists(manifest.neutralWrists);meta.EnableWristFrameV2(manifest.wristFrameV2);meta.SetTravelGain(manifest.travelGainPercent/100.);
++        Simulation sim(argv[1],2,manifest.scene,manifest.Policy(argv[1],folder),manifest.policyHz);manifest.ValidateDimensions(sim.model->nq,sim.model->nv,sim.model->nu);MetaRetargeter meta(argv[1]);meta.EnableVirtualLegLift(manifest.inputPatch=="virtual_leg_lift10_v1");meta.EnableNeutralWrists(manifest.neutralWrists);meta.EnableWristFrameV2(manifest.wristFrameV2);meta.EnableControllerWrists(manifest.scene=="rubik");meta.EnableControllerStageTargets(manifest.controllerStageTargets);meta.EnableControllerAnatomicalFrame(manifest.controllerAnatomicalFrame);meta.EnablePredictedHandOrientation(manifest.predictedHandOrientation);meta.SetTravelGain(manifest.travelGainPercent/100.);
+         std::ifstream inputs(folder+"/input.csv"),bodies(folder+"/body.csv"),frames(folder+"/frames.csv"),commands(folder+"/mimic.csv");
+         if(!inputs||!bodies||!frames||!commands)throw std::runtime_error("GMR replay requires input/body/frames/mimic streams");
+         std::map<uint64_t,TrackingFrame> poses;std::string line;
+diff --git a/prototypes/quest_g1/android/native/replay_gmr_dynamics.cpp b/prototypes/quest_g1/android/native/replay_gmr_dynamics.cpp
+index 2317919..8a0dffe 100644
+--- a/prototypes/quest_g1/android/native/replay_gmr_dynamics.cpp
++++ b/prototypes/quest_g1/android/native/replay_gmr_dynamics.cpp
+@@ -36,7 +36,7 @@ static void CheckedStep(Simulation& sim,double leftGrip,double rightGrip) {
+  CheckPhysicsNumerics(sim,previousTime);
+ }
+ int Run(int argc,char**argv){
+- if(argc!=5){std::cerr<<"Usage: replay_gmr_dynamics assets episode saved|retarget output.csv\n";return 2;}std::string folder=argv[2],mode=argv[3];if(mode!="saved"&&mode!="retarget")throw std::runtime_error("Unknown replay mode");auto manifest=episodereplay::LoadManifest(folder);Simulation sim(argv[1],2,manifest.scene,manifest.Policy(argv[1],folder),manifest.policyHz);manifest.ValidateDimensions(sim.model->nq,sim.model->nv,sim.model->nu);MetaRetargeter meta(argv[1]);meta.EnableVirtualLegLift(manifest.inputPatch=="virtual_leg_lift10_v1");meta.EnableNeutralWrists(manifest.neutralWrists);meta.EnableWristFrameV2(manifest.wristFrameV2);meta.SetTravelGain(manifest.travelGainPercent/100.);std::string line;
++ if(argc!=5){std::cerr<<"Usage: replay_gmr_dynamics assets episode saved|retarget output.csv\n";return 2;}std::string folder=argv[2],mode=argv[3];if(mode!="saved"&&mode!="retarget")throw std::runtime_error("Unknown replay mode");auto manifest=episodereplay::LoadManifest(folder);Simulation sim(argv[1],2,manifest.scene,manifest.Policy(argv[1],folder),manifest.policyHz);manifest.ValidateDimensions(sim.model->nq,sim.model->nv,sim.model->nu);MetaRetargeter meta(argv[1]);meta.EnableVirtualLegLift(manifest.inputPatch=="virtual_leg_lift10_v1");meta.EnableNeutralWrists(manifest.neutralWrists);meta.EnableWristFrameV2(manifest.wristFrameV2);meta.EnableControllerWrists(manifest.scene=="rubik");meta.EnableControllerStageTargets(manifest.controllerStageTargets);meta.EnableControllerAnatomicalFrame(manifest.controllerAnatomicalFrame);meta.EnablePredictedHandOrientation(manifest.predictedHandOrientation);meta.SetTravelGain(manifest.travelGainPercent/100.);std::string line;
+  std::map<uint64_t,TrackingFrame> poses;std::ifstream inputs(folder+"/input.csv"),bodies(folder+"/body.csv"),frames(folder+"/frames.csv"),commands(folder+"/mimic.csv");
+  if(!inputs||!bodies||!frames||!commands)throw std::runtime_error("Missing episode streams");
+  auto pauses=episodereplay::PauseTimes(folder);size_t pauseIndex=0;
+diff --git a/prototypes/quest_g1/android/native/retarget.h b/prototypes/quest_g1/android/native/retarget.h
+index 2a1fc18..f591374 100644
+--- a/prototypes/quest_g1/android/native/retarget.h
++++ b/prototypes/quest_g1/android/native/retarget.h
+@@ -46,6 +46,11 @@ struct TrackingFrame {
+     std::array<bool,2> hand_active{};
+ };
+ 
++inline bool ControllerPosesValid(const TrackingFrame& frame){
++    return frame.hand_active[0]&&frame.hand_active[1]&&
++        (frame.location_flags[1]&3)==3&&(frame.location_flags[2]&3)==3;
++}
++
+ // Quest adaptation of TWIST2's tracked-pose -> robot reference -> policy path.
+ // This is bounded native wrist IK, not the upstream full-body GMR/PICO solver.
+ class ArmRetargeter {
+diff --git a/prototypes/quest_g1/android/native/simulation.cpp b/prototypes/quest_g1/android/native/simulation.cpp
+index 3341448..dfb2227 100644
+--- a/prototypes/quest_g1/android/native/simulation.cpp
++++ b/prototypes/quest_g1/android/native/simulation.cpp
+@@ -31,7 +31,7 @@ Simulation::Simulation(const std::string& assets,int physicsWorkers,const std::s
+     if(policyHzOverride!=0 && policyHzOverride!=50 && policyHzOverride!=100)
+         throw std::runtime_error("Unsupported explicit policy frequency");
+     if(physicsWorkers<0 || physicsWorkers>4)throw std::runtime_error("Invalid MuJoCo worker count");
+-    if(sceneName!="lab" && sceneName!="stand" && sceneName!="cup" && sceneName!="push_t")
++    if(sceneName!="lab" && sceneName!="stand" && sceneName!="cup" && sceneName!="push_t" && sceneName!="tennis" && sceneName!="rubik")
+         throw std::runtime_error("Unknown Quest scene: "+sceneName);
+     options.SetIntraOpNumThreads(1);
+     options.SetInterOpNumThreads(1);
+@@ -66,6 +66,8 @@ Simulation::Simulation(const std::string& assets,int physicsWorkers,const std::s
+         bodymotors::Apply(model,decoupled_body_motors);
+         mj_setConst(model,data);
+     }
++    tennis.Initialize(model);
++    rubik.Initialize(model);
+     Reset();
+ }
+ Simulation::~Simulation(){ sonic_controller.reset(); mj_deleteData(reference_data); mj_deleteData(data); mj_deleteModel(model); }
+@@ -159,6 +161,8 @@ void Simulation::Reset() {
+     for(int i=0;i<14;i++)decoupled_command.arms[i]=data->qpos[qadr[15+i]];
+     has_reference=false;has_whole_reference=false;whole_reference.fill(0);
+     mj_forward(model,data);
++    tennis.Reset(model,data);
++    rubik.Reset(model,data);
+ }
+ void Simulation::SetArmReference(const std::array<float,29>& joints){
+     if(!has_reference)for(int k=0;k<14;k++)arm_reference[k]=data->qpos[qadr[15+k]];
+@@ -175,11 +179,19 @@ void Simulation::SetWholeBodyReference(const std::array<float,35>& reference){
+ void Simulation::PauseWholeBodyReference(){
+     if(has_whole_reference)whole_reference[0]=whole_reference[1]=whole_reference[5]=0;
+ }
+-void Simulation::Step(bool demo,double grip,double right_grip) {
++std::array<float,35> Simulation::SonicCommand()const{
++    auto command=whole_reference;
++    if(!has_whole_reference){command.fill(0);command[2]=.793f;for(int k=0;k<29;k++)command[6+k]=sonic::home[k];command[24]=command[31]=1.2f;
++        if(has_reference)std::copy(arm_reference.begin(),arm_reference.end(),command.begin()+21);}
++    return command;
++}
++bool Simulation::PrepareStep(){
++    return !sonic_controller||steps%20!=0||sonic_controller->Prepare(data,qadr,SonicCommand());
++}
++bool Simulation::Step(bool demo,double grip,double right_grip) {
++    if(!PrepareStep())return false;
+     if(steps%20==0 && sonic_controller){
+-        auto command=whole_reference;
+-        if(!has_whole_reference){command.fill(0);command[2]=.793f;for(int k=0;k<29;k++)command[6+k]=sonic::home[k];command[24]=command[31]=1.2f;
+-            if(has_reference)std::copy(arm_reference.begin(),arm_reference.end(),command.begin()+21);}
++        auto command=SonicCommand();
+         auto start=std::chrono::steady_clock::now();
+         target=sonic_controller->Update(model,data,reference_data,qadr,vadr,command);
+         inference_ms=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-start).count();
+@@ -230,9 +242,18 @@ void Simulation::Step(bool demo,double grip,double right_grip) {
+         }else if(sonic_controller)data->ctrl[aids[i]]=(target[i]-data->qpos[qadr[i]])*sonic::kp[i]-data->qvel[vadr[i]]*sonic::kd[i];
+         else data->ctrl[aids[i]]=std::clamp((target[i]-data->qpos[qadr[i]])*kp[i]-data->qvel[vadr[i]]*kd[i],-kp[i],kp[i]);
+     }
++    if(backend==questpolicy::Twist2&&scene_name=="rubik"&&has_whole_reference)for(int i=15;i<29;i++){
++        // Controller-driven manipulation uses direct joint PD for the arms;
++        // TWIST2 still controls legs/waist. The object remains free/contact-only.
++        bool wrist=(i>=19&&i<=21)||i>=26;
++        double manipulationKp=wrist?25:kp[i],manipulationKd=wrist?.6:kd[i];
++        double torque=(whole_reference[6+i]-data->qpos[qadr[i]])*manipulationKp-data->qvel[vadr[i]]*manipulationKd+data->qfrc_bias[vadr[i]];
++        data->ctrl[aids[i]]=std::clamp(torque,-kp[i],kp[i]);
++    }
+     if(right_grip<0)right_grip=grip;
+     hand_grip[0]+=std::clamp(grip-hand_grip[0],-.002,.002);
+     hand_grip[1]+=std::clamp(right_grip-hand_grip[1],-.002,.002);
++    tennis.UpdateGrip(model,data,grip,right_grip);
+     for(int aid:hands) {
+         std::string name=mj_id2name(model,mjOBJ_ACTUATOR,aid);
+         double sign=name.rfind("left",0)==0 ? 1 : -1;
+@@ -242,10 +263,17 @@ void Simulation::Step(bool demo,double grip,double right_grip) {
+             else target=-sign*(name.find("_0_")!=std::string::npos ? 1.57 : 1.74);
+         }
+         int j=model->actuator_trnid[aid*2];
+-        data->ctrl[aid]=std::clamp(target*hand_grip[sign>0?0:1],model->jnt_range[2*j],model->jnt_range[2*j+1]);
++        double control=tennis.HandControl(data,name,target*hand_grip[sign>0?0:1]);
++        data->ctrl[aid]=std::clamp(control,model->jnt_range[2*j],model->jnt_range[2*j+1]);
+     }
+-    mj_step(model,data); steps++;
++    tennis.Begin(data);
++    rubik.Begin(model,data,grip,right_grip);
++    mj_step(model,data);
++    tennis.Finish(model,data);
++    rubik.Finish(model,data);
++    steps++;
+     if(!std::isfinite(data->qpos[2]) || data->qpos[2]<.35) throw std::runtime_error("G1 fell: reset required");
++    return true;
+ }
+ 
+ grootdecoupled::Command Simulation::MakeDecoupledCommand() {
+diff --git a/prototypes/quest_g1/android/native/simulation.h b/prototypes/quest_g1/android/native/simulation.h
+index 294cc72..083fb66 100644
+--- a/prototypes/quest_g1/android/native/simulation.h
++++ b/prototypes/quest_g1/android/native/simulation.h
+@@ -1,5 +1,7 @@
+ #pragma once
+ #include <mujoco/mujoco.h>
++#include "tennis_task.h"
++#include "rubik_task.h"
+ #include <onnxruntime_cxx_api.h>
+ #include <array>
+ #include <memory>
+@@ -18,12 +20,16 @@ public:
+     Simulation(const std::string& assets, int physicsWorkers, const std::string& sceneName, const questpolicy::RuntimePolicy& policy, int policyHzOverride=0);
+     ~Simulation();
+     void Reset();
++    std::string TennisStatus()const{return tennis.Status(data);}
++    std::string RubikStatus()const{return rubik.Status(data);}
++    bool RubikSolved()const{return rubik.Solved(data);}
+     // Load and probe before committing; a failure preserves the active session.
+     void SelectPolicy(const std::string& path);
+     void SelectPolicy(const questpolicy::RuntimePolicy& policy);
+     const std::string& Backend() const { return backend; }
+     const grootdecoupled::Command& DecoupledCommand() const { return decoupled_command; }
+-    void Step(bool demo = true, double grip = 0, double right_grip = -1);
++    bool PrepareStep();
++    bool Step(bool demo = true, double grip = 0, double right_grip = -1);
+     mjModel* model = nullptr;
+     mjData* data = nullptr;
+     double inference_ms = 0;
+@@ -42,6 +48,7 @@ private:
+     std::string assets_directory;
+     bodymotors::Profile original_body_motors{},decoupled_body_motors{};
+     void StepDecoupled();
++    std::array<float,35> SonicCommand()const;
+     std::unique_ptr<sonic::Controller> sonic_controller;
+     grootdecoupled::Command MakeDecoupledCommand();
+     std::string backend=questpolicy::Twist2;
+@@ -50,6 +57,8 @@ private:
+     std::array<float,grootdecoupled::Observation> decoupled_history{};
+     std::array<float,grootdecoupled::Actions> decoupled_last_action{};
+     grootdecoupled::Command decoupled_command;
++    TennisTask tennis;
++    RubikTask rubik;
+     int policy_hz = 100;
+     // 0 follows archived ONNX metadata; live Quest explicitly selects 50 Hz.
+     const int policy_hz_override;
+diff --git a/prototypes/quest_g1/android/native/sonic.h b/prototypes/quest_g1/android/native/sonic.h
+index 25e5bcd..5ce194d 100644
+--- a/prototypes/quest_g1/android/native/sonic.h
++++ b/prototypes/quest_g1/android/native/sonic.h
+@@ -13,6 +13,7 @@
+ #include <vector>
+ 
+ namespace sonic {
++struct PlannerPending : std::exception { const char* what()const noexcept override{return "SONIC waiting for planner";} };
+ using Pose=std::array<double,36>;
+ struct Plan {std::vector<Pose> poses; double start=0,ms=0;};
+ struct Request {std::array<float,144> context{};std::array<float,3> move{},face{};float speed=.01f;int64_t mode=0;double time=0;};
+@@ -37,7 +38,7 @@ class Controller {
+     std::future<Plan> pending;
+     bool asynchronous;
+     Plan plan;
+-    double requested=-1;
++    double requested=-1,pinnedTime=0;bool planPinned=false;
+     std::array<std::array<double,93>,10> history{}; // omega, q, dq, previous action, gravity
+     std::array<double,29> previous{};
+     Plan Predict(Request r){
+@@ -69,7 +70,7 @@ public:
+         Predict(r);Reset(); // Probe all three actual models before committing a selection.
+     }
+     ~Controller(){if(pending.valid())pending.wait();}
+-    void Reset(){if(pending.valid()){pending.wait();try{pending.get();}catch(...){}}plan={};requested=-1;previous.fill(0);history={};for(auto& h:history)h[92]=-1;plannerMs=planAge=0;}
++    void Reset(){if(pending.valid()){pending.wait();try{pending.get();}catch(...){}}plan={};requested=-1;planPinned=false;previous.fill(0);history={};for(auto& h:history)h[92]=-1;plannerMs=planAge=0;}
+     Pose At(double time)const{
+         if(plan.poses.empty())throw std::runtime_error("SONIC missing plan");
+         double x=std::clamp((time-plan.start)*30.,0.,double(plan.poses.size()-1));size_t a=size_t(x),b=std::min(a+1,plan.poses.size()-1);double w=x-a;Pose q;
+@@ -79,9 +80,14 @@ public:
+         if(dot<.9995){double theta=std::acos(dot);wa=std::sin((1-w)*theta)/std::sin(theta);wb=std::sin(w*theta)/std::sin(theta);}
+         for(int k=0;k<4;k++)q[3+k]=wa*qa[k]+wb*sign*qb[k];mju_normalize4(q.data()+3);return q;
+     }
+-    void PlanFor(const Pose& state,const std::array<float,35>& cmd,double now){
++    bool PlanFor(const Pose& state,const std::array<float,35>& cmd,double now){
++        // PrepareStep and Update belong to the same physical policy tick. A
++        // future completing between them must not replace the already approved
++        // plan after the runtime has recorded that tick's source frame.
++        if(planPinned&&now==pinnedTime)return true;
+         if(pending.valid()&&pending.wait_for(std::chrono::seconds(0))==std::future_status::ready){plan=pending.get();plannerMs=plan.ms;}
+-        if(plan.poses.empty()||(!pending.valid()&&now-requested>=.2-1e-8)){
++        const double remaining=plan.poses.empty()?0:plan.start+(plan.poses.size()-1)/30.-now;
++        if(!pending.valid()&&(plan.poses.empty()||now-requested>=.2-1e-8||(asynchronous&&remaining<=.2))){
+             Request r;r.time=now;Pose last;
+             for(int j=0;j<4;j++){last=plan.poses.empty()?state:At(now+j/30.);for(int k=0;k<36;k++)r.context[j*36+k]=last[k];}
+             double local[3]={cmd[0],cmd[1],0},world[3];mju_rotVecQuat(world,local,state.data()+3);double speed=std::hypot(world[0],world[1]);
+@@ -89,12 +95,21 @@ public:
+             r.move={float(world[0]/std::max(speed,1e-8)),float(world[1]/std::max(speed,1e-8)),0};
+             auto* q=last.data()+3;double yaw=std::atan2(2*(q[0]*q[3]+q[1]*q[2]),1-2*(q[2]*q[2]+q[3]*q[3]))+cmd[5]*.3;
+             r.face={float(std::cos(yaw)),float(std::sin(yaw)),0};requested=now;
+-            if(asynchronous&&!plan.poses.empty())pending=std::async(std::launch::async,[this,r]{return Predict(r);});
++            if(asynchronous)pending=std::async(std::launch::async,[this,r]{return Predict(r);});
+             else {plan=Predict(r);plannerMs=plan.ms;}
+         }
+-        planAge=now-plan.start;
+-        // Never silently freeze the last predicted frame when compute cannot keep up.
+-        if(planAge>(plan.poses.size()-1)/30.-.02)throw std::runtime_error("SONIC planner late: trajectory exhausted");
++        planAge=plan.poses.empty()?0:now-plan.start;
++        // Backpressure simulation time instead of advancing on an exhausted
++        // plan. Rendering/input stay live while the asynchronous result arrives.
++        if(plan.poses.empty()||planAge>(plan.poses.size()-1)/30.-.02){
++            if(asynchronous&&pending.valid())return false;
++            throw std::runtime_error("SONIC planner late: trajectory exhausted");
++        }
++        pinnedTime=now;planPinned=true;return true;
++    }
++    bool Prepare(const mjData* data,const std::array<int,29>& qa,const std::array<float,35>& cmd){
++        Pose state;std::copy_n(data->qpos,7,state.begin());for(int k=0;k<29;k++)state[7+k]=data->qpos[qa[k]];
++        return PlanFor(state,cmd,data->time);
+     }
+     std::vector<float> EncoderObservation(const mjModel* model,mjData* ref,const Pose& state,const std::array<int,29>& qa,const std::array<float,35>& cmd,double now){
+         std::vector<float> obs(1762);obs[0]=1; // teleop_mode scalar id, not one-hot
+@@ -113,7 +128,7 @@ public:
+     }
+     std::array<float,29> Update(const mjModel* model,mjData* data,mjData* ref,const std::array<int,29>& qa,const std::array<int,29>& va,const std::array<float,35>& cmd){
+         Pose state;std::copy_n(data->qpos,7,state.begin());for(int k=0;k<29;k++)state[7+k]=data->qpos[qa[k]];
+-        PlanFor(state,cmd,data->time);auto token=Run(*encoder,EncoderObservation(model,ref,state,qa,cmd,data->time),64);
++        if(!PlanFor(state,cmd,data->time))throw PlannerPending{};auto token=Run(*encoder,EncoderObservation(model,ref,state,qa,cmd,data->time),64);
+         std::move(history.begin()+1,history.end(),history.begin());auto& h=history.back();
+         for(int k=0;k<3;k++)h[k]=data->qvel[3+k];for(int k=0;k<29;k++){h[3+k]=data->qpos[qa[to_isaac[k]]]-home[to_isaac[k]];h[32+k]=data->qvel[va[to_isaac[k]]];h[61+k]=previous[k];}
+         double inv[4],g[3]={0,0,-1};Inverse(inv,state.data()+3);mju_rotVecQuat(h.data()+90,g,inv);
+diff --git a/prototypes/quest_g1/android/native/stats_hud.h b/prototypes/quest_g1/android/native/stats_hud.h
+index 25897e1..ac0a9e2 100644
+--- a/prototypes/quest_g1/android/native/stats_hud.h
++++ b/prototypes/quest_g1/android/native/stats_hud.h
+@@ -1,4 +1,5 @@
+ #pragma once
++#include "graphics_epoch.h"
+ #include "runtime_stats.h"
+ #include "retarget.h"
+ #include <cmath>
+@@ -15,6 +16,7 @@ inline int DrawStatsHud(const float* headViewProjection,const std::string& asset
+                          double fps,double drawMs,uint64_t skipped,double now,int status,bool active,int exportStatus,
+                          const TrackingFrame& raw,double rawAgeMs,bool firstPerson,float visualScale,int recording,double recordingStarted,bool showSkeletonInset=true){
+     static GLuint program=0,texture=0,vao=0,vbo=0;
++    static uint64_t generation=0;g1graphics::ForgetStale(generation,program,texture,vao,vbo);
+     if(!program){
+         auto shader=[](GLenum type,const char* source){GLuint h=glCreateShader(type);glShaderSource(h,1,&source,nullptr);glCompileShader(h);GLint ok;glGetShaderiv(h,GL_COMPILE_STATUS,&ok);if(!ok)throw std::runtime_error("Stats shader failed");return h;};
+         GLuint v=shader(GL_VERTEX_SHADER,R"(#version 320 es
+@@ -150,7 +152,7 @@ void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
+         vertices[i]=left?-.98f+(vertices[i]+1.18f)*factor:.30f+(vertices[i]-.35f)*factor;
+         vertices[i+1]=.68f+(vertices[i+1]-.96f)*factor;
+     }
+-    glDisable(GL_DEPTH_TEST);glEnable(GL_BLEND);glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
++    glDisable(GL_DEPTH_TEST);glEnable(GL_BLEND);glBlendFuncSeparate(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA,GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
+     glUseProgram(program);glUniformMatrix4fv(glGetUniformLocation(program,"headViewProjection"),1,GL_FALSE,headViewProjection);
+     glActiveTexture(GL_TEXTURE0);glBindTexture(GL_TEXTURE_2D,texture);glUniform1i(glGetUniformLocation(program,"atlas"),0);
+     glBindVertexArray(vao);glBindBuffer(GL_ARRAY_BUFFER,vbo);glBufferData(GL_ARRAY_BUFFER,vertices.size()*sizeof(float),vertices.data(),GL_STREAM_DRAW);
+diff --git a/prototypes/quest_g1/android/native/world_skeleton_gl.h b/prototypes/quest_g1/android/native/world_skeleton_gl.h
+index adfa1a6..5f3fd54 100644
+--- a/prototypes/quest_g1/android/native/world_skeleton_gl.h
++++ b/prototypes/quest_g1/android/native/world_skeleton_gl.h
+@@ -1,10 +1,12 @@
+ #pragma once
++#include "graphics_epoch.h"
+ #include "world_skeleton.h"
+ #include <GLES3/gl32.h>
+ #include <stdexcept>
+ 
+ inline int DrawWorldSkeleton(const float* vp,const WorldSkeleton& skeleton){
+     static GLuint program=0,vao=0,vbo=0;
++    static uint64_t generation=0;g1graphics::ForgetStale(generation,program,vao,vbo);
+     if(!program){
+         auto shader=[](GLenum type,const char* src){GLuint s=glCreateShader(type);glShaderSource(s,1,&src,nullptr);glCompileShader(s);GLint ok;glGetShaderiv(s,GL_COMPILE_STATUS,&ok);if(!ok)throw std::runtime_error("World skeleton shader failed");return s;};
+         GLuint v=shader(GL_VERTEX_SHADER,R"(#version 320 es
+diff --git a/prototypes/quest_g1/g1_sim/controller.py b/prototypes/quest_g1/g1_sim/controller.py
+index 19aff19..6cbdad0 100644
+--- a/prototypes/quest_g1/g1_sim/controller.py
++++ b/prototypes/quest_g1/g1_sim/controller.py
+@@ -63,8 +63,9 @@ class Controller:
+         self.step_index = 0
+         self.inference_ms = []
+         self.grip = 0.
++        self.right_grip = 0.
+ 
+-    def step(self, data, command=None, grip=0.):
++    def step(self, data, command=None, grip=0., direct_arms=False, right_grip=None):
+         command = standing_command() if command is None else np.asarray(command)
+         if command.shape != (35,) or not np.isfinite(command).all():
+             raise ValueError("Expected a finite 35-value TWIST2 command")
+@@ -84,7 +85,16 @@ class Controller:
+             self.last_action = action.copy()
+             self.target = DEFAULT + .5*np.clip(action, -10, 10)
+         data.ctrl[self.aids] = np.clip((self.target-q)*KP - v*KD, -KP, KP)
++        if direct_arms:
++            # Same physical arm servo as the controller-driven Rubik scene.
++            manipulation_kp=KP[15:].copy();manipulation_kd=KD[15:].copy()
++            manipulation_kp[[4,5,6,11,12,13]]=25;manipulation_kd[[4,5,6,11,12,13]]=.6
++            arm=(command[21:35]-q[15:])*manipulation_kp-v[15:]*manipulation_kd+data.qfrc_bias[self.vadr[15:]]
++            data.ctrl[self.aids[15:]]=np.clip(arm,-KP[15:],KP[15:])
+         self.grip += np.clip(grip-self.grip, -.002, .002)
++        if right_grip is None:
++            right_grip=grip
++        self.right_grip += np.clip(right_grip-self.right_grip, -.002, .002)
+         for aid in self.hand_ids:
+             name = self.model.actuator(aid).name
+             sign = 1 if name.startswith("left") else -1
+@@ -95,7 +105,7 @@ class Controller:
+             else:
+                 target = -sign * (1.57 if "_0_" in name else 1.74)
+             jid = self.model.actuator_trnid[aid, 0]
+-            data.ctrl[aid] = np.clip(target*self.grip, *self.model.jnt_range[jid])
++            data.ctrl[aid] = np.clip(target*(self.grip if sign>0 else self.right_grip), *self.model.jnt_range[jid])
+         mujoco.mj_step(self.model, data)
+         self.step_index += 1
+ 
+diff --git a/prototypes/quest_g1/g1_sim/geometry.py b/prototypes/quest_g1/g1_sim/geometry.py
+index 3bff119..373105b 100644
+--- a/prototypes/quest_g1/g1_sim/geometry.py
++++ b/prototypes/quest_g1/g1_sim/geometry.py
+@@ -46,8 +46,10 @@ def configure_props(world):
+     # Floor remains category 1; foot boxes contact props, not the floor. The
+     # four TWIST2 sole spheres provide floor contacts without duplicate boxes.
+     for body in world.findall('body'):
+-        if body.get('name') not in ('table', 'cup', 't_box'):
++        if body.get('name') not in ('table', 'cup', 't_box', 'tennis_table', 'tennis_racket', 'tennis_feeder'):
+             continue
+         for geom in body.iter('geom'):
++            if geom.get('contype') == '0' and geom.get('conaffinity') == '0':
++                continue
+             geom.set('contype', str(PROP))
+             geom.set('conaffinity', str(FLOOR | BODY | HAND | FOOT_BOX | PROP))
+diff --git a/prototypes/quest_g1/g1_sim/scene.py b/prototypes/quest_g1/g1_sim/scene.py
+index 429020b..2f2b0f1 100644
+--- a/prototypes/quest_g1/g1_sim/scene.py
++++ b/prototypes/quest_g1/g1_sim/scene.py
+@@ -4,6 +4,8 @@ import xml.etree.ElementTree as ET
+ import mujoco
+ from .controller import UPSTREAM
+ from .geometry import apply_hybrid, configure_props
++from .cup_lab import add_workcell
++from .rubik import add_puzzle
+ 
+ 
+ def add(parent, tag, **attrs):
+@@ -29,6 +31,19 @@ def make_model(scene="lab", hands=True, geometry="hybrid"):
+     # PGS saturates 50 sweeps on dense finger/cup contacts. Newton solves the
+     # same contact model to the existing tolerance without changing timestep.
+     root.find("option").set("solver", "Newton")
++    if hands and scene in ("cup", "rubik"):
++        # Grip is an angle target: a blocked finger must not keep squeezing
++        # toward a closed fist with the upstream 2.45 Nm joint limit.
++        # Cap motor effort independently of closure angle. Joint damping is
++        # implicit under Euler; explicit actuator velocity feedback is unstable
++        # for the tiny distal inertias at the production 1 ms timestep.
++        for actuator in root.findall("actuator/position"):
++            if "hand_" in actuator.get("name", ""):
++                actuator.set("forcelimited", "true")
++                actuator.set("forcerange", "-.35 .35")
++        for joint in root.iter("joint"):
++            if "hand_" in joint.get("name", ""):
++                joint.set("damping", ".03")
+     root.find("compiler").set("meshdir", str(source.parent / "meshes"))
+     if hands and geometry != "source":
+         apply_hybrid(root, visuals=geometry == "hybrid")
+@@ -57,8 +72,8 @@ def make_model(scene="lab", hands=True, geometry="hybrid"):
+     # Camera looks along robot +X; MuJoCo camera looks along local -Z.
+     torso = root.find(".//body[@name='torso_link']")
+     add(torso, "camera", name="ego", pos=".08 0 .43", xyaxes="0 -1 0 0 0 1", fovy="80")
+-    if scene in ("cup", "lab"):
+-        x, y = (.65, 0.) if scene == "cup" else (.8, -.8)
++    if scene in ("cup", "lab", "rubik"):
++        x, y = (.65, 0.) if scene in ("cup", "rubik") else (.8, -.8)
+         table = add(world, "body", name="table", pos=f"{x} {y} 0")
+         add(table, "geom", name="tabletop", type="box", size=".32 .45 .025", pos="0 0 .725", rgba=".42 .26 .15 1", friction=".8 .005 .0001")
+         for dx in (-.26, .26):
+@@ -81,6 +96,84 @@ def make_model(scene="lab", hands=True, geometry="hybrid"):
+         target = add(world, "body", name="t_target", pos=f"{x+.9} {y} .002")
+         for pos, size in [(".12 0 0", ".09 .3 .002"), ("-.12 0 0", ".15 .09 .002")]:
+             add(target, "geom", type="box", pos=pos, size=size, contype="0", conaffinity="0", rgba=".15 .7 1 .45")
++    if scene == "tennis":
++        # +X is opponent side; near edge is reachable from standing G1.
++        table = add(world, "body", name="tennis_table", pos="1.77 0 0")
++        add(table, "geom", name="tennis_top", type="box", size="1.37 .7625 .015", pos="0 0 .745", rgba=".035 .22 .4 1")
++        for dx in (-1.12, 1.12):
++            for dy in (-.61, .61):
++                add(table, "geom", type="box", size=".035 .035 .365", pos=f"{dx} {dy} .365", rgba=".17 .19 .22 1")
++        for dy in (-.7525, .7525):
++            add(table, "geom", type="box", size="1.37 .01 .001", pos=f"0 {dy} .761", rgba="1 1 1 1", contype="0", conaffinity="0")
++        for dx in (-1.36, 1.36):
++            add(table, "geom", type="box", size=".01 .7625 .001", pos=f"{dx} 0 .761", rgba="1 1 1 1", contype="0", conaffinity="0")
++        add(table, "geom", type="box", size="1.37 .0015 .001", pos="0 0 .761", rgba="1 1 1 1", contype="0", conaffinity="0")
++        add(table, "geom", name="tennis_net", type="box", size=".006 .915 .07625", pos="0 0 .83625", rgba=".7 .75 .8 .65")
++        add(table, "geom", type="box", size=".007 .915 .004", pos="0 0 .9125", rgba="1 1 1 1", contype="0", conaffinity="0")
++        # Ball-feeding robot: hopper, motor housing and nozzle (static machine).
++        feeder = add(world, "body", name="tennis_feeder", pos="3.34 0 0")
++        add(feeder, "geom", type="box", size=".15 .16 .40", pos="0 0 .40", rgba=".22 .25 .3 1")
++        add(feeder, "geom", type="cylinder", size=".16 .10", pos="0 0 .90", rgba=".7 .4 .12 1")
++        add(feeder, "geom", type="cylinder", size=".045 .15", pos="-.16 0 1.15", euler="0 1.57079632679 0", rgba=".16 .18 .2 1")
++        racket = add(world, "body", name="tennis_racket", pos=".57 -.22 .770")
++        add(racket, "freejoint", name="tennis_racket_free")
++        add(racket, "geom", name="tennis_racket_face", type="cylinder", size=".085 .006", mass=".14", rgba=".8 .07 .055 1", friction="1 .005 .0001")
++        add(racket, "geom", name="tennis_racket_handle", type="box", size=".055 .014 .009", pos="-.13 0 0", mass=".035", rgba=".56 .32 .13 1", friction="1 .005 .0001")
++        ball = add(world, "body", name="tennis_ball", pos="3.05 0 -1")
++        add(ball, "freejoint", name="tennis_ball_free")
++        add(ball, "geom", name="tennis_ball_geom", type="sphere", size=".02", mass=".0027", rgba="1 .8 .08 1", contype="0", conaffinity="0")
++        # Native TennisTask owns ball flight/contact; never double-integrate it.
++        size = root.find("size")
++        if size is None:
++            size = add(root, "size")
++        size.set("nuserdata", "9")
++        custom = root.find("custom")
++        if custom is None:
++            custom = add(root, "custom")
++        # delay, interval, launch speed, Cd, air density, table restitution
++        add(custom, "numeric", name="tennis_config", data="7 4 5.5 .5 1.204 .9")
++        equality = root.find("equality")
++        if equality is None:
++            equality = add(root, "equality")
++        # Three-finger G1 adaptation of a shakehand grip: index along the blade,
++        # thumb on the opposite face, middle finger around the handle.
++        add(custom, "numeric", name="tennis_grip_fingers",
++            data="-.35 .85 .85 -.2 -.05 -.75 -1.6")
++        # Upstream finger position actuators have no damping. The deliberate
++        # holding pose otherwise excites finger oscillation after acquisition.
++        for actuator in root.findall("actuator/position"):
++            if "hand_" in actuator.get("name", ""):
++                actuator.set("kp", "5")
++        for joint in root.iter("joint"):
++            if "hand_" in joint.get("name", ""):
++                # Joint damping is integrated implicitly with the 1 ms Euler
++                # step; actuator velocity feedback is explicit and unstable
++                # for the distal fingers' very small inertia at this rate.
++                joint.set("damping", ".03")
++        tilt = math.radians(25)
++        q0 = math.cos(math.pi/4-tilt/2)/math.sqrt(2)
++        q1 = math.sin(math.pi/4-tilt/2)/math.sqrt(2)
++        for side, sign in (("left", 1), ("right", -1)):
++            # Handle crosses the palm toward the index-finger side (+local Z),
++            # with a small forward tilt. Blade normal is the palm's local Y.
++            position = (.13+.13*math.sin(tilt), -sign*.032, -.02+.13*math.cos(tilt))
++            quaternion = (q0, -sign*q0, -q1, -sign*q1)
++            add(equality, "weld", name=f"tennis_grip_{side}",
++                body1=f"{side}_wrist_yaw_link", body2="tennis_racket", active="false",
++                relpose=" ".join(str(x) for x in (*position, *quaternion)),
++                solref=".002 1", solimp=".99 .999 .001")
++        contact = root.find("contact")
++        if contact is None:
++            contact = add(root, "contact")
++        for body in root.iter("body"):
++            if any(g.get("contype") == "4" for g in body.findall("geom")):
++                # Avoid fighting the holding constraint with finger/palm penetration.
++                # Exact touching is still queried explicitly by native TennisTask.
++                add(contact, "exclude", body1=body.get("name"), body2="tennis_racket")
++    if scene in ("cup", "rubik"):
++        add_workcell(root)
++    if scene == "rubik":
++        add_puzzle(root)
+     if hands and geometry != "source":
+         configure_props(world)
+     xml = ET.tostring(root, encoding="unicode")
+diff --git a/prototypes/quest_g1/scripts/check_menu_replay.py b/prototypes/quest_g1/scripts/check_menu_replay.py
+index 88200d1..94de7b7 100644
+--- a/prototypes/quest_g1/scripts/check_menu_replay.py
++++ b/prototypes/quest_g1/scripts/check_menu_replay.py
+@@ -37,10 +37,11 @@ def main():
+             subprocess.run([os.environ.get('CXX', 'c++'), '-O1', '-std=c++17', '-I'+str(ROOT/'android/native'),
+                             '-I'+str(ROOT/'vendor/mujoco/include'), '-I'+str(ROOT/'vendor/onnxruntime-android/headers'),
+                             str(source), *common, str(mjlib), str(ortlib), '-o', str(folder/name)], check=True)
+-        cases = [(name, None, False, 'observer') for name in ('lab', 'stand', 'cup', 'push_t')]
++        cases = [(name, None, False, 'observer') for name in ('lab', 'stand', 'cup', 'push_t', 'tennis', 'rubik')]
+         catalog = json.loads((ROOT/'android/assets/policy_catalog.json').read_text())
+         cases += [('cup', row, False, 'observer') for row in catalog[1:]]
+         cases += [('cup', row, True, 'observer') for row in catalog]
++        cases += [('rubik', row, catch, 'observer') for row in catalog if row.get('backend') in ('groot_decoupled_v1','sonic_vr3_v1') for catch in (False,True)]
+         cases += [('cup', catalog[0], True, view) for view in ('first', 'switch')]
+         # Cadence and wrist-frame versions are episode semantics. Exercise both
+         # old100 Hz manifests and missing-field fallbacks against the new live50.
+@@ -49,12 +50,17 @@ def main():
+                   for hz in (50, 100) for wrist in (False, True)]
+         cases += [('stand', row, False, 'observer', 0, False)
+                   for row in (catalog[0], [row for row in catalog if row.get("backend", "twist2") == "twist2"][-1])]
+-        for scene, policy, catch_up, view, override_hz, wrist_v2 in cases:
++        cases = [(*case, None) for case in cases]
++        cases += [('cup', catalog[0], False, 'first', None, None, mode)
++                  for mode in ('physical', 'forearm')]
++        for scene, policy, catch_up, view, override_hz, wrist_v2, hand_mode in cases:
+             case = scene if policy is None else scene+"-"+policy["id"]
+             if catch_up:
+                 case += "-catch-up-"+view
+             if override_hz is not None:
+                 case += f'-rate{override_hz}-wrist{int(wrist_v2)}'
++            if hand_mode:
++                case += '-hand-'+hand_mode
+             episode_root = folder/case
+             episode_root.mkdir()
+             metadata = 'recording_metadata.json' if scene == 'lab' else f'recording_metadata-{scene}.json'
+@@ -63,9 +69,18 @@ def main():
+                 shutil.copy2(ROOT/'android/assets'/policy['file'], episode_root/policy['file'])
+                 if policy.get('secondary_file'):
+                     shutil.copy2(ROOT/'android/assets'/policy['secondary_file'], episode_root/policy['secondary_file'])
+-                    shutil.copy2(ROOT/'android/assets/body_motor_profile.txt', episode_root/'body_motor_profile.txt')
++                    profile_name='sonic_motor_profile.txt' if policy.get('backend')=='sonic_vr3_v1' else 'body_motor_profile.txt'
++                    shutil.copy2(ROOT/'android/assets'/profile_name, episode_root/profile_name)
++                if policy.get('planner_file'):
++                    shutil.copy2(ROOT/'android/assets'/policy['planner_file'], episode_root/policy['planner_file'])
+             fixture = json.loads((ROOT/'android/assets'/metadata).read_text())
++            if hand_mode:
++                fixture['predicted_hand_orientation'] = False
++                fixture['controller_anatomical_frame'] = hand_mode == 'forearm'
+             if override_hz is not None:
++                fixture.pop('controller_stage_targets',None)
++                fixture.pop('controller_anatomical_frame',None)
++                fixture.pop('predicted_hand_orientation',None)
+                 if override_hz:
+                     fixture['policy_hz'] = override_hz
+                 else:
+@@ -90,9 +105,12 @@ def main():
+                         raise AssertionError('Wrong decoupled backend identity')
+                     if not (Path(episode)/'policy-secondary.onnx').is_file():
+                         raise AssertionError('Missing archived walking policy')
+-                    profile_digest = hashlib.sha256((Path(episode)/'body_motor_profile.txt').read_bytes()).hexdigest()
++                    profile_digest = hashlib.sha256((Path(episode)/profile_name).read_bytes()).hexdigest()
+                     if profile_digest != manifest['body_motor_profile_sha256'] or manifest['body_motor_profile'] != fixture['body_motor_profile']:
+                         raise AssertionError('Missing or different archived body motor profile')
++                if policy.get('planner_file'):
++                    if hashlib.sha256((Path(episode)/'policy-planner.onnx').read_bytes()).hexdigest()!=policy['planner_sha256']:
++                        raise AssertionError('Missing archived SONIC planner')
+             # lab metadata has no scene field: this also checks legacy fallback.
+             subprocess.run([str(folder/'replay_gmr'), str(ROOT/'android/assets'), episode], env=env, check=True)
+             for mode in ('saved', 'retarget'):
+@@ -108,6 +126,9 @@ def main():
+                 if max(float(row['cmd_error']) for row in rows) > 1e-5:
+                     raise AssertionError(f'{scene}: pause blending/reference replay diverged')
+             print(f'{case}: policy, scene, dimensions, pauses and calibration snapshots passed', flush=True)
++            # Each case has independent recorded model copies. Drop only this
++            # completed synthetic fixture so large planners do not accumulate.
++            shutil.rmtree(episode_root)
+ 
+ 
+ if __name__ == '__main__':
+diff --git a/prototypes/quest_g1/scripts/policy_assets.py b/prototypes/quest_g1/scripts/policy_assets.py
+index ca6629f..242a7be 100644
+--- a/prototypes/quest_g1/scripts/policy_assets.py
++++ b/prototypes/quest_g1/scripts/policy_assets.py
+@@ -96,7 +96,7 @@ def export_policies(assets, upstream, config=None):
+             entry.update(secondary_file=secondary_file, secondary_sha256=secondary_digest)
+         if row.get('input_patch'):entry['input_patch']=row['input_patch']
+         catalog.append(entry)
+-    for scene in ('lab', 'stand', 'cup', 'push_t'):
++    for scene in ('lab', 'stand', 'cup', 'push_t', 'tennis', 'rubik'):
+         base = assets / ('recording_metadata.json' if scene == 'lab' else f'recording_metadata-{scene}.json')
+         metadata = json.loads(base.read_text())
+         for entry in catalog:
+diff --git a/prototypes/quest_g1/scripts/prepare_android.py b/prototypes/quest_g1/scripts/prepare_android.py
+index c286628..0554722 100644
+--- a/prototypes/quest_g1/scripts/prepare_android.py
++++ b/prototypes/quest_g1/scripts/prepare_android.py
+@@ -231,8 +231,8 @@ for name in names:
+                             'if (frameState.shouldRender == XR_TRUE) {\n            layers.push_back(passthrough.Layer());')
+         a = text.index('        layer.layerFlags =')
+         b = text.index('        layer.viewCount', a)
+-        text = text[:a] + '        layer.layerFlags = XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT | XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT;\n' + text[b:]
+-        text = text.replace('"HelloXR"', '"G1 Quest Lab"')
++        text = text[:a] + '        layer.layerFlags = XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT;\n' + text[b:]
++        text = text.replace('"HelloXR"', '"G1 Quest Lab-vlad"')
+         text = text.replace('CHECK_XRCMD(xrRequestExitSession(m_session));', 'G1Reset();')
+         text = text.replace('"Quit Session"', '"Reset scene"').replace('"Grab Object"', '"Close fingers"')
+         # Sample haptics do not represent physical contacts; omit that feedback.
+@@ -312,10 +312,17 @@ for file in ['gmr_model.xml','gmr_config.txt']:
+     metadata['sha256'][file]=hashlib.sha256((assets/file).read_bytes()).hexdigest()
+ for file in ['gmr.cpp','gmr.h','meta_retarget.cpp','meta_retarget.h','foot_floor.h','swing_clearance.h','body_tracking.h','quest_runtime.cpp','runtime_stats.h','stats_hud.h','recording_export.h','guided_capture.h','capture_hud.h','retarget.h','recording.h','full_body_io.h']:
+     metadata['sha256']['android/native/'+file]=hashlib.sha256((ROOT/'android/native'/file).read_bytes()).hexdigest()
+-for file in ['world_skeleton.h','world_skeleton_gl.h','operator_skeleton.h','operator_skeleton_draw.h','camera_fusion.cpp','camera_fusion.h','camera_stream.cpp','quest_menu.h','quest_menu_gl.h','policy_catalog.h','policy_backend.h','groot_decoupled.h','sonic.h','sonic_constants.h','virtual_leg_lift.h','body_motor_profile.h','body_motor_model.h','recording.h','episode_manifest.h','simulation.h','file_sha256.h','camera_pose_servo.h']:
++for file in ['world_skeleton.h', 'world_skeleton_gl.h', 'operator_skeleton.h', 'operator_skeleton_draw.h', 'camera_fusion.cpp', 'camera_fusion.h', 'camera_stream.cpp', 'quest_menu.h', 'quest_menu_gl.h', 'policy_catalog.h', 'policy_backend.h', 'groot_decoupled.h', 'sonic.h', 'sonic_constants.h', 'virtual_leg_lift.h', 'body_motor_profile.h', 'body_motor_model.h', 'recording.h', 'episode_manifest.h', 'simulation.h', 'file_sha256.h', 'camera_pose_servo.h', 'tennis_task.h', 'render_geom.h', 'cup_lab_shaders.h', 'cup_placement_cue.h', 'rubik_task.h', 'camera_fade.h', 'graphics_epoch.h', 'graphics.cpp']:
+     metadata['sha256']['android/native/'+file]=hashlib.sha256((ROOT/'android/native'/file).read_bytes()).hexdigest()
++metadata['camera_fade'] = dict(schema_version=1, enabled=True, render_only=True,
++    invisible_distance_m=.08, opaque_distance_m=.22, segments='robot visual/collision geometry only',
++    distance='oriented bounds of uploaded vertices in STAGE metres', camera='shared centre HMD',
++    depth_write=False, projection_alpha='premultiplied')
++metadata['sha256']['scripts/prepare_android.py']=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
++metadata['sha256']['g1_sim/cup_lab.py']=hashlib.sha256((ROOT/'g1_sim/cup_lab.py').read_bytes()).hexdigest()
++metadata['sha256']['g1_sim/rubik.py']=hashlib.sha256((ROOT/'g1_sim/rubik.py').read_bytes()).hexdigest()
+ metadata['ik_error_semantics']='unweighted GMR stage-2 SE3 residual norm; mixed metres/radians, not wrist distance'
+-metadata.update(catch_up_v2=True,neutral_wrists=True,wrist_frame_v2=True,travel_gain_percent=100)
++metadata.update(catch_up_v2=True,neutral_wrists=True,wrist_frame_v2=True,controller_stage_targets=True,controller_anatomical_frame=False,predicted_hand_orientation=True,controller_target_point="palm mesh bounds centre",travel_gain_percent=100)
+ metadata['body_tracking']={'source':'XR_FB_body_tracking + XR_META_body_tracking_full_body','lower_body':'runtime-estimated, not measured foot trackers','retargeting':'GMR two-stage SE3 box QP; Meta bind-skeleton adapter','root_xy':'Meta pelvis displacement from A, scaled to robot proportions; head-relative sway excluded','scaling':'leg height and arm lengths from Meta bind skeleton; source-specific bone-axis offsets','joints':['Pelvis','Spine3','Left_Hip','Right_Hip','Left_Knee','Right_Knee','Left_Foot','Right_Foot','Left_Shoulder','Right_Shoulder','Left_Elbow','Right_Elbow','Left_Wrist','Right_Wrist']}
+ metadata['limitations']=['Meta lower-body poses are estimates','no video','no complete policy hidden state for dynamic restart','Meta source adapter requires hardware validation']
+ for name in ['SOURCE_LICENSE', 'MODEL_LICENSE', 'NOTICE']:
+diff --git a/prototypes/quest_g1/scripts/scene_assets.py b/prototypes/quest_g1/scripts/scene_assets.py
+index a24276b..b424678 100644
+--- a/prototypes/quest_g1/scripts/scene_assets.py
++++ b/prototypes/quest_g1/scripts/scene_assets.py
+@@ -17,7 +17,7 @@ if str(ROOT) not in sys.path:
+ from g1_sim.scene import make_model
+ from g1_sim.visuals import export_visual_meshes
+ 
+-SCENES = ("stand", "cup", "push_t")
++SCENES = ("stand", "cup", "push_t", "tennis", "rubik")
+ HUD_MAX_TRIANGLES = 8192
+ OPERATOR_SKELETON_MAX_TRIANGLES = 2048  # 1024 unique triangles, two depth passes
+ MAX_TRIANGLES_PER_EYE = 100000
+@@ -152,7 +152,7 @@ def _export_visuals(model: mujoco.MjModel, path: Path, scene_name: str) -> dict:
+ 
+ 
+ def export_scenes(assets: Path) -> dict:
+-    """Export stand/cup/push_t after shared policy/GMR/metadata preparation.
++    """Export selectable scenes after shared policy/GMR/metadata preparation.
+ 
+     The legacy lab files remain available for desktop checks and old episodes.
+     Each scene's stream and dimensions come from its separately loaded model.
+@@ -185,6 +185,36 @@ def export_scenes(assets: Path) -> dict:
+         metadata.update(scene=scene_name, scene_name=scene_name, model_file=files["model"],
+                         visual_meshes_file=files["visual_meshes"], nq=model.nq, nv=model.nv,
+                         nu=model.nu, joints=[model.joint(i).name for i in range(model.njnt)])
++        if scene_name in ("cup", "rubik"):
++            metadata["hand_control"] = dict(mode="position_with_motor_effort_limit",
++                motor_torque_limit_nm=.35, joint_damping_nm_s_rad=.03,
++                contact_force_limit=False)
++        if scene_name == "cup":
++            from g1_sim.cup_lab import STYLE, GOAL
++            metadata["appearance"] = dict(style=STYLE, room="visual-only; hidden in passthrough",
++                mug_mass_kg=.240, mug_handle="12 physical capsules; 32-step visual loop",
++                placement_cue=dict(goal_xyz_m=list(GOAL[:3]),radius_m=GOAL[3],
++                    height_tolerance_m=.012,upright_cosine_min=.966,
++                    linear_speed_max_m_s=.05,angular_speed_max_rad_s=.2,
++                    affects_task_score=False),lighting="hemisphere + directional + analytic contact cues")
++        if scene_name == "tennis":
++            metadata["tennis"] = dict(schema_version=4, ball_mass_kg=.0027, ball_diameter_m=.04,
++                gravity_m_s2=9.81, air_density_kg_m3=1.204, drag_coefficient=.5,
++                first_touch_delay_s=7, serve_interval_s=4, muzzle_speed_m_s=5.5,
++                racket_restitution=1, table_restitution=.9, spin=False, magnus=False,
++                grip_assist=True, grip_style="shakehand_g1_three_fingers", grab_radius_m=.12, grip_acquire=.65, grip_release=.25,
++                impact="frictionless normal impulse with finite generalized racket effective mass (active grip weld included)",
++                state_file="tennis.csv", success="first table landing after racket hit on opponent half",
++                table_length_m=2.74, table_width_m=1.525, table_height_m=.76, net_height_m=.1525)
++        if scene_name == "rubik":
++            metadata["rubik"] = dict(schema_version=1,model="2x2-magnetic-contact-v1",edge_m=.0628,
++                total_mass_kg=.122,cubies=8,faces=["R","L","B","F","U","D"],
++                scramble="R U' F R'",grip_assist=False,face_motor=False,
++                state_file="rubik.csv",state_values=64,success="six uniform color faces at a completed detent",
++                magnetic_window_deg=15,magnetic_stiffness_nm_rad=.24,hinge_armature_kg_m2=.00001,
++                controller_wrists=True,table_height_m=.825,stand_top_m=.900,
++                retaining_mechanism="idealized switchable internal layer bindings",direct_arm_pd=True,
++                control="controller wrist poses and ordinary per-hand Grip; two loaded hands and relative wrist rotation select the free internal layer")
+         # A legacy model hash with the wrong state dimensions would make an
+         # episode ambiguous. Preserve policy, GMR and source-code provenance.
+         metadata["sha256"] = {
+diff --git a/prototypes/quest_g1/tests/check_episode_manifest.cpp b/prototypes/quest_g1/tests/check_episode_manifest.cpp
+index df8ea80..f40de44 100644
+--- a/prototypes/quest_g1/tests/check_episode_manifest.cpp
++++ b/prototypes/quest_g1/tests/check_episode_manifest.cpp
+@@ -27,7 +27,7 @@ int main() {
+     };
+     auto load = [&] { return episodereplay::LoadManifest(folder.string()); };
+     try {
+-        for (const auto *scene : {"lab", "stand", "cup", "push_t"}) {
++        for (const auto *scene : {"lab", "stand", "cup", "push_t", "tennis", "rubik"}) {
+             write(std::string("{\"scene\":\"") + scene + "\",\"nq\":50,\"nv\":48,\"nu\":43}");
+             auto manifest = load();
+             Check(manifest.scene == scene, "Wrong scene selected");
+@@ -48,6 +48,20 @@ int main() {
+         Check(!legacy.catchUp&&!legacy.firstPerson,"Legacy episode acquired catch-up");
+         Check(!legacy.catchUpV2&&!legacy.neutralWrists&&!legacy.wristFrameV2&&legacy.policyHz==0&&legacy.travelGainPercent==100,
+               "Legacy episode acquired new retarget settings");
++        Check(!legacy.controllerStageTargets&&!legacy.controllerAnatomicalFrame,"Legacy episode acquired controller frames");
++        Check(!legacy.predictedHandOrientation,"Legacy episode acquired predicted hand mode");
++        write("{\"predicted_hand_orientation\":true}");
++        Check(load().predictedHandOrientation,"Predicted hand flag lost");
++        write("{\"sha256\":{\"predicted_hand_orientation\":true},\"predicted_hand_orientation\":false}");
++        Check(!load().predictedHandOrientation,"Nested hand flag overrode false");
++        for(const auto* bad:{"{\"predicted_hand_orientation\":1}","{\"predicted_hand_orientation\":null}","{\"predicted_hand_orientation\":false,\"predicted_hand_orientation\":true}"}){write(bad);Reject([&]{load();});}
++        write("{\"controller_stage_targets\":true,\"controller_anatomical_frame\":true}");
++        auto controllers=load();Check(controllers.controllerStageTargets&&controllers.controllerAnatomicalFrame,"Controller frame flags lost");
++        write("{\"controller_stage_targets\":false,\"controller_anatomical_frame\":false}");
++        Check(!load().controllerStageTargets&&!load().controllerAnatomicalFrame,"False controller frame flags lost");
++        write("{\"sha256\":{\"controller_anatomical_frame\":true},\"controller_stage_targets\":true}");
++        Check(load().controllerStageTargets&&!load().controllerAnatomicalFrame,"Nested controller frame enabled new calibration");
++        for(const auto* bad:{"{\"controller_stage_targets\":1}","{\"controller_anatomical_frame\":null}","{\"controller_anatomical_frame\":false,\"controller_anatomical_frame\":true}"}){write(bad);Reject([&]{load();});}
+         write("{\"catch_up_v2\":true,\"neutral_wrists\":true,\"travel_gain_percent\":90}");
+         auto updated=load();
+         Check(updated.catchUpV2&&updated.neutralWrists&&updated.travelGainPercent==90,
+diff --git a/prototypes/quest_g1/tests/check_policy_selection.cpp b/prototypes/quest_g1/tests/check_policy_selection.cpp
+index f123d05..33943ef 100644
+--- a/prototypes/quest_g1/tests/check_policy_selection.cpp
++++ b/prototypes/quest_g1/tests/check_policy_selection.cpp
+@@ -2,6 +2,8 @@
+ #include "policy_catalog.h"
+ #include <cmath>
+ #include <iostream>
++#include <fstream>
++#include <cstdlib>
+ #include <stdexcept>
+ 
+ static void Check(bool value,const char* message){if(!value)throw std::runtime_error(message);}
+@@ -18,7 +20,7 @@ int main(int argc,char** argv){
+         Check(historical.PolicyHz()==100,"Legacy baseline frequency changed");
+         bool rejectedHz=false;try{Simulation invalid(assets,2,"stand","",60);}catch(const std::exception&){rejectedHz=true;}
+         Check(rejectedHz,"Unsupported explicit cadence was accepted");
+-        for(int hz:{50,100})for(auto name:{"stand","cup","push_t"}){
++        for(int hz:{50,100})for(auto name:{"stand","cup","push_t","tennis","rubik"}){
+             Simulation running(assets,2,name,"",hz),control(assets,2,name,"",hz);
+             for(int i=0;i<100;i++){running.Step(false);control.Step(false);}Equal(running,control);
+             for(auto bad:{assets+"/missing.onnx",assets+"/scene.xml"}){
+@@ -33,6 +35,52 @@ int main(int argc,char** argv){
+                 Check(running.PolicyHz()==hz,"Explicit cadence changed during policy selection");
+                 for(int i=0;i<300;i++){running.Step(false,.6,.2);fresh.Step(false,.6,.2);}Equal(running,fresh);
+                 Check(running.data->qpos[2]>.35,"Policy smoke fell");
++                if(std::string(name)=="tennis"&&entry.id=="twist2-20k"){
++                    for(auto* state:{running.data,fresh.data}){state->userdata[TennisTask::Armed]=1;state->userdata[TennisTask::NextServe]=state->time+7;}
++                    for(int i=0;i<8200;i++){running.Step(false);fresh.Step(false);}Equal(running,fresh);
++                    for(int k=0;k<TennisTask::StateSize;k++)Check(running.data->userdata[k]==fresh.data->userdata[k],"Tennis replay state differs");
++                    Check(running.data->userdata[TennisTask::Serves]==1,"Runtime did not launch ball");
++                    Check(running.data->userdata[TennisTask::Misses]==1,"Unreturned runtime serve missing");
++                }
++                if(std::string(name)=="tennis"){
++                    for(int hand=0;hand<2;hand++){
++                        running.SelectPolicy(path);
++                        TennisTask grip;grip.Initialize(running.model);
++                        auto pose=grip.HoldingPose(running.model,running.data,hand);
++                        std::copy(pose.p.begin(),pose.p.end(),running.data->qpos+grip.racketQa);
++                        std::copy(pose.q.begin(),pose.q.end(),running.data->qpos+grip.racketQa+3);
++                        mj_forward(running.model,running.data);
++                        for(int i=0;i<1000;i++){
++                            running.Step(false,hand==0?.8:0,hand==1?.8:0);
++                            Check(running.data->userdata[TennisTask::Holder]==hand+1,"Runtime lost grip");
++                            auto expected=grip.HoldingPose(running.model,running.data,hand);
++                            auto actual=grip.RacketPose(running.data);
++                            Check(TennisTask::Norm(TennisTask::Add(expected.p,actual.p,-1))<.01,"Runtime racket slipped from wrist");
++                        }
++                        std::string side=hand==0?"left":"right";
++                        auto held=grip.RacketPose(running.data);
++                        int fi=0;
++                        for(auto finger:{"index","thumb"}){
++                            int tip=mj_name2id(running.model,mjOBJ_BODY,(side+"_hand_"+finger+"_finger_tip").c_str());
++                            TennisTask::Vec p{};std::copy_n(running.data->xpos+3*tip,3,p.begin());
++                            auto local=TennisTask::Rotate(held,TennisTask::Add(p,held.p,-1),true);
++                            double distance=TennisTask::Cylinder(local,.085,.006).distance;
++                            if(distance>=.03||(fi==0?local[2]<-.005:local[2]>.005))std::cerr<<entry.id<<" "<<side<<" "<<finger<<" blade distance="<<distance<<" normal="<<local[2]<<"\n";
++                            Check(distance<.03,"Runtime fingertip left the blade");
++                            Check(fi==0?local[2]>=-.005:local[2]<=.005,"Runtime thumb/index crossed blade faces");
++                            fi++;
++                        }
++                        for(auto part:{"index_0","index_1"}){
++                            int joint=mj_name2id(running.model,mjOBJ_JOINT,(side+"_hand_"+part+"_joint").c_str());
++                            Check(std::abs(running.data->qpos[running.model->jnt_qposadr[joint]])<.4,"Runtime index curls into a fist");
++                        }
++                        if(const char* output=std::getenv("G1_GRIP_TEST_OUTPUT")){
++                            std::ofstream file(std::string(output)+"/"+entry.id+"-"+side+".json");
++                            file.precision(17);file<<"[";
++                            for(int k=0;k<running.model->nq;k++){if(k)file<<",";file<<running.data->qpos[k];}file<<"]\n";
++                        }
++                    }
++                }
+                 std::cout<<name<<": "<<entry.id<<" @ "<<running.PolicyHz()<<" Hz reset and deterministic steps passed\n";
+             }
+         }
+diff --git a/prototypes/quest_g1/tests/check_quest_menu.cpp b/prototypes/quest_g1/tests/check_quest_menu.cpp
+index 6d7762d..ea7fb15 100644
+--- a/prototypes/quest_g1/tests/check_quest_menu.cpp
++++ b/prototypes/quest_g1/tests/check_quest_menu.cpp
+@@ -26,8 +26,9 @@ static void CheckGeometry(const State& state) {
+         Check(w.rect.h >= .05f, "Menu target too short for a controller ray");
+         for (const auto& other : layout) {
+             if (&other == &w || other.action == Action::None) continue;
+-            const float ix = std::min(w.rect.x + w.rect.w, other.rect.x + other.rect.w) - std::max(w.rect.x, other.rect.x);
+-            const float iy = std::min(w.rect.y + w.rect.h, other.rect.y + other.rect.h) - std::max(w.rect.y, other.rect.y);
++            const auto a=HitRect(w),b=HitRect(other);
++            const float ix = std::min(a.x + a.w, b.x + b.w) - std::max(a.x, b.x);
++            const float iy = std::min(a.y + a.h, b.y + b.h) - std::max(a.y, b.y);
+             Check(ix < 1e-6f || iy < 1e-6f, "Overlapping menu targets");
+         }
+     }
+@@ -54,6 +55,26 @@ int main() {
+     Check(!trigger.Update(true, true), "Focus recovery retained a previously armed press");
+     Check(!trigger.Update(true, false) && trigger.Update(true, true), "Fresh press after recovery cannot click");
+ 
++    MenuPressLatch press;
++    Check(!press.Update(true,1,Action::PolicySelect0,0,.12f,0).pressed,"Held trigger clicked on menu activation");
++    press.Update(true,0,Action::PolicySelect0,0,.12f,0);
++    press.Update(true,.25f,Action::PolicySelect0,0,.12f,0);
++    auto clicked=press.Update(true,.9f,Action::None,0,.14f,0);
++    Check(clicked.pressed&&clicked.action==Action::PolicySelect0,"Finger-induced ray drift cancelled policy press");
++    Check(!press.Update(true,1,Action::PolicySelect1,0,.05f,0).pressed,"Held trigger clicked twice");
++    press.Update(true,0,Action::PolicySelect0,0,.12f,0);press.Update(true,.25f,Action::PolicySelect0,0,.12f,0);
++    Check(press.Update(true,1,Action::PolicySelect1,0,-.08f,0).action==Action::None,"Large drag selected stale policy");
++    press.Update(true,0,Action::PolicySelect0,0,.12f,0);press.Update(true,.25f,Action::PolicySelect0,0,.12f,0);
++    Check(!press.Update(true,1,Action::PolicySelect0,0,.12f,1).pressed,"Page change clicked a different catalogue entry");
++    press.Update(true,0,Action::PolicySelect0,0,.12f,1);press.Update(false,.1f,Action::PolicySelect0,0,.12f,1);
++    Check(!press.Update(true,1,Action::PolicySelect0,0,.12f,1).pressed,"Focus recovery clicked held trigger");
++    press.Update(true,0,Action::PolicySelect0,0,.12f,1);
++    clicked=press.Update(true,1,Action::None,0,.14f,1);
++    Check(clicked.action==Action::PolicySelect0,"One-frame trigger press lost recent pointed row");
++    press.Update(true,.4f,Action::PolicySelect1,0,.04f,1);
++    clicked=press.Update(true,.9f,Action::PolicySelect1,0,.04f,1);
++    Check(clicked.pressed&&clicked.action==Action::PolicySelect1,"Partial deliberate trigger release lost second policy click");
++
+     State state;
+     Check(state.open && state.paused && !state.debugEnabled && !state.recording, "Initial menu state");
+     Check(std::string(SceneName(Scene::Empty)) == "stand" &&
+@@ -77,7 +98,7 @@ int main() {
+     state.mode = Mode::Trajectories; state.recording = true;
+     layout = BuildLayout(state);
+     for (Action a : {Action::ModeSimulation, Action::ModeTrajectories, Action::CaptureRobot,
+-                     Action::CaptureHuman, Action::SceneEmpty, Action::SceneCup, Action::ScenePushT})
++                     Action::CaptureHuman, Action::SceneEmpty, Action::SceneCup, Action::ScenePushT, Action::SceneTennis})
+         Check(CentreHit(layout, a) == Action::None, "Recording configuration is editable");
+     Check(CentreHit(layout, Action::Calibrate) == Action::Calibrate, "Recording calibration is locked");
+     Check(CentreHit(layout, Action::Save) == Action::Save, "Paused recording cannot be saved");
+@@ -88,7 +109,7 @@ int main() {
+           CentreHit(layout, Action::PlanTest) == Action::None, "Recording protocol is editable");
+     Check(HumanCapture(state), "Human capture predicate");
+     for (const auto& w : layout)
+-        Check(w.action != Action::SceneEmpty && w.action != Action::SceneCup && w.action != Action::ScenePushT,
++        Check(w.action != Action::SceneEmpty && w.action != Action::SceneCup && w.action != Action::ScenePushT && w.action != Action::SceneTennis,
+               "Human capture advertises a simulated scene");
+     state.page = Page::View;
+     layout = BuildLayout(state);
+@@ -115,7 +136,14 @@ int main() {
+     Check(Find(layout,Action::PolicySelect0).text=="Candidate 4","Wrong policy page");
+     Check(CentreHit(layout,Action::PolicySelect0)==Action::PolicySelect0,"Candidate cannot be selected");
+     Check(CentreHit(layout,Action::PolicyNext)==Action::PolicyNext,"Next policy page missing");
++    state.policyLoading=true;
++    Check(CentreHit(BuildLayout(state),Action::PolicySelect0)==Action::None,"Loading policy permits overlapping selection");
++    Check(std::string(StatusText(state))=="Загрузка режима","Policy load has no explicit status");
++    state.policyLoading=false;
++    const auto row=Find(layout,Action::PolicySelect0).rect;
++    Check(HitTest(layout,row.x+.2f,row.y-.01f)==Action::PolicySelect0,"Policy subtitle misses its row target");
+     state.recording=true;layout=BuildLayout(state);
++    Check(ClickAction(layout,row.x+.2f,row.y+.02f)==Action::PolicySelect0,"Disabled policy row cannot explain recording lock");
+     Check(CentreHit(layout,Action::PolicySelect0)==Action::None,"Policy can change during recording");
+     Check(CentreHit(layout,Action::CatchUp)==Action::None,"Catch-up can change during recording");
+     state.recording=false;state.mode=Mode::Trajectories;state.capture=Capture::Human;
+diff --git a/prototypes/quest_g1/tests/check_replay_menu.cpp b/prototypes/quest_g1/tests/check_replay_menu.cpp
+index cba9675..d98e420 100644
+--- a/prototypes/quest_g1/tests/check_replay_menu.cpp
++++ b/prototypes/quest_g1/tests/check_replay_menu.cpp
+@@ -22,7 +22,7 @@ int main(int argc,char** argv){
+         }
+         std::filesystem::copy_file(std::filesystem::path(argv[2])/metadata,std::filesystem::path(argv[2])/"manifest.json");
+         const auto fixture=episodereplay::LoadManifest(argv[2]);
+-        Simulation sim(argv[1],2,name,policy,fixture.policyHz);MetaRetargeter meta(argv[1]);meta.EnableNeutralWrists(true);meta.EnableWristFrameV2(fixture.wristFrameV2);auto& solver=meta.solver();
++        Simulation sim(argv[1],2,name,policy,fixture.policyHz);MetaRetargeter meta(argv[1]);meta.EnableNeutralWrists(true);meta.EnableWristFrameV2(fixture.wristFrameV2);meta.EnableControllerWrists(name=="rubik");meta.EnableControllerStageTargets(fixture.controllerStageTargets);meta.EnableControllerAnatomicalFrame(fixture.controllerAnatomicalFrame);meta.EnablePredictedHandOrientation(fixture.predictedHandOrientation);auto& solver=meta.solver();
+         meta.EnableCameraTracking(firstPerson);int egoCamera=mj_name2id(sim.model,mjOBJ_CAMERA,"ego");
+         auto* m=solver.model();std::unique_ptr<mjData,decltype(&mj_deleteData)> data(mj_makeData(m),mj_deleteData);auto* d=data.get();
+         TrackingFrame input;input.valid=input.body.valid=input.body.supported=true;input.location_flags={15,15,15};input.hand_active={true,true};input.body.confidence=1;input.head.position={0,1.65,0};
+@@ -50,6 +50,19 @@ int main(int argc,char** argv){
+         std::array<float,35> origin{};double blendStart=0;
+         auto blend=[&]{origin.fill(0);origin[2]=sim.data->qpos[2];blendStart=sim.data->time;for(int j=1;j<m->njnt;j++){int actual=mj_name2id(sim.model,mjOBJ_JOINT,mj_id2name(m,mjOBJ_JOINT,j));origin[m->jnt_qposadr[j]-1]=sim.data->qpos[sim.model->jnt_qposadr[actual]];}};
+         auto snapshot=[&](bool reset){
++            if(fixture.controllerStageTargets){
++                mj_forward(sim.model,sim.data);
++                const auto* camera=sim.data->cam_xpos+3*egoCamera;double scale=input.head.position[1]/camera[2];
++                for(int h=0;h<2;h++){
++                    int b=mj_name2id(sim.model,mjOBJ_BODY,h==0?"left_wrist_yaw_link":"right_wrist_yaw_link");
++                    const auto* wrist=sim.data->xpos+3*b;
++                    // Calibrate once to obtain the physical palm geometry anchor.
++                    meta.Calibrate(sim.model,sim.data,input);
++                    double palm[3],point[3];mju_rotVecQuat(palm,meta.ControllerGripOffset(h).data(),sim.data->xquat+4*b);
++                    for(int k=0;k<3;k++)point[k]=wrist[k]+palm[k];
++                    input.hands[h].position={-scale*(point[1]-camera[1]),input.head.position[1]+scale*(point[2]-camera[2]),-scale*(point[0]-camera[0])};
++                }
++            }
+             sample();meta.Calibrate(sim.model,sim.data,input);blend();recorder.Event("calibrate",input.sequence);
+             std::array<float,29> joints{};std::copy_n(sim.WholeBodyReference().begin()+6,29,joints.begin());
+             recorder.Frame(sim.model,sim.data,sim.steps,input,reset,true,false,true,0,0,0,meta.error,false,joints);
+diff --git a/prototypes/quest_g1/tests/check_sonic.cpp b/prototypes/quest_g1/tests/check_sonic.cpp
+index 7d7344c..45f8ade 100644
+--- a/prototypes/quest_g1/tests/check_sonic.cpp
++++ b/prototypes/quest_g1/tests/check_sonic.cpp
+@@ -44,13 +44,41 @@ int main(int argc,char** argv){try{
+         auto p=questpolicy::VerifiedPolicy(assets,find(id));sim.SelectPolicy(p);
+         for(int i=0;i<200;i++)sim.Step(false);Check(sim.data->qpos[2]>.35,"Mode switch fell");
+     }
+-    for(auto name:{"cup","push_t"}){Simulation task(assets,0,name,policy,50);for(int i=0;i<500;i++)task.Step(false);}
++    for(auto name:{"cup","push_t","tennis","rubik"}){Simulation task(assets,0,name,policy,50);for(int i=0;i<500;i++)task.Step(false);}
+     // Android scheduling: separate planner, reset with in-flight work, fresh startup.
+     policy.asyncPlanner=true;sim.SelectPolicy(policy);
+     for(int frame=0;frame<65;frame++){
+-        cmd[0]=frame<25?0:.3;sim.SetWholeBodyReference(cmd);for(int i=0;i<20;i++)sim.Step(false);
++        cmd[0]=frame<25?0:.3;sim.SetWholeBodyReference(cmd);for(int i=0;i<20;i++)while(!sim.Step(false))std::this_thread::sleep_for(std::chrono::milliseconds(1));
+         std::this_thread::sleep_for(std::chrono::milliseconds(20));
+         if(frame==31)sim.Reset();
+     }
++    // Run physics deliberately faster than planner compute. Backpressure must
++    // preserve every state value, then resume actual integration after readiness.
++    sim.Reset();int waits=0;
++    for(int i=0;i<1200;i++){
++        auto q=std::vector<mjtNum>(sim.data->qpos,sim.data->qpos+sim.model->nq),v=std::vector<mjtNum>(sim.data->qvel,sim.data->qvel+sim.model->nv);int step=sim.steps;
++        auto deadline=std::chrono::steady_clock::now()+std::chrono::seconds(10);
++        while(!sim.Step(false)){
++            Check(sim.steps==step,"Planner wait advanced step counter");
++            for(int k=0;k<sim.model->nq;k++)Check(sim.data->qpos[k]==q[k],"Planner wait changed qpos");
++            for(int k=0;k<sim.model->nv;k++)Check(sim.data->qvel[k]==v[k],"Planner wait changed qvel");
++            Check(std::chrono::steady_clock::now()<deadline,"Planner never resumed");waits++;std::this_thread::sleep_for(std::chrono::milliseconds(1));
++        }
++    }
++    for(int i=0;i<40;i++){
++        while(!sim.PrepareStep())std::this_thread::sleep_for(std::chrono::milliseconds(1));
++        if(sim.steps%20==0)std::this_thread::sleep_for(std::chrono::milliseconds(100));
++        Check(sim.Step(false),"Planner completion between prepare and commit invalidated recorded policy tick");
++    }
++    Check(waits>0&&sim.steps==1240&&std::abs(sim.data->time-1.24)<1e-9,"Slow planner test did not exercise real backpressure");
++    {
++        Ort::Env probeEnv{ORT_LOGGING_LEVEL_WARNING,"SonicDelayCheck"};sonic::Controller probe(probeEnv,policy);
++        sonic::Pose state{};state[2]=.793;state[3]=1;for(int k=0;k<29;k++)state[7+k]=sonic::home[k];
++        while(!probe.PlanFor(state,cmd,0))std::this_thread::sleep_for(std::chrono::milliseconds(1));
++        Check(!probe.PlanFor(state,cmd,1000),"Exhausted asynchronous plan did not yield to pending inference");
++        while(!probe.PlanFor(state,cmd,1000))std::this_thread::sleep_for(std::chrono::milliseconds(1));
++        std::cout<<"SONIC forced exhausted-plan deadline yielded and resumed without exception\n";
++    }
++    std::cout<<"SONIC real-model backpressure waits="<<waits<<" preserved qpos/qvel and resumed without fault\n";
+     std::cout<<"SONIC 2s rollout, transactional load, reset, mode switches, recording hashes and async planner passed; planner_ms="<<sim.PlannerMs()<<"\n";
+ }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}}
+diff --git a/prototypes/quest_g1/tests/test_policy_assets.py b/prototypes/quest_g1/tests/test_policy_assets.py
+index 63d6ffc..44ec804 100644
+--- a/prototypes/quest_g1/tests/test_policy_assets.py
++++ b/prototypes/quest_g1/tests/test_policy_assets.py
+@@ -14,7 +14,7 @@ class PolicyAssetsTests(unittest.TestCase):
+     def test_default_catalog_contains_published_candidates(self):
+         with tempfile.TemporaryDirectory() as directory, patch.dict('os.environ', {}, clear=True):
+             root = Path(directory)
+-            for scene in ('lab', 'stand', 'cup', 'push_t'):
++            for scene in ('lab', 'stand', 'cup', 'push_t', 'tennis', 'rubik'):
+                 name = 'recording_metadata.json' if scene == 'lab' else f'recording_metadata-{scene}.json'
+                 (root / name).write_text(json.dumps({'sha256': {}, 'scene': scene}))
+             catalog = export_policies(root, UPSTREAM)
+@@ -104,7 +104,7 @@ class PolicyAssetsTests(unittest.TestCase):
+     def test_candidate_metadata_and_stale_asset_cleanup(self):
+         with tempfile.TemporaryDirectory() as directory:
+             root = Path(directory)
+-            for scene in ('lab', 'stand', 'cup', 'push_t'):
++            for scene in ('lab', 'stand', 'cup', 'push_t', 'tennis', 'rubik'):
+                 name = 'recording_metadata.json' if scene == 'lab' else f'recording_metadata-{scene}.json'
+                 (root / name).write_text(json.dumps({'sha256': {'policy.onnx': 'baseline', 'scene.xml': 'geometry'},
+                                                     'scene': scene, 'nq': 50}))
+@@ -115,7 +115,7 @@ class PolicyAssetsTests(unittest.TestCase):
+                                                title='Candidate', note='Experimental')]))
+             catalog = export_policies(root, UPSTREAM, config)
+             self.assertEqual([row['id'] for row in catalog], ['twist2-20k', 'twist2-25k', 'test-candidate'])
+-            for scene in ('lab', 'stand', 'cup', 'push_t'):
++            for scene in ('lab', 'stand', 'cup', 'push_t', 'tennis', 'rubik'):
+                 metadata = json.loads((root / f'recording_metadata-{scene}-policy-test-candidate.json').read_text())
+                 self.assertEqual(metadata['policy_sha256'], digest)
+                 self.assertEqual(metadata['sha256']['policy-test-candidate.onnx'], digest)
+diff --git a/prototypes/quest_g1/tests/test_scene_assets.py b/prototypes/quest_g1/tests/test_scene_assets.py
+index beb6fb3..52c6cd7 100644
+--- a/prototypes/quest_g1/tests/test_scene_assets.py
++++ b/prototypes/quest_g1/tests/test_scene_assets.py
+@@ -43,8 +43,9 @@ class SceneAssetsTests(unittest.TestCase):
+ 
+     def test_scene_objects_are_physically_separate(self):
+         expected = {"stand": set(), "cup": {"table", "cup"},
+-                    "push_t": {"t_box", "t_target"}}
+-        all_props = {"table", "cup", "t_box", "t_target"}
++                    "push_t": {"t_box", "t_target"}, "tennis": {"tennis_table", "tennis_racket", "tennis_feeder", "tennis_ball"},
++                    "rubik": {"table", "rubik_core"}}
++        all_props = {"table", "cup", "t_box", "t_target", "tennis_table", "tennis_racket", "tennis_feeder", "tennis_ball", "rubik_core"}
+         for name, model in self.models.items():
+             with self.subTest(scene=name):
+                 props = {model.body(i).name for i in range(model.nbody)} & all_props
+@@ -53,15 +54,17 @@ class SceneAssetsTests(unittest.TestCase):
+                 self.assertEqual(model.opt.timestep, .001)
+                 self.assertEqual(model.opt.solver, mujoco.mjtSolver.mjSOL_NEWTON)
+                 dynamic_prop = "cup" if name == "cup" else "t_box" if name == "push_t" else None
+-                self.assertEqual((model.nq, model.nv), (57, 55) if dynamic_prop else (50, 49))
++                self.assertEqual((model.nq, model.nv), (119, 109) if name == "rubik" else (64, 61) if name == "tennis" else (57, 55) if dynamic_prop else (50, 49))
+                 if dynamic_prop:
+                     body = model.body(dynamic_prop)
+                     self.assertGreater(body.mass[0], 0)
+                     joint = model.joint(dynamic_prop + "_free")
+                     self.assertEqual(joint.type[0], mujoco.mjtJoint.mjJNT_FREE)
+                     geoms = np.flatnonzero(model.geom_bodyid == body.id)
+-                    self.assertTrue(np.all(model.geom_contype[geoms] == PROP))
+-                    self.assertTrue(np.all(model.geom_conaffinity[geoms] > 0))
++                    physical = geoms[(model.geom_contype[geoms] != 0) | (model.geom_conaffinity[geoms] != 0)]
++                    self.assertGreater(len(physical), 0)
++                    self.assertTrue(np.all(model.geom_contype[physical] == PROP))
++                    self.assertTrue(np.all(model.geom_conaffinity[physical] > 0))
+                 if name == "push_t":
+                     goal_geoms = np.flatnonzero(model.geom_bodyid == model.body("t_target").id)
+                     self.assertTrue(np.all(model.geom_contype[goal_geoms] == 0))
+@@ -165,7 +168,7 @@ class SceneAssetsTests(unittest.TestCase):
+         self.assertEqual(json.loads((self.assets / "recording_metadata.json").read_text()), self.shared)
+         self.assertEqual(json.loads((self.assets / "scene_manifest.json").read_text()), self.manifest)
+         self.assertEqual(self.manifest["default_scene"], "stand")
+-        self.assertEqual(set(self.manifest["scenes"]), {"stand", "cup", "push_t"})
++        self.assertEqual(set(self.manifest["scenes"]), {"stand", "cup", "push_t", "tennis", "rubik"})
+ 
+ 
+ if __name__ == "__main__":

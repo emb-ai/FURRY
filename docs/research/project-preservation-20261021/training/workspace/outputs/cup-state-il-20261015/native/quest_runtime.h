@@ -1,0 +1,22 @@
+#pragma once
+#include <cstdint>
+#include "retarget.h"
+struct android_app;
+void G1GraphicsContextCreated();
+void G1Initialize(android_app* app);
+void G1Shutdown(bool interrupted=false);
+void G1SetActive(bool active);
+void G1Grip(int hand, float value);
+void G1Reset();
+void G1PrepareFrame();
+void G1Render(const float* viewProjection,const float* projection);
+void G1CaptureFrame(int width,int height);
+void G1SubmitTracking(const TrackingFrame& input);
+void G1ReferenceSpaceChange(int64_t changeTime);
+void G1Calibrate();
+void G1ToggleTracking();
+void G1ToggleRecording();
+void G1ToggleView();
+void G1ToggleMenu();
+void G1SubmitMenuRay(int hand,const TrackedPose& pose,bool valid,bool triggerActive,float trigger);
+bool G1PassthroughVisible();

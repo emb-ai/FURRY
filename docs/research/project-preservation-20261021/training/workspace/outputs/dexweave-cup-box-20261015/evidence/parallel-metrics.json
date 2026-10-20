@@ -1,0 +1,66 @@
+{
+  "train-episode-1792020014648126": {
+    "iteration": 2393,
+    "seconds": 7.1567360567860305,
+    "elapsed_s": 17246.420631546993,
+    "reward_mean": 0.16674279297391573,
+    "failed": 184,
+    "completed_segments": 26,
+    "object_error_m": 0.05007312260568142,
+    "learning_rate": 3.3750000000000014e-05,
+    "losses": {
+      "value_function": 0.17676632329821587,
+      "surrogate": -0.0068931309011532,
+      "entropy": 8.824684619903564
+    },
+    "actor_changed": true
+  },
+  "train-episode-1792020055691156": {
+    "iteration": 77,
+    "seconds": 7.948677069041878,
+    "elapsed_s": 1008.2295102882199,
+    "reward_mean": 0.03775484347715974,
+    "failed": 3279,
+    "completed_segments": 0,
+    "object_error_m": 0.004952770987680803,
+    "learning_rate": 0.00017085937500000009,
+    "losses": {
+      "value_function": 0.02207624614238739,
+      "surrogate": -0.011151279324258212,
+      "entropy": 57.15510768890381
+    },
+    "actor_changed": true
+  },
+  "train-episode-1792020126135729": {
+    "iteration": 127,
+    "seconds": 7.697317819111049,
+    "elapsed_s": 1023.2686865441501,
+    "reward_mean": 0.054659262765198946,
+    "failed": 1057,
+    "completed_segments": 0,
+    "object_error_m": 0.002730989634680251,
+    "learning_rate": 0.00017085937500000006,
+    "losses": {
+      "value_function": 0.08593271262943744,
+      "surrogate": -0.010169106628745794,
+      "entropy": 53.959971046447755
+    },
+    "actor_changed": true
+  },
+  "train-episode-1792020208393189": {
+    "iteration": 134,
+    "seconds": 7.12914009205997,
+    "elapsed_s": 1019.9450261378661,
+    "reward_mean": 0.06822662645330031,
+    "failed": 1218,
+    "completed_segments": 0,
+    "object_error_m": 0.0038925134479844323,
+    "learning_rate": 0.00011390625000000003,
+    "losses": {
+      "value_function": 0.04994646310806274,
+      "surrogate": -0.011807403719285504,
+      "entropy": 53.10170192718506
+    },
+    "actor_changed": true
+  }
+}

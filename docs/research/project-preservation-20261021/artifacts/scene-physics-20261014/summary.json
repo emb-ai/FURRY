@@ -1,0 +1,85 @@
+{
+  "stage1": {
+    "time_utc": "2026-10-14T07:32:24.156819+00:00",
+    "installed": true,
+    "serial": "2G0YC5ZG7T05SR",
+    "before_sha256": "6384e3f7a5239039b645261eaaa2ff29da5387ff518ea83c6673e731b15f84aa",
+    "apk_sha256": "d0a61acd2aa97d6f41d9894d7c52d8adb28e397516bae79b6514cde7aecec245",
+    "device_digest_match": true,
+    "settings_preserved": true,
+    "recording_file_list_preserved": true,
+    "recording_files": 653,
+    "start": "Starting: Intent { cmp=org.g1lab.quest/android.app.NativeActivity }",
+    "live_acceptance": false
+  },
+  "stage2": {
+    "apk": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/scene-physics-20261014/g1-quest-scenes-physics.apk",
+    "sha256": "6d72436209ff1af51b1726d9eba029a3dd0d972396691cfa650e032dc37b12fe",
+    "bytes": 846786879,
+    "zip_crc": true,
+    "signature_verified_by_build": true,
+    "policy_catalog_unchanged": true,
+    "policy_files_unchanged": 16,
+    "source_hashes_verified": 53,
+    "metadata_files_verified": 126,
+    "installed": false,
+    "live_acceptance": false
+  },
+  "native_startup_stage1_confirmed": true,
+  "stage2_installed": false,
+  "tests": {
+    "full_suite": {
+      "total": 116,
+      "passed": 115,
+      "skipped": 1
+    },
+    "final_collection_and_scene_subset": {
+      "total": 8,
+      "passed": 8
+    },
+    "replay_scenes": [
+      "cup",
+      "tennis",
+      "wb_dex",
+      "bimanual",
+      "basket"
+    ],
+    "replay_modes": [
+      "saved",
+      "retarget"
+    ],
+    "max_reference_error": 0,
+    "max_q_error": 0,
+    "broad_replay_limitation": "existing DexWeave dynamic replay unsupported; broad script stopped there"
+  },
+  "upstream": {
+    "sha": "b06178f19a22f2138cbd31f60c6d494bc263f67d",
+    "truncated": false,
+    "scene_candidates": [
+      "assets/g1/g1_12dof.xml",
+      "assets/g1/g1_29dof_rev_1_0.urdf",
+      "assets/g1/g1_29dof_rev_1_0.xml",
+      "assets/g1/g1_custom_collision.urdf",
+      "assets/g1/g1_custom_collision_29dof.urdf",
+      "assets/g1/g1_custom_collision_with_fixed_hand.urdf",
+      "assets/g1/g1_custom_collision_with_revolute_hand.urdf",
+      "assets/g1/g1_mocap.xml",
+      "assets/g1/g1_mocap_29dof.xml",
+      "assets/g1/g1_mocap_with_wrist_roll.xml",
+      "assets/g1/g1_origin_collision.urdf",
+      "assets/g1/g1_sim2sim.xml",
+      "assets/g1/g1_sim2sim_29dof.xml",
+      "assets/g1/g1_sim2sim_29dof_modified.xml",
+      "assets/g1/g1_sim2sim_29dof_with_hands.xml",
+      "assets/g1/g1_sim2sim_with_wrist_roll.xml",
+      "assets/g1/scene.xml"
+    ]
+  },
+  "limitations": [
+    "No live acceptance of stage2 on Quest",
+    "No spin, Magnus or tangential ball impact",
+    "Restitution values are FURRY approximations",
+    "Manipulation tasks are adaptations, not exact author scenes",
+    "No robot egocentric RGB dataset stream yet"
+  ]
+}

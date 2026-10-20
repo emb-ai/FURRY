@@ -1,0 +1,22 @@
+{
+  "training_jobs": {
+    "single_episode": {
+      "id": 118481,
+      "state": "COMPLETED",
+      "elapsed": "00:05:00",
+      "exit": "0:0"
+    },
+    "checkpoint_comparison": {
+      "id": 118485,
+      "state": "COMPLETED",
+      "elapsed": "00:00:10",
+      "exit": "0:0"
+    }
+  },
+  "hashes": {
+    "single-run/best.pt": "cc593ae007062ba69ad2eb145f26f499083ffb7d8ff6ebe4c49e105216e7afed",
+    "latest-ema.pt": "2323b53f8ece620f2d0bbe9d0aa1495a3dcd0e296010079ab76ecd72629a0ffd"
+  },
+  "remote_sha256_equal_local": true,
+  "source_weights_unchanged": true
+}

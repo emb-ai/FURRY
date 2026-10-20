@@ -1,0 +1,25 @@
+{
+  "status": "completed",
+  "source": "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/act-run",
+  "old_pid": 1297566,
+  "target": "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/act-run-gpu6-colleague-20261015",
+  "new_pid": 90465,
+  "checkpoint": "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/act-run/step-060000.pt",
+  "gpu": 6,
+  "optimizer_reset": true,
+  "source_last_step": 67200,
+  "resumed_step": 60000,
+  "new_step_verified": 61000,
+  "completed_at": 1792054231.1684864,
+  "resume_verification": {
+    "source": "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/act-run/step-060000.pt",
+    "sha256": "85002090a85d0cefd4bc726a50806c90a3787e2d8fa79909d8c6acb962b9bdf7",
+    "step": 60000,
+    "model_exact": true,
+    "stats_exact": true,
+    "optimizer_restored": false,
+    "optimizer_reset": true,
+    "bitwise_continuation": false,
+    "limitation": "Legacy checkpoint omits optimizer, RNG and data-loader state; legacy resume restarts Adam. Data-loader ordering restarts in either case."
+  }
+}

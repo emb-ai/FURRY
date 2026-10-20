@@ -1,0 +1,127 @@
+{
+  "scope": "29 body DOF contract of latest verified installed full-body APK source snapshot; no live device changes",
+  "upstream_commit": "b06178f19a22f2138cbd31f60c6d494bc263f67d",
+  "joints": [
+    "left_hip_pitch_joint",
+    "left_hip_roll_joint",
+    "left_hip_yaw_joint",
+    "left_knee_joint",
+    "left_ankle_pitch_joint",
+    "left_ankle_roll_joint",
+    "right_hip_pitch_joint",
+    "right_hip_roll_joint",
+    "right_hip_yaw_joint",
+    "right_knee_joint",
+    "right_ankle_pitch_joint",
+    "right_ankle_roll_joint",
+    "waist_yaw_joint",
+    "waist_roll_joint",
+    "waist_pitch_joint",
+    "left_shoulder_pitch_joint",
+    "left_shoulder_roll_joint",
+    "left_shoulder_yaw_joint",
+    "left_elbow_joint",
+    "left_wrist_roll_joint",
+    "left_wrist_pitch_joint",
+    "left_wrist_yaw_joint",
+    "right_shoulder_pitch_joint",
+    "right_shoulder_roll_joint",
+    "right_shoulder_yaw_joint",
+    "right_elbow_joint",
+    "right_wrist_roll_joint",
+    "right_wrist_pitch_joint",
+    "right_wrist_yaw_joint"
+  ],
+  "gmr_joint_order_matches": true,
+  "upstream_joint_order_matches": true,
+  "scenes": {
+    "stand": {
+      "actuators": 43,
+      "body_dof_tested": 29,
+      "mismatches": []
+    },
+    "cup": {
+      "actuators": 43,
+      "body_dof_tested": 29,
+      "mismatches": []
+    },
+    "push_t": {
+      "actuators": 43,
+      "body_dof_tested": 29,
+      "mismatches": []
+    },
+    "tennis": {
+      "actuators": 43,
+      "body_dof_tested": 29,
+      "mismatches": []
+    }
+  },
+  "arrays_max_abs_difference": {
+    "home_vs_default_dof_pos": 0.0,
+    "kp_vs_stiffness": 0.0,
+    "kd_vs_damping": 0.0,
+    "kp_vs_torque_limits": 0.0
+  },
+  "action_scale_all_0_5": true,
+  "gmr_runtime_fk": {
+    "random_poses": 30,
+    "seed": 21,
+    "position_max_abs_error_m": 0,
+    "rotation_matrix_max_abs_error": 0
+  },
+  "policy_cadence": {
+    "policy.onnx": {
+      "metadata": {},
+      "runtime_hz": 100
+    },
+    "policy-twist2-25k.onnx": {
+      "metadata": {},
+      "runtime_hz": 100
+    },
+    "policy-quest-111260-1000.onnx": {
+      "metadata": {},
+      "runtime_hz": 100
+    },
+    "policy-quest-111586-500.onnx": {
+      "metadata": {
+        "g1_policy_hz": "50"
+      },
+      "runtime_hz": 50
+    }
+  },
+  "train_deploy_differences": {
+    "upstream_training_hz": 50,
+    "upstream_real_yaml_hz": 50,
+    "upstream_sim_constructor_default_hz": 50,
+    "upstream_sim_cli_default_hz": 100,
+    "wrist_Kp_Kd_training": [
+      40,
+      5
+    ],
+    "wrist_Kp_Kd_mujoco_runtime": [
+      4,
+      0.2
+    ],
+    "wrist_Kp_Kd_upstream_real": [
+      20,
+      1
+    ],
+    "interpretation": "Upstream deployment choices differ from training; not a newly found name/order/default-angle bug. Causality for gait or tennis unproven."
+  },
+  "source_sha256": {
+    "outputs/full-body-apk-20261010/source/android/native/simulation.cpp": "f801b19721b86a021a2159eba0690bfe5093bd143d665aff33c4340b09700c72",
+    "outputs/full-body-apk-20261010/source/android/native/meta_retarget.cpp": "addf7598f4a46fcdb23f5bbefdf10445da4fb5d9a1d0e6510890af2e867ade6d",
+    "outputs/full-body-apk-20261010/source/android/assets/gmr_model.xml": "58c04b6b9c28c15bbfd29113ab44b0104a17cb1ba3dbc86331c7a680623949dc",
+    "outputs/full-body-apk-20261010/source/android/assets/scene-stand.xml": "06a70fa9bae1895e57037818d186a93beb781922b5d601e79af34ed94dc64a37",
+    "outputs/full-body-apk-20261010/source/android/assets/scene-tennis.xml": "332c30f1f7799b99d4e619e0aa1b7bc4c2559303d119389f818b88fd88603ac0",
+    ".tools/furry-publish/prototypes/quest_g1/vendor/TWIST2/deploy_real/server_low_level_g1_sim.py": "8f589b7f502bbbbb3c6dfd582a7a49b05521fcb088f79d3e646bbc463c42f3c0",
+    ".tools/furry-publish/prototypes/quest_g1/vendor/TWIST2/legged_gym/legged_gym/envs/g1/g1_mimic_config.py": "899a7ba8f99e8f5ed4835f252c8f8b392d326e6b1bfae488eb0d34cc906e6644"
+  },
+  "limitations": [
+    "No fresh live Quest acceptance or controller tests",
+    "Not an end-to-end anatomical calibration or real motor audit",
+    "FK test covers shared body transforms, not contact geometry/dynamics equality",
+    "Hand fingers are separate14 position actuators and assisted tennis grip still sets fixed finger targets",
+    "Latest live recordings confirm wrist_frame_v2=true; exact dynamic replay history remains absent"
+  ]
+}

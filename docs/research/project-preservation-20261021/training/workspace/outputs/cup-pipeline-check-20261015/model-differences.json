@@ -1,0 +1,9 @@
+{
+  "episode": "episode-1792015107773946",
+  "differences": [
+    {
+      "field": "body_invweight0",
+      "max_abs": 3.637978807091713e-12
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "status": "running",
+  "pid": 703061,
+  "updated_utc": "2026-10-15T06:30:12Z",
+  "active": {
+    "episode-1792020014648126.npz": {
+      "pid": 3077791,
+      "gpu_index": "0",
+      "gpu_uuid": "GPU-4ff902a0-d404-08b4-62da-92d04766ecb6",
+      "output": "/home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020014648126",
+      "adopted": true
+    },
+    "episode-1792020055691156.npz": {
+      "pid": 703179,
+      "gpu_index": "1",
+      "gpu_uuid": "GPU-9d79e8fc-4895-171e-768c-f63ec6f58f47",
+      "output": "/home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020055691156",
+      "adopted": false
+    },
+    "episode-1792020126135729.npz": {
+      "pid": 703180,
+      "gpu_index": "4",
+      "gpu_uuid": "GPU-05d66b51-2ff2-88b4-6ad3-d9a62ff2edc1",
+      "output": "/home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020126135729",
+      "adopted": false
+    },
+    "episode-1792020208393189.npz": {
+      "pid": 703182,
+      "gpu_index": "7",
+      "gpu_uuid": "GPU-5f5fd13a-a0c9-1525-e752-3f0137a267ea",
+      "output": "/home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020208393189",
+      "adopted": false
+    }
+  },
+  "pending": [],
+  "completed": [],
+  "failed": []
+}

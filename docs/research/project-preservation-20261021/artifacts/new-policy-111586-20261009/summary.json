@@ -1,0 +1,21 @@
+{
+  "installed": true,
+  "installation_method": "adb install -r",
+  "device": "2G0YC5ZG7T05SR",
+  "apk_sha256": "65c0e0f1024470335fd48f3ce857090cd106f59c9129d4e51eb71ad54924b47c",
+  "selected_policy": "quest-111586-500",
+  "policy_hz": 50,
+  "additional_policies": [
+    "quest-111586-200",
+    "quest-111586-300"
+  ],
+  "catch_up_preserved": true,
+  "catch_up_enabled": true,
+  "data_preserved": true,
+  "native_checks": "All seven policies: stand/cup/push_t; transactional selection and deterministic reset",
+  "unit_tests": 4,
+  "live_runtime_confirmed": false,
+  "launch_blocker": "LaunchCheckControllerRequiredDialogActivity",
+  "source_checkout": ".tools/furry-publish",
+  "source_changes_committed": false
+}

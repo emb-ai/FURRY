@@ -1,0 +1,11 @@
+exec((O/'fixed_reference.py').read_text(),globals());exec((O/'alternating_regrasp.py').read_text(),globals())
+right_released=False
+before=(d.xpos[cubeids].copy(),R.from_quat(d.xquat[cubeids][:,[1,2,3,0]]))
+try:
+ note('left-reset-start',**posemetric())
+ success=regrasp_hand(0)
+ pr,rr=rigid_residual(before);note('left-reset-end',success=bool(success),residual=[float(np.linalg.norm(pr,axis=1).max()*1000),float(np.rad2deg(np.linalg.norm(rr,axis=1)).max())],**posemetric())
+ anchors['left-reset']=capture()
+finally:
+ np.savez_compressed(O/'alternating.npz',trace=trace,qpos=qs,qvel=vs,userdata=states,support=support,commands=commands,actions=actions)
+ (O/'alternating.json').write_text(json.dumps(events,indent=2))

@@ -1,0 +1,8 @@
+{
+  "apk": "outputs/rubik-fix-20261015/g1-quest-rubik-cup.apk",
+  "sha256": "3e25f5c17fad0f206dc584b34879b25d6eb7b5177481fd8c44c472caebfc8b30",
+  "bytes": 850683285,
+  "zip_crc": true,
+  "assets_equal_to_prepared": 229,
+  "jni_libraries": 5
+}

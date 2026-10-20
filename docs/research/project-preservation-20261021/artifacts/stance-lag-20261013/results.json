@@ -1,0 +1,3908 @@
+{
+  "reports": [
+    {
+      "episode": "episode-1791652593739690",
+      "rows": [
+        {
+          "policy": "500",
+          "variant": "baseline",
+          "lag_median_ms": 10.0,
+          "lag_q25_ms": -12.5,
+          "lag_q75_ms": 32.5,
+          "correlation_median": 0.9764893262039691,
+          "windows_selected": 28,
+          "windows_used": 28,
+          "boundary_windows": 0,
+          "slip_forceweighted_m_s": 0.047668239027200576,
+          "xy_p95_m": 1.0781780878488945,
+          "fell": false,
+          "measurements": [
+            {
+              "start_s": 2.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9854896004564866,
+              "boundary": false,
+              "zero_lag_correlation": 0.9840492943128862
+            },
+            {
+              "start_s": 2.0,
+              "side": 1,
+              "lag_ms": -60,
+              "correlation": 0.9826729070838209,
+              "boundary": false,
+              "zero_lag_correlation": 0.9572982693258613
+            },
+            {
+              "start_s": 4.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.8897967639860368,
+              "boundary": false,
+              "zero_lag_correlation": 0.8854812525212629
+            },
+            {
+              "start_s": 4.0,
+              "side": 1,
+              "lag_ms": 70,
+              "correlation": 0.8297173995173075,
+              "boundary": false,
+              "zero_lag_correlation": 0.7837769636563756
+            },
+            {
+              "start_s": 6.0,
+              "side": 0,
+              "lag_ms": 200,
+              "correlation": 0.8700924603349809,
+              "boundary": false,
+              "zero_lag_correlation": 0.7219347756052292
+            },
+            {
+              "start_s": 6.0,
+              "side": 1,
+              "lag_ms": 80,
+              "correlation": 0.9576051385447816,
+              "boundary": false,
+              "zero_lag_correlation": 0.9357320359756532
+            },
+            {
+              "start_s": 8.0,
+              "side": 0,
+              "lag_ms": 40,
+              "correlation": 0.997098072998473,
+              "boundary": false,
+              "zero_lag_correlation": 0.9837627662139808
+            },
+            {
+              "start_s": 8.0,
+              "side": 1,
+              "lag_ms": 90,
+              "correlation": 0.9016811449114118,
+              "boundary": false,
+              "zero_lag_correlation": 0.8185707779999127
+            },
+            {
+              "start_s": 10.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9764430809212211,
+              "boundary": false,
+              "zero_lag_correlation": 0.9743491188642571
+            },
+            {
+              "start_s": 10.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9716660703644725,
+              "boundary": false,
+              "zero_lag_correlation": 0.9655901145357656
+            },
+            {
+              "start_s": 12.0,
+              "side": 0,
+              "lag_ms": 170,
+              "correlation": 0.927213748244741,
+              "boundary": false,
+              "zero_lag_correlation": 0.8220703786705201
+            },
+            {
+              "start_s": 12.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.976535571486717,
+              "boundary": false,
+              "zero_lag_correlation": 0.976535571486717
+            },
+            {
+              "start_s": 14.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9813008951616002,
+              "boundary": false,
+              "zero_lag_correlation": 0.980772935067884
+            },
+            {
+              "start_s": 14.0,
+              "side": 1,
+              "lag_ms": 20,
+              "correlation": 0.9556828051385006,
+              "boundary": false,
+              "zero_lag_correlation": 0.9532939360714985
+            },
+            {
+              "start_s": 16.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9891687613064378,
+              "boundary": false,
+              "zero_lag_correlation": 0.988110984735599
+            },
+            {
+              "start_s": 16.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.9782917220377678,
+              "boundary": false,
+              "zero_lag_correlation": 0.9760397098440834
+            },
+            {
+              "start_s": 18.0,
+              "side": 0,
+              "lag_ms": 0,
+              "correlation": 0.9589495449526855,
+              "boundary": false,
+              "zero_lag_correlation": 0.9589495449526855
+            },
+            {
+              "start_s": 18.0,
+              "side": 1,
+              "lag_ms": 10,
+              "correlation": 0.9904434185178959,
+              "boundary": false,
+              "zero_lag_correlation": 0.989724285097878
+            },
+            {
+              "start_s": 20.0,
+              "side": 0,
+              "lag_ms": -30,
+              "correlation": 0.9015396923419179,
+              "boundary": false,
+              "zero_lag_correlation": 0.8951038746852953
+            },
+            {
+              "start_s": 20.0,
+              "side": 1,
+              "lag_ms": 10,
+              "correlation": 0.9529744630138264,
+              "boundary": false,
+              "zero_lag_correlation": 0.9518951866040695
+            },
+            {
+              "start_s": 22.0,
+              "side": 0,
+              "lag_ms": 60,
+              "correlation": 0.9879575685176744,
+              "boundary": false,
+              "zero_lag_correlation": 0.9632170540554709
+            },
+            {
+              "start_s": 22.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9839024210384604,
+              "boundary": false,
+              "zero_lag_correlation": 0.97648425275373
+            },
+            {
+              "start_s": 24.0,
+              "side": 0,
+              "lag_ms": 10,
+              "correlation": 0.9730855598866182,
+              "boundary": false,
+              "zero_lag_correlation": 0.9729409331037281
+            },
+            {
+              "start_s": 24.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.9829206976819326,
+              "boundary": false,
+              "zero_lag_correlation": 0.9797294751671602
+            },
+            {
+              "start_s": 26.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9810303182220099,
+              "boundary": false,
+              "zero_lag_correlation": 0.9797542715883971
+            },
+            {
+              "start_s": 26.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.9508378739948973,
+              "boundary": false,
+              "zero_lag_correlation": 0.9458411885484449
+            },
+            {
+              "start_s": 28.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9782001046996927,
+              "boundary": false,
+              "zero_lag_correlation": 0.9753149106284675
+            },
+            {
+              "start_s": 28.0,
+              "side": 1,
+              "lag_ms": -40,
+              "correlation": 0.9771672858102578,
+              "boundary": false,
+              "zero_lag_correlation": 0.9657864366769782
+            }
+          ]
+        },
+        {
+          "policy": "500",
+          "variant": "ratio50",
+          "lag_median_ms": 15.0,
+          "lag_q25_ms": -20.0,
+          "lag_q75_ms": 30.0,
+          "correlation_median": 0.9727701871180825,
+          "windows_selected": 28,
+          "windows_used": 28,
+          "boundary_windows": 0,
+          "slip_forceweighted_m_s": 0.03760143007471557,
+          "xy_p95_m": 0.9179207063608039,
+          "fell": false,
+          "measurements": [
+            {
+              "start_s": 2.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.971491324267356,
+              "boundary": false,
+              "zero_lag_correlation": 0.9703272629776596
+            },
+            {
+              "start_s": 2.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.9877834004681442,
+              "boundary": false,
+              "zero_lag_correlation": 0.9851604592929014
+            },
+            {
+              "start_s": 4.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9436348513164136,
+              "boundary": false,
+              "zero_lag_correlation": 0.9425234245324811
+            },
+            {
+              "start_s": 4.0,
+              "side": 1,
+              "lag_ms": 120,
+              "correlation": 0.8822957021788461,
+              "boundary": false,
+              "zero_lag_correlation": 0.6805149318965363
+            },
+            {
+              "start_s": 6.0,
+              "side": 0,
+              "lag_ms": 300,
+              "correlation": 0.8038882869460167,
+              "boundary": false,
+              "zero_lag_correlation": 0.05203919417596606
+            },
+            {
+              "start_s": 6.0,
+              "side": 1,
+              "lag_ms": 90,
+              "correlation": 0.9085077519862891,
+              "boundary": false,
+              "zero_lag_correlation": 0.8644797140348692
+            },
+            {
+              "start_s": 8.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9862260042813427,
+              "boundary": false,
+              "zero_lag_correlation": 0.9830148329085826
+            },
+            {
+              "start_s": 8.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9555912741131428,
+              "boundary": false,
+              "zero_lag_correlation": 0.948106952500589
+            },
+            {
+              "start_s": 10.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.974049049968809,
+              "boundary": false,
+              "zero_lag_correlation": 0.9714399077070409
+            },
+            {
+              "start_s": 10.0,
+              "side": 1,
+              "lag_ms": -30,
+              "correlation": 0.9837463716724406,
+              "boundary": false,
+              "zero_lag_correlation": 0.9788365895979123
+            },
+            {
+              "start_s": 12.0,
+              "side": 0,
+              "lag_ms": 240,
+              "correlation": 0.956160720904657,
+              "boundary": false,
+              "zero_lag_correlation": 0.757226938636242
+            },
+            {
+              "start_s": 12.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.9897611598786148,
+              "boundary": false,
+              "zero_lag_correlation": 0.9893435136549303
+            },
+            {
+              "start_s": 14.0,
+              "side": 0,
+              "lag_ms": 90,
+              "correlation": 0.9330423569525986,
+              "boundary": false,
+              "zero_lag_correlation": 0.8853458662724694
+            },
+            {
+              "start_s": 14.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.9930823196476743,
+              "boundary": false,
+              "zero_lag_correlation": 0.9930823196476743
+            },
+            {
+              "start_s": 16.0,
+              "side": 0,
+              "lag_ms": 10,
+              "correlation": 0.9850723091013893,
+              "boundary": false,
+              "zero_lag_correlation": 0.9838497835306926
+            },
+            {
+              "start_s": 16.0,
+              "side": 1,
+              "lag_ms": 40,
+              "correlation": 0.96408492801923,
+              "boundary": false,
+              "zero_lag_correlation": 0.953398219438986
+            },
+            {
+              "start_s": 18.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9456025801861137,
+              "boundary": false,
+              "zero_lag_correlation": 0.9418315604468798
+            },
+            {
+              "start_s": 18.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9927062507121447,
+              "boundary": false,
+              "zero_lag_correlation": 0.9827771610977748
+            },
+            {
+              "start_s": 20.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9587187113622755,
+              "boundary": false,
+              "zero_lag_correlation": 0.9531164797959777
+            },
+            {
+              "start_s": 20.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9701556981972395,
+              "boundary": false,
+              "zero_lag_correlation": 0.954841862448608
+            },
+            {
+              "start_s": 22.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9895820282626866,
+              "boundary": false,
+              "zero_lag_correlation": 0.9848078361212903
+            },
+            {
+              "start_s": 22.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.985407622451496,
+              "boundary": false,
+              "zero_lag_correlation": 0.985407622451496
+            },
+            {
+              "start_s": 24.0,
+              "side": 0,
+              "lag_ms": -30,
+              "correlation": 0.9614659737237824,
+              "boundary": false,
+              "zero_lag_correlation": 0.9568492603385023
+            },
+            {
+              "start_s": 24.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.9880117096674165,
+              "boundary": false,
+              "zero_lag_correlation": 0.9860756104137033
+            },
+            {
+              "start_s": 26.0,
+              "side": 0,
+              "lag_ms": -30,
+              "correlation": 0.9849555439458502,
+              "boundary": false,
+              "zero_lag_correlation": 0.9720250152793154
+            },
+            {
+              "start_s": 26.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.9788588983532092,
+              "boundary": false,
+              "zero_lag_correlation": 0.9728848311111176
+            },
+            {
+              "start_s": 28.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9288929624076441,
+              "boundary": false,
+              "zero_lag_correlation": 0.9278690458537459
+            },
+            {
+              "start_s": 28.0,
+              "side": 1,
+              "lag_ms": -40,
+              "correlation": 0.9748799775498224,
+              "boundary": false,
+              "zero_lag_correlation": 0.9649650526406813
+            }
+          ]
+        },
+        {
+          "policy": "500",
+          "variant": "post12",
+          "lag_median_ms": 10.0,
+          "lag_q25_ms": -12.5,
+          "lag_q75_ms": 30.0,
+          "correlation_median": 0.9836493957764441,
+          "windows_selected": 28,
+          "windows_used": 28,
+          "boundary_windows": 0,
+          "slip_forceweighted_m_s": 0.03310281034327418,
+          "xy_p95_m": 0.9088833622860537,
+          "fell": false,
+          "measurements": [
+            {
+              "start_s": 2.0,
+              "side": 0,
+              "lag_ms": 0,
+              "correlation": 0.9912264862610419,
+              "boundary": false,
+              "zero_lag_correlation": 0.9912264862610419
+            },
+            {
+              "start_s": 2.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.9919519888228423,
+              "boundary": false,
+              "zero_lag_correlation": 0.9900258894765452
+            },
+            {
+              "start_s": 4.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.9183676505608769,
+              "boundary": false,
+              "zero_lag_correlation": 0.9158582064619903
+            },
+            {
+              "start_s": 4.0,
+              "side": 1,
+              "lag_ms": 10,
+              "correlation": 0.8151819182814665,
+              "boundary": false,
+              "zero_lag_correlation": 0.8136433369015155
+            },
+            {
+              "start_s": 6.0,
+              "side": 0,
+              "lag_ms": 240,
+              "correlation": 0.8156085913411572,
+              "boundary": false,
+              "zero_lag_correlation": 0.37212959952863905
+            },
+            {
+              "start_s": 6.0,
+              "side": 1,
+              "lag_ms": 100,
+              "correlation": 0.8768708969331368,
+              "boundary": false,
+              "zero_lag_correlation": 0.8222147580155991
+            },
+            {
+              "start_s": 8.0,
+              "side": 0,
+              "lag_ms": 10,
+              "correlation": 0.9916423200800989,
+              "boundary": false,
+              "zero_lag_correlation": 0.9906027335936642
+            },
+            {
+              "start_s": 8.0,
+              "side": 1,
+              "lag_ms": 50,
+              "correlation": 0.9825947613314691,
+              "boundary": false,
+              "zero_lag_correlation": 0.9599833502729196
+            },
+            {
+              "start_s": 10.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9946071575846159,
+              "boundary": false,
+              "zero_lag_correlation": 0.9939447313430342
+            },
+            {
+              "start_s": 10.0,
+              "side": 1,
+              "lag_ms": 20,
+              "correlation": 0.9895305223371811,
+              "boundary": false,
+              "zero_lag_correlation": 0.9858874801882754
+            },
+            {
+              "start_s": 12.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9855668233336344,
+              "boundary": false,
+              "zero_lag_correlation": 0.9851849995200789
+            },
+            {
+              "start_s": 12.0,
+              "side": 1,
+              "lag_ms": -40,
+              "correlation": 0.9734427784884643,
+              "boundary": false,
+              "zero_lag_correlation": 0.9699012763416142
+            },
+            {
+              "start_s": 14.0,
+              "side": 0,
+              "lag_ms": 30,
+              "correlation": 0.9875078492704109,
+              "boundary": false,
+              "zero_lag_correlation": 0.9814154728824264
+            },
+            {
+              "start_s": 14.0,
+              "side": 1,
+              "lag_ms": 50,
+              "correlation": 0.9785427684986274,
+              "boundary": false,
+              "zero_lag_correlation": 0.9575883594028061
+            },
+            {
+              "start_s": 16.0,
+              "side": 0,
+              "lag_ms": 10,
+              "correlation": 0.9497066707564955,
+              "boundary": false,
+              "zero_lag_correlation": 0.9487856849083816
+            },
+            {
+              "start_s": 16.0,
+              "side": 1,
+              "lag_ms": 10,
+              "correlation": 0.9892483766793049,
+              "boundary": false,
+              "zero_lag_correlation": 0.9880920443768895
+            },
+            {
+              "start_s": 18.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9621689623691025,
+              "boundary": false,
+              "zero_lag_correlation": 0.9554863577005597
+            },
+            {
+              "start_s": 18.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9949277111246368,
+              "boundary": false,
+              "zero_lag_correlation": 0.9838037860777116
+            },
+            {
+              "start_s": 20.0,
+              "side": 0,
+              "lag_ms": 30,
+              "correlation": 0.9678898790064117,
+              "boundary": false,
+              "zero_lag_correlation": 0.9590393427814956
+            },
+            {
+              "start_s": 20.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9670220962569973,
+              "boundary": false,
+              "zero_lag_correlation": 0.9542063344942461
+            },
+            {
+              "start_s": 22.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9853749891539193,
+              "boundary": false,
+              "zero_lag_correlation": 0.9831110452749867
+            },
+            {
+              "start_s": 22.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.9866354028312718,
+              "boundary": false,
+              "zero_lag_correlation": 0.9864127258222247
+            },
+            {
+              "start_s": 24.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.9847040302214191,
+              "boundary": false,
+              "zero_lag_correlation": 0.9827329765557599
+            },
+            {
+              "start_s": 24.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.9892355258172635,
+              "boundary": false,
+              "zero_lag_correlation": 0.9877798009724472
+            },
+            {
+              "start_s": 26.0,
+              "side": 0,
+              "lag_ms": -30,
+              "correlation": 0.9881088117698372,
+              "boundary": false,
+              "zero_lag_correlation": 0.9789275248123246
+            },
+            {
+              "start_s": 26.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.969453905856108,
+              "boundary": false,
+              "zero_lag_correlation": 0.9673924240440478
+            },
+            {
+              "start_s": 28.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.9323466965093907,
+              "boundary": false,
+              "zero_lag_correlation": 0.9312568227361313
+            },
+            {
+              "start_s": 28.0,
+              "side": 1,
+              "lag_ms": -30,
+              "correlation": 0.9788330343272288,
+              "boundary": false,
+              "zero_lag_correlation": 0.971029318927905
+            }
+          ]
+        },
+        {
+          "policy": "1000",
+          "variant": "baseline",
+          "lag_median_ms": -5.0,
+          "lag_q25_ms": -12.5,
+          "lag_q75_ms": 10.0,
+          "correlation_median": 0.9801169099277255,
+          "windows_selected": 28,
+          "windows_used": 28,
+          "boundary_windows": 0,
+          "slip_forceweighted_m_s": 0.06811290653157265,
+          "xy_p95_m": 0.7593354315221953,
+          "fell": false,
+          "measurements": [
+            {
+              "start_s": 2.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.97390559826742,
+              "boundary": false,
+              "zero_lag_correlation": 0.9710673386950157
+            },
+            {
+              "start_s": 2.0,
+              "side": 1,
+              "lag_ms": -30,
+              "correlation": 0.9804987336750703,
+              "boundary": false,
+              "zero_lag_correlation": 0.9748528896077224
+            },
+            {
+              "start_s": 4.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9206432782296493,
+              "boundary": false,
+              "zero_lag_correlation": 0.9180196771311182
+            },
+            {
+              "start_s": 4.0,
+              "side": 1,
+              "lag_ms": 50,
+              "correlation": 0.9069329329307555,
+              "boundary": false,
+              "zero_lag_correlation": 0.8834654794681213
+            },
+            {
+              "start_s": 6.0,
+              "side": 0,
+              "lag_ms": 220,
+              "correlation": 0.9049921876390674,
+              "boundary": false,
+              "zero_lag_correlation": 0.6131539206881564
+            },
+            {
+              "start_s": 6.0,
+              "side": 1,
+              "lag_ms": 40,
+              "correlation": 0.9648947402594661,
+              "boundary": false,
+              "zero_lag_correlation": 0.9516816663150236
+            },
+            {
+              "start_s": 8.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9921772836812549,
+              "boundary": false,
+              "zero_lag_correlation": 0.9911675139147605
+            },
+            {
+              "start_s": 8.0,
+              "side": 1,
+              "lag_ms": 10,
+              "correlation": 0.9685150631608126,
+              "boundary": false,
+              "zero_lag_correlation": 0.9681583749913941
+            },
+            {
+              "start_s": 10.0,
+              "side": 0,
+              "lag_ms": 10,
+              "correlation": 0.99007144972159,
+              "boundary": false,
+              "zero_lag_correlation": 0.9900237194616598
+            },
+            {
+              "start_s": 10.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.985864343239479,
+              "boundary": false,
+              "zero_lag_correlation": 0.985864343239479
+            },
+            {
+              "start_s": 12.0,
+              "side": 0,
+              "lag_ms": 70,
+              "correlation": 0.9797350861803806,
+              "boundary": false,
+              "zero_lag_correlation": 0.9613252348700165
+            },
+            {
+              "start_s": 12.0,
+              "side": 1,
+              "lag_ms": -40,
+              "correlation": 0.993381187152712,
+              "boundary": false,
+              "zero_lag_correlation": 0.9874175359529715
+            },
+            {
+              "start_s": 14.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9898734424530873,
+              "boundary": false,
+              "zero_lag_correlation": 0.9888068301800038
+            },
+            {
+              "start_s": 14.0,
+              "side": 1,
+              "lag_ms": 10,
+              "correlation": 0.9928933251533489,
+              "boundary": false,
+              "zero_lag_correlation": 0.9928443751497481
+            },
+            {
+              "start_s": 16.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9793263458738402,
+              "boundary": false,
+              "zero_lag_correlation": 0.9788871155925003
+            },
+            {
+              "start_s": 16.0,
+              "side": 1,
+              "lag_ms": 10,
+              "correlation": 0.9884161093046923,
+              "boundary": false,
+              "zero_lag_correlation": 0.9883586526668935
+            },
+            {
+              "start_s": 18.0,
+              "side": 0,
+              "lag_ms": 0,
+              "correlation": 0.9689058732877925,
+              "boundary": false,
+              "zero_lag_correlation": 0.9689058732877925
+            },
+            {
+              "start_s": 18.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.993189319567911,
+              "boundary": false,
+              "zero_lag_correlation": 0.993189319567911
+            },
+            {
+              "start_s": 20.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.9362593178532276,
+              "boundary": false,
+              "zero_lag_correlation": 0.9339065217017076
+            },
+            {
+              "start_s": 20.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.9501853255135009,
+              "boundary": false,
+              "zero_lag_correlation": 0.9492788818468837
+            },
+            {
+              "start_s": 22.0,
+              "side": 0,
+              "lag_ms": 30,
+              "correlation": 0.9895858974310328,
+              "boundary": false,
+              "zero_lag_correlation": 0.9808768947557668
+            },
+            {
+              "start_s": 22.0,
+              "side": 1,
+              "lag_ms": 10,
+              "correlation": 0.9866874617140391,
+              "boundary": false,
+              "zero_lag_correlation": 0.9861410697155507
+            },
+            {
+              "start_s": 24.0,
+              "side": 0,
+              "lag_ms": -30,
+              "correlation": 0.9880082351908949,
+              "boundary": false,
+              "zero_lag_correlation": 0.983481629484991
+            },
+            {
+              "start_s": 24.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.9868643028930038,
+              "boundary": false,
+              "zero_lag_correlation": 0.9860372337312567
+            },
+            {
+              "start_s": 26.0,
+              "side": 0,
+              "lag_ms": 0,
+              "correlation": 0.9452312191741987,
+              "boundary": false,
+              "zero_lag_correlation": 0.9452312191741987
+            },
+            {
+              "start_s": 26.0,
+              "side": 1,
+              "lag_ms": -30,
+              "correlation": 0.9845100600557506,
+              "boundary": false,
+              "zero_lag_correlation": 0.9742167652643307
+            },
+            {
+              "start_s": 28.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9579772800502611,
+              "boundary": false,
+              "zero_lag_correlation": 0.9576719105043789
+            },
+            {
+              "start_s": 28.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.974945306405811,
+              "boundary": false,
+              "zero_lag_correlation": 0.9722597706755545
+            }
+          ]
+        },
+        {
+          "policy": "1000",
+          "variant": "ratio50",
+          "lag_median_ms": 0.0,
+          "lag_q25_ms": -12.5,
+          "lag_q75_ms": 20.0,
+          "correlation_median": 0.983166334905639,
+          "windows_selected": 28,
+          "windows_used": 28,
+          "boundary_windows": 0,
+          "slip_forceweighted_m_s": 0.0529644125685145,
+          "xy_p95_m": 0.7954321486307384,
+          "fell": false,
+          "measurements": [
+            {
+              "start_s": 2.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.9770040993306418,
+              "boundary": false,
+              "zero_lag_correlation": 0.9746381588336837
+            },
+            {
+              "start_s": 2.0,
+              "side": 1,
+              "lag_ms": -30,
+              "correlation": 0.9915688117339655,
+              "boundary": false,
+              "zero_lag_correlation": 0.9839082948235992
+            },
+            {
+              "start_s": 4.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.9252686939034414,
+              "boundary": false,
+              "zero_lag_correlation": 0.9196442925960995
+            },
+            {
+              "start_s": 4.0,
+              "side": 1,
+              "lag_ms": 60,
+              "correlation": 0.9514719326085987,
+              "boundary": false,
+              "zero_lag_correlation": 0.9200413209477182
+            },
+            {
+              "start_s": 6.0,
+              "side": 0,
+              "lag_ms": 190,
+              "correlation": 0.9304707024002515,
+              "boundary": false,
+              "zero_lag_correlation": 0.6577655928350375
+            },
+            {
+              "start_s": 6.0,
+              "side": 1,
+              "lag_ms": 50,
+              "correlation": 0.9881543014547165,
+              "boundary": false,
+              "zero_lag_correlation": 0.9701067852800103
+            },
+            {
+              "start_s": 8.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9918419251357831,
+              "boundary": false,
+              "zero_lag_correlation": 0.9912327789070478
+            },
+            {
+              "start_s": 8.0,
+              "side": 1,
+              "lag_ms": 20,
+              "correlation": 0.9892927157387704,
+              "boundary": false,
+              "zero_lag_correlation": 0.9868315823866658
+            },
+            {
+              "start_s": 10.0,
+              "side": 0,
+              "lag_ms": 0,
+              "correlation": 0.9869053634788747,
+              "boundary": false,
+              "zero_lag_correlation": 0.9869053634788747
+            },
+            {
+              "start_s": 10.0,
+              "side": 1,
+              "lag_ms": 20,
+              "correlation": 0.9861712972152125,
+              "boundary": false,
+              "zero_lag_correlation": 0.9849354064781372
+            },
+            {
+              "start_s": 12.0,
+              "side": 0,
+              "lag_ms": 60,
+              "correlation": 0.9695400745073215,
+              "boundary": false,
+              "zero_lag_correlation": 0.9636413450185883
+            },
+            {
+              "start_s": 12.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.9724313126083199,
+              "boundary": false,
+              "zero_lag_correlation": 0.9724313126083199
+            },
+            {
+              "start_s": 14.0,
+              "side": 0,
+              "lag_ms": 10,
+              "correlation": 0.9850234790760806,
+              "boundary": false,
+              "zero_lag_correlation": 0.984281407781062
+            },
+            {
+              "start_s": 14.0,
+              "side": 1,
+              "lag_ms": 20,
+              "correlation": 0.9913317032479199,
+              "boundary": false,
+              "zero_lag_correlation": 0.987505147623775
+            },
+            {
+              "start_s": 16.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9789928131462718,
+              "boundary": false,
+              "zero_lag_correlation": 0.9780076272107229
+            },
+            {
+              "start_s": 16.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.981289772809491,
+              "boundary": false,
+              "zero_lag_correlation": 0.981289772809491
+            },
+            {
+              "start_s": 18.0,
+              "side": 0,
+              "lag_ms": 10,
+              "correlation": 0.9590043711570162,
+              "boundary": false,
+              "zero_lag_correlation": 0.9589313763248571
+            },
+            {
+              "start_s": 18.0,
+              "side": 1,
+              "lag_ms": 20,
+              "correlation": 0.9945193563940303,
+              "boundary": false,
+              "zero_lag_correlation": 0.9914073378466934
+            },
+            {
+              "start_s": 20.0,
+              "side": 0,
+              "lag_ms": -70,
+              "correlation": 0.9211213605076487,
+              "boundary": false,
+              "zero_lag_correlation": 0.8840311023194961
+            },
+            {
+              "start_s": 20.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.9540881678989271,
+              "boundary": false,
+              "zero_lag_correlation": 0.9540609669046343
+            },
+            {
+              "start_s": 22.0,
+              "side": 0,
+              "lag_ms": 30,
+              "correlation": 0.9892025431703938,
+              "boundary": false,
+              "zero_lag_correlation": 0.9822821956104306
+            },
+            {
+              "start_s": 22.0,
+              "side": 1,
+              "lag_ms": 20,
+              "correlation": 0.9936086459277649,
+              "boundary": false,
+              "zero_lag_correlation": 0.9913485584507649
+            },
+            {
+              "start_s": 24.0,
+              "side": 0,
+              "lag_ms": -40,
+              "correlation": 0.9930002662812437,
+              "boundary": false,
+              "zero_lag_correlation": 0.9856122893039523
+            },
+            {
+              "start_s": 24.0,
+              "side": 1,
+              "lag_ms": -30,
+              "correlation": 0.9942086353948306,
+              "boundary": false,
+              "zero_lag_correlation": 0.9878830091371404
+            },
+            {
+              "start_s": 26.0,
+              "side": 0,
+              "lag_ms": -50,
+              "correlation": 0.9813091907351975,
+              "boundary": false,
+              "zero_lag_correlation": 0.9578241353464859
+            },
+            {
+              "start_s": 26.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.9781711063756944,
+              "boundary": false,
+              "zero_lag_correlation": 0.9771544568954686
+            },
+            {
+              "start_s": 28.0,
+              "side": 0,
+              "lag_ms": 10,
+              "correlation": 0.9641086343087384,
+              "boundary": false,
+              "zero_lag_correlation": 0.9631610151965655
+            },
+            {
+              "start_s": 28.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.9851491874165527,
+              "boundary": false,
+              "zero_lag_correlation": 0.9851491874165527
+            }
+          ]
+        },
+        {
+          "policy": "1000",
+          "variant": "post12",
+          "lag_median_ms": 20.0,
+          "lag_q25_ms": -22.5,
+          "lag_q75_ms": 30.0,
+          "correlation_median": 0.9876155067147264,
+          "windows_selected": 28,
+          "windows_used": 28,
+          "boundary_windows": 0,
+          "slip_forceweighted_m_s": 0.04403042251671605,
+          "xy_p95_m": 0.9114778887893529,
+          "fell": false,
+          "measurements": [
+            {
+              "start_s": 2.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.9766431000014272,
+              "boundary": false,
+              "zero_lag_correlation": 0.9735381543424891
+            },
+            {
+              "start_s": 2.0,
+              "side": 1,
+              "lag_ms": -40,
+              "correlation": 0.9896973389290701,
+              "boundary": false,
+              "zero_lag_correlation": 0.9795034601897777
+            },
+            {
+              "start_s": 4.0,
+              "side": 0,
+              "lag_ms": -30,
+              "correlation": 0.9352162049188336,
+              "boundary": false,
+              "zero_lag_correlation": 0.924281908137361
+            },
+            {
+              "start_s": 4.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9266184031934418,
+              "boundary": false,
+              "zero_lag_correlation": 0.9143594421198609
+            },
+            {
+              "start_s": 6.0,
+              "side": 0,
+              "lag_ms": 170,
+              "correlation": 0.9273688388557,
+              "boundary": false,
+              "zero_lag_correlation": 0.7430533023505831
+            },
+            {
+              "start_s": 6.0,
+              "side": 1,
+              "lag_ms": 60,
+              "correlation": 0.9890573783874462,
+              "boundary": false,
+              "zero_lag_correlation": 0.9679456548102606
+            },
+            {
+              "start_s": 8.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.992954715605965,
+              "boundary": false,
+              "zero_lag_correlation": 0.9920579931860302
+            },
+            {
+              "start_s": 8.0,
+              "side": 1,
+              "lag_ms": 20,
+              "correlation": 0.9948106350415,
+              "boundary": false,
+              "zero_lag_correlation": 0.9923255086611353
+            },
+            {
+              "start_s": 10.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9935968697022293,
+              "boundary": false,
+              "zero_lag_correlation": 0.9925856370447145
+            },
+            {
+              "start_s": 10.0,
+              "side": 1,
+              "lag_ms": 20,
+              "correlation": 0.9942005247821155,
+              "boundary": false,
+              "zero_lag_correlation": 0.9922509543852633
+            },
+            {
+              "start_s": 12.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9857797896360986,
+              "boundary": false,
+              "zero_lag_correlation": 0.9845733521658556
+            },
+            {
+              "start_s": 12.0,
+              "side": 1,
+              "lag_ms": 20,
+              "correlation": 0.9958715534506207,
+              "boundary": false,
+              "zero_lag_correlation": 0.9951567852083125
+            },
+            {
+              "start_s": 14.0,
+              "side": 0,
+              "lag_ms": 30,
+              "correlation": 0.9829573580428229,
+              "boundary": false,
+              "zero_lag_correlation": 0.9769628142306265
+            },
+            {
+              "start_s": 14.0,
+              "side": 1,
+              "lag_ms": 20,
+              "correlation": 0.9951404556843159,
+              "boundary": false,
+              "zero_lag_correlation": 0.9914327277074643
+            },
+            {
+              "start_s": 16.0,
+              "side": 0,
+              "lag_ms": 30,
+              "correlation": 0.9811962651642017,
+              "boundary": false,
+              "zero_lag_correlation": 0.9730134212434317
+            },
+            {
+              "start_s": 16.0,
+              "side": 1,
+              "lag_ms": 20,
+              "correlation": 0.9942813286125519,
+              "boundary": false,
+              "zero_lag_correlation": 0.9906178597601006
+            },
+            {
+              "start_s": 18.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9702378914224351,
+              "boundary": false,
+              "zero_lag_correlation": 0.9647519204998455
+            },
+            {
+              "start_s": 18.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9958859480374318,
+              "boundary": false,
+              "zero_lag_correlation": 0.9889482180003449
+            },
+            {
+              "start_s": 20.0,
+              "side": 0,
+              "lag_ms": -80,
+              "correlation": 0.8969672757737822,
+              "boundary": false,
+              "zero_lag_correlation": 0.8429120904814291
+            },
+            {
+              "start_s": 20.0,
+              "side": 1,
+              "lag_ms": 10,
+              "correlation": 0.9607003740336,
+              "boundary": false,
+              "zero_lag_correlation": 0.9591669329469061
+            },
+            {
+              "start_s": 22.0,
+              "side": 0,
+              "lag_ms": 70,
+              "correlation": 0.9573670638351429,
+              "boundary": false,
+              "zero_lag_correlation": 0.9161219895036805
+            },
+            {
+              "start_s": 22.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9957962922837739,
+              "boundary": false,
+              "zero_lag_correlation": 0.9905378028467186
+            },
+            {
+              "start_s": 24.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.9954907552607998,
+              "boundary": false,
+              "zero_lag_correlation": 0.9928001818996345
+            },
+            {
+              "start_s": 24.0,
+              "side": 1,
+              "lag_ms": -30,
+              "correlation": 0.9834792319913859,
+              "boundary": false,
+              "zero_lag_correlation": 0.9773058569347939
+            },
+            {
+              "start_s": 26.0,
+              "side": 0,
+              "lag_ms": -30,
+              "correlation": 0.9866946124414449,
+              "boundary": false,
+              "zero_lag_correlation": 0.9764585955803663
+            },
+            {
+              "start_s": 26.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.9886713680649859,
+              "boundary": false,
+              "zero_lag_correlation": 0.9843306981528904
+            },
+            {
+              "start_s": 28.0,
+              "side": 0,
+              "lag_ms": -40,
+              "correlation": 0.9588945910626795,
+              "boundary": false,
+              "zero_lag_correlation": 0.9495622860505816
+            },
+            {
+              "start_s": 28.0,
+              "side": 1,
+              "lag_ms": -40,
+              "correlation": 0.988536400988008,
+              "boundary": false,
+              "zero_lag_correlation": 0.9745333821536949
+            }
+          ]
+        },
+        {
+          "policy": "500",
+          "variant": "rotate12",
+          "lag_median_ms": 5.0,
+          "lag_q25_ms": -12.5,
+          "lag_q75_ms": 30.0,
+          "correlation_median": 0.9770354212199983,
+          "windows_selected": 28,
+          "windows_used": 28,
+          "boundary_windows": 0,
+          "slip_forceweighted_m_s": 0.03366132823420796,
+          "xy_p95_m": 1.0451546430675336,
+          "fell": false,
+          "measurements": [
+            {
+              "start_s": 2.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9854465253585638,
+              "boundary": false,
+              "zero_lag_correlation": 0.9849681538934447
+            },
+            {
+              "start_s": 2.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.9898155678334548,
+              "boundary": false,
+              "zero_lag_correlation": 0.9871686036068882
+            },
+            {
+              "start_s": 4.0,
+              "side": 0,
+              "lag_ms": 0,
+              "correlation": 0.9575197859741252,
+              "boundary": false,
+              "zero_lag_correlation": 0.9575197859741252
+            },
+            {
+              "start_s": 4.0,
+              "side": 1,
+              "lag_ms": 80,
+              "correlation": 0.8968400754713497,
+              "boundary": false,
+              "zero_lag_correlation": 0.8059573375085997
+            },
+            {
+              "start_s": 6.0,
+              "side": 0,
+              "lag_ms": 240,
+              "correlation": 0.8509139625455671,
+              "boundary": false,
+              "zero_lag_correlation": 0.4860467567323519
+            },
+            {
+              "start_s": 6.0,
+              "side": 1,
+              "lag_ms": 110,
+              "correlation": 0.874995798755506,
+              "boundary": false,
+              "zero_lag_correlation": 0.8028754577144804
+            },
+            {
+              "start_s": 8.0,
+              "side": 0,
+              "lag_ms": 10,
+              "correlation": 0.9888214745403693,
+              "boundary": false,
+              "zero_lag_correlation": 0.9872263346529071
+            },
+            {
+              "start_s": 8.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9756461221565558,
+              "boundary": false,
+              "zero_lag_correlation": 0.9664896452540683
+            },
+            {
+              "start_s": 10.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9719372876422452,
+              "boundary": false,
+              "zero_lag_correlation": 0.9715496346976685
+            },
+            {
+              "start_s": 10.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.9818009343226861,
+              "boundary": false,
+              "zero_lag_correlation": 0.9792512684438872
+            },
+            {
+              "start_s": 12.0,
+              "side": 0,
+              "lag_ms": 30,
+              "correlation": 0.9796593035498583,
+              "boundary": false,
+              "zero_lag_correlation": 0.9778948375786971
+            },
+            {
+              "start_s": 12.0,
+              "side": 1,
+              "lag_ms": 20,
+              "correlation": 0.9673243517401896,
+              "boundary": false,
+              "zero_lag_correlation": 0.9666134254402831
+            },
+            {
+              "start_s": 14.0,
+              "side": 0,
+              "lag_ms": 0,
+              "correlation": 0.989401713995681,
+              "boundary": false,
+              "zero_lag_correlation": 0.989401713995681
+            },
+            {
+              "start_s": 14.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9764877040338462,
+              "boundary": false,
+              "zero_lag_correlation": 0.9706531470247283
+            },
+            {
+              "start_s": 16.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9524704058321817,
+              "boundary": false,
+              "zero_lag_correlation": 0.9521750846332359
+            },
+            {
+              "start_s": 16.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.9805927591171297,
+              "boundary": false,
+              "zero_lag_correlation": 0.9805927591171297
+            },
+            {
+              "start_s": 18.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9680613504131249,
+              "boundary": false,
+              "zero_lag_correlation": 0.9651077369207163
+            },
+            {
+              "start_s": 18.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9944344415394972,
+              "boundary": false,
+              "zero_lag_correlation": 0.9835273227463921
+            },
+            {
+              "start_s": 20.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9647295311690709,
+              "boundary": false,
+              "zero_lag_correlation": 0.9608860557559197
+            },
+            {
+              "start_s": 20.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9653742598858986,
+              "boundary": false,
+              "zero_lag_correlation": 0.9537492865017424
+            },
+            {
+              "start_s": 22.0,
+              "side": 0,
+              "lag_ms": 30,
+              "correlation": 0.9883482038846404,
+              "boundary": false,
+              "zero_lag_correlation": 0.9825728139419959
+            },
+            {
+              "start_s": 22.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.9860523984365988,
+              "boundary": false,
+              "zero_lag_correlation": 0.9854119016454866
+            },
+            {
+              "start_s": 24.0,
+              "side": 0,
+              "lag_ms": -40,
+              "correlation": 0.986037421573624,
+              "boundary": false,
+              "zero_lag_correlation": 0.9760460746290485
+            },
+            {
+              "start_s": 24.0,
+              "side": 1,
+              "lag_ms": -30,
+              "correlation": 0.9839800036644069,
+              "boundary": false,
+              "zero_lag_correlation": 0.9789152264490463
+            },
+            {
+              "start_s": 26.0,
+              "side": 0,
+              "lag_ms": -40,
+              "correlation": 0.98340086046116,
+              "boundary": false,
+              "zero_lag_correlation": 0.9685708068137838
+            },
+            {
+              "start_s": 26.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.9712769417944236,
+              "boundary": false,
+              "zero_lag_correlation": 0.9659907449712631
+            },
+            {
+              "start_s": 28.0,
+              "side": 0,
+              "lag_ms": 30,
+              "correlation": 0.9351254026005004,
+              "boundary": false,
+              "zero_lag_correlation": 0.9325823188583167
+            },
+            {
+              "start_s": 28.0,
+              "side": 1,
+              "lag_ms": -40,
+              "correlation": 0.9775831384061503,
+              "boundary": false,
+              "zero_lag_correlation": 0.9670750581417858
+            }
+          ]
+        },
+        {
+          "policy": "500_original",
+          "variant": "baseline",
+          "lag_median_ms": 10.0,
+          "lag_q25_ms": -12.5,
+          "lag_q75_ms": 32.5,
+          "correlation_median": 0.9764893262039691,
+          "windows_selected": 28,
+          "windows_used": 28,
+          "boundary_windows": 0,
+          "slip_forceweighted_m_s": 0.047668239027200576,
+          "xy_p95_m": 1.0781780878488945,
+          "fell": false,
+          "measurements": [
+            {
+              "start_s": 2.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9854896004564866,
+              "boundary": false,
+              "zero_lag_correlation": 0.9840492943128862
+            },
+            {
+              "start_s": 2.0,
+              "side": 1,
+              "lag_ms": -60,
+              "correlation": 0.9826729070838209,
+              "boundary": false,
+              "zero_lag_correlation": 0.9572982693258613
+            },
+            {
+              "start_s": 4.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.8897967639860368,
+              "boundary": false,
+              "zero_lag_correlation": 0.8854812525212629
+            },
+            {
+              "start_s": 4.0,
+              "side": 1,
+              "lag_ms": 70,
+              "correlation": 0.8297173995173075,
+              "boundary": false,
+              "zero_lag_correlation": 0.7837769636563756
+            },
+            {
+              "start_s": 6.0,
+              "side": 0,
+              "lag_ms": 200,
+              "correlation": 0.8700924603349809,
+              "boundary": false,
+              "zero_lag_correlation": 0.7219347756052292
+            },
+            {
+              "start_s": 6.0,
+              "side": 1,
+              "lag_ms": 80,
+              "correlation": 0.9576051385447816,
+              "boundary": false,
+              "zero_lag_correlation": 0.9357320359756532
+            },
+            {
+              "start_s": 8.0,
+              "side": 0,
+              "lag_ms": 40,
+              "correlation": 0.997098072998473,
+              "boundary": false,
+              "zero_lag_correlation": 0.9837627662139808
+            },
+            {
+              "start_s": 8.0,
+              "side": 1,
+              "lag_ms": 90,
+              "correlation": 0.9016811449114118,
+              "boundary": false,
+              "zero_lag_correlation": 0.8185707779999127
+            },
+            {
+              "start_s": 10.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9764430809212211,
+              "boundary": false,
+              "zero_lag_correlation": 0.9743491188642571
+            },
+            {
+              "start_s": 10.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9716660703644725,
+              "boundary": false,
+              "zero_lag_correlation": 0.9655901145357656
+            },
+            {
+              "start_s": 12.0,
+              "side": 0,
+              "lag_ms": 170,
+              "correlation": 0.927213748244741,
+              "boundary": false,
+              "zero_lag_correlation": 0.8220703786705201
+            },
+            {
+              "start_s": 12.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.976535571486717,
+              "boundary": false,
+              "zero_lag_correlation": 0.976535571486717
+            },
+            {
+              "start_s": 14.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9813008951616002,
+              "boundary": false,
+              "zero_lag_correlation": 0.980772935067884
+            },
+            {
+              "start_s": 14.0,
+              "side": 1,
+              "lag_ms": 20,
+              "correlation": 0.9556828051385006,
+              "boundary": false,
+              "zero_lag_correlation": 0.9532939360714985
+            },
+            {
+              "start_s": 16.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9891687613064378,
+              "boundary": false,
+              "zero_lag_correlation": 0.988110984735599
+            },
+            {
+              "start_s": 16.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.9782917220377678,
+              "boundary": false,
+              "zero_lag_correlation": 0.9760397098440834
+            },
+            {
+              "start_s": 18.0,
+              "side": 0,
+              "lag_ms": 0,
+              "correlation": 0.9589495449526855,
+              "boundary": false,
+              "zero_lag_correlation": 0.9589495449526855
+            },
+            {
+              "start_s": 18.0,
+              "side": 1,
+              "lag_ms": 10,
+              "correlation": 0.9904434185178959,
+              "boundary": false,
+              "zero_lag_correlation": 0.989724285097878
+            },
+            {
+              "start_s": 20.0,
+              "side": 0,
+              "lag_ms": -30,
+              "correlation": 0.9015396923419179,
+              "boundary": false,
+              "zero_lag_correlation": 0.8951038746852953
+            },
+            {
+              "start_s": 20.0,
+              "side": 1,
+              "lag_ms": 10,
+              "correlation": 0.9529744630138264,
+              "boundary": false,
+              "zero_lag_correlation": 0.9518951866040695
+            },
+            {
+              "start_s": 22.0,
+              "side": 0,
+              "lag_ms": 60,
+              "correlation": 0.9879575685176744,
+              "boundary": false,
+              "zero_lag_correlation": 0.9632170540554709
+            },
+            {
+              "start_s": 22.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9839024210384604,
+              "boundary": false,
+              "zero_lag_correlation": 0.97648425275373
+            },
+            {
+              "start_s": 24.0,
+              "side": 0,
+              "lag_ms": 10,
+              "correlation": 0.9730855598866182,
+              "boundary": false,
+              "zero_lag_correlation": 0.9729409331037281
+            },
+            {
+              "start_s": 24.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.9829206976819326,
+              "boundary": false,
+              "zero_lag_correlation": 0.9797294751671602
+            },
+            {
+              "start_s": 26.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9810303182220099,
+              "boundary": false,
+              "zero_lag_correlation": 0.9797542715883971
+            },
+            {
+              "start_s": 26.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.9508378739948973,
+              "boundary": false,
+              "zero_lag_correlation": 0.9458411885484449
+            },
+            {
+              "start_s": 28.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9782001046996927,
+              "boundary": false,
+              "zero_lag_correlation": 0.9753149106284675
+            },
+            {
+              "start_s": 28.0,
+              "side": 1,
+              "lag_ms": -40,
+              "correlation": 0.9771672858102578,
+              "boundary": false,
+              "zero_lag_correlation": 0.9657864366769782
+            }
+          ]
+        },
+        {
+          "policy": "500_original",
+          "variant": "post12",
+          "lag_median_ms": 10.0,
+          "lag_q25_ms": -10.0,
+          "lag_q75_ms": 30.0,
+          "correlation_median": 0.9762716468828756,
+          "windows_selected": 28,
+          "windows_used": 28,
+          "boundary_windows": 0,
+          "slip_forceweighted_m_s": 0.035541104878896265,
+          "xy_p95_m": 0.8310723506583383,
+          "fell": false,
+          "measurements": [
+            {
+              "start_s": 2.0,
+              "side": 0,
+              "lag_ms": 0,
+              "correlation": 0.9904588463717287,
+              "boundary": false,
+              "zero_lag_correlation": 0.9904588463717287
+            },
+            {
+              "start_s": 2.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.9915684653569453,
+              "boundary": false,
+              "zero_lag_correlation": 0.9885217929064057
+            },
+            {
+              "start_s": 4.0,
+              "side": 0,
+              "lag_ms": 10,
+              "correlation": 0.9480265470899847,
+              "boundary": false,
+              "zero_lag_correlation": 0.9480235085237677
+            },
+            {
+              "start_s": 4.0,
+              "side": 1,
+              "lag_ms": 20,
+              "correlation": 0.6666863874289279,
+              "boundary": false,
+              "zero_lag_correlation": 0.663111300398542
+            },
+            {
+              "start_s": 6.0,
+              "side": 0,
+              "lag_ms": 200,
+              "correlation": 0.934418183276559,
+              "boundary": false,
+              "zero_lag_correlation": 0.66677994819314
+            },
+            {
+              "start_s": 6.0,
+              "side": 1,
+              "lag_ms": 90,
+              "correlation": 0.9190179953559074,
+              "boundary": false,
+              "zero_lag_correlation": 0.8683045124556574
+            },
+            {
+              "start_s": 8.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9932194257001611,
+              "boundary": false,
+              "zero_lag_correlation": 0.9898616500432034
+            },
+            {
+              "start_s": 8.0,
+              "side": 1,
+              "lag_ms": 50,
+              "correlation": 0.9568765293235755,
+              "boundary": false,
+              "zero_lag_correlation": 0.9280630916472032
+            },
+            {
+              "start_s": 10.0,
+              "side": 0,
+              "lag_ms": -30,
+              "correlation": 0.9727356711973401,
+              "boundary": false,
+              "zero_lag_correlation": 0.9683552838029984
+            },
+            {
+              "start_s": 10.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.9808899184413791,
+              "boundary": false,
+              "zero_lag_correlation": 0.9803510683586413
+            },
+            {
+              "start_s": 12.0,
+              "side": 0,
+              "lag_ms": 30,
+              "correlation": 0.9786492709606213,
+              "boundary": false,
+              "zero_lag_correlation": 0.9759698388615677
+            },
+            {
+              "start_s": 12.0,
+              "side": 1,
+              "lag_ms": 80,
+              "correlation": 0.9440192719074207,
+              "boundary": false,
+              "zero_lag_correlation": 0.9376136887176262
+            },
+            {
+              "start_s": 14.0,
+              "side": 0,
+              "lag_ms": 10,
+              "correlation": 0.9767081741343452,
+              "boundary": false,
+              "zero_lag_correlation": 0.9764684651534973
+            },
+            {
+              "start_s": 14.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9805223807331578,
+              "boundary": false,
+              "zero_lag_correlation": 0.9749984479147648
+            },
+            {
+              "start_s": 16.0,
+              "side": 0,
+              "lag_ms": 0,
+              "correlation": 0.9604531418335103,
+              "boundary": false,
+              "zero_lag_correlation": 0.9604531418335103
+            },
+            {
+              "start_s": 16.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.9884941598417029,
+              "boundary": false,
+              "zero_lag_correlation": 0.9884941598417029
+            },
+            {
+              "start_s": 18.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9793297761481956,
+              "boundary": false,
+              "zero_lag_correlation": 0.9748152840451605
+            },
+            {
+              "start_s": 18.0,
+              "side": 1,
+              "lag_ms": 40,
+              "correlation": 0.9932478626430713,
+              "boundary": false,
+              "zero_lag_correlation": 0.98085941311606
+            },
+            {
+              "start_s": 20.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.9479109588327812,
+              "boundary": false,
+              "zero_lag_correlation": 0.9462032504788536
+            },
+            {
+              "start_s": 20.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9652162640646835,
+              "boundary": false,
+              "zero_lag_correlation": 0.947717865147737
+            },
+            {
+              "start_s": 22.0,
+              "side": 0,
+              "lag_ms": 80,
+              "correlation": 0.9704885544671715,
+              "boundary": false,
+              "zero_lag_correlation": 0.9258212397722041
+            },
+            {
+              "start_s": 22.0,
+              "side": 1,
+              "lag_ms": 20,
+              "correlation": 0.9758351196314059,
+              "boundary": false,
+              "zero_lag_correlation": 0.9729212878581306
+            },
+            {
+              "start_s": 24.0,
+              "side": 0,
+              "lag_ms": -50,
+              "correlation": 0.9938597004265859,
+              "boundary": false,
+              "zero_lag_correlation": 0.9810740968975831
+            },
+            {
+              "start_s": 24.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.9830021481881208,
+              "boundary": false,
+              "zero_lag_correlation": 0.9816462472453323
+            },
+            {
+              "start_s": 26.0,
+              "side": 0,
+              "lag_ms": -30,
+              "correlation": 0.9893888258879815,
+              "boundary": false,
+              "zero_lag_correlation": 0.981125646738592
+            },
+            {
+              "start_s": 26.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.9801913706041169,
+              "boundary": false,
+              "zero_lag_correlation": 0.9801913706041169
+            },
+            {
+              "start_s": 28.0,
+              "side": 0,
+              "lag_ms": -50,
+              "correlation": 0.9451309922644797,
+              "boundary": false,
+              "zero_lag_correlation": 0.9346219078943303
+            },
+            {
+              "start_s": 28.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.9484174005897701,
+              "boundary": false,
+              "zero_lag_correlation": 0.9484174005897701
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "episode": "episode-1791652646384286",
+      "rows": [
+        {
+          "policy": "500",
+          "variant": "baseline",
+          "lag_median_ms": 50.0,
+          "lag_q25_ms": -7.5,
+          "lag_q75_ms": 80.0,
+          "correlation_median": 0.967291887337757,
+          "windows_selected": 22,
+          "windows_used": 22,
+          "boundary_windows": 0,
+          "slip_forceweighted_m_s": 0.04724934128061191,
+          "xy_p95_m": 0.31022852478106483,
+          "fell": false,
+          "measurements": [
+            {
+              "start_s": 2.0,
+              "side": 0,
+              "lag_ms": 0,
+              "correlation": 0.9841367482264329,
+              "boundary": false,
+              "zero_lag_correlation": 0.9841367482264329
+            },
+            {
+              "start_s": 2.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.984805619753211,
+              "boundary": false,
+              "zero_lag_correlation": 0.984805619753211
+            },
+            {
+              "start_s": 4.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9843800880145114,
+              "boundary": false,
+              "zero_lag_correlation": 0.9840633375092274
+            },
+            {
+              "start_s": 4.0,
+              "side": 1,
+              "lag_ms": 50,
+              "correlation": 0.9785730899171495,
+              "boundary": false,
+              "zero_lag_correlation": 0.9693979594809278
+            },
+            {
+              "start_s": 6.0,
+              "side": 0,
+              "lag_ms": 70,
+              "correlation": 0.9435974738792169,
+              "boundary": false,
+              "zero_lag_correlation": 0.924787788516134
+            },
+            {
+              "start_s": 6.0,
+              "side": 1,
+              "lag_ms": 80,
+              "correlation": 0.8971038195075572,
+              "boundary": false,
+              "zero_lag_correlation": 0.8307641636493757
+            },
+            {
+              "start_s": 8.0,
+              "side": 0,
+              "lag_ms": 110,
+              "correlation": 0.9314146241054019,
+              "boundary": false,
+              "zero_lag_correlation": 0.8635459630663442
+            },
+            {
+              "start_s": 8.0,
+              "side": 1,
+              "lag_ms": 70,
+              "correlation": 0.7933772842061727,
+              "boundary": false,
+              "zero_lag_correlation": 0.7608950791752953
+            },
+            {
+              "start_s": 10.0,
+              "side": 0,
+              "lag_ms": 140,
+              "correlation": 0.9756849025246772,
+              "boundary": false,
+              "zero_lag_correlation": 0.8973216721226889
+            },
+            {
+              "start_s": 10.0,
+              "side": 1,
+              "lag_ms": 270,
+              "correlation": 0.9524649221062558,
+              "boundary": false,
+              "zero_lag_correlation": 0.9116752030343827
+            },
+            {
+              "start_s": 12.0,
+              "side": 0,
+              "lag_ms": 140,
+              "correlation": 0.9784356387369264,
+              "boundary": false,
+              "zero_lag_correlation": 0.9335590224752346
+            },
+            {
+              "start_s": 12.0,
+              "side": 1,
+              "lag_ms": 130,
+              "correlation": 0.98272442493677,
+              "boundary": false,
+              "zero_lag_correlation": 0.9773994462035492
+            },
+            {
+              "start_s": 14.0,
+              "side": 0,
+              "lag_ms": 30,
+              "correlation": 0.9275841263511975,
+              "boundary": false,
+              "zero_lag_correlation": 0.9216171381688205
+            },
+            {
+              "start_s": 14.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.9823832576672616,
+              "boundary": false,
+              "zero_lag_correlation": 0.9818875255906709
+            },
+            {
+              "start_s": 16.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.9659980787100048,
+              "boundary": false,
+              "zero_lag_correlation": 0.9641332351580808
+            },
+            {
+              "start_s": 16.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.974926186223698,
+              "boundary": false,
+              "zero_lag_correlation": 0.9742918503904533
+            },
+            {
+              "start_s": 18.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9629725147404494,
+              "boundary": false,
+              "zero_lag_correlation": 0.9625904214777089
+            },
+            {
+              "start_s": 18.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.9685856959655093,
+              "boundary": false,
+              "zero_lag_correlation": 0.9676154208746413
+            },
+            {
+              "start_s": 20.0,
+              "side": 0,
+              "lag_ms": 50,
+              "correlation": 0.9765709189686818,
+              "boundary": false,
+              "zero_lag_correlation": 0.9570289654126217
+            },
+            {
+              "start_s": 20.0,
+              "side": 1,
+              "lag_ms": 80,
+              "correlation": 0.9107808302337215,
+              "boundary": false,
+              "zero_lag_correlation": 0.854564982952832
+            },
+            {
+              "start_s": 22.0,
+              "side": 0,
+              "lag_ms": 30,
+              "correlation": 0.9410914127449396,
+              "boundary": false,
+              "zero_lag_correlation": 0.9347247427145313
+            },
+            {
+              "start_s": 22.0,
+              "side": 1,
+              "lag_ms": 60,
+              "correlation": 0.9322730442768001,
+              "boundary": false,
+              "zero_lag_correlation": 0.8965002707957461
+            }
+          ]
+        },
+        {
+          "policy": "500",
+          "variant": "ratio50",
+          "lag_median_ms": 35.0,
+          "lag_q25_ms": -10.0,
+          "lag_q75_ms": 60.0,
+          "correlation_median": 0.9717803228582715,
+          "windows_selected": 22,
+          "windows_used": 22,
+          "boundary_windows": 0,
+          "slip_forceweighted_m_s": 0.03402432250879604,
+          "xy_p95_m": 0.3949317146674114,
+          "fell": false,
+          "measurements": [
+            {
+              "start_s": 2.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9837447277679072,
+              "boundary": false,
+              "zero_lag_correlation": 0.983730999502068
+            },
+            {
+              "start_s": 2.0,
+              "side": 1,
+              "lag_ms": 10,
+              "correlation": 0.9880560303875797,
+              "boundary": false,
+              "zero_lag_correlation": 0.9880388306523219
+            },
+            {
+              "start_s": 4.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.9502173977438619,
+              "boundary": false,
+              "zero_lag_correlation": 0.9464533358130626
+            },
+            {
+              "start_s": 4.0,
+              "side": 1,
+              "lag_ms": 40,
+              "correlation": 0.9877941155724116,
+              "boundary": false,
+              "zero_lag_correlation": 0.9835567450507114
+            },
+            {
+              "start_s": 6.0,
+              "side": 0,
+              "lag_ms": 80,
+              "correlation": 0.8978676612835815,
+              "boundary": false,
+              "zero_lag_correlation": 0.8700129271115892
+            },
+            {
+              "start_s": 6.0,
+              "side": 1,
+              "lag_ms": 50,
+              "correlation": 0.9443687365059215,
+              "boundary": false,
+              "zero_lag_correlation": 0.9200065894362528
+            },
+            {
+              "start_s": 8.0,
+              "side": 0,
+              "lag_ms": 110,
+              "correlation": 0.9315345448395771,
+              "boundary": false,
+              "zero_lag_correlation": 0.8635026250997948
+            },
+            {
+              "start_s": 8.0,
+              "side": 1,
+              "lag_ms": 60,
+              "correlation": 0.7806951811277442,
+              "boundary": false,
+              "zero_lag_correlation": 0.7613908538567212
+            },
+            {
+              "start_s": 10.0,
+              "side": 0,
+              "lag_ms": 110,
+              "correlation": 0.9737840276811853,
+              "boundary": false,
+              "zero_lag_correlation": 0.9347409118858608
+            },
+            {
+              "start_s": 10.0,
+              "side": 1,
+              "lag_ms": 290,
+              "correlation": 0.9268069693416374,
+              "boundary": false,
+              "zero_lag_correlation": 0.8617771433676658
+            },
+            {
+              "start_s": 12.0,
+              "side": 0,
+              "lag_ms": 140,
+              "correlation": 0.9757729429867117,
+              "boundary": false,
+              "zero_lag_correlation": 0.9323992216585897
+            },
+            {
+              "start_s": 12.0,
+              "side": 1,
+              "lag_ms": 40,
+              "correlation": 0.9862694139130448,
+              "boundary": false,
+              "zero_lag_correlation": 0.9859765719958674
+            },
+            {
+              "start_s": 14.0,
+              "side": 0,
+              "lag_ms": 40,
+              "correlation": 0.9309033073386239,
+              "boundary": false,
+              "zero_lag_correlation": 0.9216267728487548
+            },
+            {
+              "start_s": 14.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.9908375118956402,
+              "boundary": false,
+              "zero_lag_correlation": 0.9908375118956402
+            },
+            {
+              "start_s": 16.0,
+              "side": 0,
+              "lag_ms": -60,
+              "correlation": 0.9810293695203497,
+              "boundary": false,
+              "zero_lag_correlation": 0.9635338940368839
+            },
+            {
+              "start_s": 16.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.9768030415890497,
+              "boundary": false,
+              "zero_lag_correlation": 0.9760255986270413
+            },
+            {
+              "start_s": 18.0,
+              "side": 0,
+              "lag_ms": -40,
+              "correlation": 0.9697766180353576,
+              "boundary": false,
+              "zero_lag_correlation": 0.9661133523049675
+            },
+            {
+              "start_s": 18.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.9748623661700839,
+              "boundary": false,
+              "zero_lag_correlation": 0.9744642918864564
+            },
+            {
+              "start_s": 20.0,
+              "side": 0,
+              "lag_ms": 60,
+              "correlation": 0.9798765512169008,
+              "boundary": false,
+              "zero_lag_correlation": 0.9514352247640078
+            },
+            {
+              "start_s": 20.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9382756008557338,
+              "boundary": false,
+              "zero_lag_correlation": 0.9289099185741181
+            },
+            {
+              "start_s": 22.0,
+              "side": 0,
+              "lag_ms": -50,
+              "correlation": 0.9690480343821964,
+              "boundary": false,
+              "zero_lag_correlation": 0.9619229338523051
+            },
+            {
+              "start_s": 22.0,
+              "side": 1,
+              "lag_ms": 10,
+              "correlation": 0.9403575268348715,
+              "boundary": false,
+              "zero_lag_correlation": 0.9394118086987175
+            }
+          ]
+        },
+        {
+          "policy": "500",
+          "variant": "post12",
+          "lag_median_ms": 15.0,
+          "lag_q25_ms": 0.0,
+          "lag_q75_ms": 80.0,
+          "correlation_median": 0.9789689892798081,
+          "windows_selected": 22,
+          "windows_used": 22,
+          "boundary_windows": 0,
+          "slip_forceweighted_m_s": 0.03043390220000556,
+          "xy_p95_m": 0.40571598395717307,
+          "fell": false,
+          "measurements": [
+            {
+              "start_s": 2.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9843982160414352,
+              "boundary": false,
+              "zero_lag_correlation": 0.9820318596628739
+            },
+            {
+              "start_s": 2.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.9935399878390538,
+              "boundary": false,
+              "zero_lag_correlation": 0.992106255142056
+            },
+            {
+              "start_s": 4.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9792531085451558,
+              "boundary": false,
+              "zero_lag_correlation": 0.9781072787056131
+            },
+            {
+              "start_s": 4.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9860744204083824,
+              "boundary": false,
+              "zero_lag_correlation": 0.9833234704547136
+            },
+            {
+              "start_s": 6.0,
+              "side": 0,
+              "lag_ms": 80,
+              "correlation": 0.8391987570495354,
+              "boundary": false,
+              "zero_lag_correlation": 0.8179148239385791
+            },
+            {
+              "start_s": 6.0,
+              "side": 1,
+              "lag_ms": 80,
+              "correlation": 0.9383462077672745,
+              "boundary": false,
+              "zero_lag_correlation": 0.8902767213237348
+            },
+            {
+              "start_s": 8.0,
+              "side": 0,
+              "lag_ms": 90,
+              "correlation": 0.9369279380705696,
+              "boundary": false,
+              "zero_lag_correlation": 0.8919327986641589
+            },
+            {
+              "start_s": 8.0,
+              "side": 1,
+              "lag_ms": 50,
+              "correlation": 0.7745388188218023,
+              "boundary": false,
+              "zero_lag_correlation": 0.7620262313202447
+            },
+            {
+              "start_s": 10.0,
+              "side": 0,
+              "lag_ms": 100,
+              "correlation": 0.9817448547100358,
+              "boundary": false,
+              "zero_lag_correlation": 0.9534578914548731
+            },
+            {
+              "start_s": 10.0,
+              "side": 1,
+              "lag_ms": 170,
+              "correlation": 0.9542578642849523,
+              "boundary": false,
+              "zero_lag_correlation": 0.931712374348091
+            },
+            {
+              "start_s": 12.0,
+              "side": 0,
+              "lag_ms": 120,
+              "correlation": 0.9786848700144605,
+              "boundary": false,
+              "zero_lag_correlation": 0.9379633420141835
+            },
+            {
+              "start_s": 12.0,
+              "side": 1,
+              "lag_ms": 80,
+              "correlation": 0.9808014338389911,
+              "boundary": false,
+              "zero_lag_correlation": 0.9794363984578276
+            },
+            {
+              "start_s": 14.0,
+              "side": 0,
+              "lag_ms": 10,
+              "correlation": 0.9574999910107137,
+              "boundary": false,
+              "zero_lag_correlation": 0.9567709075228275
+            },
+            {
+              "start_s": 14.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.9935101782749968,
+              "boundary": false,
+              "zero_lag_correlation": 0.9935101782749968
+            },
+            {
+              "start_s": 16.0,
+              "side": 0,
+              "lag_ms": -40,
+              "correlation": 0.9924437489674365,
+              "boundary": false,
+              "zero_lag_correlation": 0.9819929727698692
+            },
+            {
+              "start_s": 16.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.9796753432987384,
+              "boundary": false,
+              "zero_lag_correlation": 0.9796483660791172
+            },
+            {
+              "start_s": 18.0,
+              "side": 0,
+              "lag_ms": 0,
+              "correlation": 0.9583431035177414,
+              "boundary": false,
+              "zero_lag_correlation": 0.9583431035177414
+            },
+            {
+              "start_s": 18.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.9775871334104326,
+              "boundary": false,
+              "zero_lag_correlation": 0.9775871334104326
+            },
+            {
+              "start_s": 20.0,
+              "side": 0,
+              "lag_ms": 10,
+              "correlation": 0.9887423512311334,
+              "boundary": false,
+              "zero_lag_correlation": 0.9876064708482956
+            },
+            {
+              "start_s": 20.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9408916490600163,
+              "boundary": false,
+              "zero_lag_correlation": 0.9342022758006622
+            },
+            {
+              "start_s": 22.0,
+              "side": 0,
+              "lag_ms": -100,
+              "correlation": 0.9877471293198199,
+              "boundary": false,
+              "zero_lag_correlation": 0.9559607758479709
+            },
+            {
+              "start_s": 22.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.9187909719912114,
+              "boundary": false,
+              "zero_lag_correlation": 0.9187909719912114
+            }
+          ]
+        },
+        {
+          "policy": "1000",
+          "variant": "baseline",
+          "lag_median_ms": 35.0,
+          "lag_q25_ms": -20.0,
+          "lag_q75_ms": 80.0,
+          "correlation_median": 0.9746552148960277,
+          "windows_selected": 22,
+          "windows_used": 22,
+          "boundary_windows": 0,
+          "slip_forceweighted_m_s": 0.06259987299503542,
+          "xy_p95_m": 0.3927145308365858,
+          "fell": false,
+          "measurements": [
+            {
+              "start_s": 2.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.9735903960385206,
+              "boundary": false,
+              "zero_lag_correlation": 0.9705033863977359
+            },
+            {
+              "start_s": 2.0,
+              "side": 1,
+              "lag_ms": 10,
+              "correlation": 0.9795992365050721,
+              "boundary": false,
+              "zero_lag_correlation": 0.9785476388323994
+            },
+            {
+              "start_s": 4.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.9717813120547237,
+              "boundary": false,
+              "zero_lag_correlation": 0.9688091772838656
+            },
+            {
+              "start_s": 4.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.9708639436566772,
+              "boundary": false,
+              "zero_lag_correlation": 0.9708639436566772
+            },
+            {
+              "start_s": 6.0,
+              "side": 0,
+              "lag_ms": 50,
+              "correlation": 0.8756339644347992,
+              "boundary": false,
+              "zero_lag_correlation": 0.8635220144456975
+            },
+            {
+              "start_s": 6.0,
+              "side": 1,
+              "lag_ms": 50,
+              "correlation": 0.9543358698195996,
+              "boundary": false,
+              "zero_lag_correlation": 0.934347216142358
+            },
+            {
+              "start_s": 8.0,
+              "side": 0,
+              "lag_ms": 140,
+              "correlation": 0.9702736395350171,
+              "boundary": false,
+              "zero_lag_correlation": 0.847691046773844
+            },
+            {
+              "start_s": 8.0,
+              "side": 1,
+              "lag_ms": 80,
+              "correlation": 0.9486317640583777,
+              "boundary": false,
+              "zero_lag_correlation": 0.9019901704244426
+            },
+            {
+              "start_s": 10.0,
+              "side": 0,
+              "lag_ms": 110,
+              "correlation": 0.9821490017151683,
+              "boundary": false,
+              "zero_lag_correlation": 0.9331502011015362
+            },
+            {
+              "start_s": 10.0,
+              "side": 1,
+              "lag_ms": 120,
+              "correlation": 0.995134066296799,
+              "boundary": false,
+              "zero_lag_correlation": 0.9801937967716602
+            },
+            {
+              "start_s": 12.0,
+              "side": 0,
+              "lag_ms": 80,
+              "correlation": 0.9890090340422081,
+              "boundary": false,
+              "zero_lag_correlation": 0.9695493202452116
+            },
+            {
+              "start_s": 12.0,
+              "side": 1,
+              "lag_ms": 140,
+              "correlation": 0.9891043478042356,
+              "boundary": false,
+              "zero_lag_correlation": 0.9857108603197525
+            },
+            {
+              "start_s": 14.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9757200337535347,
+              "boundary": false,
+              "zero_lag_correlation": 0.9740084222794394
+            },
+            {
+              "start_s": 14.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.9917924574082206,
+              "boundary": false,
+              "zero_lag_correlation": 0.988981030540744
+            },
+            {
+              "start_s": 16.0,
+              "side": 0,
+              "lag_ms": -40,
+              "correlation": 0.9864504573138765,
+              "boundary": false,
+              "zero_lag_correlation": 0.9782460243103505
+            },
+            {
+              "start_s": 16.0,
+              "side": 1,
+              "lag_ms": -30,
+              "correlation": 0.9865515241175591,
+              "boundary": false,
+              "zero_lag_correlation": 0.9821242973134007
+            },
+            {
+              "start_s": 18.0,
+              "side": 0,
+              "lag_ms": -40,
+              "correlation": 0.9692300513925521,
+              "boundary": false,
+              "zero_lag_correlation": 0.9650902539508134
+            },
+            {
+              "start_s": 18.0,
+              "side": 1,
+              "lag_ms": -40,
+              "correlation": 0.9883879171805738,
+              "boundary": false,
+              "zero_lag_correlation": 0.9805153810959019
+            },
+            {
+              "start_s": 20.0,
+              "side": 0,
+              "lag_ms": 40,
+              "correlation": 0.9767763464563961,
+              "boundary": false,
+              "zero_lag_correlation": 0.9609425551745098
+            },
+            {
+              "start_s": 20.0,
+              "side": 1,
+              "lag_ms": 60,
+              "correlation": 0.9493741435208438,
+              "boundary": false,
+              "zero_lag_correlation": 0.9186390245493649
+            },
+            {
+              "start_s": 22.0,
+              "side": 0,
+              "lag_ms": 170,
+              "correlation": 0.970937289025403,
+              "boundary": false,
+              "zero_lag_correlation": 0.9223932981693562
+            },
+            {
+              "start_s": 22.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9277513011014477,
+              "boundary": false,
+              "zero_lag_correlation": 0.9227724444054384
+            }
+          ]
+        },
+        {
+          "policy": "1000",
+          "variant": "ratio50",
+          "lag_median_ms": 30.0,
+          "lag_q25_ms": -17.5,
+          "lag_q75_ms": 50.0,
+          "correlation_median": 0.9788507308086103,
+          "windows_selected": 22,
+          "windows_used": 22,
+          "boundary_windows": 0,
+          "slip_forceweighted_m_s": 0.042537750591100716,
+          "xy_p95_m": 0.3352800295923489,
+          "fell": false,
+          "measurements": [
+            {
+              "start_s": 2.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9795807765418301,
+              "boundary": false,
+              "zero_lag_correlation": 0.97921598521083
+            },
+            {
+              "start_s": 2.0,
+              "side": 1,
+              "lag_ms": -30,
+              "correlation": 0.9934050266888189,
+              "boundary": false,
+              "zero_lag_correlation": 0.9890359597920853
+            },
+            {
+              "start_s": 4.0,
+              "side": 0,
+              "lag_ms": -30,
+              "correlation": 0.9731039842297129,
+              "boundary": false,
+              "zero_lag_correlation": 0.9680661161168841
+            },
+            {
+              "start_s": 4.0,
+              "side": 1,
+              "lag_ms": -30,
+              "correlation": 0.9850674626489511,
+              "boundary": false,
+              "zero_lag_correlation": 0.9781549500079942
+            },
+            {
+              "start_s": 6.0,
+              "side": 0,
+              "lag_ms": 60,
+              "correlation": 0.9017607278387919,
+              "boundary": false,
+              "zero_lag_correlation": 0.8899808794555149
+            },
+            {
+              "start_s": 6.0,
+              "side": 1,
+              "lag_ms": 50,
+              "correlation": 0.9624086349504428,
+              "boundary": false,
+              "zero_lag_correlation": 0.942694787088878
+            },
+            {
+              "start_s": 8.0,
+              "side": 0,
+              "lag_ms": 120,
+              "correlation": 0.9652911844638471,
+              "boundary": false,
+              "zero_lag_correlation": 0.8969113325269138
+            },
+            {
+              "start_s": 8.0,
+              "side": 1,
+              "lag_ms": 120,
+              "correlation": 0.9600733742318547,
+              "boundary": false,
+              "zero_lag_correlation": 0.8801626703182127
+            },
+            {
+              "start_s": 10.0,
+              "side": 0,
+              "lag_ms": 50,
+              "correlation": 0.9905628451533554,
+              "boundary": false,
+              "zero_lag_correlation": 0.9809804391710728
+            },
+            {
+              "start_s": 10.0,
+              "side": 1,
+              "lag_ms": 60,
+              "correlation": 0.957977267167528,
+              "boundary": false,
+              "zero_lag_correlation": 0.954054822733886
+            },
+            {
+              "start_s": 12.0,
+              "side": 0,
+              "lag_ms": 30,
+              "correlation": 0.988216945195215,
+              "boundary": false,
+              "zero_lag_correlation": 0.9854461121491467
+            },
+            {
+              "start_s": 12.0,
+              "side": 1,
+              "lag_ms": 100,
+              "correlation": 0.9932325709532558,
+              "boundary": false,
+              "zero_lag_correlation": 0.9897244382184677
+            },
+            {
+              "start_s": 14.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9764997078309783,
+              "boundary": false,
+              "zero_lag_correlation": 0.9751037532497686
+            },
+            {
+              "start_s": 14.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.9964322755073429,
+              "boundary": false,
+              "zero_lag_correlation": 0.9954914441966012
+            },
+            {
+              "start_s": 16.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.9839295704462664,
+              "boundary": false,
+              "zero_lag_correlation": 0.9808678986760556
+            },
+            {
+              "start_s": 16.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.9929089798200119,
+              "boundary": false,
+              "zero_lag_correlation": 0.9895290603874094
+            },
+            {
+              "start_s": 18.0,
+              "side": 0,
+              "lag_ms": 10,
+              "correlation": 0.9726333543525756,
+              "boundary": false,
+              "zero_lag_correlation": 0.9725628293420364
+            },
+            {
+              "start_s": 18.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.9829553757264229,
+              "boundary": false,
+              "zero_lag_correlation": 0.9808057677280355
+            },
+            {
+              "start_s": 20.0,
+              "side": 0,
+              "lag_ms": 40,
+              "correlation": 0.9781206850753904,
+              "boundary": false,
+              "zero_lag_correlation": 0.9642057900008504
+            },
+            {
+              "start_s": 20.0,
+              "side": 1,
+              "lag_ms": 40,
+              "correlation": 0.9626571136238831,
+              "boundary": false,
+              "zero_lag_correlation": 0.9462445484746115
+            },
+            {
+              "start_s": 22.0,
+              "side": 0,
+              "lag_ms": 40,
+              "correlation": 0.9861200581884446,
+              "boundary": false,
+              "zero_lag_correlation": 0.9811599059468986
+            },
+            {
+              "start_s": 22.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9748026308269375,
+              "boundary": false,
+              "zero_lag_correlation": 0.9696625008669438
+            }
+          ]
+        },
+        {
+          "policy": "1000",
+          "variant": "post12",
+          "lag_median_ms": 5.0,
+          "lag_q25_ms": -20.0,
+          "lag_q75_ms": 30.0,
+          "correlation_median": 0.9858864080078056,
+          "windows_selected": 22,
+          "windows_used": 22,
+          "boundary_windows": 0,
+          "slip_forceweighted_m_s": 0.036123752472458574,
+          "xy_p95_m": 0.2932139442643929,
+          "fell": false,
+          "measurements": [
+            {
+              "start_s": 2.0,
+              "side": 0,
+              "lag_ms": 10,
+              "correlation": 0.9848518816097278,
+              "boundary": false,
+              "zero_lag_correlation": 0.9845956911916549
+            },
+            {
+              "start_s": 2.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.9960773378232509,
+              "boundary": false,
+              "zero_lag_correlation": 0.9944681280754901
+            },
+            {
+              "start_s": 4.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.9833853464783916,
+              "boundary": false,
+              "zero_lag_correlation": 0.981172995634415
+            },
+            {
+              "start_s": 4.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.9880629239063615,
+              "boundary": false,
+              "zero_lag_correlation": 0.9880629239063615
+            },
+            {
+              "start_s": 6.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.915168257597418,
+              "boundary": false,
+              "zero_lag_correlation": 0.9137511607165566
+            },
+            {
+              "start_s": 6.0,
+              "side": 1,
+              "lag_ms": 60,
+              "correlation": 0.9798547891624719,
+              "boundary": false,
+              "zero_lag_correlation": 0.9545911744513923
+            },
+            {
+              "start_s": 8.0,
+              "side": 0,
+              "lag_ms": 70,
+              "correlation": 0.9814953400848785,
+              "boundary": false,
+              "zero_lag_correlation": 0.9528042599187907
+            },
+            {
+              "start_s": 8.0,
+              "side": 1,
+              "lag_ms": 70,
+              "correlation": 0.9659584011881568,
+              "boundary": false,
+              "zero_lag_correlation": 0.9338784194665675
+            },
+            {
+              "start_s": 10.0,
+              "side": 0,
+              "lag_ms": 50,
+              "correlation": 0.983451029459992,
+              "boundary": false,
+              "zero_lag_correlation": 0.9763315287388742
+            },
+            {
+              "start_s": 10.0,
+              "side": 1,
+              "lag_ms": 80,
+              "correlation": 0.9852333358288218,
+              "boundary": false,
+              "zero_lag_correlation": 0.9833745520544886
+            },
+            {
+              "start_s": 12.0,
+              "side": 0,
+              "lag_ms": 10,
+              "correlation": 0.9931236660588993,
+              "boundary": false,
+              "zero_lag_correlation": 0.992738927864286
+            },
+            {
+              "start_s": 12.0,
+              "side": 1,
+              "lag_ms": -200,
+              "correlation": 0.9916325373878404,
+              "boundary": false,
+              "zero_lag_correlation": 0.9894897522775332
+            },
+            {
+              "start_s": 14.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9878648836245254,
+              "boundary": false,
+              "zero_lag_correlation": 0.9871376555392779
+            },
+            {
+              "start_s": 14.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.9968582462449476,
+              "boundary": false,
+              "zero_lag_correlation": 0.9968582462449476
+            },
+            {
+              "start_s": 16.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.9902744680459367,
+              "boundary": false,
+              "zero_lag_correlation": 0.9868154805759466
+            },
+            {
+              "start_s": 16.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.9889740110021028,
+              "boundary": false,
+              "zero_lag_correlation": 0.9860934904353097
+            },
+            {
+              "start_s": 18.0,
+              "side": 0,
+              "lag_ms": -30,
+              "correlation": 0.9763861264353341,
+              "boundary": false,
+              "zero_lag_correlation": 0.9749752038671687
+            },
+            {
+              "start_s": 18.0,
+              "side": 1,
+              "lag_ms": -40,
+              "correlation": 0.9865394801867895,
+              "boundary": false,
+              "zero_lag_correlation": 0.9785848466316459
+            },
+            {
+              "start_s": 20.0,
+              "side": 0,
+              "lag_ms": 30,
+              "correlation": 0.9891518315222827,
+              "boundary": false,
+              "zero_lag_correlation": 0.9825711820396443
+            },
+            {
+              "start_s": 20.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9672375740356887,
+              "boundary": false,
+              "zero_lag_correlation": 0.957225930826778
+            },
+            {
+              "start_s": 22.0,
+              "side": 0,
+              "lag_ms": 0,
+              "correlation": 0.9910770896193786,
+              "boundary": false,
+              "zero_lag_correlation": 0.9910770896193786
+            },
+            {
+              "start_s": 22.0,
+              "side": 1,
+              "lag_ms": 20,
+              "correlation": 0.9736788375085706,
+              "boundary": false,
+              "zero_lag_correlation": 0.9712027048620818
+            }
+          ]
+        },
+        {
+          "policy": "500",
+          "variant": "rotate12",
+          "lag_median_ms": 20.0,
+          "lag_q25_ms": -7.5,
+          "lag_q75_ms": 67.5,
+          "correlation_median": 0.9707825382304426,
+          "windows_selected": 22,
+          "windows_used": 22,
+          "boundary_windows": 0,
+          "slip_forceweighted_m_s": 0.03510236921499343,
+          "xy_p95_m": 0.4057273172062173,
+          "fell": false,
+          "measurements": [
+            {
+              "start_s": 2.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9839075800608498,
+              "boundary": false,
+              "zero_lag_correlation": 0.9818956216966603
+            },
+            {
+              "start_s": 2.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.9925103502544452,
+              "boundary": false,
+              "zero_lag_correlation": 0.9921558040276218
+            },
+            {
+              "start_s": 4.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.9511133777185432,
+              "boundary": false,
+              "zero_lag_correlation": 0.9485706709377675
+            },
+            {
+              "start_s": 4.0,
+              "side": 1,
+              "lag_ms": 40,
+              "correlation": 0.9899098605666752,
+              "boundary": false,
+              "zero_lag_correlation": 0.9798131099094799
+            },
+            {
+              "start_s": 6.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9428533733053839,
+              "boundary": false,
+              "zero_lag_correlation": 0.9399736268058966
+            },
+            {
+              "start_s": 6.0,
+              "side": 1,
+              "lag_ms": 60,
+              "correlation": 0.9321522091322241,
+              "boundary": false,
+              "zero_lag_correlation": 0.9039916351189033
+            },
+            {
+              "start_s": 8.0,
+              "side": 0,
+              "lag_ms": 100,
+              "correlation": 0.957931934496567,
+              "boundary": false,
+              "zero_lag_correlation": 0.9038706310898703
+            },
+            {
+              "start_s": 8.0,
+              "side": 1,
+              "lag_ms": 40,
+              "correlation": 0.9204738559755673,
+              "boundary": false,
+              "zero_lag_correlation": 0.9103051597627485
+            },
+            {
+              "start_s": 10.0,
+              "side": 0,
+              "lag_ms": 100,
+              "correlation": 0.9736776494670056,
+              "boundary": false,
+              "zero_lag_correlation": 0.9440418142703819
+            },
+            {
+              "start_s": 10.0,
+              "side": 1,
+              "lag_ms": 210,
+              "correlation": 0.9632024609692084,
+              "boundary": false,
+              "zero_lag_correlation": 0.9298771370378859
+            },
+            {
+              "start_s": 12.0,
+              "side": 0,
+              "lag_ms": 140,
+              "correlation": 0.9754540373545669,
+              "boundary": false,
+              "zero_lag_correlation": 0.9305691163923241
+            },
+            {
+              "start_s": 12.0,
+              "side": 1,
+              "lag_ms": 80,
+              "correlation": 0.9828481682291093,
+              "boundary": false,
+              "zero_lag_correlation": 0.9819606461796161
+            },
+            {
+              "start_s": 14.0,
+              "side": 0,
+              "lag_ms": 20,
+              "correlation": 0.9432160928704625,
+              "boundary": false,
+              "zero_lag_correlation": 0.9400902498738778
+            },
+            {
+              "start_s": 14.0,
+              "side": 1,
+              "lag_ms": 10,
+              "correlation": 0.9929024478223933,
+              "boundary": false,
+              "zero_lag_correlation": 0.9928087673665716
+            },
+            {
+              "start_s": 16.0,
+              "side": 0,
+              "lag_ms": -40,
+              "correlation": 0.9859777156157811,
+              "boundary": false,
+              "zero_lag_correlation": 0.974943155437905
+            },
+            {
+              "start_s": 16.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.9718292206957543,
+              "boundary": false,
+              "zero_lag_correlation": 0.9713847286388558
+            },
+            {
+              "start_s": 18.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.9483558182421291,
+              "boundary": false,
+              "zero_lag_correlation": 0.9474558599353875
+            },
+            {
+              "start_s": 18.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.9752349854376922,
+              "boundary": false,
+              "zero_lag_correlation": 0.9752349854376922
+            },
+            {
+              "start_s": 20.0,
+              "side": 0,
+              "lag_ms": 70,
+              "correlation": 0.9716404340002701,
+              "boundary": false,
+              "zero_lag_correlation": 0.9398449397780481
+            },
+            {
+              "start_s": 20.0,
+              "side": 1,
+              "lag_ms": 20,
+              "correlation": 0.9332836174964181,
+              "boundary": false,
+              "zero_lag_correlation": 0.9278149703400652
+            },
+            {
+              "start_s": 22.0,
+              "side": 0,
+              "lag_ms": -70,
+              "correlation": 0.969924642460615,
+              "boundary": false,
+              "zero_lag_correlation": 0.9564358713819519
+            },
+            {
+              "start_s": 22.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.9262512965576577,
+              "boundary": false,
+              "zero_lag_correlation": 0.9262512965576577
+            }
+          ]
+        },
+        {
+          "policy": "500_original",
+          "variant": "baseline",
+          "lag_median_ms": 50.0,
+          "lag_q25_ms": -7.5,
+          "lag_q75_ms": 80.0,
+          "correlation_median": 0.967291887337757,
+          "windows_selected": 22,
+          "windows_used": 22,
+          "boundary_windows": 0,
+          "slip_forceweighted_m_s": 0.04724934128061191,
+          "xy_p95_m": 0.31022852478106483,
+          "fell": false,
+          "measurements": [
+            {
+              "start_s": 2.0,
+              "side": 0,
+              "lag_ms": 0,
+              "correlation": 0.9841367482264329,
+              "boundary": false,
+              "zero_lag_correlation": 0.9841367482264329
+            },
+            {
+              "start_s": 2.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.984805619753211,
+              "boundary": false,
+              "zero_lag_correlation": 0.984805619753211
+            },
+            {
+              "start_s": 4.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9843800880145114,
+              "boundary": false,
+              "zero_lag_correlation": 0.9840633375092274
+            },
+            {
+              "start_s": 4.0,
+              "side": 1,
+              "lag_ms": 50,
+              "correlation": 0.9785730899171495,
+              "boundary": false,
+              "zero_lag_correlation": 0.9693979594809278
+            },
+            {
+              "start_s": 6.0,
+              "side": 0,
+              "lag_ms": 70,
+              "correlation": 0.9435974738792169,
+              "boundary": false,
+              "zero_lag_correlation": 0.924787788516134
+            },
+            {
+              "start_s": 6.0,
+              "side": 1,
+              "lag_ms": 80,
+              "correlation": 0.8971038195075572,
+              "boundary": false,
+              "zero_lag_correlation": 0.8307641636493757
+            },
+            {
+              "start_s": 8.0,
+              "side": 0,
+              "lag_ms": 110,
+              "correlation": 0.9314146241054019,
+              "boundary": false,
+              "zero_lag_correlation": 0.8635459630663442
+            },
+            {
+              "start_s": 8.0,
+              "side": 1,
+              "lag_ms": 70,
+              "correlation": 0.7933772842061727,
+              "boundary": false,
+              "zero_lag_correlation": 0.7608950791752953
+            },
+            {
+              "start_s": 10.0,
+              "side": 0,
+              "lag_ms": 140,
+              "correlation": 0.9756849025246772,
+              "boundary": false,
+              "zero_lag_correlation": 0.8973216721226889
+            },
+            {
+              "start_s": 10.0,
+              "side": 1,
+              "lag_ms": 270,
+              "correlation": 0.9524649221062558,
+              "boundary": false,
+              "zero_lag_correlation": 0.9116752030343827
+            },
+            {
+              "start_s": 12.0,
+              "side": 0,
+              "lag_ms": 140,
+              "correlation": 0.9784356387369264,
+              "boundary": false,
+              "zero_lag_correlation": 0.9335590224752346
+            },
+            {
+              "start_s": 12.0,
+              "side": 1,
+              "lag_ms": 130,
+              "correlation": 0.98272442493677,
+              "boundary": false,
+              "zero_lag_correlation": 0.9773994462035492
+            },
+            {
+              "start_s": 14.0,
+              "side": 0,
+              "lag_ms": 30,
+              "correlation": 0.9275841263511975,
+              "boundary": false,
+              "zero_lag_correlation": 0.9216171381688205
+            },
+            {
+              "start_s": 14.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.9823832576672616,
+              "boundary": false,
+              "zero_lag_correlation": 0.9818875255906709
+            },
+            {
+              "start_s": 16.0,
+              "side": 0,
+              "lag_ms": -20,
+              "correlation": 0.9659980787100048,
+              "boundary": false,
+              "zero_lag_correlation": 0.9641332351580808
+            },
+            {
+              "start_s": 16.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.974926186223698,
+              "boundary": false,
+              "zero_lag_correlation": 0.9742918503904533
+            },
+            {
+              "start_s": 18.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9629725147404494,
+              "boundary": false,
+              "zero_lag_correlation": 0.9625904214777089
+            },
+            {
+              "start_s": 18.0,
+              "side": 1,
+              "lag_ms": -10,
+              "correlation": 0.9685856959655093,
+              "boundary": false,
+              "zero_lag_correlation": 0.9676154208746413
+            },
+            {
+              "start_s": 20.0,
+              "side": 0,
+              "lag_ms": 50,
+              "correlation": 0.9765709189686818,
+              "boundary": false,
+              "zero_lag_correlation": 0.9570289654126217
+            },
+            {
+              "start_s": 20.0,
+              "side": 1,
+              "lag_ms": 80,
+              "correlation": 0.9107808302337215,
+              "boundary": false,
+              "zero_lag_correlation": 0.854564982952832
+            },
+            {
+              "start_s": 22.0,
+              "side": 0,
+              "lag_ms": 30,
+              "correlation": 0.9410914127449396,
+              "boundary": false,
+              "zero_lag_correlation": 0.9347247427145313
+            },
+            {
+              "start_s": 22.0,
+              "side": 1,
+              "lag_ms": 60,
+              "correlation": 0.9322730442768001,
+              "boundary": false,
+              "zero_lag_correlation": 0.8965002707957461
+            }
+          ]
+        },
+        {
+          "policy": "500_original",
+          "variant": "post12",
+          "lag_median_ms": 15.0,
+          "lag_q25_ms": -17.5,
+          "lag_q75_ms": 70.0,
+          "correlation_median": 0.9732082400801869,
+          "windows_selected": 22,
+          "windows_used": 22,
+          "boundary_windows": 0,
+          "slip_forceweighted_m_s": 0.03399951570214677,
+          "xy_p95_m": 0.38582717841548675,
+          "fell": false,
+          "measurements": [
+            {
+              "start_s": 2.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9882406657520788,
+              "boundary": false,
+              "zero_lag_correlation": 0.9876272179173802
+            },
+            {
+              "start_s": 2.0,
+              "side": 1,
+              "lag_ms": -40,
+              "correlation": 0.9952843012766617,
+              "boundary": false,
+              "zero_lag_correlation": 0.9874348240325287
+            },
+            {
+              "start_s": 4.0,
+              "side": 0,
+              "lag_ms": -40,
+              "correlation": 0.9715032985262047,
+              "boundary": false,
+              "zero_lag_correlation": 0.9581209762787254
+            },
+            {
+              "start_s": 4.0,
+              "side": 1,
+              "lag_ms": 10,
+              "correlation": 0.9769526600197812,
+              "boundary": false,
+              "zero_lag_correlation": 0.9762684085662283
+            },
+            {
+              "start_s": 6.0,
+              "side": 0,
+              "lag_ms": 40,
+              "correlation": 0.9198771965513947,
+              "boundary": false,
+              "zero_lag_correlation": 0.910462290066092
+            },
+            {
+              "start_s": 6.0,
+              "side": 1,
+              "lag_ms": 40,
+              "correlation": 0.9282799683837037,
+              "boundary": false,
+              "zero_lag_correlation": 0.9143690654712737
+            },
+            {
+              "start_s": 8.0,
+              "side": 0,
+              "lag_ms": 70,
+              "correlation": 0.9708454744064673,
+              "boundary": false,
+              "zero_lag_correlation": 0.9359913261779256
+            },
+            {
+              "start_s": 8.0,
+              "side": 1,
+              "lag_ms": 110,
+              "correlation": 0.8524745270684634,
+              "boundary": false,
+              "zero_lag_correlation": 0.8000733765164019
+            },
+            {
+              "start_s": 10.0,
+              "side": 0,
+              "lag_ms": 70,
+              "correlation": 0.9605967580519503,
+              "boundary": false,
+              "zero_lag_correlation": 0.9496909324054988
+            },
+            {
+              "start_s": 10.0,
+              "side": 1,
+              "lag_ms": 140,
+              "correlation": 0.9749131816341691,
+              "boundary": false,
+              "zero_lag_correlation": 0.9597426968202167
+            },
+            {
+              "start_s": 12.0,
+              "side": 0,
+              "lag_ms": 90,
+              "correlation": 0.9750226814707479,
+              "boundary": false,
+              "zero_lag_correlation": 0.9487084099834464
+            },
+            {
+              "start_s": 12.0,
+              "side": 1,
+              "lag_ms": 70,
+              "correlation": 0.9911727121449848,
+              "boundary": false,
+              "zero_lag_correlation": 0.9902355535316373
+            },
+            {
+              "start_s": 14.0,
+              "side": 0,
+              "lag_ms": -10,
+              "correlation": 0.9584246417578027,
+              "boundary": false,
+              "zero_lag_correlation": 0.9572676383532105
+            },
+            {
+              "start_s": 14.0,
+              "side": 1,
+              "lag_ms": 10,
+              "correlation": 0.9929483935217293,
+              "boundary": false,
+              "zero_lag_correlation": 0.9928748788317225
+            },
+            {
+              "start_s": 16.0,
+              "side": 0,
+              "lag_ms": -50,
+              "correlation": 0.981094021479762,
+              "boundary": false,
+              "zero_lag_correlation": 0.9666360970228958
+            },
+            {
+              "start_s": 16.0,
+              "side": 1,
+              "lag_ms": 0,
+              "correlation": 0.9776847826961456,
+              "boundary": false,
+              "zero_lag_correlation": 0.9776847826961456
+            },
+            {
+              "start_s": 18.0,
+              "side": 0,
+              "lag_ms": -30,
+              "correlation": 0.9415753353831564,
+              "boundary": false,
+              "zero_lag_correlation": 0.9397427108078968
+            },
+            {
+              "start_s": 18.0,
+              "side": 1,
+              "lag_ms": -20,
+              "correlation": 0.9761794233293468,
+              "boundary": false,
+              "zero_lag_correlation": 0.9745605522040055
+            },
+            {
+              "start_s": 20.0,
+              "side": 0,
+              "lag_ms": 70,
+              "correlation": 0.98167146996046,
+              "boundary": false,
+              "zero_lag_correlation": 0.939294238310938
+            },
+            {
+              "start_s": 20.0,
+              "side": 1,
+              "lag_ms": 30,
+              "correlation": 0.9397168531688904,
+              "boundary": false,
+              "zero_lag_correlation": 0.9310319092622875
+            },
+            {
+              "start_s": 22.0,
+              "side": 0,
+              "lag_ms": -80,
+              "correlation": 0.9590430318689053,
+              "boundary": false,
+              "zero_lag_correlation": 0.9495521554285177
+            },
+            {
+              "start_s": 22.0,
+              "side": 1,
+              "lag_ms": 20,
+              "correlation": 0.9215949399126907,
+              "boundary": false,
+              "zero_lag_correlation": 0.9185339332244906
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method": "For each ankle, forward coordinate relative to pelvis in body yaw axes, both actual and GMR target. Lag maximizes Pearson correlation reference(t) vs actual(t+lag); positive means robot lags GMR. Search -500..500ms in10ms steps, fixed2s nonoverlapping windows starting at2s and with full lag margin. Windows selected identically using baseline reference p95-p05 excursion>10cm. Retain correlations>=0.6 and interior peaks; report counts, median and IQR. Source/root/nav commands natural, same1s warmup and physical fork. Native policy cadence100Hz for1112601000,50Hz for111586500.",
+  "limitations": [
+    "Motion phase lag estimate, not end-to-end sensor/display latency, nor GMR compute time.",
+    "Low-correlation or ambiguous periodic gait can make a single time lag a poor description; inspect per-window values and retained counts.",
+    "Two recordings, deterministic offline rollouts, no Quest acceptance."
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "apk": "g1-quest-lab-vlad-predicted-hands.apk",
+  "bytes": 832275683,
+  "sha256": "a3b7364147d5d02f4f8b4ca0b148fb6f616c356ce6c47702d77ea42080ce0722",
+  "zip_crc": true,
+  "source_and_asset_digest_checks": 107,
+  "model_digest_checks": 13,
+  "policy_count": 10,
+  "metadata_variants": 66,
+  "predicted_hand_orientation": true,
+  "controller_anatomical_frame": false,
+  "controller_stage_targets": true,
+  "soft_grip_preserved": true,
+  "all_scene_xml_unchanged": true,
+  "package": "org.g1lab.quest",
+  "label": "G1 Quest Lab-vlad",
+  "installed": false
+}

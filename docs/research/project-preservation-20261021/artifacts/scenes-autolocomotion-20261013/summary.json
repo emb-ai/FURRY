@@ -1,0 +1,130 @@
+{
+  "date": "2026-10-13",
+  "source_checkout": ".tools/furry-homie-sonic-20261012",
+  "source_base_commit": "9ea7ae6",
+  "apk": {
+    "apk": "g1-quest-scenes-autolocomotion-camera-fade.apk",
+    "bytes": 832259299,
+    "sha256": "41a42322c88ce0e953a358f3a081cf419ede57886ba7e4770a96894a37631ac8",
+    "zip_crc": true,
+    "source_digest_checks": true,
+    "model_digest_checks": true,
+    "policy_ids": [
+      "twist2-20k",
+      "twist2-25k",
+      "quest-111260-500",
+      "quest-111260-1000",
+      "quest-111586-200",
+      "quest-111586-300",
+      "quest-111586-500",
+      "homie-v2",
+      "sonic-vr3",
+      "quest-111586-500-lift10"
+    ],
+    "onnx_files": 13,
+    "unique_onnx_digests": 12,
+    "model_sha256": {
+      "policy.onnx": "2d1fb3a31e4e967f70ecfefc3ad1e7b2ac491677068b89f60b565a94e7735061",
+      "policy-twist2-25k.onnx": "126ab9089b6ca0be8b6582fc9ef17b0b6c6d6577378f9324a2e10d580fe48f2e",
+      "policy-quest-111260-500.onnx": "c83fdeb9747410c5e6b8b150d6d543966ed4024cd6111e9d94281e414c6bcfb6",
+      "policy-quest-111260-1000.onnx": "8d386bf94724d1dccc7050e1bb3dee40315e20e1bba20a31debb5d9b0b61cae3",
+      "policy-quest-111586-200.onnx": "f7af32cacec3d697d902f5a19373895cba19cca04fb424d9664df11593a0c5ed",
+      "policy-quest-111586-300.onnx": "a8fba7232e1d5079af5ce23c3c7fe40389c3965f7dde895ea07b45222b557c0d",
+      "policy-quest-111586-500.onnx": "57d6ac4b2461ac8884afeac86d32bcc9a7b4b72f376e15b898af7ac3d8a5241d",
+      "policy-homie-v2-balance.onnx": "f645da599d4ca3d29ed273c8f4712620bb680d34977469ca3aeabe5bb9631c18",
+      "policy-homie-v2-walk.onnx": "7c82255b6905ffcc4468fa7f8ddcf7b70db168cf1042107ccab887cb6a8e5407",
+      "policy-sonic-vr3-sonic_encoder.onnx": "013ab0287236aa2721e13f1e936d699db982302d0de0bfcdae76d5c3245362d3",
+      "policy-sonic-vr3-sonic_decoder.onnx": "c7241a123eaa36b5d64bad19540efde93cac1ad443bd4572fd12ca99898118ed",
+      "policy-sonic-vr3-planner.onnx": "39b553e197f62f077975ba38512bc04781a3fc37c2af7c6756e04629f760edea",
+      "policy-quest-111586-500-lift10.onnx": "57d6ac4b2461ac8884afeac86d32bcc9a7b4b72f376e15b898af7ac3d8a5241d"
+    },
+    "scenes": [
+      "stand",
+      "cup",
+      "push_t",
+      "tennis",
+      "rubik"
+    ],
+    "camera_fade": {
+      "schema_version": 1,
+      "enabled": true,
+      "render_only": true,
+      "invisible_distance_m": 0.08,
+      "opaque_distance_m": 0.22,
+      "segments": "robot visual/collision geometry only",
+      "distance": "oriented bounds of uploaded vertices in STAGE metres",
+      "camera": "shared centre HMD",
+      "depth_write": false,
+      "projection_alpha": "premultiplied"
+    },
+    "autonomy_source_preserved": [
+      "android/native/groot_decoupled.h",
+      "android/native/sonic.h",
+      "android/native/sonic_constants.h",
+      "android/native/body_motor_model.h",
+      "android/native/body_motor_profile.h",
+      "android/config/policies.json"
+    ],
+    "installed": true,
+    "quest_live_acceptance": false
+  },
+  "validation": {
+    "unit_tests": {
+      "run": 109,
+      "passed": 108,
+      "skipped": 1,
+      "skip_reason": "optional Torch"
+    },
+    "synthetic_replay": {
+      "cases": 37,
+      "max_reference_error": 0,
+      "max_state_error": 0
+    },
+    "native_backend_checks": [
+      "HOMIE balance/walk and authored motor profiles",
+      "SONIC planner/reset/recording/switching",
+      "policy selection across stand/cup/push_t/tennis/rubik"
+    ],
+    "desktop_render_checks": [
+      "head, torso and wrist proximity",
+      "head and torso sharing physical body fade separately",
+      "far view pixel invariant",
+      "near props remain opaque",
+      "transparent geometry does not write depth",
+      "premultiplied OpenXR framebuffer"
+    ],
+    "android_build": true,
+    "apk_integrity": true
+  },
+  "acceptance": {
+    "installed": true,
+    "quest_live_fade": false,
+    "quest_fps": false,
+    "rubik_manual_vr_solve": false,
+    "rubik_reliable_bimanual_turn": false
+  },
+  "rubik_evidence": {
+    "free_robot_contact_lift_m": 0.067449,
+    "fixed_core_fixture_quarter_turn_deg": 90.0222,
+    "magnetic_12_deg_final_deg": 0.000203395,
+    "outside_magnet_window_25_deg_final_deg": 25
+  },
+  "publication_context": "Root AGENTS.md separately records integration into main dab9038 and a newer Capture APK. This report identifies the independently verified scene APK built from the source checkout above.",
+  "installation": {
+    "device": "2G0YC5ZG7T05SR",
+    "installed": true,
+    "apk_sha256": "41a42322c88ce0e953a358f3a081cf419ede57886ba7e4770a96894a37631ac8",
+    "installed_base_apk_sha256": "41a42322c88ce0e953a358f3a081cf419ede57886ba7e4770a96894a37631ac8",
+    "apk_device_digest_match": true,
+    "data_restored": true,
+    "restored_files": 655,
+    "all_original_file_digests_match": true,
+    "external_files_before_uninstall": 0,
+    "verification_utc": "2026-10-13T08:01:10.846067+00:00",
+    "quest_live_acceptance": false
+  },
+  "startup": {
+    "controller_dialog_present": true,
+    "native_initialization_logged": false
+  }
+}

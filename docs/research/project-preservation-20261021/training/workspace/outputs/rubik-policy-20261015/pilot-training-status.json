@@ -1,0 +1,1505 @@
+{
+  "arguments": {
+    "bc_updates": 0,
+    "ppo_steps": 10240,
+    "sequence_length": 2,
+    "faces": [
+      3,
+      4
+    ],
+    "signs": [
+      -1
+    ],
+    "seed": 0,
+    "envs": 4,
+    "load": "outputs/rubik-policy-20261015/bc-policy.zip",
+    "name": "pilot"
+  },
+  "bc_updates": 0,
+  "ppo_steps": 10240,
+  "ppo_wall_seconds": 257.04113020800287,
+  "held_out_success_rate": null,
+  "completed_training_moves": 0,
+  "training_episodes": [
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "cube_lost"
+    },
+    {
+      "success": false,
+      "completed_moves": 0,
+      "failure": "external_support"
+    }
+  ],
+  "status": "training pilot completed; episode outcomes are training results, no held-out evaluation",
+  "action_interface": "two wrist poses plus two scalar Grip commands",
+  "lower_policy": "unchanged HOMIE Standing",
+  "physics_modified": false,
+  "headset_deployed": false
+}

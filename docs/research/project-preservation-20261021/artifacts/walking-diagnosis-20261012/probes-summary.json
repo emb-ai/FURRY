@@ -1,0 +1,381 @@
+{
+  "method": {
+    "policy": "quest-111586-500",
+    "policy_hz": 50,
+    "physics_hz": 1000,
+    "full_foot_retarget": true,
+    "source": "outputs/full-body-apk-20261010/source",
+    "initialization": "Measured qpos/qvel/ctrl/time; actor history/last_action initially zero, then 1s identical teacher-forced saved states and saved commands; same measured state restored at branch point.",
+    "trajectory": "Exact same recorded Meta84/HMD/calibration stream; source-only GMR precomputed, 29 pose commands identical. Two variants differ only by deployed CameraPoseServo invocation (including its reference-to-actual XY conversion). Fork source1s.",
+    "stop": "Fork source30s after common teacher forcing29..30s; freeze GMR pose and its camera goal; set feedforward vx/vy/wz=0; simulate6s. No fabricated gait.",
+    "yaw_only": "Same fork/history/frozen pose; goal initially actual camera with +30deg yaw; zero feedforward; suppress XY velocity correction. Simulate6s. Artificial diagnostic target, no fabricated gait.",
+    "torque": "Every physics substep checks actual leg motor ctrl against deployed software cap; not limited to100Hz frame sampling."
+  },
+  "limitations": [
+    "Counterfactual diagnostic, not exact headset replay: original hidden actor history and previous actions before recording are unavailable.",
+    "One initial condition per probe and two recorded motions; no general gait acceptance.",
+    "A gain/no-gain intervention estimates the effect of catch-up for these inputs; it does not isolate which policy training reward causes limited response.",
+    "Stationary pose and yaw-only scenarios deliberately test correction without operator leg motion; they are not complete human demonstrations.",
+    "Slip uses force-weighted contact-point speed, sampled at100Hz; torque limits checked1000Hz."
+  ],
+  "pair_checks": [
+    {
+      "episode": "episode-1791652593739690",
+      "scenario": "stop",
+      "common_warmup_max_difference": 0.0,
+      "pose_commands_max_difference": 0.0,
+      "reference_qpos_max_difference": 0.0,
+      "fork_physical_state_max_difference": 0.0
+    },
+    {
+      "episode": "episode-1791652593739690",
+      "scenario": "trajectory",
+      "common_warmup_max_difference": 0.0,
+      "pose_commands_max_difference": 0.0,
+      "reference_qpos_max_difference": 0.0,
+      "fork_physical_state_max_difference": 0.0
+    },
+    {
+      "episode": "episode-1791652593739690",
+      "scenario": "yaw_only",
+      "common_warmup_max_difference": 0.0,
+      "pose_commands_max_difference": 0.0,
+      "reference_qpos_max_difference": 0.0,
+      "fork_physical_state_max_difference": 0.0
+    },
+    {
+      "episode": "episode-1791652646384286",
+      "scenario": "trajectory",
+      "common_warmup_max_difference": 0.0,
+      "pose_commands_max_difference": 0.0,
+      "reference_qpos_max_difference": 0.0,
+      "fork_physical_state_max_difference": 0.0
+    }
+  ],
+  "source_sha256": {
+    "probes-run.py": "1c280e2e8eacc4846ef440bd16f6b14cb9465534468183547100f96fa0122115",
+    "probes-runner.cpp": "d329c84b32e5cdc02ef382bce00ee1be46066b97b9d9439dee1cdde8e665f0ff",
+    "probes-runner": "f3c2c4d640c31cdb53c4582a727885204faab3e99c44ca9034150b04c3415c30",
+    "probes-analyze.py": "edb394c86f44c4bf491e8fe1f8eb0612f3119cff9261b1bae724a3ce80d6acc4"
+  },
+  "runtime_source_sha256": {
+    "full-body-apk-20261010/source/android/native/simulation.cpp": "f801b19721b86a021a2159eba0690bfe5093bd143d665aff33c4340b09700c72",
+    "full-body-apk-20261010/source/android/native/simulation.h": "2e91dcc9e249141b75180c164310d91316e64645819a245d627f6f242ed4e411",
+    "full-body-apk-20261010/source/android/native/meta_retarget.cpp": "addf7598f4a46fcdb23f5bbefdf10445da4fb5d9a1d0e6510890af2e867ade6d",
+    "full-body-apk-20261010/source/android/native/meta_retarget.h": "b5f65a55dde29bd6a12e1ccdfd4cdbf1b848ef8610e7db9eef22f75636127c6e",
+    "full-body-apk-20261010/source/android/native/gmr.cpp": "042748b4aca7b255bb2cad52307b0321791fe9cd89ddf0706b29c2b6f4da6df7",
+    "full-body-apk-20261010/source/android/native/gmr.h": "d62287daf28288ac7d858d14779221434d837b45ce721d3e34b8ed2ae77b2779",
+    "full-body-apk-20261010/source/android/native/full_foot_targets.h": "79950fd72d213193701422af4377baa14e904f89721a2b2939d781e32af10a7c",
+    "full-body-apk-20261010/source/android/native/foot_floor.h": "afab9e133a80f31ccea0f322bed02d881a61c616fda8ea1ec58eb35b052ad235",
+    "full-body-apk-20261010/source/android/native/camera_pose_servo.h": "96ca49447af99fa7eba532a9743bd5b8f26229bf6bec9c291d0f6510e5a11aac",
+    "full-body-apk-20261010/source/android/assets/gmr_model.xml": "58c04b6b9c28c15bbfd29113ab44b0104a17cb1ba3dbc86331c7a680623949dc",
+    "full-body-apk-20261010/source/android/assets/gmr_config.txt": "c51357389b77ec3d15e52c4f393f0d3e449ab3a349259f4c4b8a1677cd59d1c0",
+    "full-body-apk-20261010/source/android/assets/scene-stand.xml": "06a70fa9bae1895e57037818d186a93beb781922b5d601e79af34ed94dc64a37"
+  },
+  "episode_input_sha256": {
+    "episode-1791652593739690": {
+      "manifest.json": "21da730116105dc16b8c3da714ae921552aab60da588e693b96b3e6922cd85b7",
+      "policy.onnx": "57d6ac4b2461ac8884afeac86d32bcc9a7b4b72f376e15b898af7ac3d8a5241d",
+      "input.csv": "3186d500bd2ff80aa939bd8cb1f7e3bae421e7df15c38cc82d9ad9a007819eff",
+      "body.csv": "6f4f1c6615095931108cfd9eea52ced1d931ac5589e53aba61c1c3375742f2f4",
+      "body_full.bin": "9e05f95bb5c008826e80eb5815bb9cf1946e5aeec516bc364f6724fe0a34bee0",
+      "body_skeleton.bin": "291b6fe725182b3aea5b2bcad3cbcae50f22014f4995c4fc81868a45c7c7b3e0",
+      "frames.csv": "b5ab3c6a5bd33f8d56a7f3e3c8e89c9af3d335d52ddcd806b290bd8f620e7b54",
+      "mimic.csv": "af4c81c91facb7e64b6d80a5f023e4f6b7839d7c2728029bc81f18d225dbe26d",
+      "events.csv": "bf582f2990aeaafb440984c18eee8b3e4e86b9705b3af1dd5c5447b10cf11793"
+    },
+    "episode-1791652646384286": {
+      "manifest.json": "e4b955b0a98fe649c7b1d78ecafb4f17a66fdc2c555ca3166dbd6463cb659d0e",
+      "policy.onnx": "57d6ac4b2461ac8884afeac86d32bcc9a7b4b72f376e15b898af7ac3d8a5241d",
+      "input.csv": "6729c85616012eebb3549f166cdad748627ebe563f2bfc3fcea85258b9a8b224",
+      "body.csv": "161feaa9a865326c7bdc19595fa313d02cb63c186b399225f810454e7cd6c657",
+      "body_full.bin": "9a8003ed5d5856f1501138c0c6ed5d0dc4296c3f46a1e06f5b19513228ad586c",
+      "body_skeleton.bin": "84cab5c9e24eaa06dd77a4b8039bf3e49aae71216fe399d1087ede317c1d8b8a",
+      "frames.csv": "053bf7523d1cc804dd5bf762bae8fc01d625ee2a60d260951b2f43e198ec07a9",
+      "mimic.csv": "4e98da48fa52f1a9b63acb7091b81ec9cf517450e9d193029e313e874c91c70f",
+      "events.csv": "e317680e595bb6ce4caea51f9c83392f7e05492af2bcc076be4c8626812feeff"
+    }
+  },
+  "results": [
+    {
+      "episode": "episode-1791652593739690",
+      "scenario": "trajectory",
+      "catch_up": "off",
+      "log": "policy_hz=50 full_feet=1 correction=0 scenario=trajectory fork_source_s=1 rows=3452 fell=0 min_height=0.754473\n",
+      "measured_seconds": 33.52,
+      "xy_error_m": {
+        "mean": 2.373778563076758,
+        "p95": 5.929884554144606,
+        "initial": 0.050863989267981746,
+        "final": 5.921114413158559
+      },
+      "absolute_yaw_error_deg": {
+        "mean": 76.74539125457851,
+        "p95": 155.4979559722347,
+        "initial": 4.373167426903669,
+        "final": 149.5281435713385
+      },
+      "camera_xy_displacement_m": 5.749510107448495,
+      "camera_yaw_signed_change_deg": 149.15494485798564,
+      "pelvis_yaw_signed_change_deg": 144.78346240025445,
+      "waist_yaw_joint_change_deg": 4.191896452808665,
+      "force_weighted_slip_cm_s": 4.003206560035384,
+      "both_feet_contact_fraction_force_gt20N": 0.47643198090692124,
+      "any_leg_torque_saturated_substep_fraction_1000Hz": 0.008263723150357996,
+      "max_leg_torque_fraction_cap": 1.0,
+      "min_height_m": 0.7544734741255879,
+      "max_tilt_deg": 9.959542580951734,
+      "last2s_command_speed_m_s": 0.022663330714832616,
+      "last2s_actual_progress_along_command_m_s": 0.004580251263444476,
+      "last2s_yaw_command_deg_s": 1.4226785935935247,
+      "last2s_actual_body_z_rate_deg_s": 1.615737413872047,
+      "last2s_max_leg_torque_fraction_cap": 0.345516956094711,
+      "last2s_any_leg_saturated_substep_fraction": 0.0
+    },
+    {
+      "episode": "episode-1791652593739690",
+      "scenario": "trajectory",
+      "catch_up": "on",
+      "log": "policy_hz=50 full_feet=1 correction=1 scenario=trajectory fork_source_s=1 rows=3452 fell=0 min_height=0.752018\n",
+      "measured_seconds": 33.52,
+      "xy_error_m": {
+        "mean": 0.5144886576303135,
+        "p95": 1.0781780878488945,
+        "initial": 0.050863989267981746,
+        "final": 0.42793219062661936
+      },
+      "absolute_yaw_error_deg": {
+        "mean": 26.752614532273764,
+        "p95": 82.322049604851,
+        "initial": 4.373167426903669,
+        "final": 1.9679296178560055
+      },
+      "camera_xy_displacement_m": 0.2490992980979295,
+      "camera_yaw_signed_change_deg": 357.65887166879116,
+      "pelvis_yaw_signed_change_deg": 355.0808858630589,
+      "waist_yaw_joint_change_deg": 2.337794479474698,
+      "force_weighted_slip_cm_s": 4.766823902720057,
+      "both_feet_contact_fraction_force_gt20N": 0.4630071599045346,
+      "any_leg_torque_saturated_substep_fraction_1000Hz": 0.012321002386634847,
+      "max_leg_torque_fraction_cap": 1.0,
+      "min_height_m": 0.7520183993600184,
+      "max_tilt_deg": 9.927314399946672,
+      "last2s_command_speed_m_s": 0.39685836836007177,
+      "last2s_actual_progress_along_command_m_s": 0.0456035176967914,
+      "last2s_yaw_command_deg_s": 23.391108105521948,
+      "last2s_actual_body_z_rate_deg_s": 11.319200336590468,
+      "last2s_max_leg_torque_fraction_cap": 0.681080731477992,
+      "last2s_any_leg_saturated_substep_fraction": 0.0
+    },
+    {
+      "episode": "episode-1791652646384286",
+      "scenario": "trajectory",
+      "catch_up": "off",
+      "log": "policy_hz=50 full_feet=1 correction=0 scenario=trajectory fork_source_s=1 rows=2596 fell=0 min_height=0.750311\n",
+      "measured_seconds": 24.96,
+      "xy_error_m": {
+        "mean": 0.7718152951858951,
+        "p95": 1.4697290510415821,
+        "initial": 0.031727020970934515,
+        "final": 1.4731162814520864
+      },
+      "absolute_yaw_error_deg": {
+        "mean": 9.9600296068751,
+        "p95": 20.54397900529638,
+        "initial": 9.426917397285502,
+        "final": 2.0507789082426524
+      },
+      "camera_xy_displacement_m": 1.6572203302199566,
+      "camera_yaw_signed_change_deg": -53.85864112464549,
+      "pelvis_yaw_signed_change_deg": -54.810118215796486,
+      "waist_yaw_joint_change_deg": 0.6874994282895831,
+      "force_weighted_slip_cm_s": 4.436647236287608,
+      "both_feet_contact_fraction_force_gt20N": 0.5504807692307693,
+      "any_leg_torque_saturated_substep_fraction_1000Hz": 0.001642628205128205,
+      "max_leg_torque_fraction_cap": 1.0,
+      "min_height_m": 0.7503110575980072,
+      "max_tilt_deg": 11.751812158047995,
+      "last2s_command_speed_m_s": 0.03505916612629413,
+      "last2s_actual_progress_along_command_m_s": -0.006660097465750051,
+      "last2s_yaw_command_deg_s": -0.817981372222605,
+      "last2s_actual_body_z_rate_deg_s": -0.1526667835854394,
+      "last2s_max_leg_torque_fraction_cap": 0.45281145433132836,
+      "last2s_any_leg_saturated_substep_fraction": 0.0
+    },
+    {
+      "episode": "episode-1791652646384286",
+      "scenario": "trajectory",
+      "catch_up": "on",
+      "log": "policy_hz=50 full_feet=1 correction=1 scenario=trajectory fork_source_s=1 rows=2596 fell=0 min_height=0.749931\n",
+      "measured_seconds": 24.96,
+      "xy_error_m": {
+        "mean": 0.17019396878509244,
+        "p95": 0.31022852478106483,
+        "initial": 0.031727020970934515,
+        "final": 0.21524468609814845
+      },
+      "absolute_yaw_error_deg": {
+        "mean": 6.432064340566453,
+        "p95": 26.374979257073676,
+        "initial": 9.426917397285502,
+        "final": 1.7529580408000571
+      },
+      "camera_xy_displacement_m": 0.861356119949334,
+      "camera_yaw_signed_change_deg": -50.05490417560277,
+      "pelvis_yaw_signed_change_deg": -50.399416480106076,
+      "waist_yaw_joint_change_deg": 0.07222021016008756,
+      "force_weighted_slip_cm_s": 4.724934128061191,
+      "both_feet_contact_fraction_force_gt20N": 0.47876602564102566,
+      "any_leg_torque_saturated_substep_fraction_1000Hz": 0.0011618589743589746,
+      "max_leg_torque_fraction_cap": 1.0,
+      "min_height_m": 0.7499311145720634,
+      "max_tilt_deg": 11.4222410365085,
+      "last2s_command_speed_m_s": 0.2121771427476002,
+      "last2s_actual_progress_along_command_m_s": 0.007526929572126531,
+      "last2s_yaw_command_deg_s": -3.065094347826058,
+      "last2s_actual_body_z_rate_deg_s": -0.439247670977059,
+      "last2s_max_leg_torque_fraction_cap": 0.19395207113545704,
+      "last2s_any_leg_saturated_substep_fraction": 0.0
+    },
+    {
+      "episode": "episode-1791652593739690",
+      "scenario": "stop",
+      "catch_up": "off",
+      "log": "policy_hz=50 full_feet=1 correction=0 scenario=stop fork_source_s=30 rows=700 fell=0 min_height=0.774446\n",
+      "measured_seconds": 6.0,
+      "xy_error_m": {
+        "mean": 0.6157135905754068,
+        "p95": 0.6332261387452786,
+        "initial": 0.6096434882512752,
+        "final": 0.6145560675946878
+      },
+      "absolute_yaw_error_deg": {
+        "mean": 72.83591488061847,
+        "p95": 73.72524149396538,
+        "initial": 68.92242659591493,
+        "final": 72.51357947973283
+      },
+      "camera_xy_displacement_m": 0.005250595464534804,
+      "camera_yaw_signed_change_deg": -3.5911528838179096,
+      "pelvis_yaw_signed_change_deg": -2.1892472529289706,
+      "waist_yaw_joint_change_deg": -1.381537130965504,
+      "force_weighted_slip_cm_s": 0.49376499997150464,
+      "both_feet_contact_fraction_force_gt20N": 0.97,
+      "any_leg_torque_saturated_substep_fraction_1000Hz": 0.0,
+      "max_leg_torque_fraction_cap": 0.9526574111317835,
+      "min_height_m": 0.7851935647430952,
+      "max_tilt_deg": 3.9981426260614454,
+      "last2s_command_speed_m_s": 0.0,
+      "last2s_actual_progress_along_command_m_s": 0.0,
+      "last2s_yaw_command_deg_s": 0.0,
+      "last2s_actual_body_z_rate_deg_s": 0.11397333194544913,
+      "last2s_max_leg_torque_fraction_cap": 0.33860584736673227,
+      "last2s_any_leg_saturated_substep_fraction": 0.0
+    },
+    {
+      "episode": "episode-1791652593739690",
+      "scenario": "stop",
+      "catch_up": "on",
+      "log": "policy_hz=50 full_feet=1 correction=1 scenario=stop fork_source_s=30 rows=700 fell=0 min_height=0.774446\n",
+      "measured_seconds": 6.0,
+      "xy_error_m": {
+        "mean": 0.5684705703084237,
+        "p95": 0.5929004295574702,
+        "initial": 0.6096434882512752,
+        "final": 0.5620608906890943
+      },
+      "absolute_yaw_error_deg": {
+        "mean": 23.84173683912489,
+        "p95": 59.5795182838443,
+        "initial": 68.92242659591493,
+        "final": 9.21125528219014
+      },
+      "camera_xy_displacement_m": 0.05966102011546201,
+      "camera_yaw_signed_change_deg": 59.711171313724776,
+      "pelvis_yaw_signed_change_deg": 61.376724652207145,
+      "waist_yaw_joint_change_deg": -1.5588695317026358,
+      "force_weighted_slip_cm_s": 1.46888230643914,
+      "both_feet_contact_fraction_force_gt20N": 0.9383333333333334,
+      "any_leg_torque_saturated_substep_fraction_1000Hz": 0.0,
+      "max_leg_torque_fraction_cap": 0.6740103123852637,
+      "min_height_m": 0.7824764473026263,
+      "max_tilt_deg": 3.7492228081718757,
+      "last2s_command_speed_m_s": 0.40000000072867314,
+      "last2s_actual_progress_along_command_m_s": -0.0007661079219587777,
+      "last2s_yaw_command_deg_s": 27.424858022835576,
+      "last2s_actual_body_z_rate_deg_s": -0.2146607573083129,
+      "last2s_max_leg_torque_fraction_cap": 0.3585000987686685,
+      "last2s_any_leg_saturated_substep_fraction": 0.0
+    },
+    {
+      "episode": "episode-1791652593739690",
+      "scenario": "yaw_only",
+      "catch_up": "off",
+      "log": "policy_hz=50 full_feet=1 correction=0 scenario=yaw_only fork_source_s=30 rows=700 fell=0 min_height=0.774446\n",
+      "measured_seconds": 6.0,
+      "xy_error_m": {
+        "mean": 0.008087197694736745,
+        "p95": 0.028236865257470635,
+        "initial": 0.0,
+        "final": 0.005250595464534804
+      },
+      "absolute_yaw_error_deg": {
+        "mean": 33.91348828470356,
+        "p95": 34.80281489805048,
+        "initial": 30.000000000000004,
+        "final": 33.591152883817905
+      },
+      "camera_xy_displacement_m": 0.005250595464534804,
+      "camera_yaw_signed_change_deg": -3.5911528838179096,
+      "pelvis_yaw_signed_change_deg": -2.1892472529289706,
+      "waist_yaw_joint_change_deg": -1.381537130965504,
+      "force_weighted_slip_cm_s": 0.49376499997150464,
+      "both_feet_contact_fraction_force_gt20N": 0.97,
+      "any_leg_torque_saturated_substep_fraction_1000Hz": 0.0,
+      "max_leg_torque_fraction_cap": 0.9526574111317835,
+      "min_height_m": 0.7851935647430952,
+      "max_tilt_deg": 3.9981426260614454,
+      "last2s_command_speed_m_s": 0.0,
+      "last2s_actual_progress_along_command_m_s": 0.0,
+      "last2s_yaw_command_deg_s": 0.0,
+      "last2s_actual_body_z_rate_deg_s": 0.11397333194544913,
+      "last2s_max_leg_torque_fraction_cap": 0.33860584736673227,
+      "last2s_any_leg_saturated_substep_fraction": 0.0
+    },
+    {
+      "episode": "episode-1791652593739690",
+      "scenario": "yaw_only",
+      "catch_up": "on",
+      "log": "policy_hz=50 full_feet=1 correction=1 scenario=yaw_only fork_source_s=30 rows=700 fell=0 min_height=0.774446\n",
+      "measured_seconds": 6.0,
+      "xy_error_m": {
+        "mean": 0.0741883744512628,
+        "p95": 0.09387106301857091,
+        "initial": 0.0,
+        "final": 0.08859472253157406
+      },
+      "absolute_yaw_error_deg": {
+        "mean": 9.217889720026177,
+        "p95": 23.85177530731055,
+        "initial": 30.000000000000004,
+        "final": 7.275934601698565
+      },
+      "camera_xy_displacement_m": 0.08859472253157406,
+      "camera_yaw_signed_change_deg": 22.724065398301438,
+      "pelvis_yaw_signed_change_deg": 23.66649320802221,
+      "waist_yaw_joint_change_deg": -0.8474049725120263,
+      "force_weighted_slip_cm_s": 0.6090896301991289,
+      "both_feet_contact_fraction_force_gt20N": 0.95,
+      "any_leg_torque_saturated_substep_fraction_1000Hz": 0.015166666666666667,
+      "max_leg_torque_fraction_cap": 1.0,
+      "min_height_m": 0.784634313101072,
+      "max_tilt_deg": 3.914265941489791,
+      "last2s_command_speed_m_s": 0.0,
+      "last2s_actual_progress_along_command_m_s": 0.0,
+      "last2s_yaw_command_deg_s": 21.776306029672565,
+      "last2s_actual_body_z_rate_deg_s": 0.09709782647244986,
+      "last2s_max_leg_torque_fraction_cap": 0.4530729138310261,
+      "last2s_any_leg_saturated_substep_fraction": 0.0
+    }
+  ]
+}

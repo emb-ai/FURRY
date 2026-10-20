@@ -1,0 +1,24 @@
+{
+  "arguments": {
+    "bc_updates": 1000,
+    "ppo_steps": 128,
+    "sequence_length": 2,
+    "faces": [
+      3,
+      4
+    ],
+    "signs": [
+      -1
+    ],
+    "seed": 0
+  },
+  "bc_updates": 1000,
+  "ppo_steps": 128,
+  "ppo_wall_seconds": 6.5687426250078715,
+  "success_rate": null,
+  "status": "optimizer/environment smoke only; autonomous sequence success not evaluated",
+  "action_interface": "two wrist poses plus two scalar Grip commands",
+  "lower_policy": "unchanged HOMIE Standing",
+  "physics_modified": false,
+  "headset_deployed": false
+}

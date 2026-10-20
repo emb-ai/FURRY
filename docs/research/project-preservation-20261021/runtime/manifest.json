@@ -1,0 +1,791 @@
+{
+  "baseline": "68079cfdfa36fbaef020eb192db3a477f8fe961c",
+  "additions": [
+    "skeleton/inference_logger/.gitignore",
+    "skeleton/inference_logger/README.md",
+    "skeleton/inference_logger/__init__.py",
+    "skeleton/inference_logger/__main__.py",
+    "skeleton/inference_logger/capture.py",
+    "skeleton/inference_logger/offline.py",
+    "skeleton/inference_logger/quest_patch.py",
+    "skeleton/inference_logger/quest_sync.patch",
+    "skeleton/inference_logger/run.ps1",
+    "skeleton/inference_logger/storage.py",
+    "skeleton/inference_logger/tag_geometry.py",
+    "skeleton/inference_logger/test_logger.py",
+    "skeleton/inference_logger/transport.py",
+    "skeleton/body2d.py",
+    "skeleton/gmr_live.py",
+    "skeleton/gmr_view.py",
+    "skeleton/keypoints2d.py",
+    "skeleton/requirements-gmr-view.txt",
+    "skeleton/test_body2d.py",
+    "skeleton/test_gmr_live.py",
+    "skeleton/test_keypoints2d.py"
+  ],
+  "archives": [
+    {
+      "name": "skeleton-denoiser-v0",
+      "source_ref": "origin/skeleton-denoiser-v0",
+      "source_commit": "81159c1aac822f35f782632851f058a42081dd63",
+      "patch_base": "9858d318262584b58a07b55abea83726281bca0b",
+      "patch_path": "skeleton-denoiser-v0.patch",
+      "bytes": 238278,
+      "sha256": "199b1ca4c64807ae5933a30c974e0e77e0d3f1490c7d6d162821004330d3f091",
+      "lfs": [
+        {
+          "path": "skeleton/l2_dataset/l2_session2.npz",
+          "oid": "sha256:95e0fd3c8605b6262ce2eb3c901f2aa112b27fdb1049d6e9d9b55112047a4718",
+          "size": 4750551,
+          "archive_path": "skeleton-denoiser-v0/skeleton/l2_dataset/l2_session2.npz"
+        },
+        {
+          "path": "skeleton/l2_dataset/v1_pairs.npz",
+          "oid": "sha256:e1c191ec960e4bad7e08a85a17b6114673e8dfeafa421492dc26dacb80d55be0",
+          "size": 2252647,
+          "archive_path": "skeleton-denoiser-v0/skeleton/l2_dataset/v1_pairs.npz"
+        },
+        {
+          "path": "skeleton/l2_dataset/v1_pairs_block.npz",
+          "oid": "sha256:be5fcea909772e4cece0ed7ebbe9bc4eb21d39aaf15c26b621d8d437ea195f4a",
+          "size": 2252649,
+          "archive_path": "skeleton-denoiser-v0/skeleton/l2_dataset/v1_pairs_block.npz"
+        },
+        {
+          "path": "skeleton/l2_dataset/v1_pairs_stride.npz",
+          "oid": "sha256:7b88dca73a38b24ac793677fc26c4fda113930a2ae6c50670ff451d6bc8db726",
+          "size": 2252650,
+          "archive_path": "skeleton-denoiser-v0/skeleton/l2_dataset/v1_pairs_stride.npz"
+        },
+        {
+          "path": "skeleton/models/denoiser_v1.onnx",
+          "oid": "sha256:259d52015f4a65eb2cd98e5fa89294038488e8becd5b8ec7c3413fd22e1b5350",
+          "size": 16243680,
+          "archive_path": "skeleton-denoiser-v0/skeleton/models/denoiser_v1.onnx"
+        },
+        {
+          "path": "skeleton/models/denoiser_v1.pt",
+          "oid": "sha256:2b049561feba5523f3096e4bb85915b3265a92be9a0fb11f0ad57b41153d6c28",
+          "size": 16245990,
+          "archive_path": "skeleton-denoiser-v0/skeleton/models/denoiser_v1.pt"
+        }
+      ],
+      "source_snapshot": [
+        {
+          "source_path": "skeleton/.gitignore",
+          "archive_path": "skeleton-denoiser-v0/skeleton/.gitignore.txt",
+          "git_blob_sha256": "1823736cd6de3736cfc6d89106f1f2f02a2fbcda66267e03defaf2c29d8e0e85",
+          "git_blob_bytes": 114,
+          "archive_bytes": 114,
+          "archive_sha256": "1823736cd6de3736cfc6d89106f1f2f02a2fbcda66267e03defaf2c29d8e0e85"
+        },
+        {
+          "source_path": "skeleton/DENOISER_V1.md",
+          "archive_path": "skeleton-denoiser-v0/skeleton/DENOISER_V1.md.txt",
+          "git_blob_sha256": "bdc1e98bcf3713e864da7ad7159d6797dfbe4200be55457e5d2dea05da9660da",
+          "git_blob_bytes": 6063,
+          "archive_bytes": 6063,
+          "archive_sha256": "bdc1e98bcf3713e864da7ad7159d6797dfbe4200be55457e5d2dea05da9660da"
+        },
+        {
+          "source_path": "skeleton/build_gt_dataset.py",
+          "archive_path": "skeleton-denoiser-v0/skeleton/build_gt_dataset.py",
+          "git_blob_sha256": "081f9e9d25af0e0b8853e31533d0543feac7e9071530c88cbce8ba437a68f6dd",
+          "git_blob_bytes": 15371,
+          "archive_bytes": 15371,
+          "archive_sha256": "081f9e9d25af0e0b8853e31533d0543feac7e9071530c88cbce8ba437a68f6dd"
+        },
+        {
+          "source_path": "skeleton/denoiser_ov.py",
+          "archive_path": "skeleton-denoiser-v0/skeleton/denoiser_ov.py",
+          "git_blob_sha256": "9172df815175f24f28f554a9a1e43dba8189496dbcc081d17e845066c78114dc",
+          "git_blob_bytes": 7017,
+          "archive_bytes": 7017,
+          "archive_sha256": "9172df815175f24f28f554a9a1e43dba8189496dbcc081d17e845066c78114dc"
+        },
+        {
+          "source_path": "skeleton/denoiser_v1_ov.py",
+          "archive_path": "skeleton-denoiser-v0/skeleton/denoiser_v1_ov.py",
+          "git_blob_sha256": "5848d1b7443c92844002e10f21d599f1a7777b1c9f9aa09d6613118a63c7dd7d",
+          "git_blob_bytes": 7536,
+          "archive_bytes": 7536,
+          "archive_sha256": "5848d1b7443c92844002e10f21d599f1a7777b1c9f9aa09d6613118a63c7dd7d"
+        },
+        {
+          "source_path": "skeleton/eval_denoiser_v1.py",
+          "archive_path": "skeleton-denoiser-v0/skeleton/eval_denoiser_v1.py",
+          "git_blob_sha256": "10dc3c4fb5a6a240f7bb657b06bda5077fd4b6a1b1a479c55a669476a877c1f8",
+          "git_blob_bytes": 5304,
+          "archive_bytes": 5304,
+          "archive_sha256": "10dc3c4fb5a6a240f7bb657b06bda5077fd4b6a1b1a479c55a669476a877c1f8"
+        },
+        {
+          "source_path": "skeleton/export_denoiser_v1_onnx.py",
+          "archive_path": "skeleton-denoiser-v0/skeleton/export_denoiser_v1_onnx.py",
+          "git_blob_sha256": "46c1cf9f174f0632cdcdb21687c884fc827a86cd37314795e14b7a62e50bc578",
+          "git_blob_bytes": 2075,
+          "archive_bytes": 2075,
+          "archive_sha256": "46c1cf9f174f0632cdcdb21687c884fc827a86cd37314795e14b7a62e50bc578"
+        },
+        {
+          "source_path": "skeleton/extract_pairs.py",
+          "archive_path": "skeleton-denoiser-v0/skeleton/extract_pairs.py",
+          "git_blob_sha256": "16fec75c3c3c6171bda5fad4cdeaf9e6fcaa6ea307acb643f9cc52dab4fd5d8c",
+          "git_blob_bytes": 8463,
+          "archive_bytes": 8463,
+          "archive_sha256": "16fec75c3c3c6171bda5fad4cdeaf9e6fcaa6ea307acb643f9cc52dab4fd5d8c"
+        },
+        {
+          "source_path": "skeleton/inference_logger/.gitignore",
+          "archive_path": "skeleton-denoiser-v0/skeleton/inference_logger/.gitignore.txt",
+          "git_blob_sha256": "2c05ed7a47caf794f82f815f08ebb8c7b9cc9fff25a3f981656f6b0cf313207b",
+          "git_blob_bytes": 36,
+          "archive_bytes": 36,
+          "archive_sha256": "2c05ed7a47caf794f82f815f08ebb8c7b9cc9fff25a3f981656f6b0cf313207b"
+        },
+        {
+          "source_path": "skeleton/inference_logger/README.md",
+          "archive_path": "skeleton-denoiser-v0/skeleton/inference_logger/README.md.txt",
+          "git_blob_sha256": "e142e69a64e43c95b015010945b4333380c9e5fd61147b0c0291ba0428501627",
+          "git_blob_bytes": 14695,
+          "archive_bytes": 14695,
+          "archive_sha256": "e142e69a64e43c95b015010945b4333380c9e5fd61147b0c0291ba0428501627"
+        },
+        {
+          "source_path": "skeleton/inference_logger/__init__.py",
+          "archive_path": "skeleton-denoiser-v0/skeleton/inference_logger/__init__.py",
+          "git_blob_sha256": "c9f9c6025d6964a6dadfb085cc3f101ba297abae189a0f36ba3acb777f43c2f7",
+          "git_blob_bytes": 71,
+          "archive_bytes": 71,
+          "archive_sha256": "c9f9c6025d6964a6dadfb085cc3f101ba297abae189a0f36ba3acb777f43c2f7"
+        },
+        {
+          "source_path": "skeleton/inference_logger/__main__.py",
+          "archive_path": "skeleton-denoiser-v0/skeleton/inference_logger/__main__.py",
+          "git_blob_sha256": "0456dbd0d1f104896f029b9638af88650064f5c348ce74e46d3a15c6498d27da",
+          "git_blob_bytes": 3055,
+          "archive_bytes": 3055,
+          "archive_sha256": "0456dbd0d1f104896f029b9638af88650064f5c348ce74e46d3a15c6498d27da"
+        },
+        {
+          "source_path": "skeleton/inference_logger/capture.py",
+          "archive_path": "skeleton-denoiser-v0/skeleton/inference_logger/capture.py",
+          "git_blob_sha256": "db7abd931d23442641a6960392b31c01c1bbf39fe45422185700ba2bd1d6caa2",
+          "git_blob_bytes": 11576,
+          "archive_bytes": 11576,
+          "archive_sha256": "db7abd931d23442641a6960392b31c01c1bbf39fe45422185700ba2bd1d6caa2"
+        },
+        {
+          "source_path": "skeleton/inference_logger/offline.py",
+          "archive_path": "skeleton-denoiser-v0/skeleton/inference_logger/offline.py",
+          "git_blob_sha256": "c6f222d0b5493b793e08ad52a4873b726127834ee0ef1dcfb6e212a95894e034",
+          "git_blob_bytes": 13493,
+          "archive_bytes": 13493,
+          "archive_sha256": "c6f222d0b5493b793e08ad52a4873b726127834ee0ef1dcfb6e212a95894e034"
+        },
+        {
+          "source_path": "skeleton/inference_logger/quest_patch.py",
+          "archive_path": "skeleton-denoiser-v0/skeleton/inference_logger/quest_patch.py",
+          "git_blob_sha256": "00257f252ea36bad854f29d8a94e69f4d950218bb2a9c65be8ba16d0530859f5",
+          "git_blob_bytes": 3022,
+          "archive_bytes": 3022,
+          "archive_sha256": "00257f252ea36bad854f29d8a94e69f4d950218bb2a9c65be8ba16d0530859f5"
+        },
+        {
+          "source_path": "skeleton/inference_logger/quest_sync.patch",
+          "archive_path": "skeleton-denoiser-v0/skeleton/inference_logger/quest_sync.patch",
+          "git_blob_sha256": "aba9e294c23abc56663196e95043a5f0e864fd5929b2667c23b2bbb14f336363",
+          "git_blob_bytes": 3169,
+          "archive_bytes": 3169,
+          "archive_sha256": "aba9e294c23abc56663196e95043a5f0e864fd5929b2667c23b2bbb14f336363"
+        },
+        {
+          "source_path": "skeleton/inference_logger/run.ps1",
+          "archive_path": "skeleton-denoiser-v0/skeleton/inference_logger/run.ps1",
+          "git_blob_sha256": "458f985f985712772cd1454c409cd15db77b707632f1772b2c26052b8eb4aa7c",
+          "git_blob_bytes": 801,
+          "archive_bytes": 801,
+          "archive_sha256": "458f985f985712772cd1454c409cd15db77b707632f1772b2c26052b8eb4aa7c"
+        },
+        {
+          "source_path": "skeleton/inference_logger/storage.py",
+          "archive_path": "skeleton-denoiser-v0/skeleton/inference_logger/storage.py",
+          "git_blob_sha256": "14e373f16c39c3f7dc5572c649242905800b9c12abd57dfc5bf8e632cc1647b3",
+          "git_blob_bytes": 3910,
+          "archive_bytes": 3910,
+          "archive_sha256": "14e373f16c39c3f7dc5572c649242905800b9c12abd57dfc5bf8e632cc1647b3"
+        },
+        {
+          "source_path": "skeleton/inference_logger/tag_geometry.py",
+          "archive_path": "skeleton-denoiser-v0/skeleton/inference_logger/tag_geometry.py",
+          "git_blob_sha256": "5580c7d527dcaadfeaaa0f7a641ebd32dcf7840fc33f03cf783d6a7013c80427",
+          "git_blob_bytes": 1198,
+          "archive_bytes": 1198,
+          "archive_sha256": "5580c7d527dcaadfeaaa0f7a641ebd32dcf7840fc33f03cf783d6a7013c80427"
+        },
+        {
+          "source_path": "skeleton/inference_logger/test_logger.py",
+          "archive_path": "skeleton-denoiser-v0/skeleton/inference_logger/test_logger.py",
+          "git_blob_sha256": "d4e5354c8cbaaf81fe092c44405d44da1170332902ee547576addba312deeea9",
+          "git_blob_bytes": 6010,
+          "archive_bytes": 6010,
+          "archive_sha256": "d4e5354c8cbaaf81fe092c44405d44da1170332902ee547576addba312deeea9"
+        },
+        {
+          "source_path": "skeleton/inference_logger/transport.py",
+          "archive_path": "skeleton-denoiser-v0/skeleton/inference_logger/transport.py",
+          "git_blob_sha256": "a0e15bf7bb4b20f42575f8fc10a3c6acb374b5259bc848f223ef782e61cd553b",
+          "git_blob_bytes": 5416,
+          "archive_bytes": 5416,
+          "archive_sha256": "a0e15bf7bb4b20f42575f8fc10a3c6acb374b5259bc848f223ef782e61cd553b"
+        },
+        {
+          "source_path": "skeleton/l2_build_v1.py",
+          "archive_path": "skeleton-denoiser-v0/skeleton/l2_build_v1.py",
+          "git_blob_sha256": "f141ad1934de72ea63a872dee17858c78212eb7ea980e555c1fae47defd5ac01",
+          "git_blob_bytes": 10791,
+          "archive_bytes": 10791,
+          "archive_sha256": "f141ad1934de72ea63a872dee17858c78212eb7ea980e555c1fae47defd5ac01"
+        },
+        {
+          "source_path": "skeleton/l2_dataset/README.md",
+          "archive_path": "skeleton-denoiser-v0/skeleton/l2_dataset/README.md.txt",
+          "git_blob_sha256": "7c2ce130aeb0ff7d27017cc4463e2bee3f2af7cca486bf86b3d10b7ff22d7675",
+          "git_blob_bytes": 2284,
+          "archive_bytes": 2284,
+          "archive_sha256": "7c2ce130aeb0ff7d27017cc4463e2bee3f2af7cca486bf86b3d10b7ff22d7675"
+        },
+        {
+          "source_path": "skeleton/l2_dataset/l2_session2.npz",
+          "archive_path": "skeleton-denoiser-v0/skeleton/l2_dataset/l2_session2.npz",
+          "git_blob_sha256": "89c5cd5d9b21a26b94eefd9020226345ffdfc1fedd9a0ee1648ee22fa48ab99c",
+          "git_blob_bytes": 132,
+          "lfs_oid": "sha256:95e0fd3c8605b6262ce2eb3c901f2aa112b27fdb1049d6e9d9b55112047a4718",
+          "lfs_size": 4750551,
+          "archive_bytes": 4750551,
+          "archive_sha256": "95e0fd3c8605b6262ce2eb3c901f2aa112b27fdb1049d6e9d9b55112047a4718"
+        },
+        {
+          "source_path": "skeleton/l2_dataset/train_v1_log.txt",
+          "archive_path": "skeleton-denoiser-v0/skeleton/l2_dataset/train_v1_log.txt",
+          "git_blob_sha256": "775a676addb7b58c9e50ee2a59b5205f64ed530f89d1ce41568982f18e2dfafc",
+          "git_blob_bytes": 1426,
+          "archive_bytes": 1426,
+          "archive_sha256": "775a676addb7b58c9e50ee2a59b5205f64ed530f89d1ce41568982f18e2dfafc"
+        },
+        {
+          "source_path": "skeleton/l2_dataset/v1_pairs.npz",
+          "archive_path": "skeleton-denoiser-v0/skeleton/l2_dataset/v1_pairs.npz",
+          "git_blob_sha256": "bd6152f83fa4c9531f57171180e2685cca31fd79389bd15c77d7efc41ae5adc3",
+          "git_blob_bytes": 132,
+          "lfs_oid": "sha256:e1c191ec960e4bad7e08a85a17b6114673e8dfeafa421492dc26dacb80d55be0",
+          "lfs_size": 2252647,
+          "archive_bytes": 2252647,
+          "archive_sha256": "e1c191ec960e4bad7e08a85a17b6114673e8dfeafa421492dc26dacb80d55be0"
+        },
+        {
+          "source_path": "skeleton/l2_dataset/v1_pairs_block.npz",
+          "archive_path": "skeleton-denoiser-v0/skeleton/l2_dataset/v1_pairs_block.npz",
+          "git_blob_sha256": "7dff0d96a95208388b9d6dadc42be36f729b379f5ec95afa49d8b8d5caaf0aec",
+          "git_blob_bytes": 132,
+          "lfs_oid": "sha256:be5fcea909772e4cece0ed7ebbe9bc4eb21d39aaf15c26b621d8d437ea195f4a",
+          "lfs_size": 2252649,
+          "archive_bytes": 2252649,
+          "archive_sha256": "be5fcea909772e4cece0ed7ebbe9bc4eb21d39aaf15c26b621d8d437ea195f4a"
+        },
+        {
+          "source_path": "skeleton/l2_dataset/v1_pairs_stride.npz",
+          "archive_path": "skeleton-denoiser-v0/skeleton/l2_dataset/v1_pairs_stride.npz",
+          "git_blob_sha256": "531042ad7eec2c54c343b26bd6d059e2ad80abcdca10b26f6c43a9e312849598",
+          "git_blob_bytes": 132,
+          "lfs_oid": "sha256:7b88dca73a38b24ac793677fc26c4fda113930a2ae6c50670ff451d6bc8db726",
+          "lfs_size": 2252650,
+          "archive_bytes": 2252650,
+          "archive_sha256": "7b88dca73a38b24ac793677fc26c4fda113930a2ae6c50670ff451d6bc8db726"
+        },
+        {
+          "source_path": "skeleton/l2_extract.py",
+          "archive_path": "skeleton-denoiser-v0/skeleton/l2_extract.py",
+          "git_blob_sha256": "2874592a341486e44fda490abdd0fbe2a06ef4a717efffc95b61cbc35b5c15b2",
+          "git_blob_bytes": 11686,
+          "archive_bytes": 11686,
+          "archive_sha256": "2874592a341486e44fda490abdd0fbe2a06ef4a717efffc95b61cbc35b5c15b2"
+        },
+        {
+          "source_path": "skeleton/models/denoiser_v1.onnx",
+          "archive_path": "skeleton-denoiser-v0/skeleton/models/denoiser_v1.onnx",
+          "git_blob_sha256": "cc73d1eebd833e40f0f287b5b82523e92e9b5264f20014bbc7036fe697a65f85",
+          "git_blob_bytes": 133,
+          "lfs_oid": "sha256:259d52015f4a65eb2cd98e5fa89294038488e8becd5b8ec7c3413fd22e1b5350",
+          "lfs_size": 16243680,
+          "archive_bytes": 16243680,
+          "archive_sha256": "259d52015f4a65eb2cd98e5fa89294038488e8becd5b8ec7c3413fd22e1b5350"
+        },
+        {
+          "source_path": "skeleton/models/denoiser_v1.onnx.fixture.npz",
+          "archive_path": "skeleton-denoiser-v0/skeleton/models/denoiser_v1.onnx.fixture.npz",
+          "git_blob_sha256": "9062b44ffa23c43d23d6d10e3fd6e393d3299bc3dc271ae082ee0fcf03a2a0f3",
+          "git_blob_bytes": 18864,
+          "archive_bytes": 18864,
+          "archive_sha256": "9062b44ffa23c43d23d6d10e3fd6e393d3299bc3dc271ae082ee0fcf03a2a0f3"
+        },
+        {
+          "source_path": "skeleton/models/denoiser_v1.pt",
+          "archive_path": "skeleton-denoiser-v0/skeleton/models/denoiser_v1.pt",
+          "git_blob_sha256": "d1cdf4671a599b045279bcee7d9da1360e97c52c6061e846c4d1cc780293a453",
+          "git_blob_bytes": 133,
+          "lfs_oid": "sha256:2b049561feba5523f3096e4bb85915b3265a92be9a0fb11f0ad57b41153d6c28",
+          "lfs_size": 16245990,
+          "archive_bytes": 16245990,
+          "archive_sha256": "2b049561feba5523f3096e4bb85915b3265a92be9a0fb11f0ad57b41153d6c28"
+        },
+        {
+          "source_path": "skeleton/pose_yolo.py",
+          "archive_path": "skeleton-denoiser-v0/skeleton/pose_yolo.py",
+          "git_blob_sha256": "33f53f80b09793204d49686ab040c6d49625a24ab64ed910945547db48149757",
+          "git_blob_bytes": 23884,
+          "archive_bytes": 23884,
+          "archive_sha256": "33f53f80b09793204d49686ab040c6d49625a24ab64ed910945547db48149757"
+        },
+        {
+          "source_path": "skeleton/tag_tracker.py",
+          "archive_path": "skeleton-denoiser-v0/skeleton/tag_tracker.py",
+          "git_blob_sha256": "e21acd67925961e83ed6b90ae26bc96c41ef44c860cf823d4ffa4876c37a662e",
+          "git_blob_bytes": 32704,
+          "archive_bytes": 32704,
+          "archive_sha256": "e21acd67925961e83ed6b90ae26bc96c41ef44c860cf823d4ffa4876c37a662e"
+        },
+        {
+          "source_path": "skeleton/test_denoiser_ov.py",
+          "archive_path": "skeleton-denoiser-v0/skeleton/test_denoiser_ov.py",
+          "git_blob_sha256": "1c871cdc3461b86a7233cca984f0a551ecde910a96606009095c82d2b1933f76",
+          "git_blob_bytes": 3627,
+          "archive_bytes": 3627,
+          "archive_sha256": "1c871cdc3461b86a7233cca984f0a551ecde910a96606009095c82d2b1933f76"
+        },
+        {
+          "source_path": "skeleton/test_denoiser_v1_ov.py",
+          "archive_path": "skeleton-denoiser-v0/skeleton/test_denoiser_v1_ov.py",
+          "git_blob_sha256": "549a453c8f3eb7c55beeb055c1f3f59c40647c12c5214b879cc37b4db61cc301",
+          "git_blob_bytes": 2900,
+          "archive_bytes": 2900,
+          "archive_sha256": "549a453c8f3eb7c55beeb055c1f3f59c40647c12c5214b879cc37b4db61cc301"
+        },
+        {
+          "source_path": "skeleton/train_denoiser_v1.py",
+          "archive_path": "skeleton-denoiser-v0/skeleton/train_denoiser_v1.py",
+          "git_blob_sha256": "6ad4890053485d0d5b073c0b4220cf214dde846d9a098b7a217a44f07c586a2e",
+          "git_blob_bytes": 9423,
+          "archive_bytes": 9423,
+          "archive_sha256": "6ad4890053485d0d5b073c0b4220cf214dde846d9a098b7a217a44f07c586a2e"
+        }
+      ]
+    },
+    {
+      "name": "camera-2d-legs",
+      "source_ref": "origin/claude/project-thread-ei5tbk",
+      "source_commit": "1b26515ce69f247d7c7a7b770bca04633c27c786",
+      "patch_base": "dffe05620c0b47e3d5aebed004432f6f467154a0",
+      "patch_path": "camera-2d-legs.patch",
+      "bytes": 143929,
+      "sha256": "0b93987bc70964efaf08c1d955192c1bd4f3b7a381e20aabdcd2adf533b0b89c",
+      "lfs": []
+    },
+    {
+      "name": "predicted-hands-working-tree",
+      "source_directory": ".tools/furry-homie-sonic-20261012",
+      "source_commit": "9ea7ae6d92c07bd5bddfa2d5b1c0e0a043378d1d",
+      "patch_base": "9ea7ae6d92c07bd5bddfa2d5b1c0e0a043378d1d",
+      "patch_path": "predicted-hands-working-tree.patch",
+      "bytes": 171928,
+      "sha256": "52faa7f19778473927c184d9bc194b15181dc2c9591360f98a0de5e308286901",
+      "warning": "Tracked delta includes scenes/menu/SONIC fixes already superseded in main; archive only, never apply to current main.",
+      "untracked_sources": [
+        {
+          "path": "prototypes/quest_g1/android/RUBIK.md",
+          "sha256": "6518e40cbde3dd10d7e5a45c90efeacdbe4c6d023f63244384cc297955242a71",
+          "bytes": 5785,
+          "archive_path": "predicted-hands-supplemental/prototypes/quest_g1/android/RUBIK.md.txt"
+        },
+        {
+          "path": "prototypes/quest_g1/android/TENNIS.md",
+          "sha256": "2a46bdfae6a2e944f781bbf611fb911e60b6fea0ae332ef25e97209c70ed0731",
+          "bytes": 11634,
+          "archive_path": "predicted-hands-supplemental/prototypes/quest_g1/android/TENNIS.md.txt"
+        },
+        {
+          "path": "prototypes/quest_g1/android/native/camera_fade.h",
+          "sha256": "ce339c85482be23de20470bb56c6fe3266b28277343e8f6cfec0639cd51c91fb",
+          "bytes": 2115,
+          "available_in_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c"
+        },
+        {
+          "path": "prototypes/quest_g1/android/native/cup_lab_shaders.h",
+          "sha256": "d5223c6fa35e8b96c4facdb75165f5e6c455f2f975f1f6611fd957ec0e0fb8ef",
+          "bytes": 3467,
+          "available_in_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c"
+        },
+        {
+          "path": "prototypes/quest_g1/android/native/cup_placement_cue.h",
+          "sha256": "a661754a0a369814ebae5ff60b80641fd62c1bb99064b0121129a93483acc570",
+          "bytes": 887,
+          "archive_path": "predicted-hands-supplemental/prototypes/quest_g1/android/native/cup_placement_cue.h"
+        },
+        {
+          "path": "prototypes/quest_g1/android/native/graphics_epoch.h",
+          "sha256": "6e94c45533b8100614b317635e167f5c3e4aacf9cc8e3b8b7c91bd9cab2caf61",
+          "bytes": 613,
+          "available_in_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c"
+        },
+        {
+          "path": "prototypes/quest_g1/android/native/render_geom.h",
+          "sha256": "861406696bcfb03124553167af7414f9467ffa5acd77ded38abd67e38356b3ec",
+          "bytes": 433,
+          "available_in_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c"
+        },
+        {
+          "path": "prototypes/quest_g1/android/native/rubik_task.h",
+          "sha256": "40d58b1a8550295c24a524251424170a4eb74979a19e0b870999a9a13af3743f",
+          "bytes": 10956,
+          "archive_path": "predicted-hands-supplemental/prototypes/quest_g1/android/native/rubik_task.h"
+        },
+        {
+          "path": "prototypes/quest_g1/android/native/tennis_task.h",
+          "sha256": "8754b19c5f4ba5521a10cf4ad0408e9d7722ad87c236de3c320e423c15018a3c",
+          "bytes": 22157,
+          "archive_path": "predicted-hands-supplemental/prototypes/quest_g1/android/native/tennis_task.h"
+        },
+        {
+          "path": "prototypes/quest_g1/assets/g1/visual/cup_lab/manifest.json",
+          "sha256": "a706515709f896f5a724fe20420404bb3ba8c0d7ab3b5882444d25ab4e65d5fb",
+          "bytes": 807,
+          "available_in_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c"
+        },
+        {
+          "path": "prototypes/quest_g1/g1_sim/cup_lab.py",
+          "sha256": "7ebb9f6f7ee07b83ce1015f0f5a91e45c794373949d037b9f85b91a79eb868cd",
+          "bytes": 13774,
+          "archive_path": "predicted-hands-supplemental/prototypes/quest_g1/g1_sim/cup_lab.py"
+        },
+        {
+          "path": "prototypes/quest_g1/g1_sim/rubik.py",
+          "sha256": "3d47572b39e95eec48f8e2d4f9a9e3c2c249908c770572cd2e77f37a2632a282",
+          "bytes": 5238,
+          "archive_path": "predicted-hands-supplemental/prototypes/quest_g1/g1_sim/rubik.py"
+        },
+        {
+          "path": "prototypes/quest_g1/scripts/build_cup_lab_lod.py",
+          "sha256": "141a522401ee5dbfb984f8847bb70b587cd25e392f19582007d967dafb305aa0",
+          "bytes": 3955,
+          "available_in_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c"
+        },
+        {
+          "path": "prototypes/quest_g1/scripts/camera_fade_bridge.cpp",
+          "sha256": "42c537979abb2b5af25f18d581d4eefcffc6c1d20322f944628a76503ed02cce",
+          "bytes": 209,
+          "available_in_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c"
+        },
+        {
+          "path": "prototypes/quest_g1/scripts/camera_fade_native.py",
+          "sha256": "95704b268e0640f1f9dfc1cf7af4d2a038a52b6f9139c6e5b14823fc4b298df8",
+          "bytes": 1316,
+          "available_in_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c"
+        },
+        {
+          "path": "prototypes/quest_g1/scripts/check_camera_fade_render.py",
+          "sha256": "fd6600c318592f2a6f8f60965a58737834985fe46fe834b295c9fc9ed8817eb4",
+          "bytes": 5282,
+          "available_in_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c"
+        },
+        {
+          "path": "prototypes/quest_g1/scripts/probe_rubik_grasp.py",
+          "sha256": "a736fe3ee6312b30d507ea2cf4f3dfa8c2c261d1147a04c7e87b36a080849454",
+          "bytes": 4265,
+          "available_in_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c"
+        },
+        {
+          "path": "prototypes/quest_g1/scripts/probe_rubik_turn.py",
+          "sha256": "1b17b607b5b51f89fc12730e46ed161effb8cedec31ebebc14aca51dd56a3c28",
+          "bytes": 3779,
+          "available_in_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c"
+        },
+        {
+          "path": "prototypes/quest_g1/scripts/render_cup_lab.py",
+          "sha256": "a6a21240759daf8f87f80986cceedc6a94da8f2048884f4ba819832ef202966b",
+          "bytes": 12399,
+          "available_in_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c"
+        },
+        {
+          "path": "prototypes/quest_g1/scripts/rubik_native.py",
+          "sha256": "970e6868a66cdc2e11d527879191a27df0037b5cccae7d60730f110033c6935f",
+          "bytes": 2143,
+          "available_in_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c"
+        },
+        {
+          "path": "prototypes/quest_g1/scripts/rubik_probe_bridge.cpp",
+          "sha256": "4533332a3b74137b8330af7f24afc91fae16d3193ee1d91d3b27a5f05a392468",
+          "bytes": 864,
+          "available_in_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c"
+        },
+        {
+          "path": "prototypes/quest_g1/tests/check_camera_fade.cpp",
+          "sha256": "d23d3b267639a14afb16d5fd34c15c07fa1e779c46a21bfb80fb2bc50430516f",
+          "bytes": 1755,
+          "available_in_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c"
+        },
+        {
+          "path": "prototypes/quest_g1/tests/check_controller_wrists.cpp",
+          "sha256": "296f71c52c1dfce5afad27c6621da4276e5c79a78b10e43f8536d24710019399",
+          "bytes": 14017,
+          "archive_path": "predicted-hands-supplemental/prototypes/quest_g1/tests/check_controller_wrists.cpp"
+        },
+        {
+          "path": "prototypes/quest_g1/tests/check_cup_lab.cpp",
+          "sha256": "cd84a04ccee91f84e14da9d71a17f60837226bad016f1533ffed994ab505dd14",
+          "bytes": 1829,
+          "archive_path": "predicted-hands-supplemental/prototypes/quest_g1/tests/check_cup_lab.cpp"
+        },
+        {
+          "path": "prototypes/quest_g1/tests/check_graphics_epoch.cpp",
+          "sha256": "15c2f264760891d0158e4ce62c9461fa4413f803996d351a1fa60b43a15becf9",
+          "bytes": 1050,
+          "available_in_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c"
+        },
+        {
+          "path": "prototypes/quest_g1/tests/check_rubik_mechanism.cpp",
+          "sha256": "8437598bf9bf3221c11ac0fac11ed215b40b3d99fc86fbe677a0edb40180cbbe",
+          "bytes": 6013,
+          "available_in_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c"
+        },
+        {
+          "path": "prototypes/quest_g1/tests/check_tennis.cpp",
+          "sha256": "d92199b11d657c1bc5a0f10a40264bc9f57b864231e5c70e60c57ea9ab6b94f3",
+          "bytes": 16113,
+          "archive_path": "predicted-hands-supplemental/prototypes/quest_g1/tests/check_tennis.cpp"
+        },
+        {
+          "path": "prototypes/quest_g1/tests/test_camera_fade.py",
+          "sha256": "8f4d85aa67316bea43248d5c5d5dd2d39515abde24bf64ee89a6d87aa4df543e",
+          "bytes": 694,
+          "available_in_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c"
+        },
+        {
+          "path": "prototypes/quest_g1/tests/test_controller_wrists.py",
+          "sha256": "d6c85ef9b1b5647e8f075d55c50a14c54d290b03e24a0f07ade36843f03643dc",
+          "bytes": 1651,
+          "archive_path": "predicted-hands-supplemental/prototypes/quest_g1/tests/test_controller_wrists.py"
+        },
+        {
+          "path": "prototypes/quest_g1/tests/test_cup_lab.py",
+          "sha256": "68b3c16f85847866c2c67c3072aabd20695e5d201335d68227cbf1dcee6c5143",
+          "bytes": 3844,
+          "archive_path": "predicted-hands-supplemental/prototypes/quest_g1/tests/test_cup_lab.py"
+        },
+        {
+          "path": "prototypes/quest_g1/tests/test_graphics_epoch.py",
+          "sha256": "52c8a396a03bfbf999038d93e7468d4dcee57dff1fe5081d147be345424db373",
+          "bytes": 579,
+          "available_in_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c"
+        },
+        {
+          "path": "prototypes/quest_g1/tests/test_grip_force.py",
+          "sha256": "1b84a0dd499ed909047eeb05118c74dc8621ee2e883f309cb5cf84ad72f72c6b",
+          "bytes": 3461,
+          "archive_path": "predicted-hands-supplemental/prototypes/quest_g1/tests/test_grip_force.py"
+        },
+        {
+          "path": "prototypes/quest_g1/tests/test_rubik.py",
+          "sha256": "f66999e0fc9571840b4e1dd18a8ade3fa192fd2ec2ac0f4da34f26521eb543f6",
+          "bytes": 2046,
+          "archive_path": "predicted-hands-supplemental/prototypes/quest_g1/tests/test_rubik.py"
+        },
+        {
+          "path": "prototypes/quest_g1/tests/test_tennis.py",
+          "sha256": "6a8491257f731ef77c0798efd076f14913e383cf3734d3bfb1f4dc0e08d08c14",
+          "bytes": 1894,
+          "available_in_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c"
+        }
+      ],
+      "evidence": [
+        {
+          "path": "predicted-hands-evidence/summary.json",
+          "bytes": 1266,
+          "sha256": "f715bba5c82913eb63e60bdda9f24e0ed0d890441aec6508c88f6eeb758c15d1"
+        },
+        {
+          "path": "predicted-hands-evidence/REPORT.md.txt",
+          "bytes": 5515,
+          "sha256": "90ca0c164c37a111891da5b4d9f84c350454146ae750b688684fde0e5a06d0ec"
+        },
+        {
+          "path": "predicted-hands-evidence/wrist-comparison.json",
+          "bytes": 13302,
+          "sha256": "e55365c06653242f821f6899da1e69f63bb6573512d2547ead789d9ac58c36ee"
+        },
+        {
+          "path": "predicted-hands-evidence/unit-tests.log",
+          "bytes": 3064,
+          "sha256": "08d596932bb99bcb993879a467c2db15755e2ff72e697dce626adecd4c64580d"
+        },
+        {
+          "path": "predicted-hands-evidence/replay-tests.log",
+          "bytes": 10011,
+          "sha256": "fc8c1d835c6a605647538cb9aaa326b2da304b6b23d75a117c910676ff3403b6"
+        },
+        {
+          "path": "predicted-hands-evidence/both-hand-axis-tests.log",
+          "bytes": 257,
+          "sha256": "a4dc21bb000fa971be07afc2fe874317a520a76196a8fd621f83727cdcdff8bf"
+        },
+        {
+          "path": "predicted-hands-evidence/apk-verification.json",
+          "bytes": 559,
+          "sha256": "32c5a6b5f4f40c48ae7469c7538e0141a69249e1b2ba5649d3ba4930e4e47213"
+        },
+        {
+          "path": "predicted-hands-evidence/compare_wrist.cpp",
+          "bytes": 8206,
+          "sha256": "0f84336162bdbf527ec5d532e59ab3fd1c5c71a08847484f1e6d2ee4b721bb14"
+        }
+      ]
+    }
+  ],
+  "lfs_remote_verification": {
+    "date": "2026-10-21",
+    "verified_objects": 6,
+    "verified_bytes": 43998167,
+    "method": "Parent fetched from remote LFS; full SHA256/size independently rechecked in runtime archive",
+    "passed": true
+  },
+  "integration_files": {
+    "skeleton/inference_logger/.gitignore": {
+      "bytes": 36,
+      "sha256": "2c05ed7a47caf794f82f815f08ebb8c7b9cc9fff25a3f981656f6b0cf313207b"
+    },
+    "skeleton/inference_logger/README.md": {
+      "bytes": 14695,
+      "sha256": "e142e69a64e43c95b015010945b4333380c9e5fd61147b0c0291ba0428501627"
+    },
+    "skeleton/inference_logger/__init__.py": {
+      "bytes": 71,
+      "sha256": "c9f9c6025d6964a6dadfb085cc3f101ba297abae189a0f36ba3acb777f43c2f7"
+    },
+    "skeleton/inference_logger/__main__.py": {
+      "bytes": 3055,
+      "sha256": "0456dbd0d1f104896f029b9638af88650064f5c348ce74e46d3a15c6498d27da"
+    },
+    "skeleton/inference_logger/capture.py": {
+      "bytes": 11576,
+      "sha256": "db7abd931d23442641a6960392b31c01c1bbf39fe45422185700ba2bd1d6caa2"
+    },
+    "skeleton/inference_logger/offline.py": {
+      "bytes": 13493,
+      "sha256": "c6f222d0b5493b793e08ad52a4873b726127834ee0ef1dcfb6e212a95894e034"
+    },
+    "skeleton/inference_logger/quest_patch.py": {
+      "bytes": 3022,
+      "sha256": "00257f252ea36bad854f29d8a94e69f4d950218bb2a9c65be8ba16d0530859f5"
+    },
+    "skeleton/inference_logger/quest_sync.patch": {
+      "bytes": 3169,
+      "sha256": "aba9e294c23abc56663196e95043a5f0e864fd5929b2667c23b2bbb14f336363"
+    },
+    "skeleton/inference_logger/run.ps1": {
+      "bytes": 801,
+      "sha256": "458f985f985712772cd1454c409cd15db77b707632f1772b2c26052b8eb4aa7c"
+    },
+    "skeleton/inference_logger/storage.py": {
+      "bytes": 3910,
+      "sha256": "14e373f16c39c3f7dc5572c649242905800b9c12abd57dfc5bf8e632cc1647b3"
+    },
+    "skeleton/inference_logger/tag_geometry.py": {
+      "bytes": 1198,
+      "sha256": "5580c7d527dcaadfeaaa0f7a641ebd32dcf7840fc33f03cf783d6a7013c80427"
+    },
+    "skeleton/inference_logger/test_logger.py": {
+      "bytes": 6010,
+      "sha256": "d4e5354c8cbaaf81fe092c44405d44da1170332902ee547576addba312deeea9"
+    },
+    "skeleton/inference_logger/transport.py": {
+      "bytes": 5416,
+      "sha256": "a0e15bf7bb4b20f42575f8fc10a3c6acb374b5259bc848f223ef782e61cd553b"
+    },
+    "skeleton/body2d.py": {
+      "bytes": 24324,
+      "sha256": "bcbec99361f0617a58d68ada4c4306d8115daef5e667bcc3eeb1e1dee821f7a3"
+    },
+    "skeleton/gmr_live.py": {
+      "bytes": 14496,
+      "sha256": "6b3dcfb3dbd10daafdc2fd0924421ec79af55d8b6d941ed7dcc7722780a5e0eb"
+    },
+    "skeleton/gmr_view.py": {
+      "bytes": 16895,
+      "sha256": "9f98fdbe2955c93e7437314dc18ef0e85237d406e38b4087f6bafb12101a6c81"
+    },
+    "skeleton/keypoints2d.py": {
+      "bytes": 1477,
+      "sha256": "6065efc34d648be3195c76654585def2ed48fb9899eb1fb467d435d21cce4e79"
+    },
+    "skeleton/requirements-gmr-view.txt": {
+      "bytes": 195,
+      "sha256": "c06b30798283799df5f61e2c1cf484201775f6790d965552aec9b0331befc489"
+    },
+    "skeleton/test_body2d.py": {
+      "bytes": 4158,
+      "sha256": "49f82c80e61ca89a33b09dcac0a8bda82f21fc948f978b70b5e548ea233d86cf"
+    },
+    "skeleton/test_gmr_live.py": {
+      "bytes": 2945,
+      "sha256": "3a34872f26fa605e3691d2b14616b6d8eb51b71edba8eead807d5162c30ac512"
+    },
+    "skeleton/test_keypoints2d.py": {
+      "bytes": 1093,
+      "sha256": "b1d749282608b59a02cd3886f434033748b06adea23433b8d2cb810c8c109de7"
+    },
+    "skeleton/DESKTOP_2D.md": {
+      "bytes": 3007,
+      "sha256": "ca9b35e9d3389b785276d8da27ad0a1a3b93c5f6eeff1c785a7ecce881b3fa7c"
+    },
+    "skeleton/skeleton_server.py": {
+      "bytes": 5813,
+      "sha256": "52321a948c7f9ce0715a21af30bce6e27182e99b8e40ca43d3eae753ae69ba36"
+    },
+    "skeleton/pose_yolo.py": {
+      "bytes": 25777,
+      "sha256": "e8151b25c265cccfe225be5f9be37147ea978c4ba48b8da146f46a10d19e725d"
+    },
+    "skeleton/test_skeleton_server.py": {
+      "bytes": 4023,
+      "sha256": "cabdfb45de2951feef356a546a6e2bbde6522af013cacbc597581b75b398f9be"
+    }
+  },
+  "integration_notes": {
+    "test_keypoints2d.py": "Only desktop undistortion/keypoint tests integrated; packet-extension test remains in archived complete camera2D patch because those packet fields and headset runtime were not enabled."
+  },
+  "validation": {
+    "date": "2026-10-21",
+    "test_groups": [
+      {
+        "modules": [
+          "inference_logger.test_logger",
+          "test_skeleton_server",
+          "test_body2d",
+          "test_gmr_live"
+        ],
+        "passed": 23,
+        "duration_seconds": 6.505,
+        "environment": "project Python3.12 with pinned MuJoCo/Mink; loopback WebSocket test permitted"
+      },
+      {
+        "modules": [
+          "test_keypoints2d"
+        ],
+        "passed": 2,
+        "duration_seconds": 0.004,
+        "environment": "existing skeleton Python environment, OpenCV5.0.0"
+      }
+    ],
+    "quest_sync_patch_apply_check": "passed; unapplied",
+    "hardware": "no new camera capture, APK build, installation or headset validation"
+  }
+}

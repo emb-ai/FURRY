@@ -1,0 +1,9 @@
+{
+  "run": "three-cycles",
+  "bridge": "bridge-original-home.dylib",
+  "frames": 9302,
+  "qpos_max_error": 0.0,
+  "userdata_max_error": 0.0,
+  "first_divergent_frame": null,
+  "warnings": 0
+}

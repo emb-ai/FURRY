@@ -1,0 +1,63 @@
+{
+  "source_sha256": {
+    "cup_robot_acceptance.py": "ad4485c0eb694f022b51ac27b2e57050ba797faa25a93eb560b4e36d6288c5f8",
+    "bimanual_acceptance.py": "4ce160e5d004832652b494e4d030b9463dcd2d569967f69b51498cb109570e01",
+    "bridge.cpp": "21eae43dbecbf45ad32d264fa00c5bdf30139c9148594d47a468dc1444cb6f01",
+    "reach_physical.py": "c14ad4b50d2237949acbce872e365f3245a3831bac5960322d1cd096329d2dae",
+    "reach_workspace_v2.py": "4374997cfcd833193ac74ff7269cd0d245dc6738bc164a52ea2b1101d425d582",
+    "reach_bridge_v2.cpp": "b6f4d93ef579904b6f689a427a367f515ed9c3c73e0b8371d46171693af943b0",
+    "standing_stress_v2.py": "b1be588536900b50ddb232e49e4fc2a498f35574785212cb37333239826f047b",
+    "verify_bundle.py": "81edff418735fc007a38b71ab0554fec20bba22795888232827d74450f8a9a22",
+    "reproduce_offline.sh": "87ca3499a6c73c5777e5753519fb522d38bee19bc8755c351dbfc498c5d93691"
+  },
+  "assets": "frozen-assets-v2",
+  "physics": "MuJoCo 3.3.7, native Simulation at 1000 Hz, HOMIE Balance at 50 Hz",
+  "cup": {
+    "new_seeds": [
+      700,
+      731
+    ],
+    "hold_seconds": 60,
+    "grip": 1,
+    "grasp_offset_m": [
+      0.12,
+      "-hand_sign*.052",
+      -0.06
+    ],
+    "wrist_yaw_rad": 0,
+    "idle_hand_target_m": [
+      0.12,
+      "idle_sign*.33",
+      1.0
+    ],
+    "object_pose_feedback": "exact simulated transform before transport and placement",
+    "nominal_motor_effort_Nm": 0.35,
+    "sway_seeds": [
+      900,
+      907
+    ],
+    "sway_hold_seconds": 60,
+    "sway_height_amplitude_m": 0.05,
+    "sway_roll_pitch_rad": [
+      0.05,
+      0.07
+    ]
+  },
+  "bimanual": {
+    "new_seeds": [
+      300,
+      347
+    ],
+    "grasp_height_above_center_m": 0.015,
+    "hold_seconds": 5,
+    "grip": 1,
+    "grasp_wrist_orientation": "initial object yaw",
+    "object_pose_feedback": "exact measured grasp transform before transport"
+  },
+  "restrictions": [
+    "All root and prop joints remain free.",
+    "No object/grip weld, mocap grasp, post-reset qpos teleport or grip force override used.",
+    "Oracle fixture commands are not installed autonomous grasp behavior.",
+    "No Quest use or installation."
+  ]
+}

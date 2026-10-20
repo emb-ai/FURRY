@@ -1,0 +1,39 @@
+{
+  "apk": "g1-quest-rubik-prototype.apk",
+  "bytes": 49166590,
+  "sha256": "2fe539a92ff9c67ae09602126af07de43036a6e04642226ba21efa9830d3c969",
+  "zip_crc": true,
+  "model_digest": true,
+  "scene": {
+    "schema_version": 1,
+    "model": "2x2-magnetic-contact-v1",
+    "edge_m": 0.0628,
+    "total_mass_kg": 0.122,
+    "cubies": 8,
+    "faces": [
+      "R",
+      "L",
+      "B",
+      "F",
+      "U",
+      "D"
+    ],
+    "scramble": "R U' F R'",
+    "grip_assist": false,
+    "face_motor": false,
+    "state_file": "rubik.csv",
+    "state_values": 64,
+    "success": "six uniform color faces at a completed detent",
+    "magnetic_window_deg": 15,
+    "magnetic_stiffness_nm_rad": 0.24,
+    "hinge_armature_kg_m2": 1e-05,
+    "controller_wrists": true,
+    "table_height_m": 0.825,
+    "stand_top_m": 0.9,
+    "retaining_mechanism": "idealized switchable internal layer bindings",
+    "direct_arm_pd": true,
+    "control": "controller wrist poses and ordinary per-hand Grip; two loaded hands and relative wrist rotation select the free internal layer"
+  },
+  "installed": false,
+  "quest_live_acceptance": false
+}

@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-10",
+  "apk": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs/tennis-shakehand-20261010/g1-quest-tennis-shakehand.apk",
+  "apk_sha256": "9f9c40d75b40ba4c6f64bd8c4af9d6eec5d6e20778cf6a3aab9c8a6e0bb305e5",
+  "provenance_hashes_verified": 83,
+  "grip": "shakehand adapted to G1 three-finger hand",
+  "handle_across_palm": true,
+  "index_extended": true,
+  "thumb_opposite_blade_face": true,
+  "middle_around_handle": true,
+  "finger_kp": 5,
+  "joint_damping": 0.03,
+  "explicit_actuator_kv": 0,
+  "native_test": "passed: both hands, geometry of finger/blade relationship, grip mechanics, stable finger velocities at 1 ms, held elastic impacts, snapshots and recording",
+  "scene_tests": {
+    "passed": 5
+  },
+  "policy_checks": {
+    "scenes": 4,
+    "policies": 7,
+    "passed": true,
+    "held_runtime_per_hand_s": 1,
+    "both_hands_actual_pose_checked": true
+  },
+  "installed": true,
+  "native_started": false,
+  "live_acceptance": false,
+  "source_changes_published": false,
+  "preview": "shakehand-preview.png: actual native baseline state after 1 s; MuJoCo render, not Quest screen capture",
+  "device": "2G0YC5ZG7T05SR",
+  "installed_hash_verified": true,
+  "installed_apk_sha256": "9f9c40d75b40ba4c6f64bd8c4af9d6eec5d6e20778cf6a3aab9c8a6e0bb305e5",
+  "launch_blocked": "LaunchCheckControllerRequiredDialogActivity",
+  "replay": {
+    "synthetic_cases": 20,
+    "passed": true,
+    "max_command_error": 0,
+    "max_state_error": 0
+  }
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "episode": "episode-1792015434582696",
+    "outcome": 0,
+    "min_root_height": 0.3653041206061237,
+    "warnings": 0,
+    "step_failed": false,
+    "elapsed_steps": 2481,
+    "note": "Native closed-loop actor + free robot/cup physics from first recorded snapshot; initial actor history unavailable and reinitialized, so not exact replay"
+  },
+  {
+    "episode": "episode-1792015467386805",
+    "outcome": 0,
+    "min_root_height": 0.33975686219704515,
+    "warnings": 0,
+    "step_failed": false,
+    "elapsed_steps": 2454,
+    "note": "Native closed-loop actor + free robot/cup physics from first recorded snapshot; initial actor history unavailable and reinitialized, so not exact replay"
+  }
+]

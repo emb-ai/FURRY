@@ -1,0 +1,26 @@
+[
+  {
+    "mode": "velocity_standing_legs",
+    "seconds": 11.99,
+    "min_height": 0.7696078196120651,
+    "distance": 1.2939494746088978,
+    "final_xy": [
+      -0.2765370138804498,
+      0.10094643733853347
+    ],
+    "max_tilt_degrees": 5.280700603017291,
+    "fell": false
+  },
+  {
+    "mode": "full_walk_reference",
+    "seconds": 11.99,
+    "min_height": 0.7609012882321535,
+    "distance": 3.567212939510456,
+    "final_xy": [
+      1.8797639713175782,
+      0.8990644569641716
+    ],
+    "max_tilt_degrees": 10.428466479450957,
+    "fell": false
+  }
+]

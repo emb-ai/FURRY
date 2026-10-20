@@ -1,0 +1,51 @@
+{
+  "run": "second-other-face",
+  "cycles": [
+    {
+      "start_s": 250.09,
+      "end_s": 278.31,
+      "expected_rotation_deg": 90,
+      "corner_position_max_mm": 0.07794195134189065,
+      "corner_orientation_max_deg": 1.6652757685417088,
+      "common_rotation_deg": 6.720319581369902,
+      "cube_center_drift_mm": 4.864641814833927,
+      "other_support_frames": 0,
+      "open_contact_free_longest_s": 3.53,
+      "right_max_clearance_m_10hz": 0.04961835166321167,
+      "corners_rotated": [
+        7,
+        1,
+        5,
+        6
+      ]
+    },
+    {
+      "start_s": 278.31,
+      "end_s": 283.67,
+      "expected_rotation_deg": 90,
+      "corner_position_max_mm": 0.06201673476992513,
+      "corner_orientation_max_deg": 1.4702679606131905,
+      "common_rotation_deg": 17.66976487181501,
+      "cube_center_drift_mm": 27.386161360363054,
+      "other_support_frames": 0,
+      "open_contact_free_longest_s": 0.0,
+      "right_max_clearance_m_10hz": 0.0,
+      "corners_rotated": [
+        6,
+        7,
+        1,
+        5
+      ]
+    }
+  ],
+  "continuous": true,
+  "initial_warmup_s": 2.5,
+  "policy": "homie-standing",
+  "physics_modified": false,
+  "complete_basis_of_moves": false,
+  "limitations": [
+    "Two successive turns of an adjacent physical face after nine turns of the initial face and whole-cube X reorientation",
+    "Canonical grasp accuracy is still insufficient; arbitrary move basis and robustness not established",
+    "Desktop native simulation; no new headset installation"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "first_task_fall_s": 17.7,
+  "goal_entry_samples": 0,
+  "max_consecutive_goal_duration_s": 0.0,
+  "goal_parameters": [
+    0.58,
+    -0.64,
+    0.018,
+    0.15,
+    0.17,
+    0.03
+  ],
+  "failure_proof": "If no goal entry occurred, task success (requires >=0.5s settled inside goal) is impossible in this rollout. This is a necessary-condition check, not a success detector."
+}

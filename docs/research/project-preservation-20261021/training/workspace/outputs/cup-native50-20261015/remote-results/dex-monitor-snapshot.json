@@ -1,0 +1,28 @@
+{
+  "checked_at": 1792070427.3086817,
+  "path": "/home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020014648126-gpu7-colleague-20261015",
+  "status": {
+    "status": "running",
+    "pid": 90464,
+    "iteration": 5621,
+    "seconds": 8.667846874333918,
+    "elapsed_s": 16245.037791009061,
+    "reward_mean": 0.17293636376659074,
+    "failed": 139,
+    "completed_segments": 51,
+    "object_error_m": 0.045393728806326784,
+    "learning_rate": 1.5000000000000004e-05,
+    "losses": {
+      "value_function": 0.09733580984175205,
+      "surrogate": -0.006239311670651659,
+      "entropy": 5.3848058700561525
+    },
+    "actor_changed": true
+  },
+  "status_mtime": 1792070427.0724077,
+  "last_checkpoint": {
+    "path": "/home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020014648126-gpu7-colleague-20261015/checkpoint-05600.pt",
+    "bytes": 15003071,
+    "mtime": 1792070245.0884273
+  }
+}

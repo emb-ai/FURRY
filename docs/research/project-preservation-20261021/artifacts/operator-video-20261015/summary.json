@@ -1,0 +1,61 @@
+{
+  "apk": "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs.nosync/operator-video-20261015/g1-quest-operator-video.apk",
+  "sha256": "8e354a97d802af0ae52d67dbeaf15544676d1a7e09b7a4a55c17399015b90323",
+  "bytes": 850768526,
+  "baseline": "installed grip-guard b7970138d82bbebfd417acc8d33558298a8be8367fb27675f3cd1a4bc2bd0cbf",
+  "format": {
+    "width": 1280,
+    "height": 720,
+    "fps": 30,
+    "codec": "H264",
+    "audio": false
+  },
+  "ui": "\u0412\u0438\u0434 \u2192 \u0417\u0430\u043f\u0438\u0441\u0430\u0442\u044c \u0432\u0438\u0434\u0435\u043e \u043e\u043f\u0435\u0440\u0430\u0442\u043e\u0440\u0430 / \u041e\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c \u0432\u0438\u0434\u0435\u043e \u043e\u043f\u0435\u0440\u0430\u0442\u043e\u0440\u0430",
+  "destination": "Movies/G1Quest",
+  "tests": {
+    "menu_native": true,
+    "recording_unit": 11,
+    "episode_manifest_unit": 1,
+    "android_arm64_build": true,
+    "java_dex_build": true,
+    "apk_signature_v3": true,
+    "zip_crc": true,
+    "asset_count": 280,
+    "unchanged_models_policies_catalogs": 30,
+    "all_provenance_manifests": 135,
+    "native_and_dex_match_build": true
+  },
+  "device_read_only": {
+    "serial": "2G0YC5ZG7T05SR",
+    "android_sdk": 34,
+    "permission_activity": "com.meta.systemui/com.meta.systemui.media.MediaProjectionPermissionActivity"
+  },
+  "installed": true,
+  "on_device_video_verified": false,
+  "committed": false,
+  "pushed": false,
+  "limitations": [
+    "First capture requires user consent in headset",
+    "Actual compositor image and passthrough require device acceptance",
+    "Independent MP4, no automatic episode linking or frame synchronization",
+    "No recovery after abrupt process/power loss"
+  ],
+  "build_note": "Native arm64 and Java/DEX compiled; final incremental packaging refreshed every provenance manifest and kept the four dependency JNI libraries byte-identical to baseline.",
+  "delivery": {
+    "time_utc": "2026-10-15T12:16:49.706182+00:00",
+    "serial": "2G0YC5ZG7T05SR",
+    "apk": "/data/app/~~yPTcZoQxUh6TEvpFgGL2lg==/org.g1lab.quest-Q_xvHP1ZIOJV4Mt57ETcZA==/base.apk",
+    "apk_sha256": "8e354a97d802af0ae52d67dbeaf15544676d1a7e09b7a4a55c17399015b90323",
+    "latest_episode": "episode-1792064173118091",
+    "latest_status": "complete",
+    "files": 9110,
+    "app_running": false,
+    "install_method": "adb install -r",
+    "verified_local_apk_sha256": "8e354a97d802af0ae52d67dbeaf15544676d1a7e09b7a4a55c17399015b90323",
+    "app_files_preserved": 9110,
+    "settings_preserved": true,
+    "live_video_verified": false,
+    "native_startup_confirmed": false,
+    "launch_blocker": "LaunchCheckControllerRequiredDialogActivity"
+  }
+}

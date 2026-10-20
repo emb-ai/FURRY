@@ -1,0 +1,466 @@
+{
+  "date_utc": "2026-10-14T10:43:37.363710+00:00",
+  "offline_only": true,
+  "headset_installed": false,
+  "source_project": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/homie-standing-20261014/project",
+  "source_baseline": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/scene-diversity-20261014/project",
+  "apk": {
+    "baseline_apk": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/rubik-size-20261014/g1-quest-rubik-100mm.apk",
+    "baseline_sha256": "296c08355ae84498ce75f3d2db3bca2ce51b40b6363bcf33bdd43911bd787fb9",
+    "candidate_apk": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/homie-standing-20261014/g1-quest-homie-standing.apk",
+    "candidate_sha256": "d2f0ad4e17d0ec84240e3c792d1a5f54d5901f00119c13266bb251c9fe3fa117",
+    "candidate_size_bytes": 850654613,
+    "installed": false,
+    "catalog_count": [
+      13,
+      14
+    ],
+    "original_catalog_entries_unchanged": true,
+    "old_onnx_preserved": [
+      "assets/policy-dexweave-B-4174.onnx",
+      "assets/policy-dexweave-wide-2977.onnx",
+      "assets/policy-homie-v2-balance.onnx",
+      "assets/policy-homie-v2-walk.onnx",
+      "assets/policy-quest-111260-1000.onnx",
+      "assets/policy-quest-111260-500.onnx",
+      "assets/policy-quest-111586-200.onnx",
+      "assets/policy-quest-111586-300.onnx",
+      "assets/policy-quest-111586-500-lift10.onnx",
+      "assets/policy-quest-111586-500.onnx",
+      "assets/policy-quest-stance12-B-s11.onnx",
+      "assets/policy-sonic-vr3-planner.onnx",
+      "assets/policy-sonic-vr3-sonic_decoder.onnx",
+      "assets/policy-sonic-vr3-sonic_encoder.onnx",
+      "assets/policy-twist2-25k.onnx",
+      "assets/policy.onnx"
+    ],
+    "manifest_unchanged": true,
+    "apk_zip_valid": true,
+    "source_provenance_verified": [
+      "android/native/retarget.cpp",
+      "android/native/simulation.cpp",
+      "android/native/gmr.cpp",
+      "android/native/gmr.h",
+      "android/native/meta_retarget.cpp",
+      "android/native/meta_retarget.h",
+      "android/native/foot_floor.h",
+      "android/native/swing_clearance.h",
+      "android/native/body_tracking.h",
+      "android/native/quest_runtime.cpp",
+      "android/native/runtime_stats.h",
+      "android/native/stats_hud.h",
+      "android/native/recording_export.h",
+      "android/native/guided_capture.h",
+      "android/native/capture_hud.h",
+      "android/native/retarget.h",
+      "android/native/recording.h",
+      "android/native/full_body_io.h",
+      "android/native/world_skeleton.h",
+      "android/native/world_skeleton_gl.h",
+      "android/native/operator_skeleton.h",
+      "android/native/operator_skeleton_draw.h",
+      "android/native/camera_fusion.cpp",
+      "android/native/camera_fusion.h",
+      "android/native/camera_stream.cpp",
+      "android/native/quest_menu.h",
+      "android/native/quest_menu_gl.h",
+      "android/native/policy_catalog.h",
+      "android/native/policy_backend.h",
+      "android/native/groot_decoupled.h",
+      "android/native/dexweave.h",
+      "android/native/sonic.h",
+      "android/native/sonic_constants.h",
+      "android/native/virtual_leg_lift.h",
+      "android/native/body_motor_profile.h",
+      "android/native/body_motor_model.h",
+      "android/native/episode_manifest.h",
+      "android/native/simulation.h",
+      "android/native/standing_arms.h",
+      "android/native/file_sha256.h",
+      "android/native/camera_pose_servo.h",
+      "android/native/tennis_task.h",
+      "android/native/collection_task.h",
+      "android/native/render_geom.h",
+      "android/native/cup_lab_shaders.h",
+      "android/native/cup_placement_cue.h",
+      "android/native/rubik_task.h",
+      "android/native/camera_fade.h",
+      "android/native/graphics_epoch.h",
+      "android/native/graphics.cpp",
+      "scripts/prepare_android.py",
+      "g1_sim/cup_lab.py",
+      "g1_sim/collection_scenes.py",
+      "g1_sim/scene.py",
+      "g1_sim/geometry.py",
+      "g1_sim/rubik.py"
+    ],
+    "changed_packaged_source_digests": [
+      "android/native/simulation.cpp",
+      "android/native/quest_runtime.cpp",
+      "android/native/quest_menu.h",
+      "android/native/policy_catalog.h",
+      "android/native/policy_backend.h",
+      "android/native/episode_manifest.h",
+      "android/native/simulation.h",
+      "scripts/prepare_android.py",
+      "g1_sim/cup_lab.py",
+      "g1_sim/collection_scenes.py"
+    ],
+    "other_chat_source_provenance_preserved": true,
+    "packaged_scenes_match_test_assets": {
+      "stand": true,
+      "cup": true,
+      "rubik": true,
+      "tennis": true,
+      "push_t": true,
+      "wb_dex": true,
+      "bimanual": true,
+      "basket": true
+    },
+    "preserved_scene_physics": {
+      "stand": {
+        "unchanged_except_two_author_thumb_colliders": true,
+        "different_arrays": {
+          "geom_pos": [
+            56,
+            82
+          ],
+          "geom_quat": [
+            56,
+            82
+          ],
+          "geom_size": [
+            56,
+            82
+          ],
+          "geom_type": [
+            56,
+            82
+          ],
+          "geom_dataid": [
+            56,
+            82
+          ]
+        }
+      },
+      "rubik": {
+        "unchanged_except_two_author_thumb_colliders": true,
+        "different_arrays": {
+          "geom_pos": [
+            56,
+            82
+          ],
+          "geom_quat": [
+            56,
+            82
+          ],
+          "geom_size": [
+            56,
+            82
+          ],
+          "geom_type": [
+            56,
+            82
+          ],
+          "geom_dataid": [
+            56,
+            82
+          ]
+        }
+      },
+      "tennis": {
+        "unchanged_except_two_author_thumb_colliders": true,
+        "different_arrays": {
+          "geom_pos": [
+            56,
+            82
+          ],
+          "geom_quat": [
+            56,
+            82
+          ],
+          "geom_size": [
+            56,
+            82
+          ],
+          "geom_type": [
+            56,
+            82
+          ],
+          "geom_dataid": [
+            56,
+            82
+          ]
+        }
+      },
+      "push_t": {
+        "unchanged_except_two_author_thumb_colliders": true,
+        "different_arrays": {
+          "geom_pos": [
+            56,
+            82
+          ],
+          "geom_quat": [
+            56,
+            82
+          ],
+          "geom_size": [
+            56,
+            82
+          ],
+          "geom_type": [
+            56,
+            82
+          ],
+          "geom_dataid": [
+            56,
+            82
+          ]
+        }
+      },
+      "wb_dex": {
+        "unchanged_except_two_author_thumb_colliders": true,
+        "different_arrays": {
+          "geom_pos": [
+            56,
+            82
+          ],
+          "geom_quat": [
+            56,
+            82
+          ],
+          "geom_size": [
+            56,
+            82
+          ],
+          "geom_type": [
+            56,
+            82
+          ],
+          "geom_dataid": [
+            56,
+            82
+          ]
+        }
+      },
+      "basket": {
+        "unchanged_except_two_author_thumb_colliders": true,
+        "different_arrays": {
+          "geom_pos": [
+            57,
+            83
+          ],
+          "geom_quat": [
+            57,
+            83
+          ],
+          "geom_size": [
+            57,
+            83
+          ],
+          "geom_type": [
+            57,
+            83
+          ],
+          "geom_dataid": [
+            57,
+            83
+          ]
+        }
+      }
+    },
+    "signing_certificate_unchanged": true,
+    "signing_certificate": "Signer #1 certificate SHA-256 digest: 546d8ffa26d402e64b7939edef800a323dbb4e73a17e74bd16041a26d7e95203",
+    "rubik_edge_m": 0.1
+  },
+  "changes": [
+    "android/native/episode_manifest.h",
+    "android/native/policy_backend.h",
+    "android/native/policy_catalog.h",
+    "android/native/quest_menu.h",
+    "android/native/quest_runtime.cpp",
+    "android/native/replay_gmr.cpp",
+    "android/native/replay_gmr_dynamics.cpp",
+    "android/native/simulation.cpp",
+    "android/native/simulation.h",
+    "android/native/standing_arms.h",
+    "android/config/policies.json",
+    "g1_sim/collection_scenes.py",
+    "g1_sim/cup_lab.py",
+    "g1_sim/geometry.py",
+    "g1_sim/scene.py",
+    "scripts/check_menu_replay.py",
+    "scripts/check_standing_control.py",
+    "scripts/policy_assets.py",
+    "scripts/prepare_android.py",
+    "tests/check_collection.cpp",
+    "tests/check_cup_lab.cpp",
+    "tests/check_decoupled_backend.cpp",
+    "tests/check_replay_menu.cpp",
+    "tests/check_standing_control.cpp",
+    "tests/test_cup_lab.py",
+    "tests/test_geometry.py",
+    "tests/test_policy_assets.py"
+  ],
+  "cup": {
+    "diameter_before_m": 0.086,
+    "diameter_after_m": 0.0645,
+    "height_m": 0.096,
+    "mass_before_kg": 0.24,
+    "mass_after_kg": 0.135,
+    "start_x_m": [
+      0.38,
+      0.47
+    ],
+    "start_y_m": [
+      -0.28,
+      0.28
+    ],
+    "start_yaw_rad": [
+      -0.1,
+      0.1
+    ],
+    "excluded_goal_radius_m": 0.15,
+    "development_successes": 4,
+    "development_trials": 4,
+    "heldout_seed_range": [
+      700,
+      731
+    ],
+    "heldout_successes": 32,
+    "heldout_trials": 32,
+    "heldout_complete": true,
+    "hold_seconds": 60,
+    "min_lift_during_hold_m": 0.13648770466662608,
+    "failed_seeds": [],
+    "sway_60s": {
+      "seeds": [
+        900,
+        907
+      ],
+      "successes": 8,
+      "trials": 8,
+      "min_lift_m": 0.13561955435617346
+    },
+    "last5s_relative_drift_max_m": 0.0005718097820566143
+  },
+  "bimanual": {
+    "block_dimensions_m": [
+      0.05,
+      0.05,
+      0.09
+    ],
+    "mass_kg": 0.085,
+    "seeds": [
+      300,
+      347
+    ],
+    "successes": 45,
+    "trials": 48,
+    "both_held_8cm": 45,
+    "failed_seeds": [
+      307,
+      310,
+      329
+    ],
+    "limitation": "Known-pose scripted grasp and transport; not a learned policy or headset trial.",
+    "grasp_height_offset_m": 0.015,
+    "failure_stage": "All three held-out failures are initial right-hand grasps; all 45 successful two-hand holds completed placement.",
+    "development": {
+      "successes": 23,
+      "trials": 24,
+      "seeds": [
+        22,
+        45
+      ]
+    }
+  },
+  "standing": {
+    "stress_trials": 15,
+    "seconds_per_trial": 20,
+    "falls": 0,
+    "max_foot_xy_m": 0.0049793748833610995,
+    "max_tilt_deg": 5.657408047563996,
+    "min_root_height_m": 0.5406696579707382,
+    "wrist_rms_without_correction_m": 0.011642088634364159,
+    "wrist_rms_with_correction_m": 0.003505457050491716,
+    "root_and_feet_free": true
+  },
+  "reach": {
+    "targets": 46,
+    "max_wrist_error_m": 0.028946408820650985,
+    "per_scene": {
+      "cup": {
+        "targets": 20,
+        "max_wrist_error_m": 0.027038461630608426
+      },
+      "bimanual": {
+        "targets": 20,
+        "max_wrist_error_m": 0.028946408820650985
+      },
+      "rubik": {
+        "targets": 6,
+        "max_wrist_error_m": 0.0015841354756985246
+      }
+    },
+    "note": "Final-second mean physical wrist error with props present and open fingers; no universal workspace guarantee.",
+    "raised_grasp_check": {
+      "targets": 46,
+      "max_wrist_error_m": 0.027038461630608426
+    }
+  },
+  "verification": {
+    "unit_tests": 119,
+    "passed": 118,
+    "skipped": 1,
+    "unit_ok": true,
+    "standing_replay_cases": 12,
+    "full_replay_cases": 46,
+    "full_replay_skips": [
+      "SKIP 4 DexWeave cases: absolute-reference dynamic replay is unsupported"
+    ],
+    "full_replay_traceback": false,
+    "actual_reset_checks": 1920
+  },
+  "limits": [
+    "No new headset test or installation; Android performance and live controller alignment remain unverified.",
+    "Scripted wrist paths use exact simulated object poses and feedback; they are test fixtures, not runtime autonomous grasping.",
+    "Cup handle starts face +X with only ±0.1 rad yaw; tests do not cover arbitrary handle orientation or controller noise.",
+    "Bimanual still has grasp and placement failures.",
+    "Reach tested only for tabletop cup, bimanual and Rubik; basket/door, floor shelf task and locomotion are not accepted.",
+    "DexWeave absolute-reference dynamic replay is unsupported by the legacy replayer; those cases are explicitly skipped."
+  ],
+  "author_sources": {
+    "paper": "https://arxiv.org/html/2511.02832v1",
+    "twist2_config": "https://github.com/amazon-far/TWIST2/blob/b06178f19a22f2138cbd31f60c6d494bc263f67d/legged_gym/legged_gym/envs/base/humanoid_char_config.py",
+    "twist2_g1": "https://github.com/amazon-far/TWIST2/blob/b06178f19a22f2138cbd31f60c6d494bc263f67d/legged_gym/legged_gym/envs/g1/g1_mimic_config.py",
+    "homie_runtime": "https://github.com/NVlabs/GR00T-WholeBodyControl/blob/b042411fae38ee4d1af9aac82a37a1f8d14d6dd0/decoupled_wbc/control/policy/g1_gear_wbc_policy.py"
+  },
+  "author_cup_dimensions_known": false,
+  "contact_solver": {
+    "scenes": [
+      "cup",
+      "bimanual"
+    ],
+    "solver": "Newton",
+    "cone": "pyramidal",
+    "noslip_iterations": 2,
+    "multiccd": true,
+    "friction_and_motor_force_unchanged": true
+  },
+  "history": {
+    "prototype_15s_cup": {
+      "successes": 64,
+      "trials": 64,
+      "failure": "Minute hold then lost cup in 3/4 selected seeds; superseded by NoSlip candidate."
+    },
+    "bimanual_before_raised_grasp_and_noslip": {
+      "successes": 36,
+      "trials": 48
+    },
+    "raised_grasp_without_noslip": {
+      "successes": 39,
+      "trials": 48
+    }
+  }
+}

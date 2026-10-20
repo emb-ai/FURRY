@@ -1,0 +1,33 @@
+{
+  "run": "other-face",
+  "cycles": [
+    {
+      "start_s": 227.29,
+      "end_s": 232.6,
+      "expected_rotation_deg": 90,
+      "corner_position_max_mm": 0.13572395287896927,
+      "corner_orientation_max_deg": 1.4419049344145467,
+      "common_rotation_deg": 15.350630970850414,
+      "cube_center_drift_mm": 23.32482918171778,
+      "other_support_frames": 0,
+      "open_contact_free_longest_s": 0.0,
+      "right_max_clearance_m_10hz": 0.0,
+      "corners_rotated": [
+        7,
+        5,
+        1,
+        6
+      ]
+    }
+  ],
+  "continuous": true,
+  "initial_warmup_s": 2.5,
+  "policy": "homie-standing",
+  "physics_modified": false,
+  "complete_basis_of_moves": false,
+  "limitations": [
+    "One quarter-turn of a different physical face after whole-cube rotation and sequential regrasp",
+    "Repeatable canonical return and continued arbitrary moves remain unresolved",
+    "Desktop native simulation; no new headset installation"
+  ]
+}

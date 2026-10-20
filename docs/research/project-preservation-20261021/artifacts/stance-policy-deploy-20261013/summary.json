@@ -1,0 +1,65 @@
+{
+  "apk": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/stance-policy-deploy-20261013/g1-quest-lab-vlad-stance12-B.apk",
+  "verification": {
+    "apk": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/stance-policy-deploy-20261013/project/android/build/g1-quest.apk",
+    "sha256": "4a41c769c32accf51d184b1fc243edbc5b1be4ecefc6b516886277e6e0d03744",
+    "bytes": 835504074,
+    "zip_crc": true,
+    "policy": {
+      "id": "quest-stance12-B-s11",
+      "title": "TWIST2: узкая стойка −12 см",
+      "note": "B · дообучение +1000 · 50 Гц",
+      "file": "policy-quest-stance12-B-s11.onnx",
+      "sha256": "f24be7b0ef36b9bfef61672aa54dbd7f494c6527a0cc66f64b449d2f7da15745",
+      "policy_hz": 50,
+      "legacy_policy_hz": 100,
+      "backend": "twist2",
+      "input_patch": "stance_narrow12_v1"
+    },
+    "old_policies_unchanged": true,
+    "scenes_gmr_config_unchanged": true,
+    "installed_wrist_mode_preserved": true,
+    "metadata_variants": 72,
+    "source_asset_checks": 107,
+    "tests": {
+      "native_contract_manifest_wrists": 3,
+      "synthetic_replay_cases": 18,
+      "new_policy_max_reference_and_state_error": 0
+    },
+    "input_change": "6cm inward per foot in target pelvis yaw axis after adapter before GMR; no changes to source, bind, target height/orientation/knees or GMR weights",
+    "gamma_blending": false
+  },
+  "installation": {
+    "time_utc": "2026-10-13T19:53:40.691572+00:00",
+    "serial": "2G0YC5ZG7T05SR",
+    "installed": true,
+    "install_r": true,
+    "data_cleared": false,
+    "apk_sha256": "4a41c769c32accf51d184b1fc243edbc5b1be4ecefc6b516886277e6e0d03744",
+    "device_digest_match": true,
+    "selected_policy": "quest-stance12-B-s11",
+    "input_patch": "stance_narrow12_v1",
+    "settings_only_policy_changed": true,
+    "other_apps_unchanged": true,
+    "before": {
+      "org.g1lab.quest": "ffeea973b3b192d09e189104a2cafce59bfc09ab6fd664de4847bb131257de4f",
+      "org.g1lab.quest.smooth": "3e0c4f70fd55f63d351c332e95230e18d7af45d4f9c47a573626658685b123f7",
+      "org.g1lab.quest.camera": "381596da14ec9f083caeeb0c522d416121ade646662aa2c96a4aeee3dbfc641f"
+    },
+    "after": {
+      "org.g1lab.quest": "4a41c769c32accf51d184b1fc243edbc5b1be4ecefc6b516886277e6e0d03744",
+      "org.g1lab.quest.smooth": "3e0c4f70fd55f63d351c332e95230e18d7af45d4f9c47a573626658685b123f7",
+      "org.g1lab.quest.camera": "381596da14ec9f083caeeb0c522d416121ade646662aa2c96a4aeee3dbfc641f"
+    },
+    "start": "Starting: Intent { cmp=org.g1lab.quest/android.app.NativeActivity }",
+    "live_acceptance": false
+  },
+  "native_startup_confirmed": true,
+  "process_id": 6143,
+  "actual_hz": 50,
+  "weight_and_metadata_device_verified": true,
+  "live_walking_acceptance": false,
+  "published": false,
+  "source_checkout": "isolated project snapshot in this output directory; original dirty checkouts untouched",
+  "patch": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/stance-policy-deploy-20261013/stance-runtime.patch"
+}

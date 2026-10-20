@@ -1,0 +1,13 @@
+{
+  "destination": "mipt-stud:~/furry/cup-dp-20261015",
+  "files": {
+    "code-and-weights.tar.gz": {
+      "bytes": 41649803,
+      "sha256": "8982dd62a3402917f92c557a5e7f3a1cd3f9e85b2097aa68ec0295a3283fde2d"
+    },
+    "cup44-no-shadow-causal.hdf5.gz": {
+      "bytes": 728571260,
+      "sha256": "ab37d09d738020d46579ffeae2fe3b3a1da28949f2465b5f2f552ec0e9131bcc"
+    }
+  }
+}

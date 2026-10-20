@@ -1,0 +1,28 @@
+{
+  "learned": {
+    "normalized_mse": 0.10892120748758316,
+    "arm_mae_deg": 2.56329345703125,
+    "grip_mae": 0.055745918303728104,
+    "first4_arm_mae_deg": 2.2677345275878906
+  },
+  "repeat_previous_command": {
+    "normalized_mse": 0.19088846445083618,
+    "arm_mae_deg": 1.8738707304000854,
+    "grip_mae": 0.01660866104066372,
+    "first4_arm_mae_deg": 0.6606363654136658
+  },
+  "shuffle_cup_goal": {
+    "normalized_mse": 0.14142540097236633,
+    "arm_mae_deg": 2.8755977153778076,
+    "grip_mae": 0.07799080014228821,
+    "first4_arm_mae_deg": 2.527116537094116,
+    "prediction_arm_change_deg": 1.475392460823059
+  },
+  "shuffle_previous_command": {
+    "normalized_mse": 1.1819483041763306,
+    "arm_mae_deg": 7.019872188568115,
+    "grip_mae": 0.1220482736825943,
+    "first4_arm_mae_deg": 6.923215389251709,
+    "prediction_arm_change_deg": 6.618905544281006
+  }
+}

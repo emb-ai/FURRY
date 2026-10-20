@@ -1,0 +1,1982 @@
+{
+  "scope": "Local outputs, including ignored files, recording archives and dataset ZIP; no fresh headset query",
+  "body_files": [
+    {
+      "path": "outputs/catch-up-wrists-20261010/replay-debug/stand/recordings/episode-1791621029464933/body.csv",
+      "size_bytes": 523972,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/catch-up-wrists-20261010/replay-debug/stand/recordings/episode-1791621088056187/body.csv",
+      "size_bytes": 523972,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/catch-up-wrists-20261010/replay-debug/lab/recordings/episode-1791621086106916/body.csv",
+      "size_bytes": 523972,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/catch-up-wrists-20261010/replay-debug/lab/recordings/episode-1791621027201801/body.csv",
+      "size_bytes": 523972,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/user-diagnostics/g1-quest-diagnostics-20261006-180153/files/g1/recordings/episode-1791296229786271/body.csv",
+      "size_bytes": 10657949,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/quest-walk-catch-up-20261009/files/g1/recordings/episode-1791551115540918/body.csv",
+      "size_bytes": 17870302,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/quest-postfix-traces-20261010/files/g1/recordings/episode-1791621888465718/body.csv",
+      "size_bytes": 11470656,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/guided-capture-20261008/recordings/episode-1791463512264301/body.csv",
+      "size_bytes": 4354890,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/quest-postfix-traces-20261010/files/g1/recordings/episode-1791619472758775/body.csv",
+      "size_bytes": 612776,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/quest-postfix-traces-20261010/files/g1/recordings/episode-1791621867365094/body.csv",
+      "size_bytes": 730906,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/floor-grounding-20261008/recordings/episode-1791453824870454/body.csv",
+      "size_bytes": 20093760,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/floor-grounding-20261008/recordings/episode-1791453976077276/body.csv",
+      "size_bytes": 2684426,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/floor-grounding-20261008/recordings/episode-1791453991117291/body.csv",
+      "size_bytes": 20095690,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/long-recording-20261007/episode-1791382878606181/body.csv",
+      "size_bytes": 77558168,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/quest-tennis-control-audit-20261010/baseline-episode/body.csv",
+      "size_bytes": 11470656,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/quest-tennis-control-audit-20261010/old-walk-body.csv",
+      "size_bytes": 11470656,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/head-follow-20261007/y-recordings/episode-1791381882884690/body.csv",
+      "size_bytes": 546527,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/head-follow-20261007/y-recordings/episode-1791381881314690/body.csv",
+      "size_bytes": 184786,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/head-follow-20261007/y-recordings/episode-1791381885294695/body.csv",
+      "size_bytes": 172817,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/ego-camera-follow-20261007/recordings/episode-1791368724761036/body.csv",
+      "size_bytes": 15661589,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/head-follow-20261007/y-recordings/episode-1791381886884693/body.csv",
+      "size_bytes": 3091800,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/gmr-recording/recordings/episode-1791292441760778/body.csv",
+      "size_bytes": 3217309,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/gmr-recording/recordings/episode-1791280352614038/body.csv",
+      "size_bytes": 3217309,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/gmr-recording/recordings/episode-1791293662620741/body.csv",
+      "size_bytes": 3211261,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/gmr-recording/recordings/episode-1791292810184037/body.csv",
+      "size_bytes": 3211261,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/gmr-recording/recordings/episode-1791280612722375/body.csv",
+      "size_bytes": 3217309,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/gmr-recording/recordings/episode-1791291690274881/body.csv",
+      "size_bytes": 3217309,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/gmr-recording/recordings/episode-1791320567948885/body.csv",
+      "size_bytes": 3211261,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/gmr-recording/recordings/episode-1791326700869921/body.csv",
+      "size_bytes": 3225309,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/gmr-recording/recordings/episode-1791281080206061/body.csv",
+      "size_bytes": 3217309,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/gmr-recording/recordings/episode-1791280294679836/body.csv",
+      "size_bytes": 3217309,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/camera-stream-20261007/recordings/episode-1791374609882775/body.csv",
+      "size_bytes": 13076156,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/world-skeleton/episode-1791471886355756/body.csv",
+      "size_bytes": 10373192,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/quest-cup-freeze-20261007/recordings/episode-1791365001615188/body.csv",
+      "size_bytes": 17592800,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/recording-fixture/recordings/episode-1791280355746819/body.csv",
+      "size_bytes": 218889,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/quest-catch-up-111586-audit/files/g1/recordings/episode-1791566232971326/body.csv",
+      "size_bytes": 11040034,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/trace-20261008/episode-1791453824870454/body.csv",
+      "size_bytes": 20093760,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/trace-20261008/episode-1791453976077276/body.csv",
+      "size_bytes": 2684426,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/dataset-audit-20261008/episode/episode-1791467626074995/body.csv",
+      "size_bytes": 336314304,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/trace-20261008/episode-1791453991117291/body.csv",
+      "size_bytes": 20095690,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/marker-calibration/alignment-check/quest/body.csv",
+      "size_bytes": 318693424,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/floor-grounding-live-20261008/recordings/episode-1791458536846595/body.csv",
+      "size_bytes": 3880210,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/floor-grounding-live-20261008/recordings/episode-1791458504162610/body.csv",
+      "size_bytes": 6742220,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/floor-grounding-live-20261008/recordings/episode-1791458472343296/body.csv",
+      "size_bytes": 486428,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    },
+    {
+      "path": "outputs/floor-grounding-live-20261008/recordings/episode-1791458528331401/body.csv",
+      "size_bytes": 544109,
+      "columns": 216,
+      "pose_joint_count": 14,
+      "pose_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "extra_foot_fields": []
+    }
+  ],
+  "archives": [
+    {
+      "path": "outputs/quest-postfix-traces-20261010/episodes.tar",
+      "body_headers": [
+        {
+          "member": "files/g1/recordings/episode-1791619472758775/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        },
+        {
+          "member": "files/g1/recordings/episode-1791621867365094/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        },
+        {
+          "member": "files/g1/recordings/episode-1791621888465718/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        }
+      ],
+      "other_tracking_members": [],
+      "file_types": {
+        ".csv": 15,
+        ".json": 12,
+        ".jsonl": 3,
+        ".onnx": 3,
+        "": 3
+      }
+    },
+    {
+      "path": "outputs/quest-walk-catch-up-20261009/episode.tar",
+      "body_headers": [
+        {
+          "member": "files/g1/recordings/episode-1791551115540918/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        }
+      ],
+      "other_tracking_members": [],
+      "file_types": {
+        ".onnx": 1,
+        ".csv": 5,
+        ".json": 4,
+        ".jsonl": 1,
+        "": 1
+      }
+    },
+    {
+      "path": "outputs/long-recording-20261007/episode.tar",
+      "body_headers": [
+        {
+          "member": "episode-1791382878606181/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        }
+      ],
+      "other_tracking_members": [],
+      "file_types": {
+        "": 1,
+        ".jsonl": 1,
+        ".csv": 5,
+        ".json": 2
+      }
+    },
+    {
+      "path": "outputs/quest-tennis-control-audit-20261010/device-traces.tar",
+      "body_headers": [],
+      "other_tracking_members": [
+        "teleop_trace.csv",
+        "teleop_trace_previous.csv"
+      ],
+      "file_types": {
+        ".csv": 3,
+        ".txt": 1,
+        ".json": 1
+      }
+    },
+    {
+      "path": "outputs/floor-grounding-20261008/today.tar",
+      "body_headers": [
+        {
+          "member": "episode-1791453991117291/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        },
+        {
+          "member": "episode-1791453976077276/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        },
+        {
+          "member": "episode-1791453824870454/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        }
+      ],
+      "other_tracking_members": [],
+      "file_types": {
+        "": 3,
+        ".csv": 15,
+        ".json": 6,
+        ".jsonl": 3
+      }
+    },
+    {
+      "path": "outputs/policy-selection-20261009/device-data-before-install.tar",
+      "body_headers": [
+        {
+          "member": "files/g1/recordings/episode-1791546646740990/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        },
+        {
+          "member": "files/g1/recordings/episode-1791545389063846/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        },
+        {
+          "member": "files/g1/recordings/episode-1791545380714160/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        }
+      ],
+      "other_tracking_members": [
+        "files/g1/teleop_trace_previous.csv",
+        "files/g1/teleop_trace.csv"
+      ],
+      "file_types": {
+        ".bin": 8,
+        ".txt": 14,
+        ".json": 20,
+        ".rgba": 18,
+        ".csv": 18,
+        "": 3,
+        ".jsonl": 3,
+        ".xml": 5,
+        ".obj": 49,
+        ".ppm": 1,
+        ".onnx": 1
+      }
+    },
+    {
+      "path": "outputs/head-follow-20261007/y-regression.tar",
+      "body_headers": [
+        {
+          "member": "episode-1791381881314690/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        },
+        {
+          "member": "episode-1791381882884690/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        },
+        {
+          "member": "episode-1791381885294695/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        },
+        {
+          "member": "episode-1791381886884693/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        }
+      ],
+      "other_tracking_members": [],
+      "file_types": {
+        ".csv": 20,
+        ".json": 8,
+        "": 4,
+        ".jsonl": 4
+      }
+    },
+    {
+      "path": "outputs/ego-camera-follow-20261007/device-new.tar",
+      "body_headers": [
+        {
+          "member": "recordings/episode-1791368724761036/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        }
+      ],
+      "other_tracking_members": [],
+      "file_types": {},
+      "error": "unexpected end of data"
+    },
+    {
+      "path": "outputs/camera-stream-20261007/ego-recording.tar",
+      "body_headers": [
+        {
+          "member": "recordings/episode-1791374609882775/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        }
+      ],
+      "other_tracking_members": [],
+      "file_types": {
+        ".csv": 5,
+        ".json": 2,
+        "": 1
+      }
+    },
+    {
+      "path": "outputs/world-skeleton/episode-1791471886355756.tar",
+      "body_headers": [
+        {
+          "member": "./body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        }
+      ],
+      "other_tracking_members": [],
+      "file_types": {
+        ".csv": 5,
+        ".jsonl": 1,
+        ".json": 1
+      }
+    },
+    {
+      "path": "outputs/quest-cup-freeze-20261007/device.tar",
+      "body_headers": [
+        {
+          "member": "recordings/episode-1791365001615188/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        }
+      ],
+      "other_tracking_members": [
+        "teleop_trace.csv",
+        "teleop_trace_previous.csv"
+      ],
+      "file_types": {
+        ".csv": 8,
+        ".json": 4,
+        "": 1
+      }
+    },
+    {
+      "path": "outputs/quest-catch-up-111586-audit/episode.tar",
+      "body_headers": [
+        {
+          "member": "files/g1/recordings/episode-1791566232971326/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        }
+      ],
+      "other_tracking_members": [],
+      "file_types": {
+        ".csv": 5,
+        ".json": 4,
+        ".onnx": 1,
+        "": 1,
+        ".jsonl": 1
+      }
+    },
+    {
+      "path": "outputs/floor-grounding-live-20261008/recordings.tar",
+      "body_headers": [
+        {
+          "member": "episode-1791458536846595/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        },
+        {
+          "member": "episode-1791458528331401/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        },
+        {
+          "member": "episode-1791458504162610/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        },
+        {
+          "member": "episode-1791458472343296/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        }
+      ],
+      "other_tracking_members": [],
+      "file_types": {
+        ".csv": 20,
+        "": 4,
+        ".json": 8,
+        ".jsonl": 4
+      }
+    },
+    {
+      "path": "outputs/trace-20261008/episodes.tar",
+      "body_headers": [
+        {
+          "member": "episode-1791453991117291/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        },
+        {
+          "member": "episode-1791453976077276/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        },
+        {
+          "member": "episode-1791453824870454/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        }
+      ],
+      "other_tracking_members": [],
+      "file_types": {
+        "": 3,
+        ".csv": 15,
+        ".json": 6,
+        ".jsonl": 3
+      }
+    },
+    {
+      "path": "outputs/trace-20261008/traces.tar",
+      "body_headers": [],
+      "other_tracking_members": [
+        "teleop_trace.csv",
+        "teleop_trace_previous.csv"
+      ],
+      "file_types": {
+        ".csv": 3,
+        ".json": 1
+      }
+    },
+    {
+      "path": "outputs/dataset-audit-20261008/g1-episode-1791467626074995.zip",
+      "body_headers": [
+        {
+          "member": "episode-1791467626074995/body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        }
+      ],
+      "other_tracking_members": [],
+      "file_types": {
+        ".csv": 6,
+        ".json": 4,
+        ".jsonl": 1
+      }
+    },
+    {
+      "path": "outputs/marker-calibration/alignment-check/quest/latest-recording.tar",
+      "body_headers": [
+        {
+          "member": "body.csv",
+          "columns": 216,
+          "pose_joint_count": 14,
+          "pose_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "extra_foot_fields": []
+        }
+      ],
+      "other_tracking_members": [],
+      "file_types": {
+        ".csv": 3,
+        ".jsonl": 1,
+        ".json": 1
+      }
+    },
+    {
+      "path": "outputs/floor-grounding-live-20261008/telemetry.tar",
+      "body_headers": [],
+      "other_tracking_members": [
+        "teleop_trace.csv",
+        "teleop_trace_previous.csv"
+      ],
+      "file_types": {
+        ".csv": 3
+      }
+    }
+  ],
+  "summary": {
+    "local_body_file_count": 45,
+    "local_joint_count_distribution": {
+      "14": 45
+    },
+    "archive_count": 18,
+    "archived_body_count": 29,
+    "archive_joint_count_distribution": {
+      "14": 29
+    }
+  },
+  "trace_headers": [
+    {
+      "path": "outputs/user-diagnostics/g1-quest-diagnostics-20261006-180153/files/g1/teleop_trace.csv",
+      "columns": 65,
+      "body_pose_fields": []
+    },
+    {
+      "path": "outputs/user-diagnostics/g1-quest-diagnostics-20261006-180153/files/g1/teleop_trace_previous.csv",
+      "columns": 65,
+      "body_pose_fields": []
+    },
+    {
+      "path": "outputs/quest-tennis-control-audit-20261010/teleop_trace.csv",
+      "columns": 65,
+      "body_pose_fields": []
+    },
+    {
+      "path": "outputs/quest-tennis-control-audit-20261010/teleop_trace_previous.csv",
+      "columns": 65,
+      "body_pose_fields": []
+    },
+    {
+      "path": "outputs/quest-cup-freeze-20261007/teleop_trace.csv",
+      "columns": 65,
+      "body_pose_fields": []
+    },
+    {
+      "path": "outputs/quest-cup-freeze-20261007/teleop_trace_previous.csv",
+      "columns": 65,
+      "body_pose_fields": []
+    },
+    {
+      "path": "outputs/trace-20261008/teleop_trace.csv",
+      "columns": 65,
+      "body_pose_fields": []
+    },
+    {
+      "path": "outputs/trace-20261008/teleop_trace_previous.csv",
+      "columns": 65,
+      "body_pose_fields": []
+    },
+    {
+      "path": "outputs/floor-grounding-live-20261008/teleop_trace.csv",
+      "columns": 65,
+      "body_pose_fields": []
+    },
+    {
+      "path": "outputs/floor-grounding-live-20261008/teleop_trace_previous.csv",
+      "columns": 65,
+      "body_pose_fields": []
+    }
+  ],
+  "log_search": {
+    "files_with_joint_name_hits": [],
+    "candidate_log_count": 54,
+    "pattern": "FOOT_BALL|FootBall|foot_ball|FOOT_SUBTALAR|FootSubtalar|full_skeleton|full_body_joints",
+    "note": "Exact name search of local outputs returned no matches; header/code inspection also used."
+  },
+  "backup_binary_members": [
+    "files/g1/menu_font.bin",
+    "files/g1/menu_font_widths.bin",
+    "files/g1/visual_meshes.bin",
+    "files/g1/visual_meshes-cup.bin",
+    "files/g1/capture_font.bin",
+    "files/g1/stats_font.bin",
+    "files/g1/visual_meshes-stand.bin",
+    "files/g1/visual_meshes-push_t.bin"
+  ]
+}

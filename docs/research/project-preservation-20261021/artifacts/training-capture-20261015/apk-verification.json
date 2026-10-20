@@ -1,0 +1,43 @@
+{
+  "sha256": "f753771a436a7c37afb7e22cadd703d9d8941770ea47b847a6119a3e47dff23e",
+  "bytes": 850679189,
+  "unchanged_assets": [
+    "assets/gmr_model.xml",
+    "assets/policy-dexweave-B-4174.onnx",
+    "assets/policy-dexweave-wide-2977.onnx",
+    "assets/policy-homie-standing-balance.onnx",
+    "assets/policy-homie-standing-walk.onnx",
+    "assets/policy-homie-v2-balance.onnx",
+    "assets/policy-homie-v2-walk.onnx",
+    "assets/policy-quest-111260-1000.onnx",
+    "assets/policy-quest-111260-500.onnx",
+    "assets/policy-quest-111586-200.onnx",
+    "assets/policy-quest-111586-300.onnx",
+    "assets/policy-quest-111586-500-lift10.onnx",
+    "assets/policy-quest-111586-500.onnx",
+    "assets/policy-quest-stance12-B-s11.onnx",
+    "assets/policy-sonic-vr3-planner.onnx",
+    "assets/policy-sonic-vr3-sonic_decoder.onnx",
+    "assets/policy-sonic-vr3-sonic_encoder.onnx",
+    "assets/policy-twist2-25k.onnx",
+    "assets/policy.onnx",
+    "assets/policy_catalog.json",
+    "assets/scene-basket.xml",
+    "assets/scene-bimanual.xml",
+    "assets/scene-cup.xml",
+    "assets/scene-push_t.xml",
+    "assets/scene-rubik.xml",
+    "assets/scene-stand.xml",
+    "assets/scene-tennis.xml",
+    "assets/scene-wb_dex.xml",
+    "assets/scene.xml"
+  ],
+  "capture_schema": {
+    "schema": "furry-visual-capture-v1",
+    "rgb": "offline rendering of archived model/state/camera",
+    "action_schema": "body35_grip2_gaze2",
+    "fps": 30,
+    "not_quest_screen_video": true
+  },
+  "baseline_apk_sha256": "d2f0ad4e17d0ec84240e3c792d1a5f54d5901f00119c13266bb251c9fe3fa117"
+}

@@ -1,0 +1,48 @@
+{
+  "frames": 417,
+  "start_epoch_ms": 1791471843522,
+  "end_epoch_ms": 1791471876446,
+  "wrist_to_controller_distance": {
+    "l": {
+      "n": 417,
+      "median_m": 0.2935813426512976,
+      "p95_m": 0.8594120173691664
+    },
+    "r": {
+      "n": 417,
+      "median_m": 0.25326614550898696,
+      "p95_m": 0.7983564419935558
+    }
+  },
+  "calibration": {
+    "R": [
+      [
+        0.17946927616827227,
+        0.8759716005730209,
+        0.4477326589619941
+      ],
+      [
+        0.12055415941996296,
+        -0.47127507893435044,
+        0.8737084723304274
+      ],
+      [
+        0.9763490531352932,
+        -0.10282779276520061,
+        -0.19018141727533305
+      ]
+    ],
+    "t": [
+      -2.742978849107626,
+      -1.0803053034149368,
+      0.7601124187298791
+    ],
+    "marker_id": 1,
+    "marker_m": 0.12,
+    "hand": "right",
+    "reproj_px": 0.04880019176018868
+  },
+  "timing": "Camera capture epoch paired with nearest PC receipt of Quest uplink within 40 ms. One-way network delay and pose prediction are not compensated.",
+  "scope": "Camera landmarks + simultaneous HMD/controller poses only. Full Meta body recording begins after camera stream ended. Wrist and controller origins are distinct landmarks.",
+  "camera_received_quest_clock_delta_ms_median": -688.6240234375
+}

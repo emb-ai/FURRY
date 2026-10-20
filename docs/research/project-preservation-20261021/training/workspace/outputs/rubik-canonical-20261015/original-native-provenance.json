@@ -1,0 +1,8 @@
+{
+  "native_differences": {
+    "simulation.h": "--- \n+++ \n@@ -66,6 +66,7 @@\n     const std::array<float,35>& WholeBodyReference()const{return whole_reference;}\n     void ClearArmReference(){has_reference=false;}\n private:\n+    friend struct SearchSnapshot;\n     std::string assets_directory;\n     bool standing=false;\n     StandingArms standing_arms;\n"
+  },
+  "scene_sha256": "b731d2e4cdd0fbc9660d0e437db833563ed4727f163a1be74354dd9e8bec1ce3",
+  "physical_model_modified": false,
+  "description": "Snapshot helper declares a friend for copying native controller state. All production stepping, collision, forces, and Rubik selection remain identical to the installed baseline."
+}

@@ -1,0 +1,122 @@
+[
+  {
+    "seed": 1261690313,
+    "success": false,
+    "outcome": 3,
+    "sim_s": 89.99999999999923,
+    "wall_s": 51.116132974624634,
+    "lift_m": 0,
+    "max_cup_tilt_deg": 0.020803333771057083,
+    "final_cup_tilt_deg": 0.019995745684250922,
+    "goal_xy_error_m": 0.37124317463783424,
+    "error": null
+  },
+  {
+    "seed": 886437167,
+    "success": true,
+    "outcome": 1,
+    "sim_s": 12.17999999999983,
+    "wall_s": 7.625264883041382,
+    "lift_m": 0.053608852655365746,
+    "max_cup_tilt_deg": 7.808882500896353,
+    "final_cup_tilt_deg": 0.013880060890070666,
+    "goal_xy_error_m": 0.04382715097582291,
+    "error": null
+  },
+  {
+    "seed": 1019837660,
+    "success": false,
+    "outcome": 3,
+    "sim_s": 89.99999999999923,
+    "wall_s": 56.113856077194214,
+    "lift_m": 0.09509170475451156,
+    "max_cup_tilt_deg": 15.152057973492486,
+    "final_cup_tilt_deg": 9.903736015888189,
+    "goal_xy_error_m": 0.22013745032209436,
+    "error": null
+  },
+  {
+    "seed": 603205921,
+    "success": false,
+    "outcome": 3,
+    "sim_s": 89.99999999999923,
+    "wall_s": 47.15946102142334,
+    "lift_m": 0,
+    "max_cup_tilt_deg": 0.012972862064701884,
+    "final_cup_tilt_deg": 0.012972862064701884,
+    "goal_xy_error_m": 0.45866662675311326,
+    "error": null
+  },
+  {
+    "seed": 9722254,
+    "success": false,
+    "outcome": 3,
+    "sim_s": 89.99999999999923,
+    "wall_s": 49.39002728462219,
+    "lift_m": 0.08589766902563678,
+    "max_cup_tilt_deg": 19.838189369547365,
+    "final_cup_tilt_deg": 0.13738381405976166,
+    "goal_xy_error_m": 0.2584670109368157,
+    "error": null
+  },
+  {
+    "seed": 856219333,
+    "success": false,
+    "outcome": 3,
+    "sim_s": 89.99999999999923,
+    "wall_s": 46.79036045074463,
+    "lift_m": 0.02911756436185975,
+    "max_cup_tilt_deg": 91.10922051417012,
+    "final_cup_tilt_deg": 89.92525180118724,
+    "goal_xy_error_m": 0.2934045672072829,
+    "error": null
+  },
+  {
+    "seed": 1714622801,
+    "success": false,
+    "outcome": 3,
+    "sim_s": 89.99999999999923,
+    "wall_s": 61.21143960952759,
+    "lift_m": 0.014259759664997373,
+    "max_cup_tilt_deg": 9.367072334660563,
+    "final_cup_tilt_deg": 8.516889492298406,
+    "goal_xy_error_m": 0.06296844760136977,
+    "error": null
+  },
+  {
+    "seed": 1502896800,
+    "success": false,
+    "outcome": 3,
+    "sim_s": 89.99999999999923,
+    "wall_s": 45.89780616760254,
+    "lift_m": 0.06288609820230262,
+    "max_cup_tilt_deg": 9.569308708760497,
+    "final_cup_tilt_deg": 0.01025719904189812,
+    "goal_xy_error_m": 0.277411462711342,
+    "error": null
+  },
+  {
+    "seed": 435361755,
+    "success": false,
+    "outcome": 3,
+    "sim_s": 89.99999999999923,
+    "wall_s": 69.0468213558197,
+    "lift_m": 0.0424745080169221,
+    "max_cup_tilt_deg": 9.082763809141268,
+    "final_cup_tilt_deg": 3.533332631206885,
+    "goal_xy_error_m": 0.06944387842937243,
+    "error": null
+  },
+  {
+    "seed": 1446583522,
+    "success": true,
+    "outcome": 1,
+    "sim_s": 8.8399999999999,
+    "wall_s": 4.994542837142944,
+    "lift_m": 0.08373921771003878,
+    "max_cup_tilt_deg": 13.24071438568216,
+    "final_cup_tilt_deg": 0.010980964429025348,
+    "goal_xy_error_m": 0.020032354147449385,
+    "error": null
+  }
+]

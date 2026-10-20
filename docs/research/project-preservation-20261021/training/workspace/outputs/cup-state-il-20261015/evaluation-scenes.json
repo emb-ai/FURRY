@@ -1,0 +1,15 @@
+{
+  "seeds": [
+    28242088,
+    998368989,
+    1923872659,
+    212826034,
+    63432792,
+    535152318,
+    1490691527,
+    325077295,
+    1871389036,
+    1402018836
+  ],
+  "selection": "fixed before training and testing, never choose checkpoints using these 10 trials"
+}

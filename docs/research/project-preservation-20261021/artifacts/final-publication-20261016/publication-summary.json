@@ -1,0 +1,21 @@
+{
+  "repository": "https://github.com/emb-ai/FURRY",
+  "published_commit": "68079cfdfa36fbaef020eb192db3a477f8fe961c",
+  "runtime_commit": "f6d87c83b98e6c0527274a90d7c799b081a5a178",
+  "runtime_ci": "https://github.com/emb-ai/FURRY/actions/runs/38931337126",
+  "runtime_ci_result": "success",
+  "documentation_ci": "https://github.com/emb-ai/FURRY/actions/runs/38931336795",
+  "documentation_ci_result": "success",
+  "media_docs_local_lint_and_links": "passed",
+  "video_lfs_upload": "both objects uploaded successfully; push confirmed 2/2 objects",
+  "video_independent_download": "not completed; remote download stopped after 34 MB with DNS lookup github.com: no such host",
+  "pptx_status": "blocked: repeated fresh exports truncated; latest HTTP/1.1 request returned success but ZIP had no central directory",
+  "old_pptx_published": false,
+  "unfinished_training_experiments_included": false,
+  "headset_installation": false,
+  "published_commit_ci": {
+    "runtime": "https://github.com/emb-ai/FURRY/actions/runs/38950485231",
+    "documentation": "https://github.com/emb-ai/FURRY/actions/runs/38950485219",
+    "both": "success"
+  }
+}

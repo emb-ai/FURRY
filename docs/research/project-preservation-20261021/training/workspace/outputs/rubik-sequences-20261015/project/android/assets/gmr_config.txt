@@ -1,0 +1,15 @@
+GMR1 14 1.8 0.0
+Pelvis pelvis 0.9 0 10 10 5 0.0 0.0 0.0 -0.5 0.5 -0.5 -0.5
+Spine3 torso_link 0.9 0 10 0 10 0.0 0.0 0.0 -0.5 0.5 -0.5 -0.5
+Left_Hip left_hip_yaw_link 0.9 0 10 10 5 0.0 0.0 0.0 -0.5 0.5 -0.5 -0.5
+Right_Hip right_hip_yaw_link 0.9 0 10 10 5 0.0 0.0 0.0 -0.5 0.5 -0.5 -0.5
+Left_Knee left_knee_link 0.9 0 10 10 5 0.0 0.0 0.0 -0.5 0.5 -0.5 -0.5
+Right_Knee right_knee_link 0.9 0 10 10 5 0.0 0.0 0.0 -0.5 0.5 -0.5 -0.5
+Left_Foot left_toe_link 0.9 100 10 100 10 0.05 0.0 0.0 -0.5 0.5 -0.5 -0.5
+Right_Foot right_toe_link 0.9 100 10 100 10 0.05 0.0 0.0 -0.5 0.5 -0.5 -0.5
+Left_Shoulder left_shoulder_yaw_link 0.8 0 10 0 10 0.0 0.0 0.0 0.7071067811865475 0.0 0.7071067811865475 0.0
+Right_Shoulder right_shoulder_yaw_link 0.8 0 10 0 10 0.0 0.0 0.0 0.0 0.7071067811865475 0.0 -0.7071067811865475
+Left_Elbow left_elbow_link 0.8 0 10 0 10 0.0 0.0 0.0 0.0 0.0 1.0 0.0
+Right_Elbow right_elbow_link 0.8 0 10 0 10 0.0 0.0 0.0 0.0 1.0 0.0 0.0
+Left_Wrist left_wrist_yaw_link 0.8 0 10 0 10 0.0 0.0 0.0 0.0 0.0 1.0 0.0
+Right_Wrist right_wrist_yaw_link 0.8 0 10 0 10 0.0 0.0 0.0 0.0 1.0 0.0 0.0

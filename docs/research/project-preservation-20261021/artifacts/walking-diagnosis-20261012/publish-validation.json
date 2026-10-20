@@ -1,0 +1,23 @@
+{
+  "base_commit": "1baa7e55abe9bc4a517f3577ed0519c90277bde4",
+  "scope": "wrist rigid-frame fix + live all50Hz + preserved historical50/100Hz replay; no tennis/full-foot/runtime deployment",
+  "unit": {
+    "ran": 84,
+    "skipped": 1,
+    "failed": 0
+  },
+  "native_policy_cases": 42,
+  "synthetic_replay_cases": 25,
+  "synthetic_max_state_error": 0.0,
+  "synthetic_max_reference_error": 0.0,
+  "wrist_test": [
+    "wrist rigid-frame target error=4.03918137e-16 FK error=5.07961937e-07 legacy axis error=0.171054898 radians",
+    "coordinate/scale/local-axis equivalence max=2.22530327e-14"
+  ],
+  "post_review_rename": "legacy_policy_hz names metadata/historical runtime fallback, not training cadence;4policyassets tests rerun passed",
+  "weights_rewritten": false,
+  "android_build": true,
+  "device_deployment": false,
+  "android_apk_sha256": "ee2c303160b29368ddd81a94e24892665fb82edf803f9cf96b577c2e62840f7e",
+  "android_verification": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs/walking-diagnosis-20261012/publish-android-verification.json"
+}

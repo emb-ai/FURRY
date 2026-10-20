@@ -1,0 +1,246 @@
+{
+  "date_moscow": "2026-10-15",
+  "status": "Installed and SHA/data preservation verified; live headset acceptance pending",
+  "changes": [
+    "Rubik NoSlip=2 and MultiCCD",
+    "Finger position kp 1 to 2; unchanged ±0.35 Nm effort; maximum curl target .8 of full fist",
+    "Cube and stand x .25 to .40; standing reset shoulders roll ±.5 to clear cube before capture",
+    "Face unlock requires relative operator wrist-goal rotation; common motion cancels; task input userdata[7] archived/restored in saved replay",
+    "Cup diversity patch from outputs/cup-workspace-20261015; no change to wb_dex"
+  ],
+  "cube_edge_m": 0.1,
+  "cube_mass_kg": 0.122,
+  "magnet_parameters_unchanged": true,
+  "weights_unchanged": true,
+  "other_scene_xml_unchanged": true,
+  "idle": {
+    "initial": [
+      0.4,
+      0.0,
+      0.9526,
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "end": [
+      0.4000000959371686,
+      -4.2739710176474533e-07,
+      0.9498499735926969,
+      0.9999999971679236,
+      -5.583622610443529e-07,
+      1.0947605932572797e-06,
+      7.525053097543308e-05
+    ],
+    "xy_max_m": 4.431176443798458e-07,
+    "z_min": 0.9498306986282823,
+    "warnings": 0
+  },
+  "other_policy_starts": [
+    {
+      "policy": "twist2-20k",
+      "xy_max_m": 4.431176440758044e-07,
+      "z_min": 0.9498306986282823,
+      "root_z": 0.7826734032575625,
+      "warnings": 0
+    },
+    {
+      "policy": "homie-v2",
+      "xy_max_m": 4.43117644446614e-07,
+      "z_min": 0.9498306986282823,
+      "root_z": 0.7489649253421066,
+      "warnings": 0
+    },
+    {
+      "policy": "sonic-vr3",
+      "xy_max_m": 4.4311764462350867e-07,
+      "z_min": 0.9498306986282823,
+      "root_z": 0.7843112454883561,
+      "warnings": 0
+    },
+    {
+      "policy": "quest-stance12-B-s11",
+      "xy_max_m": 4.431176443622269e-07,
+      "z_min": 0.9498306986282823,
+      "root_z": 0.7797701705910054,
+      "warnings": 0
+    }
+  ],
+  "hold_30s_and_release": [
+    {
+      "config": [
+        0.14,
+        0.075,
+        0,
+        1,
+        1
+      ],
+      "lift_max_m": 0.14471503672530117,
+      "hold_min_lift_m": 0.11970315455415004,
+      "root_min_z_m": 0.7440775640070239,
+      "warnings": 0,
+      "failed": false,
+      "hold_nonhand_support_frames": 0,
+      "turns": 0.0,
+      "hand_contact_frames": [
+        3307,
+        3322
+      ],
+      "hold_hand_contact_frames": [
+        3000,
+        3000
+      ],
+      "hold_frames": 3000,
+      "release_final_contact_masks": [
+        0,
+        0
+      ],
+      "release_drop_m": 0.20360892663901586
+    },
+    {
+      "config": [
+        0.15,
+        0.075,
+        0,
+        1,
+        1
+      ],
+      "lift_max_m": 0.09432030677426262,
+      "hold_min_lift_m": 0.04915462358841316,
+      "root_min_z_m": 0.7440775640070239,
+      "warnings": 0,
+      "failed": false,
+      "hold_nonhand_support_frames": 0,
+      "turns": 0.0,
+      "hand_contact_frames": [
+        3280,
+        3282
+      ],
+      "hold_hand_contact_frames": [
+        3000,
+        3000
+      ],
+      "hold_frames": 3000,
+      "release_final_contact_masks": [
+        0,
+        0
+      ],
+      "release_drop_m": 0.13330635527077495
+    },
+    {
+      "config": [
+        0.14,
+        0.085,
+        0,
+        1,
+        1
+      ],
+      "lift_max_m": 0.14536194578968886,
+      "hold_min_lift_m": 0.12038338004779559,
+      "root_min_z_m": 0.7440775640070239,
+      "warnings": 0,
+      "failed": false,
+      "hold_nonhand_support_frames": 0,
+      "turns": 0.0,
+      "hand_contact_frames": [
+        3290,
+        3287
+      ],
+      "hold_hand_contact_frames": [
+        3000,
+        3000
+      ],
+      "hold_frames": 3000,
+      "release_final_contact_masks": [
+        0,
+        0
+      ],
+      "release_drop_m": 0.20239366517918767
+    }
+  ],
+  "quarter_turn": {
+    "source": "rubik-combined-turn-0.npz",
+    "scene": "rubik",
+    "policy": "homie-standing",
+    "script": "rubik_turn_feedback.py",
+    "initial_cube_position": [
+      0.40000009034225464,
+      -4.333508671486715e-07,
+      0.9498499748739848
+    ],
+    "turn_count": 1,
+    "face": "B",
+    "sign": -1,
+    "turn_time_s": 14.499999999999735,
+    "post_turn_duration_s": 9.500000000001217,
+    "final_angle_deg": -92.82549079472842,
+    "last_5s_angle_deg": [
+      -92.82549079472842,
+      -90.2069146668097
+    ],
+    "unsupported_hold_frames": 0,
+    "last_5s_both_hands_frames": 500,
+    "last_5s_frames": 500,
+    "warnings": 0,
+    "object_forces_or_pose_edits": false,
+    "hand_object_weld": false,
+    "script_feedback": "Freeze commanded wrist goals at first physical quarter crossing; keep both grips closed. No task-state or object-pose edits."
+  },
+  "combined_physics_repeat": {
+    "qpos": 0.0,
+    "userdata": 0.0,
+    "trace": 0.0,
+    "support": 0.0
+  },
+  "tests": {
+    "suite": {
+      "run": 129,
+      "passed": 128,
+      "skipped": 1,
+      "skip_reason": "optional Torch"
+    },
+    "new_cup_goal_capture_test": 1,
+    "standing_replay_cases": 12,
+    "replay_max_state_reference_error": 0
+  },
+  "limitations": [
+    "One scripted quarter-turn accepted; no complete Rubik solve or human headset acceptance.",
+    "Narrow approach x=.14,y=.065 loses grip; all arbitrary hand trajectories are not guaranteed.",
+    "Of three quarter-turn approach configurations, one clean accepted, one dropped, one touched a forearm.",
+    "Rubik remains unsupported in visual training dataset export, as in the installed base; userdata[7] is recorded for deterministic replay."
+  ],
+  "apk": {
+    "apk": "outputs/rubik-fix-20261015/g1-quest-rubik-cup.apk",
+    "sha256": "3e25f5c17fad0f206dc584b34879b25d6eb7b5177481fd8c44c472caebfc8b30",
+    "bytes": 850683285,
+    "zip_crc": true,
+    "assets_equal_to_prepared": 229,
+    "jni_libraries": 5
+  },
+  "cup_report": "../cup-workspace-20261015/",
+  "cup_physical_acceptance": {
+    "standard_protocol_success": 15,
+    "standard_protocol_trials": 16,
+    "edge1005_alternative_release_success": true,
+    "alternative_release": "release 2.5 cm above the table; no object state/force edits",
+    "source_unchanged_after_patch": true
+  },
+  "base_apk_sha256": "f753771a436a7c37afb7e22cadd703d9d8941770ea47b847a6119a3e47dff23e",
+  "installation": {
+    "time_utc": "2026-10-14T22:33:14.183568+00:00",
+    "serial": "2G0YC5ZG7T05SR",
+    "apk": "/data/app/~~vF1WzwiY3AhftOx2bER2zg==/org.g1lab.quest-l78IIMnMg7dA0noLF7TUEA==/base.apk",
+    "apk_sha256": "3e25f5c17fad0f206dc584b34879b25d6eb7b5177481fd8c44c472caebfc8b30",
+    "latest_episode": "episode-1792015467386805",
+    "latest_status": "complete",
+    "recording_files": 1533,
+    "settings_sha256": "5f1acc211e7709462a6c983e817341a152334758a4156f43301a2703ae6c746f",
+    "install_method": "adb install -r",
+    "recording_files_preserved": 1533,
+    "settings_preserved": true,
+    "verified_local_apk_sha256": "3e25f5c17fad0f206dc584b34879b25d6eb7b5177481fd8c44c472caebfc8b30",
+    "live_headset_acceptance": false,
+    "native_startup_confirmed": false,
+    "launch_attempted": false
+  }
+}

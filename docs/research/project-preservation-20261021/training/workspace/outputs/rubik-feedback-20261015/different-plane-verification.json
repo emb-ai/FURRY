@@ -1,0 +1,51 @@
+{
+  "previous_face_corners": [
+    0,
+    4,
+    6,
+    7
+  ],
+  "next_face_corners": [
+    1,
+    5,
+    6,
+    7
+  ],
+  "shared_corners": [
+    6,
+    7
+  ],
+  "angle_between_physical_face_normals_deg": 89.96863707643102,
+  "different_adjacent_face": true,
+  "quarter_turn_check": {
+    "start_s": 227.29,
+    "end_s": 232.6,
+    "expected_rotation_deg": 90,
+    "corner_position_max_mm": 0.13572395287896927,
+    "corner_orientation_max_deg": 1.4419049344145467,
+    "common_rotation_deg": 15.350630970850414,
+    "cube_center_drift_mm": 23.32482918171778,
+    "other_support_frames": 0,
+    "open_contact_free_longest_s": 0.0,
+    "right_max_clearance_m_10hz": 0.0,
+    "corners_rotated": [
+      7,
+      5,
+      1,
+      6
+    ]
+  },
+  "support_sampling_hz": 100,
+  "other_support_frames_after_initial_grasp": 0,
+  "both_hands_without_cube_contact_frames_after_initial_grasp": 0,
+  "independent_replay": {
+    "run": "other-face",
+    "bridge": "bridge-original-home.dylib",
+    "frames": 23260,
+    "qpos_max_error": 0.0,
+    "userdata_max_error": 0.0,
+    "first_divergent_frame": null,
+    "warnings": 0
+  },
+  "repeatable_return_after_second_face": false
+}

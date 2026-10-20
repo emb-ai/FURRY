@@ -1,0 +1,12 @@
+[
+  {
+    "prediction_type": "epsilon",
+    "oracle_loss": 0.0,
+    "scheduler_matches_target": true
+  },
+  {
+    "prediction_type": "sample",
+    "oracle_loss": 0.0,
+    "scheduler_matches_target": true
+  }
+]

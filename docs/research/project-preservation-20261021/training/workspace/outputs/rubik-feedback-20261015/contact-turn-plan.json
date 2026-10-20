@@ -1,0 +1,238 @@
+[
+  {
+    "cycle": 6,
+    "trials": [
+      {
+        "outward_m": 0,
+        "grip": 0.65,
+        "valid": false,
+        "reason": "lost_progress",
+        "progress_deg": 87.43471391615738,
+        "dispersion_deg": 0.7882728625797665,
+        "max_progress_deg": 95.6996017831689,
+        "metric": {
+          "center_mm": 23.970007803905606,
+          "rotation_deg": 7.969783330500379,
+          "finger_rms_mm": [
+            13.336726690383108,
+            111.8332683418554
+          ],
+          "finger_max_mm": [
+            17.03514833634877,
+            157.2861673818781
+          ],
+          "wrist_mm": [
+            14.735957767536632,
+            42.68880566011507
+          ],
+          "finger_orientation_rms_deg": [
+            12.14122801990824,
+            77.38450126789307
+          ],
+          "finger_orientation_max_deg": [
+            17.021999219198904,
+            93.79523398092473
+          ]
+        }
+      },
+      {
+        "outward_m": 0.004,
+        "grip": 1,
+        "valid": false,
+        "reason": "lost_progress",
+        "progress_deg": 4.020046874217506,
+        "dispersion_deg": 2.668298654839959,
+        "max_progress_deg": 12.121250697364637,
+        "metric": {
+          "center_mm": 42.23534286484628,
+          "rotation_deg": 23.56158954004917,
+          "finger_rms_mm": [
+            18.643389652516312,
+            21.14522505691254
+          ],
+          "finger_max_mm": [
+            32.40695726522957,
+            28.062301575832283
+          ],
+          "wrist_mm": [
+            32.43355146813876,
+            57.08600995643368
+          ],
+          "finger_orientation_rms_deg": [
+            14.958678093305112,
+            25.50540573784351
+          ],
+          "finger_orientation_max_deg": [
+            18.029095524402603,
+            29.2019666515983
+          ]
+        }
+      },
+      {
+        "outward_m": 0.004,
+        "grip": 0.65,
+        "valid": false,
+        "reason": "lost_progress",
+        "progress_deg": 5.944292800613292,
+        "dispersion_deg": 2.4346646724229903,
+        "max_progress_deg": 14.022589898192889,
+        "metric": {
+          "center_mm": 32.85480877365381,
+          "rotation_deg": 19.178164994359737,
+          "finger_rms_mm": [
+            17.808620376196103,
+            17.535678116477587
+          ],
+          "finger_max_mm": [
+            29.602262599659387,
+            26.858010850671334
+          ],
+          "wrist_mm": [
+            29.444583922883655,
+            48.358537938771036
+          ],
+          "finger_orientation_rms_deg": [
+            14.229350120031135,
+            20.44117969957828
+          ],
+          "finger_orientation_max_deg": [
+            17.484828969712883,
+            21.75350459055704
+          ]
+        }
+      },
+      {
+        "outward_m": 0.008,
+        "grip": 1,
+        "valid": false,
+        "reason": "lost_progress",
+        "progress_deg": 4.105845476014004,
+        "dispersion_deg": 2.6542997540985973,
+        "max_progress_deg": 12.113237952509008,
+        "metric": {
+          "center_mm": 46.46694727198945,
+          "rotation_deg": 23.81596280962289,
+          "finger_rms_mm": [
+            18.99585995980047,
+            23.20916731298
+          ],
+          "finger_max_mm": [
+            32.69054454815434,
+            33.298570095380924
+          ],
+          "wrist_mm": [
+            32.141306747215445,
+            64.37635557263117
+          ],
+          "finger_orientation_rms_deg": [
+            15.159077367320922,
+            26.86145312706951
+          ],
+          "finger_orientation_max_deg": [
+            19.212304397447586,
+            30.797948023370367
+          ]
+        }
+      },
+      {
+        "outward_m": 0.008,
+        "grip": 0.65,
+        "valid": false,
+        "reason": "lost_progress",
+        "progress_deg": 10.843805310790376,
+        "dispersion_deg": 0.9700355833070329,
+        "max_progress_deg": 20.127396235926287,
+        "metric": {
+          "center_mm": 36.589026238597725,
+          "rotation_deg": 17.547858941569707,
+          "finger_rms_mm": [
+            17.384315063075555,
+            37.333392319457694
+          ],
+          "finger_max_mm": [
+            28.751318320467952,
+            57.041697140731436
+          ],
+          "wrist_mm": [
+            21.001592906348517,
+            47.19123056437846
+          ],
+          "finger_orientation_rms_deg": [
+            15.229726617618589,
+            32.62997864738635
+          ],
+          "finger_orientation_max_deg": [
+            21.62572362960112,
+            34.48185290280572
+          ]
+        }
+      },
+      {
+        "outward_m": 0.012,
+        "grip": 1,
+        "valid": false,
+        "reason": "lost_progress",
+        "progress_deg": 10.159437606262278,
+        "dispersion_deg": 1.17653649235608,
+        "max_progress_deg": 24.478262048262945,
+        "metric": {
+          "center_mm": 72.00584601467398,
+          "rotation_deg": 30.756564671238195,
+          "finger_rms_mm": [
+            20.796898926021594,
+            73.58320552692857
+          ],
+          "finger_max_mm": [
+            35.0502352985227,
+            129.45293456008093
+          ],
+          "wrist_mm": [
+            28.356890336587156,
+            123.28859168721802
+          ],
+          "finger_orientation_rms_deg": [
+            24.716887939639147,
+            85.09920597968593
+          ],
+          "finger_orientation_max_deg": [
+            30.496431115019735,
+            98.34340824359637
+          ]
+        }
+      },
+      {
+        "outward_m": 0.012,
+        "grip": 0.65,
+        "valid": false,
+        "reason": "stalled",
+        "progress_deg": 68.806503515778,
+        "dispersion_deg": 0.811375969875743,
+        "max_progress_deg": 74.54355337648029,
+        "metric": {
+          "center_mm": 21.44548483361217,
+          "rotation_deg": 3.789444515078292,
+          "finger_rms_mm": [
+            10.548579171386319,
+            208.654845118795
+          ],
+          "finger_max_mm": [
+            15.129154841452992,
+            278.9372377040898
+          ],
+          "wrist_mm": [
+            20.610189994267518,
+            17.79866525826772
+          ],
+          "finger_orientation_rms_deg": [
+            5.84510382210904,
+            155.03543625195317
+          ],
+          "finger_orientation_max_deg": [
+            6.402108267236037,
+            170.981903118471
+          ]
+        }
+      }
+    ]
+  }
+]

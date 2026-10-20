@@ -24,6 +24,8 @@ deployment is outside this project's scope.
 - [Contribution workflow](docs/Contributing.md)
 - [GitHub Wiki mirror](https://github.com/emb-ai/FURRY/wiki)
 
+- [Project preservation audit — 21 October 2026](docs/research/project-preservation-20261021/README.md)
+
 ## Status
 
 As of 16 October 2026, the

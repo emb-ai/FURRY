@@ -1,0 +1,25 @@
+{
+  "explicit_user_authorization": "\u0414\u0430, \u043f\u0435\u0440\u0435\u0434\u0430\u0442\u044c \u0432\u0441\u0435 44 \u0437\u0430\u043f\u0438\u0441\u0438",
+  "host": "andrei_gpu",
+  "remote_root": "/home/jovyan/vlad/FURRY/cup-fast-check-20261015",
+  "files": [
+    {
+      "source": "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs.nosync/cup-dp-training-20261015/cup44-no-shadow-causal.hdf5.gz",
+      "remote_name": "cup44-no-shadow-causal.hdf5.gz",
+      "bytes": 728571260,
+      "sha256": "ab37d09d738020d46579ffeae2fe3b3a1da28949f2465b5f2f552ec0e9131bcc"
+    },
+    {
+      "source": "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs.nosync/cup-dp-training-20261015/weights/r3m-resnet18-encoder.pt",
+      "remote_name": "r3m-resnet18-encoder.pt",
+      "bytes": 44783989,
+      "sha256": "4ed6446408489e6fe99f826e15c4d8b62878a765be66f5359380c23fd3a86cea"
+    }
+  ],
+  "uncompressed_hdf5_sha256": "6f0cd24a85e68a9a5ca140418e7edf784e4f2cf43a8698afbb9ac39b0b9ccd39",
+  "dataset_episodes": 44,
+  "train_episodes": 40,
+  "validation_episodes": 4,
+  "uploaded": true,
+  "remote_sha256_verified": true
+}

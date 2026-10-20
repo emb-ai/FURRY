@@ -1,0 +1,9 @@
+{
+  "frames": 6,
+  "compared_execution_actions": 8,
+  "arms_difference_mae_deg": 0.19537431001663208,
+  "arms_difference_max_deg": 1.2811590433120728,
+  "grip_mae": 0.0128370625898242,
+  "gaze_mae_deg": 0.1390097290277481,
+  "caveat": "Paired image sensitivity at fixed inputs, not closed-loop success"
+}

@@ -1,0 +1,30 @@
+{
+  "status": "stopped_by_user",
+  "pid": 90464,
+  "signal": "SIGTERM",
+  "time": 1792075773.5329561,
+  "last_status": {
+    "status": "running",
+    "pid": 90464,
+    "iteration": 6149,
+    "seconds": 12.177995210047811,
+    "elapsed_s": 21572.958217992913,
+    "reward_mean": 0.17321529674033323,
+    "failed": 180,
+    "completed_segments": 50,
+    "object_error_m": 0.048366916831582785,
+    "learning_rate": 2.2500000000000005e-05,
+    "losses": {
+      "value_function": 0.12268402129411697,
+      "surrogate": -0.0065085204623756,
+      "entropy": 4.91335961818695
+    },
+    "actor_changed": true
+  },
+  "retained_checkpoint": "/home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020014648126-gpu7-colleague-20261015/checkpoint-06100.pt",
+  "checkpoint_bytes": 15003071,
+  "gpu": "7, 12816 MiB, 0 %\n",
+  "gpu_processes": "90464, 12748 MiB\n",
+  "confirmed_at": 1792075814.5213015,
+  "final_signal": "SIGKILL"
+}

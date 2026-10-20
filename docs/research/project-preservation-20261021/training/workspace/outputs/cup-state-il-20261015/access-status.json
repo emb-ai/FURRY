@@ -1,0 +1,26 @@
+{
+  "status": "both_trainings_complete_diffusion_evaluation_running",
+  "server": "andrei_gpu",
+  "destination": "/home/jovyan/vlad/FURRY/cup-state-il-20261015",
+  "upload_completed": true,
+  "training_started": true,
+  "authorization": "Explicit permanent user consent for FURRY transfers to andrei_gpu and MIPT verified through read_thread; auto-review allowed retry after evidence",
+  "failed_upload_attempts": 3,
+  "last_error": null,
+  "updated_at_unix": 1792072476.3800719,
+  "last_connect_timeout_seconds": 45,
+  "dispatch_pid": 3841438,
+  "verified_package_sha256": "7540589d686c9e7cb632a461809d846684728fc66968f3faeb592b920b8ff802",
+  "remote_native_validation_passed": true,
+  "waiting_for": null,
+  "gpu_jobs_started": 2,
+  "active_gpu_indices": [
+    0,
+    5
+  ],
+  "pipeline_pids": {
+    "bc-rnn": 3846482,
+    "diffusion": 3846487
+  },
+  "training_complete": true
+}

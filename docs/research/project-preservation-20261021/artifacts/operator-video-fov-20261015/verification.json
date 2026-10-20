@@ -1,0 +1,66 @@
+{
+  "status": "internal_projection_cutoff_fixed_in_live_test",
+  "video": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/operator-video-20261015/downloads/G1Quest/operator-20261015-165432-927.mp4",
+  "sha256": "a87b10f5b9a04eefbe87928d3fb312ea5e30762799b5ae212afd638275fff7aa",
+  "device_sha256_matches": true,
+  "ffmpeg_full_decode_passed": true,
+  "probe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "width": 1024,
+        "height": 1024,
+        "avg_frame_rate": "12843000/428123"
+      }
+    ],
+    "format": {
+      "duration": "47.569222",
+      "size": "47513360"
+    }
+  },
+  "comparison": {
+    "baseline_video": "operator-20261015-164338-821.mp4",
+    "sample_time_seconds": 5,
+    "head_locked_hud_bounds_approx_px": [
+      150,
+      190,
+      494,
+      490
+    ],
+    "bounds_same_in_both_frames": true,
+    "capture_fov_change_observed": false
+  },
+  "device_changes": [
+    {
+      "property": "debug.oculus.captureFovDegrees",
+      "original": "",
+      "set": "110",
+      "tested_in_video": true,
+      "observed_effect": false
+    },
+    {
+      "property": "debug.oculus.headsetOverride",
+      "original": "",
+      "set": "1",
+      "tested_in_video": false
+    }
+  ],
+  "eye_projection_properties_changed": false,
+  "apk_changed_in_this_investigation": false,
+  "limitations": [
+    "One live recording; no synchronized through-lens reference or all-pose acceptance.",
+    "Camera/head movements, natural occlusion and existing transparency may still hide the paddle.",
+    "110-degree compositor override is reset by headset reboot and must be reapplied with configure_capture.py."
+  ],
+  "next_steps": [],
+  "runtime_log_confirms_capture_fov_degrees": 110,
+  "runtime_log": "applied-fov-log.txt",
+  "diagnostic_adb_video": "fov-gated-diagnostic2.mp4",
+  "diagnostic_adb_video_limitation": "ADB screenrecord is the stereo distorted display, not the operator MediaProjection path; cannot establish operator FOV.",
+  "control_video": "fov110-before-native-fix.json",
+  "capture_only_widened_but_source_projection_clipped": true,
+  "native_fix_installed": "8d6c528a27c68079e244e67d1fbdb4e12bf6cce1b20c2ab5606aa7034044af2a",
+  "acceptance": "acceptance.json"
+}

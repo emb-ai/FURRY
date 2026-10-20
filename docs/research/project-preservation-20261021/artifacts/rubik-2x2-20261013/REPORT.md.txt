@@ -1,0 +1,47 @@
+# 2×2 Rubik scene — prototype, 2026-10-13
+
+Controller positions/orientations drive the wrists; ordinary independent Grip
+closes the existing G1 fingers. The object has eight physical colored cubies,
+a free core, passive layer hinges and a magnetic torque inside 15° of a quarter
+revolution. There are no hand/world grasp attachments or face motors in the
+runtime model. Its switchable internal retaining bindings are idealized.
+
+## Verified
+
+Free G1 hand-contact lift: cube center 0.934 → 1.001449 m, +67.449 mm; loaded
+hand contacts for 3119 of 3500 steps. Author 20k at 100 Hz, physics 1000 Hz,
+runtime-equivalent direct arm PD and ordinary Grip. Robot root remained free;
+minimum pelvis height 0.783994 m, zero MuJoCo warnings. Only the initial arm
+pose was set as a fixture; during measurement no cube/robot coordinates were
+rewritten. Wrist IK for this offline probe is independent of live GMR.
+
+An externally loaded mechanism fixture rotated the four real corner bodies to
+90.0222°. The core was fixed in this test. It proves passive physical face
+motion, not G1 bimanual manipulation. Magnet: 12° → 0.000203°; at 25° the face
+stayed outside the capture window. Snapshot restoration, no coordinate or
+velocity overwrite at a quarter-turn, and inverse-scramble color recognition
+passed native checks.
+
+Controller mapping, independent wrists, orientation axes, tracking loss and
+calibration using current FK passed. 91 unit tests: 90 passed, 1 optional Torch
+skipped. All 21 synthetic replay cases had zero state/reference error.
+
+APK ZIP CRC, packaged model/source hashes and signing verification passed.
+Visual budget: 96697 triangles per eye including HUD/skeleton reserve. Preview
+uses the native shaders on desktop; it is not a headset screenshot.
+
+## Not accepted
+
+Reliable controlled bimanual quarter-turn through G1 hands and full manual VR
+solve are not demonstrated. Hand probes lose contacts, select another axis or
+drop the cube. Raw turn counts, unplanned turns, and turns after falling do not
+count as success. The 94.8 mm experiment did not improve grasp and was reverted.
+The final scene is 62.8 mm / 122 g. Quest FPS and usability are unverified.
+
+The APK is a prototype and has not been installed. Unrelated existing local
+changes were preserved; nothing was committed or pushed.
+
+Evidence: `summary.json`, `apk-verification.json`, `source-verification.json`,
+`final-tests.log`, `final-replay.log`, `loaded-face-test.log`,
+`grasp-final63/result.json`, `grasp-final63/grasp-trace.npz`. Other probe outputs
+are historical failed/diagnostic experiments and are not acceptance evidence.

@@ -1,0 +1,18 @@
+{
+  "old_slip": {
+    "exit_code": 0,
+    "stop_reason": "persistent_baseline_regression",
+    "last_iteration": 300,
+    "accepted_checkpoint": null,
+    "fallback": "original initial policy",
+    "elapsed_s": 11237.031754732132
+  },
+  "new_slip_w2": {
+    "exit_code": 0,
+    "stop_reason": "persistent_baseline_regression",
+    "last_iteration": 300,
+    "accepted_checkpoint": null,
+    "fallback": "original initial policy",
+    "elapsed_s": 11162.703674077988
+  }
+}

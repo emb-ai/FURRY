@@ -1,0 +1,17 @@
+{
+  "success": true,
+  "message": "Optimization terminated successfully",
+  "thumb_angles": [
+    0,
+    -0.002294406393772673,
+    -0.003593116694950937
+  ],
+  "cube_local_wrist_offset_m": [
+    -0.03534628919595648,
+    -0.03143723553606686,
+    0.021950164542285232
+  ],
+  "predicted_clearance_m": 0.003000001592701425,
+  "evaluations": 482,
+  "objective": 0.0027194698432556133
+}

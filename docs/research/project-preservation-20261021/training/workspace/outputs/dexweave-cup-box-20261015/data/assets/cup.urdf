@@ -1,0 +1,111 @@
+<robot name="cup">
+  <link name="task_object_0">
+    <inertial>
+      <origin xyz="-3.54965799647e-19 3.69940538885e-19 0.039" rpy="0 0 0" />
+      <mass value="0.06000000000000002" />
+      <inertia ixx="7.797500004120694e-05" iyy="7.797500004120694e-05" izz="6.055000008241389e-05" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <collision name="geom_98_0">
+      <origin xyz="0 0 0.003" rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.035" length="0.006" />
+      </geometry>
+    </collision>
+    <collision name="geom_99_0">
+      <origin xyz="0.033 0 0.048" rpy="0 0 0" />
+      <geometry>
+        <box size="0.006 0.014 0.084" />
+      </geometry>
+    </collision>
+    <collision name="geom_100_0">
+      <origin xyz="0.0304880246 0.0126285533 0.048" rpy="0 0 0.392699081699" />
+      <geometry>
+        <box size="0.006 0.014 0.084" />
+      </geometry>
+    </collision>
+    <collision name="geom_101_0">
+      <origin xyz="0.0233345238 0.0233345238 0.048" rpy="0 0 0.785398163397" />
+      <geometry>
+        <box size="0.006 0.014 0.084" />
+      </geometry>
+    </collision>
+    <collision name="geom_102_0">
+      <origin xyz="0.0126285533 0.0304880246 0.048" rpy="0 0 1.1780972451" />
+      <geometry>
+        <box size="0.006 0.014 0.084" />
+      </geometry>
+    </collision>
+    <collision name="geom_103_0">
+      <origin xyz="2.02066722e-18 0.033 0.048" rpy="0 0 1.57079632679" />
+      <geometry>
+        <box size="0.006 0.014 0.084" />
+      </geometry>
+    </collision>
+    <collision name="geom_104_0">
+      <origin xyz="-0.0126285533 0.0304880246 0.048" rpy="0 0 1.96349540849" />
+      <geometry>
+        <box size="0.006 0.014 0.084" />
+      </geometry>
+    </collision>
+    <collision name="geom_105_0">
+      <origin xyz="-0.0233345238 0.0233345238 0.048" rpy="0 0 2.35619449019" />
+      <geometry>
+        <box size="0.006 0.014 0.084" />
+      </geometry>
+    </collision>
+    <collision name="geom_106_0">
+      <origin xyz="-0.0304880246 0.0126285533 0.048" rpy="0 0 2.74889357189" />
+      <geometry>
+        <box size="0.006 0.014 0.084" />
+      </geometry>
+    </collision>
+    <collision name="geom_107_0">
+      <origin xyz="-0.033 4.04133444e-18 0.048" rpy="0 0 3.14159265359" />
+      <geometry>
+        <box size="0.006 0.014 0.084" />
+      </geometry>
+    </collision>
+    <collision name="geom_108_0">
+      <origin xyz="-0.0304880246 -0.0126285533 0.048" rpy="0 0 -2.74889357189" />
+      <geometry>
+        <box size="0.006 0.014 0.084" />
+      </geometry>
+    </collision>
+    <collision name="geom_109_0">
+      <origin xyz="-0.0233345238 -0.0233345238 0.048" rpy="0 0 -2.35619449019" />
+      <geometry>
+        <box size="0.006 0.014 0.084" />
+      </geometry>
+    </collision>
+    <collision name="geom_110_0">
+      <origin xyz="-0.0126285533 -0.0304880246 0.048" rpy="0 0 -1.96349540849" />
+      <geometry>
+        <box size="0.006 0.014 0.084" />
+      </geometry>
+    </collision>
+    <collision name="geom_111_0">
+      <origin xyz="-6.06200166e-18 -0.033 0.048" rpy="0 0 -1.57079632679" />
+      <geometry>
+        <box size="0.006 0.014 0.084" />
+      </geometry>
+    </collision>
+    <collision name="geom_112_0">
+      <origin xyz="0.0126285533 -0.0304880246 0.048" rpy="0 0 -1.1780972451" />
+      <geometry>
+        <box size="0.006 0.014 0.084" />
+      </geometry>
+    </collision>
+    <collision name="geom_113_0">
+      <origin xyz="0.0233345238 -0.0233345238 0.048" rpy="0 0 -0.785398163397" />
+      <geometry>
+        <box size="0.006 0.014 0.084" />
+      </geometry>
+    </collision>
+    <collision name="geom_114_0">
+      <origin xyz="0.0304880246 -0.0126285533 0.048" rpy="0 0 -0.392699081699" />
+      <geometry>
+        <box size="0.006 0.014 0.084" />
+      </geometry>
+    </collision>
+  </link>
+</robot>

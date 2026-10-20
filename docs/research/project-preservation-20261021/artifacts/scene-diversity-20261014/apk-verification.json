@@ -1,0 +1,23 @@
+{
+  "apk": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/scene-diversity-20261014/project/android/build/g1-quest.apk",
+  "sha256": "d0a61acd2aa97d6f41d9894d7c52d8adb28e397516bae79b6514cde7aecec245",
+  "bytes": 846778687,
+  "zip_crc": true,
+  "policy_catalog_equal_to_installed_base": true,
+  "policies": 13,
+  "source_hashes_verified": 53,
+  "metadata_files_verified": 125,
+  "triangle_budgets": {
+    "stand": 99325,
+    "cup": 99601,
+    "push_t": 99373,
+    "tennis": 98837,
+    "rubik": 96697,
+    "wb_dex": 94601,
+    "bimanual": 94429,
+    "basket": 94801
+  },
+  "installed": false,
+  "signature_verified": true,
+  "delivered_apk": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/scene-diversity-20261014/g1-quest-scenes.apk"
+}

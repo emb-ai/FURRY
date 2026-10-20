@@ -1,0 +1,32 @@
+[
+  {
+    "id": 0,
+    "path": "/Users/vlad/Downloads/Telegram Desktop/org.g1lab.quest-20261006-150531-0.mp4",
+    "duration": 112.6971
+  },
+  {
+    "id": 1,
+    "path": "/Users/vlad/Downloads/Telegram Desktop/org.g1lab.quest-20261006-153314-0.mp4",
+    "duration": 25.532854
+  },
+  {
+    "id": 2,
+    "path": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/cup-data-publish-20261015/training-camera.mp4",
+    "duration": 8.2
+  },
+  {
+    "id": 3,
+    "path": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/cup-dp-eval-20261015/cup-control-vs-policy.mp4",
+    "duration": 15.0
+  },
+  {
+    "id": 4,
+    "path": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/cup-training-plan-20261015/cup-trajectory-46cm.mp4",
+    "duration": 8.966667
+  },
+  {
+    "id": 5,
+    "path": "/Users/vlad/Documents/ChatGPT/VR-телеуправление гуманоидом/outputs.nosync/cup-homie-finetune-20261015/fresh-start/video/act-full-reset-10-collage-final.mp4",
+    "duration": 48.066667
+  }
+]

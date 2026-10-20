@@ -1,0 +1,16 @@
+{
+  "apk": "g1-quest-lab-vlad-anatomical-hands.apk",
+  "bytes": 832275683,
+  "sha256": "ffeea973b3b192d09e189104a2cafce59bfc09ab6fd664de4847bb131257de4f",
+  "zip_crc": true,
+  "source_and_asset_digest_checks": 107,
+  "model_digest_checks": 13,
+  "policy_count": 10,
+  "metadata_variants": 66,
+  "controller_anatomical_frame": true,
+  "controller_stage_targets": true,
+  "soft_grip_preserved": true,
+  "package": "org.g1lab.quest",
+  "label": "G1 Quest Lab-vlad",
+  "installed": true
+}

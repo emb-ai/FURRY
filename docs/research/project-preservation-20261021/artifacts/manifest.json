@@ -1,0 +1,1920 @@
+{
+  "schema_version": 1,
+  "preserved_on": "2026-10-21",
+  "audited_main": "68079cfdfa36fbaef020eb192db3a477f8fe961c",
+  "scope": "Broad compact project evidence and final presentation reproducibility; separate training auditor owns recent cup/DexWeave/Rubik experiments.",
+  "files": [
+    {
+      "source": "outputs/capture-skeleton-20261008/capture_plan.json",
+      "bytes": 2635,
+      "sha256": "a78ef645732c05483af1a6d9ca573854d0d3eaae85705995f1706f48f275dca8",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/capture-skeleton-20261008/capture_plan.json",
+      "path": "capture-skeleton-20261008/capture_plan.json"
+    },
+    {
+      "source": "outputs/capture-skeleton-20261008/capture_summary.json",
+      "bytes": 161,
+      "sha256": "0efba51b6a01744820c33af776535e2f8b9ab5b4d7008dfc3f108ef12520754e",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/capture-skeleton-20261008/capture_summary.json",
+      "path": "capture-skeleton-20261008/capture_summary.json"
+    },
+    {
+      "source": "outputs/catch-up-menu-20261009/summary.json",
+      "bytes": 918,
+      "sha256": "e31094c84f6edc671470db1738bb04f6f7f1ac55f293ae2b722840820f60bfe3",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/catch-up-menu-20261009/summary.json",
+      "path": "catch-up-menu-20261009/summary.json"
+    },
+    {
+      "source": "outputs/catch-up-wrists-20261010/summary.json",
+      "bytes": 3926,
+      "sha256": "4057f3371dd8b68af630cc942b2d49f8438c9df017ae76a2727096da9e740b5f",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/catch-up-wrists-20261010/summary.json",
+      "path": "catch-up-wrists-20261010/summary.json"
+    },
+    {
+      "source": "outputs/cup-lab-20261013/summary.json",
+      "bytes": 2548,
+      "sha256": "fc94311522705cd9f040dfd6c7ede548c832f8bbc0feba73ae8714ae8fadc4c0",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/cup-lab-20261013/summary.json",
+      "path": "cup-lab-20261013/summary.json"
+    },
+    {
+      "source": "outputs/cup-policy-audit-20261014/summary.json",
+      "bytes": 4609,
+      "sha256": "2542383d9b2af958d456512eda5f9f90ac32eae0bb942b8a1faca8dc1918dc5e",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/cup-policy-audit-20261014/summary.json",
+      "path": "cup-policy-audit-20261014/summary.json"
+    },
+    {
+      "source": "outputs/dexweave-body-20261012/EXPERIMENT.md",
+      "bytes": 4024,
+      "sha256": "77c548a57ecd7210a2520713495add1a9942b9d13a206a26ec97d0073ecd445b",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/dexweave-body-20261012/EXPERIMENT.md.txt",
+      "path": "dexweave-body-20261012/EXPERIMENT.md.txt"
+    },
+    {
+      "source": "outputs/dexweave-body-20261012/REPORT.md",
+      "bytes": 16718,
+      "sha256": "de5e30d231144ed27b9c4765f9f8e9759b0debd9bda71f10709e82f176c56946",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/dexweave-body-20261012/REPORT.md.txt",
+      "path": "dexweave-body-20261012/REPORT.md.txt"
+    },
+    {
+      "source": "outputs/dexweave-feasibility-20261012/REPORT.md",
+      "bytes": 46121,
+      "sha256": "d64207bfa3ceeb772c7260fcea209ddbccf8e88d20bf39af0f3c37606486997a",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/dexweave-feasibility-20261012/REPORT.md.txt",
+      "path": "dexweave-feasibility-20261012/REPORT.md.txt"
+    },
+    {
+      "source": "outputs/dexweave-inference-20261013/results.json",
+      "bytes": 2223,
+      "sha256": "92c466c51cc59f2e0144c588b5c86d73191b0d2eee719dda861e76261b3810fe",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/dexweave-inference-20261013/results.json",
+      "path": "dexweave-inference-20261013/results.json"
+    },
+    {
+      "source": "outputs/dexweave-new-inference-20261013/results.json",
+      "bytes": 2215,
+      "sha256": "b29b4af5e341d491a9e73c2179247be7854e8d8253cf325b8e82a9ba2e580099",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/dexweave-new-inference-20261013/results.json",
+      "path": "dexweave-new-inference-20261013/results.json"
+    },
+    {
+      "source": "outputs/dexweave-quest-deploy-20261013/REPORT.md",
+      "bytes": 5251,
+      "sha256": "3dca0b512d1d645fde737a7d71d579f059f74d2187926a92d5855749e5c5f43a",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/dexweave-quest-deploy-20261013/REPORT.md.txt",
+      "path": "dexweave-quest-deploy-20261013/REPORT.md.txt"
+    },
+    {
+      "source": "outputs/dexweave-quest-deploy-20261013/apk-verification.json",
+      "bytes": 2120,
+      "sha256": "73682cef5729d941c3ff03853fb16727384a3e57b003e1191efd679dfec3314e",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/dexweave-quest-deploy-20261013/apk-verification.json",
+      "path": "dexweave-quest-deploy-20261013/apk-verification.json"
+    },
+    {
+      "source": "outputs/dexweave-quest-deploy-20261013/summary.json",
+      "bytes": 3622,
+      "sha256": "56c3b5ee4db5886ed95167caccb6ff077689f523fbadfcf3edc1b52ac67da025",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/dexweave-quest-deploy-20261013/summary.json",
+      "path": "dexweave-quest-deploy-20261013/summary.json"
+    },
+    {
+      "source": "outputs/dexweave-stance-20261013/provenance.json",
+      "bytes": 1957,
+      "sha256": "c6aaef3d87d0af5ca5b91012c16bd3d9f500f35438d9002846b5857e70542711",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/dexweave-stance-20261013/provenance.json",
+      "path": "dexweave-stance-20261013/provenance.json"
+    },
+    {
+      "source": "outputs/dexweave-stance-20261013/report.html",
+      "bytes": 3848,
+      "sha256": "a549be54b810fcab08d5ffa4536e5b88ace7d5ad6ba4457c73b793702913f89f",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/dexweave-stance-20261013/report.html",
+      "path": "dexweave-stance-20261013/report.html"
+    },
+    {
+      "source": "outputs/dexweave-stance-20261013/summary.json",
+      "bytes": 16799,
+      "sha256": "52c6bce4809d1dc091210e9147eca766d50461f52c898e01dc11fa0bb4dcc73a",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/dexweave-stance-20261013/summary.json",
+      "path": "dexweave-stance-20261013/summary.json"
+    },
+    {
+      "source": "outputs/dexweave-stance-finetune-20261013/EXPERIMENT.md",
+      "bytes": 2148,
+      "sha256": "cf11b958763f99907a0c58e650a4a8b9141c7ce0ebbebe8db9ea32dd48d6dd2b",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/dexweave-stance-finetune-20261013/EXPERIMENT.md.txt",
+      "path": "dexweave-stance-finetune-20261013/EXPERIMENT.md.txt"
+    },
+    {
+      "source": "outputs/final-montage-20261016/concat.txt",
+      "bytes": 331,
+      "sha256": "b0a55dfa4dcc0ea56d958f5ff0a2e05341c2af5cca7070e02eac8d0bb4daa535",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/final-montage-20261016/concat.txt",
+      "path": "final-montage-20261016/concat.txt"
+    },
+    {
+      "source": "outputs/final-publication-20261016/publication-summary.json",
+      "bytes": 1142,
+      "sha256": "cf7fdbe18cea245bb268eff991b2077a7c53b3d1a92df73827d9cb3e5758cb6f",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/final-publication-20261016/publication-summary.json",
+      "path": "final-publication-20261016/publication-summary.json"
+    },
+    {
+      "source": "outputs/final-publication-20261016/validation.json",
+      "bytes": 601,
+      "sha256": "9169a00cdf23e2e9c1e09b405e3bda45e6134d8000329dd139aac1cd4fc57a10",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/final-publication-20261016/validation.json",
+      "path": "final-publication-20261016/validation.json"
+    },
+    {
+      "source": "outputs/floor-grounding-audit/summary.json",
+      "bytes": 7521,
+      "sha256": "c4361c10db9ae06cb137b258dca8a4e60e7e88439597aa0cc8d858347ae3fd9c",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/floor-grounding-audit/summary.json",
+      "path": "floor-grounding-audit/summary.json"
+    },
+    {
+      "source": "outputs/floor-grounding-live-20261008/report.md",
+      "bytes": 6661,
+      "sha256": "87a7db10078eebc71109058e682a3b1d0011ccf5e2790525fbca04d4ad7fa597",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/floor-grounding-live-20261008/report.md.txt",
+      "path": "floor-grounding-live-20261008/report.md.txt"
+    },
+    {
+      "source": "outputs/floor-grounding-live-20261008/summary.json",
+      "bytes": 8211,
+      "sha256": "9686cac30e92fcbaa5ae5db921c490862c6c23d7935e0318a8f8cae55e52f8c5",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/floor-grounding-live-20261008/summary.json",
+      "path": "floor-grounding-live-20261008/summary.json"
+    },
+    {
+      "source": "outputs/full-body-apk-20261010/summary.json",
+      "bytes": 5103,
+      "sha256": "4ca02d39b583287aee1824038b13e1ae5c0b72dee04380b3816c92e4dd8b6fc8",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/full-body-apk-20261010/summary.json",
+      "path": "full-body-apk-20261010/summary.json"
+    },
+    {
+      "source": "outputs/full-body-feet-ab-20261010/report.json",
+      "bytes": 7776,
+      "sha256": "2e5a5c2e8a6bdc779e1cc2a766ad1480e567792eed79cdb3b20ac10ec7f43488",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/full-body-feet-ab-20261010/report.json",
+      "path": "full-body-feet-ab-20261010/report.json"
+    },
+    {
+      "source": "outputs/full-body-fixed-commands-20261010/report.json",
+      "bytes": 6859,
+      "sha256": "5ed91126c8aa040519735ceafb5598ff48f3ccd7eca7b1dcc81a56838999fd7c",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/full-body-fixed-commands-20261010/report.json",
+      "path": "full-body-fixed-commands-20261010/report.json"
+    },
+    {
+      "source": "outputs/full-body-live-20261010/summary.json",
+      "bytes": 6460,
+      "sha256": "7fc53ba04c3a040a6d0030d3f97c099e5a861dedd0952a7d4af5bd12fddd2d1c",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/full-body-live-20261010/summary.json",
+      "path": "full-body-live-20261010/summary.json"
+    },
+    {
+      "source": "outputs/full-body-recording-audit-20261010/inventory.json",
+      "bytes": 38181,
+      "sha256": "375f100ae0451a8e198a3cbe0cf40002b7c86f4a5cd46aa8462f7dc0047d4622",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/full-body-recording-audit-20261010/inventory.json",
+      "path": "full-body-recording-audit-20261010/inventory.json"
+    },
+    {
+      "source": "outputs/gait-capture-20261010/summary.json",
+      "bytes": 2054,
+      "sha256": "64dce7b94a51bf795de70d9d303604621fd33c5b9c5fdf694bd300445f88d941",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/gait-capture-20261010/summary.json",
+      "path": "gait-capture-20261010/summary.json"
+    },
+    {
+      "source": "outputs/gait-direct-holdouts/summary.json",
+      "bytes": 29964,
+      "sha256": "68411b1783c8cd0ce12ed1e7fe38e9f74901b4615a441c693bb827dd1bb33748",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/gait-direct-holdouts/summary.json",
+      "path": "gait-direct-holdouts/summary.json"
+    },
+    {
+      "source": "outputs/gait-empty-scene/summary.json",
+      "bytes": 58430,
+      "sha256": "642fa05a9c6c99e200ce7895e691418bcbd8646286e33438345bd1371beebf87",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/gait-empty-scene/summary.json",
+      "path": "gait-empty-scene/summary.json"
+    },
+    {
+      "source": "outputs/gait-housing-candidate/summary.json",
+      "bytes": 3406,
+      "sha256": "0c52c262891df06e532785e6fe2c3153b5ed14e98f3378a37ece67663c972c27",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/gait-housing-candidate/summary.json",
+      "path": "gait-housing-candidate/summary.json"
+    },
+    {
+      "source": "outputs/gait-wrist-candidate/summary.json",
+      "bytes": 3427,
+      "sha256": "597503bd21c223ff75b31ae9a1c570885c2b0f3669813013632eeec33dce8e71",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/gait-wrist-candidate/summary.json",
+      "path": "gait-wrist-candidate/summary.json"
+    },
+    {
+      "source": "outputs/grip-force-20261013/REPORT.md",
+      "bytes": 2292,
+      "sha256": "f45a1c6e8f321916d883f7a9d4d1b01b304fddafe1c49ad3802b2dcec948fccf",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/grip-force-20261013/REPORT.md.txt",
+      "path": "grip-force-20261013/REPORT.md.txt"
+    },
+    {
+      "source": "outputs/grip-force-20261013/summary.json",
+      "bytes": 1411,
+      "sha256": "825b191acd9460caea951ce45991eaa7f0fc1bc6a162e589527c064ae22c903e",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/grip-force-20261013/summary.json",
+      "path": "grip-force-20261013/summary.json"
+    },
+    {
+      "source": "outputs/homie-standing-20261014/REPORT.html",
+      "bytes": 22418,
+      "sha256": "48cb42e0b6430edc590ddc1783524508fedae1da7e129ef566e827fd8e0e7ee4",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/homie-standing-20261014/REPORT.html",
+      "path": "homie-standing-20261014/REPORT.html"
+    },
+    {
+      "source": "outputs/homie-standing-20261014/final-protocol.json",
+      "bytes": 2135,
+      "sha256": "a72425901f70e8a56efa95cdab6350dc460359dc5e39b2f9f4f730c976cb1a63",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/homie-standing-20261014/final-protocol.json",
+      "path": "homie-standing-20261014/final-protocol.json"
+    },
+    {
+      "source": "outputs/homie-standing-20261014/summary.json",
+      "bytes": 13677,
+      "sha256": "5b1194022198eedcd357cb4912926278d064b88864537a5d9172aba8b2d7ef5f",
+      "reason": "nested final evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/homie-standing-20261014/summary.json",
+      "path": "homie-standing-20261014/summary.json"
+    },
+    {
+      "source": "outputs/human-gmr-20261008/floor-corrected/floor.json",
+      "bytes": 259,
+      "sha256": "311fe380b5ed0800c0158cf8f75bd1d3fde7f7d69f0881fedb0b4319da69db88",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/human-gmr-20261008/floor-corrected/floor.json",
+      "path": "human-gmr-20261008/floor-corrected/floor.json"
+    },
+    {
+      "source": "outputs/human-gmr-20261008/floor-corrected/metrics.json",
+      "bytes": 254,
+      "sha256": "ba441b99744744e0717d0592c283fb42f09339ff6630a3c41b95cb5d0187c059",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/human-gmr-20261008/floor-corrected/metrics.json",
+      "path": "human-gmr-20261008/floor-corrected/metrics.json"
+    },
+    {
+      "source": "outputs/human-gmr-20261008/floor-corrected/proportions.json",
+      "bytes": 274,
+      "sha256": "137ac31e59cf66a3315aabd9c121048ff68e654c55c02f9e51424f49c4f09acb",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/human-gmr-20261008/floor-corrected/proportions.json",
+      "path": "human-gmr-20261008/floor-corrected/proportions.json"
+    },
+    {
+      "source": "outputs/human-gmr-20261008/rtmw-floor/floor.json",
+      "bytes": 259,
+      "sha256": "311fe380b5ed0800c0158cf8f75bd1d3fde7f7d69f0881fedb0b4319da69db88",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/human-gmr-20261008/rtmw-floor/floor.json",
+      "path": "human-gmr-20261008/rtmw-floor/floor.json"
+    },
+    {
+      "source": "outputs/human-gmr-20261008/rtmw-floor/metrics.json",
+      "bytes": 254,
+      "sha256": "a685b2fd4266afb38044b538c08a7dc2bb11c308025e3e0ea0fe7ef979d22f30",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/human-gmr-20261008/rtmw-floor/metrics.json",
+      "path": "human-gmr-20261008/rtmw-floor/metrics.json"
+    },
+    {
+      "source": "outputs/human-gmr-20261008/rtmw-floor/proportions.json",
+      "bytes": 274,
+      "sha256": "137ac31e59cf66a3315aabd9c121048ff68e654c55c02f9e51424f49c4f09acb",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/human-gmr-20261008/rtmw-floor/proportions.json",
+      "path": "human-gmr-20261008/rtmw-floor/proportions.json"
+    },
+    {
+      "source": "outputs/human-gmr-20261008/yolo/metrics.json",
+      "bytes": 254,
+      "sha256": "b187035fe5ec73d584732db16d955e6cbb0d95dda0cb117e69f14e71d4ca5f05",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/human-gmr-20261008/yolo/metrics.json",
+      "path": "human-gmr-20261008/yolo/metrics.json"
+    },
+    {
+      "source": "outputs/human-gmr-20261008/yolo/proportions.json",
+      "bytes": 274,
+      "sha256": "137ac31e59cf66a3315aabd9c121048ff68e654c55c02f9e51424f49c4f09acb",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/human-gmr-20261008/yolo/proportions.json",
+      "path": "human-gmr-20261008/yolo/proportions.json"
+    },
+    {
+      "source": "outputs/locomotion-audit/position_compare.json",
+      "bytes": 785,
+      "sha256": "874e9c81cd2fdf1e43be7b7a7531ad8f025ff23eb9fadc573ba71f72be716a2d",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/locomotion-audit/position_compare.json",
+      "path": "locomotion-audit/position_compare.json"
+    },
+    {
+      "source": "outputs/locomotion-audit/position_compare_unclipped.json",
+      "bytes": 781,
+      "sha256": "9abbf3b2c9d8d6e43ea15fec091e9c44078063d27926d30bcf4026af449c66e7",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/locomotion-audit/position_compare_unclipped.json",
+      "path": "locomotion-audit/position_compare_unclipped.json"
+    },
+    {
+      "source": "outputs/locomotion-audit/walk_compare.json",
+      "bytes": 562,
+      "sha256": "a2503358b603436e5f89ca0dcbf96266f9066b681ace2b3e17f7ad40189b920a",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/locomotion-audit/walk_compare.json",
+      "path": "locomotion-audit/walk_compare.json"
+    },
+    {
+      "source": "outputs/long-recording-20261007/summary.json",
+      "bytes": 4338,
+      "sha256": "73e248f9db4409218edb2ad7584bd156589b3c8e22baf9afb6a095b9f1a5983f",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/long-recording-20261007/summary.json",
+      "path": "long-recording-20261007/summary.json"
+    },
+    {
+      "source": "outputs/main-publication-20261013/summary.json",
+      "bytes": 1277,
+      "sha256": "f07bdbaefb357a5d88696f00ba9e0b8d2ddfca2bfdc922b7ada51a9e0d7d445f",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/main-publication-20261013/summary.json",
+      "path": "main-publication-20261013/summary.json"
+    },
+    {
+      "source": "outputs/menu-policy-vlad-20261013/REPORT.md",
+      "bytes": 7562,
+      "sha256": "93c91cc69cdf0bac9faa4e24a6693b295d0d4a072cf847ea37789a2c157c4bf4",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/menu-policy-vlad-20261013/REPORT.md.txt",
+      "path": "menu-policy-vlad-20261013/REPORT.md.txt"
+    },
+    {
+      "source": "outputs/menu-policy-vlad-20261013/apk-verification.json",
+      "bytes": 286,
+      "sha256": "10b01ff1d807f3fe1276cf58c542ea87b0491100d9b70511889d9054d8f4c5cb",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/menu-policy-vlad-20261013/apk-verification.json",
+      "path": "menu-policy-vlad-20261013/apk-verification.json"
+    },
+    {
+      "source": "outputs/menu-policy-vlad-20261013/summary.json",
+      "bytes": 3035,
+      "sha256": "a21388b178539af83693b21f062076742b20689015f940dd28f77f8ceefa4955",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/menu-policy-vlad-20261013/summary.json",
+      "path": "menu-policy-vlad-20261013/summary.json"
+    },
+    {
+      "source": "outputs/new-policy-111586-20261009/summary.json",
+      "bytes": 715,
+      "sha256": "1e929647eccc1c35037e16c3dc4ae3947e63c0758d4ebda9b8acce645cc7657d",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/new-policy-111586-20261009/summary.json",
+      "path": "new-policy-111586-20261009/summary.json"
+    },
+    {
+      "source": "outputs/operator-video-20261015/apk-verification.json",
+      "bytes": 10916,
+      "sha256": "35f1d44add1ea896187e76bbbf2ae86a1198d9cf5ba334ebbda570ea2a212596",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/operator-video-20261015/apk-verification.json",
+      "path": "operator-video-20261015/apk-verification.json"
+    },
+    {
+      "source": "outputs/operator-video-20261015/summary.json",
+      "bytes": 2817,
+      "sha256": "a134c16424a783ee786089e7bd17993bcec63d3d77ab12e87092c4a5215db419",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/operator-video-20261015/summary.json",
+      "path": "operator-video-20261015/summary.json"
+    },
+    {
+      "source": "outputs/operator-video-fov-20261015/REPORT.md",
+      "bytes": 6049,
+      "sha256": "df67205d5ac94bf613a1d8c2f8f6edc05d82c9624c18dcc76081528f6cb0e209",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/operator-video-fov-20261015/REPORT.md.txt",
+      "path": "operator-video-fov-20261015/REPORT.md.txt"
+    },
+    {
+      "source": "outputs/operator-video-fov-20261015/acceptance-t16.png",
+      "bytes": 751759,
+      "sha256": "db8224b7355fc45d49ffca5b5f87fe830331e5e5a86d35dfafbab550b855b95f",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/operator-video-fov-20261015/acceptance-t16.png",
+      "path": "operator-video-fov-20261015/acceptance-t16.png"
+    },
+    {
+      "source": "outputs/operator-video-fov-20261015/acceptance-t20.png",
+      "bytes": 819439,
+      "sha256": "f56bdaeb09d0691e6a418ae4e64ab0baad64db6fad53a77dd32bf5cd55282285",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/operator-video-fov-20261015/acceptance-t20.png",
+      "path": "operator-video-fov-20261015/acceptance-t20.png"
+    },
+    {
+      "source": "outputs/operator-video-fov-20261015/acceptance.json",
+      "bytes": 1603,
+      "sha256": "1d1a0ebb6314c46cffd99052047006d06a2081053b408cd8269a4cf16543c239",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/operator-video-fov-20261015/acceptance.json",
+      "path": "operator-video-fov-20261015/acceptance.json"
+    },
+    {
+      "source": "outputs/operator-video-fov-20261015/configure_capture.py",
+      "bytes": 2512,
+      "sha256": "044878fb3b37f1665e7c78c0c3fdbfcc97ed80b623170e0936ceec40a1750303",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/operator-video-fov-20261015/configure_capture.py",
+      "path": "operator-video-fov-20261015/configure_capture.py"
+    },
+    {
+      "source": "outputs/operator-video-fov-20261015/summary.json",
+      "bytes": 11408,
+      "sha256": "581c8e7ee0ade60142d1694cd8cd05f38e7202f4463a3d28007acf648a904dac",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/operator-video-fov-20261015/summary.json",
+      "path": "operator-video-fov-20261015/summary.json"
+    },
+    {
+      "source": "outputs/operator-video-fov-20261015/verification.json",
+      "bytes": 2305,
+      "sha256": "4a0b0f947d62106fd490a553a3a98d014de3d9e6174659c1783b073d22ff754b",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/operator-video-fov-20261015/verification.json",
+      "path": "operator-video-fov-20261015/verification.json"
+    },
+    {
+      "source": "outputs/operator-video-square-20261015/summary.json",
+      "bytes": 11675,
+      "sha256": "34f018a92957f82c2078bcab957d96869b6fc49e78fa1b54388bd7a7d95c15b6",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/operator-video-square-20261015/summary.json",
+      "path": "operator-video-square-20261015/summary.json"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/README.md",
+      "bytes": 6132,
+      "sha256": "5be5ff6892e10b3ce207033d70c04e3372ce516994e5328c50aefa315280c97b",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/README.md.txt",
+      "path": "policy-comparison-20261016/README.md.txt"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/build.py",
+      "bytes": 819,
+      "sha256": "52cc548ffe33fef43fe26e711ee809e8c5343203bbdd5fc9908957918c65cc4e",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/build.py",
+      "path": "policy-comparison-20261016/build.py"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/collect.py",
+      "bytes": 3494,
+      "sha256": "816bddc5d228d3fb765dfba89ad61c10caab1bfd26bf82aa86c7a55771d5e14d",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/collect.py",
+      "path": "policy-comparison-20261016/collect.py"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/dexweave-B-4174.csv",
+      "bytes": 2138505,
+      "sha256": "2aed6cbf5547b2ca6179c0191876c6586816a3e2ef68ed08fa8d51fbf1f72f4c",
+      "reason": "eight-policy metric recomputation input (published final comparison)",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/dexweave-B-4174.csv",
+      "path": "policy-comparison-20261016/dexweave-B-4174.csv"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/dexweave-wide-2977.csv",
+      "bytes": 2134871,
+      "sha256": "1b159171dc1c5cabfcee0283dee04c48583a269f6b70ae6f311f63add5de1aff",
+      "reason": "eight-policy metric recomputation input (published final comparison)",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/dexweave-wide-2977.csv",
+      "path": "policy-comparison-20261016/dexweave-wide-2977.csv"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/display-labels-v3.json",
+      "bytes": 590,
+      "sha256": "bfff2eab307e3b50d447771c5a962148d8d232aa7765c10e8d95e2b8824d2ead",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/display-labels-v3.json",
+      "path": "policy-comparison-20261016/display-labels-v3.json"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/fix_overlay.py",
+      "bytes": 2417,
+      "sha256": "f13ed9fd7863f4698bc9de481c81da95308f6b46acd56a9e3e50b1cacfece23e",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/fix_overlay.py",
+      "path": "policy-comparison-20261016/fix_overlay.py"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/homie-v2.csv",
+      "bytes": 2146610,
+      "sha256": "3d6ac47e04a7b499e339f4958afe8134f70dcbb7a02c17dc46574a11298eadb4",
+      "reason": "eight-policy metric recomputation input (published final comparison)",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/homie-v2.csv",
+      "path": "policy-comparison-20261016/homie-v2.csv"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/mae_ending.py",
+      "bytes": 1365,
+      "sha256": "b52302cd011a8bdc4cdc4fb7f80992e93c0202f2614a1a25d36ab53661f922ff",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/mae_ending.py",
+      "path": "policy-comparison-20261016/mae_ending.py"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/metric-verification.json",
+      "bytes": 1701,
+      "sha256": "23e11e05860926aa3426f55164ea6ab8a95579479faff939f9c7a37702703492",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/metric-verification.json",
+      "path": "policy-comparison-20261016/metric-verification.json"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/metrics.json",
+      "bytes": 1824,
+      "sha256": "d41b9786338ef2da2d3fe1b345545e6c8ed39ed46b0b998a4a811e3524da3903",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/metrics.json",
+      "path": "policy-comparison-20261016/metrics.json"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/native-source.json",
+      "bytes": 8411,
+      "sha256": "14e398335e076398096513a91194558e7bb618866fa155723e8e8ccb24bc25b0",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/native-source.json",
+      "path": "policy-comparison-20261016/native-source.json"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/native.cpp",
+      "bytes": 3838,
+      "sha256": "32a3c50f59c97ac1959434f17d84c02c4ec90953a14b292e2103a3661d46f368",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/native.cpp",
+      "path": "policy-comparison-20261016/native.cpp"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/plain_mae_ending.py",
+      "bytes": 1441,
+      "sha256": "a216bf7d68cf4b19452bc47d33797a82ce9c5a0596700e49116683f6acc2dee1",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/plain_mae_ending.py",
+      "path": "policy-comparison-20261016/plain_mae_ending.py"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/quest-111586-500-lift10.csv",
+      "bytes": 2135610,
+      "sha256": "63e21e5b890e9179356950b3a8b469c16b42beade32963280340a56935fa1429",
+      "reason": "eight-policy metric recomputation input (published final comparison)",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/quest-111586-500-lift10.csv",
+      "path": "policy-comparison-20261016/quest-111586-500-lift10.csv"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/quest-111586-500.csv",
+      "bytes": 2135735,
+      "sha256": "f2d80e4afef4d41d07fee37d6d158305bf3d57334b28eb9413e19977bf6a8964",
+      "reason": "eight-policy metric recomputation input (published final comparison)",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/quest-111586-500.csv",
+      "path": "policy-comparison-20261016/quest-111586-500.csv"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/quest-stance12-B-s11.csv",
+      "bytes": 2136899,
+      "sha256": "b59d1e8e4b83f80b71ce50634480848a97b27fab048c93fd6d985348b5f09201",
+      "reason": "eight-policy metric recomputation input (published final comparison)",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/quest-stance12-B-s11.csv",
+      "path": "policy-comparison-20261016/quest-stance12-B-s11.csv"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/readable_overlay.py",
+      "bytes": 3766,
+      "sha256": "0069c0ef9cb74e59169b2b156f286c09709e40ca8e6c4654e9c8869a821bf742",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/readable_overlay.py",
+      "path": "policy-comparison-20261016/readable_overlay.py"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/references.npz",
+      "bytes": 1658370,
+      "sha256": "eedda7ca44dcd0d7bbd8ae8be580931a59f8a9c9beca5e8d226f0d8b1f810100",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/references.npz",
+      "path": "policy-comparison-20261016/references.npz"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/refs-base.csv",
+      "bytes": 2146373,
+      "sha256": "986c45abf5a3faa1539b4f20f34731891a11b220811c4b488804949569882610",
+      "reason": "eight-policy metric recomputation input (published final comparison)",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/refs-base.csv",
+      "path": "policy-comparison-20261016/refs-base.csv"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/refs-lift.csv",
+      "bytes": 2147980,
+      "sha256": "8da9b85cbae15e722b9da5240f024aa6fe4ef1aa5ec0480aa6a473b5ce8e3b3a",
+      "reason": "eight-policy metric recomputation input (published final comparison)",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/refs-lift.csv",
+      "path": "policy-comparison-20261016/refs-lift.csv"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/refs-narrow.csv",
+      "bytes": 2145101,
+      "sha256": "6c0d2c3961365dcdef7e2d08e72c0e81f8a85e9c008298e7bf33b00c97265a00",
+      "reason": "eight-policy metric recomputation input (published final comparison)",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/refs-narrow.csv",
+      "path": "policy-comparison-20261016/refs-narrow.csv"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/render.py",
+      "bytes": 5277,
+      "sha256": "8cb2cc6042842baa367e2f3c7781436968ab0d1c1d5d6dc4ead9324f4133be49",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/render.py",
+      "path": "policy-comparison-20261016/render.py"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/sonic-vr3.csv",
+      "bytes": 2139300,
+      "sha256": "fffc8fce7dc01529f24f7f664d4dd0ea1d54949d1873d411b8deaced18edf369",
+      "reason": "eight-policy metric recomputation input (published final comparison)",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/sonic-vr3.csv",
+      "path": "policy-comparison-20261016/sonic-vr3.csv"
+    },
+    {
+      "source": "outputs/policy-comparison-20261016/twist2-20k.csv",
+      "bytes": 2140802,
+      "sha256": "a1426dde366817df54715e1838eaf9a29ffc42361663e7c2863f3ea095cf8d0c",
+      "reason": "eight-policy metric recomputation input (published final comparison)",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-comparison-20261016/twist2-20k.csv",
+      "path": "policy-comparison-20261016/twist2-20k.csv"
+    },
+    {
+      "source": "outputs/policy-git-publish-20261009/summary.json",
+      "bytes": 666,
+      "sha256": "c683e3b02f66924a17b2a303367d005c643a389bc6dff9fc267cd6502f9ae825",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-git-publish-20261009/summary.json",
+      "path": "policy-git-publish-20261009/summary.json"
+    },
+    {
+      "source": "outputs/policy-selection-20261009/backup-verification.json",
+      "bytes": 223,
+      "sha256": "ff67c7cd647140f2fe038ddbf8d64b076c1c2138fe7330b8ca9595802392da44",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-selection-20261009/backup-verification.json",
+      "path": "policy-selection-20261009/backup-verification.json"
+    },
+    {
+      "source": "outputs/policy-selection-20261009/restore-verification.json",
+      "bytes": 80,
+      "sha256": "77d6a10c5215fe74f9f67886ef02c70c71c555903dff92ed8019ac517dd86251",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-selection-20261009/restore-verification.json",
+      "path": "policy-selection-20261009/restore-verification.json"
+    },
+    {
+      "source": "outputs/policy-selection-20261009/summary.json",
+      "bytes": 2016,
+      "sha256": "905c8a1bc324e4b521f7d376b10b41ae12d56a2809db00cf81fd853d31555422",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/policy-selection-20261009/summary.json",
+      "path": "policy-selection-20261009/summary.json"
+    },
+    {
+      "source": "outputs/predicted-hands-20261013/REPORT.md",
+      "bytes": 5515,
+      "sha256": "90ca0c164c37a111891da5b4d9f84c350454146ae750b688684fde0e5a06d0ec",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/predicted-hands-20261013/REPORT.md.txt",
+      "path": "predicted-hands-20261013/REPORT.md.txt"
+    },
+    {
+      "source": "outputs/predicted-hands-20261013/apk-verification.json",
+      "bytes": 559,
+      "sha256": "32c5a6b5f4f40c48ae7469c7538e0141a69249e1b2ba5649d3ba4930e4e47213",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/predicted-hands-20261013/apk-verification.json",
+      "path": "predicted-hands-20261013/apk-verification.json"
+    },
+    {
+      "source": "outputs/predicted-hands-20261013/summary.json",
+      "bytes": 1266,
+      "sha256": "f715bba5c82913eb63e60bdda9f24e0ed0d890441aec6508c88f6eeb758c15d1",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/predicted-hands-20261013/summary.json",
+      "path": "predicted-hands-20261013/summary.json"
+    },
+    {
+      "source": "outputs/quest-catch-up-111586-audit/report.json",
+      "bytes": 7002,
+      "sha256": "68298070cac8ad65b61b4e651390478fac377a9cbd482a7a71bd22016c9c67a1",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/quest-catch-up-111586-audit/report.json",
+      "path": "quest-catch-up-111586-audit/report.json"
+    },
+    {
+      "source": "outputs/quest-finetune-20261008/night-v3/status-checks/20261009T063806Z/reports/night-results.json",
+      "bytes": 471,
+      "sha256": "474ca214c5cd615eaaf8888014fb03ddf6de62537a2a09b49b0829da8abea9d2",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/quest-finetune-20261008/night-v3/status-checks/20261009T063806Z/reports/night-results.json",
+      "path": "quest-finetune-20261008/night-v3/status-checks/20261009T063806Z/reports/night-results.json"
+    },
+    {
+      "source": "outputs/quest-h100-distributed-20261010/REPORT.md",
+      "bytes": 7381,
+      "sha256": "067e44a2fd7d7a3afb2dfea0997015eededcd0aea0e35d642a505f509432b181",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/quest-h100-distributed-20261010/REPORT.md.txt",
+      "path": "quest-h100-distributed-20261010/REPORT.md.txt"
+    },
+    {
+      "source": "outputs/quest-locomotion-ablations-20261010/EXPERIMENT.md",
+      "bytes": 9849,
+      "sha256": "a6837ab868cb0f246f6c9c10dc6a8757d704fa0fd8b2135836c930f65f6b901c",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/quest-locomotion-ablations-20261010/EXPERIMENT.md.txt",
+      "path": "quest-locomotion-ablations-20261010/EXPERIMENT.md.txt"
+    },
+    {
+      "source": "outputs/quest-locomotion-ablations-20261010/RESULTS_20261012.md",
+      "bytes": 5219,
+      "sha256": "dc613b116ee95bd4673b99315a6c363f79500b5e777463ec2547db0b9d2b6932",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/quest-locomotion-ablations-20261010/RESULTS_20261012.md.txt",
+      "path": "quest-locomotion-ablations-20261010/RESULTS_20261012.md.txt"
+    },
+    {
+      "source": "outputs/quest-ppo-scaling-20261010/REPORT.md",
+      "bytes": 2457,
+      "sha256": "a9eb47ca4d3668e804eada25dd5e37fd361aed448a0d573680f4309e7ff6b5c0",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/quest-ppo-scaling-20261010/REPORT.md.txt",
+      "path": "quest-ppo-scaling-20261010/REPORT.md.txt"
+    },
+    {
+      "source": "outputs/quest-robust-legs-20261010/experiment.json",
+      "bytes": 18996,
+      "sha256": "c498e8d12e55c7289559bfdc8af39d821ae13655076e1a4d16d1ee83add54c4b",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/quest-robust-legs-20261010/experiment.json",
+      "path": "quest-robust-legs-20261010/experiment.json"
+    },
+    {
+      "source": "outputs/quest-robust-legs-5k-20261010/EXPERIMENT.md",
+      "bytes": 8594,
+      "sha256": "db691148d97e6f61a345385267ae3da49e807270f53147e907dd4ea217f1f5f9",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/quest-robust-legs-5k-20261010/EXPERIMENT.md.txt",
+      "path": "quest-robust-legs-5k-20261010/EXPERIMENT.md.txt"
+    },
+    {
+      "source": "outputs/quest-tennis-control-audit-20261010/REPORT.md",
+      "bytes": 6894,
+      "sha256": "f7704727de763b03ad2d79cf8469329dcc006580d9cdc34369142da86b3eef50",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/quest-tennis-control-audit-20261010/REPORT.md.txt",
+      "path": "quest-tennis-control-audit-20261010/REPORT.md.txt"
+    },
+    {
+      "source": "outputs/quest-tennis-control-audit-20261010/backup-verification.json",
+      "bytes": 156,
+      "sha256": "491af05f4ba4056510a389296233d44326f127c789c9fbea8fd70aecb7bf9116",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/quest-tennis-control-audit-20261010/backup-verification.json",
+      "path": "quest-tennis-control-audit-20261010/backup-verification.json"
+    },
+    {
+      "source": "outputs/quest-walk-catch-up-20261009/all-segments.csv",
+      "bytes": 7274,
+      "sha256": "7f0605e0b719cd96aab151f7b214b0985907b0f9cc153f20b39acf18c409e855",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/quest-walk-catch-up-20261009/all-segments.csv",
+      "path": "quest-walk-catch-up-20261009/all-segments.csv"
+    },
+    {
+      "source": "outputs/quest-walk-catch-up-20261009/all-segments.json",
+      "bytes": 43602,
+      "sha256": "d492d4aeadd3ea7d6ef1f37233bccab978c84f96fb36f86ae01b8f7029aa38b0",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/quest-walk-catch-up-20261009/all-segments.json",
+      "path": "quest-walk-catch-up-20261009/all-segments.json"
+    },
+    {
+      "source": "outputs/quest-walk-catch-up-20261009/proportions.json",
+      "bytes": 8861,
+      "sha256": "f1140ff644a0a17625dcd695ca89caf73d9073da0f262383a74709dfe34e644e",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/quest-walk-catch-up-20261009/proportions.json",
+      "path": "quest-walk-catch-up-20261009/proportions.json"
+    },
+    {
+      "source": "outputs/quest-walk-catch-up-20261009/report.json",
+      "bytes": 15057,
+      "sha256": "58e78d953a098af80b764fc0c482a2779087e89be367f70b5cbfd4c84a09c06a",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/quest-walk-catch-up-20261009/report.json",
+      "path": "quest-walk-catch-up-20261009/report.json"
+    },
+    {
+      "source": "outputs/quest-walk-catch-up-20261009/segment-fit-trajectories.png",
+      "bytes": 670966,
+      "sha256": "a161a14a7498e2e77685b557c8d03de0aa8d6e928e0e2c14cbe14e99b4d19506",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/quest-walk-catch-up-20261009/segment-fit-trajectories.png",
+      "path": "quest-walk-catch-up-20261009/segment-fit-trajectories.png"
+    },
+    {
+      "source": "outputs/quest-walk-catch-up-20261009/segments-comparison.png",
+      "bytes": 97542,
+      "sha256": "0ec616273dd5cdd5af59de9cb9c6070c67351f36716c340c80322d8d4de51a3c",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/quest-walk-catch-up-20261009/segments-comparison.png",
+      "path": "quest-walk-catch-up-20261009/segments-comparison.png"
+    },
+    {
+      "source": "outputs/racket-demo-20261015/scene-verification.json",
+      "bytes": 213,
+      "sha256": "f5c7f5cc5ab9e20e2cf474d20d7b72d6df8d37d3f7654f9745e708221f98095e",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/racket-demo-20261015/scene-verification.json",
+      "path": "racket-demo-20261015/scene-verification.json"
+    },
+    {
+      "source": "outputs/reference-adapter-20261012/intent-v1/active-status.json",
+      "bytes": 3621,
+      "sha256": "f9c0a48eefa7aee0c7b01d4ff50721236acff07ebd8a9d152c0fba303a19ce5a",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/reference-adapter-20261012/intent-v1/active-status.json",
+      "path": "reference-adapter-20261012/intent-v1/active-status.json"
+    },
+    {
+      "source": "outputs/reference-adapter-20261012/intent-v1/block2-failure.json",
+      "bytes": 4895,
+      "sha256": "ccdd471aa56475643e60b905741b438d277c7c3a8977b7997354e9e61f788438",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/reference-adapter-20261012/intent-v1/block2-failure.json",
+      "path": "reference-adapter-20261012/intent-v1/block2-failure.json"
+    },
+    {
+      "source": "outputs/reference-adapter-20261012/intent-v1/latest-results.json",
+      "bytes": 10139,
+      "sha256": "d7955587b9bdd842b7681f9feaf0c0f44249f9deda8b2374dac93674925b1324",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/reference-adapter-20261012/intent-v1/latest-results.json",
+      "path": "reference-adapter-20261012/intent-v1/latest-results.json"
+    },
+    {
+      "source": "outputs/reference-adapter-20261012/intent-v1/recorded-transfer-check.json",
+      "bytes": 3865,
+      "sha256": "6a3034a8afb24d4df2e40ae3911aa4c89ce4cba7e7c9d9fa495baf21561d9695",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/reference-adapter-20261012/intent-v1/recorded-transfer-check.json",
+      "path": "reference-adapter-20261012/intent-v1/recorded-transfer-check.json"
+    },
+    {
+      "source": "outputs/reference-adapter-20261012/latest-metrics.json",
+      "bytes": 88554,
+      "sha256": "ad6014be62f2bc8f9a0f721b14bcc03c48cf5123206277b029126ff9218f0937",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/reference-adapter-20261012/latest-metrics.json",
+      "path": "reference-adapter-20261012/latest-metrics.json"
+    },
+    {
+      "source": "outputs/reference-adapter-20261012/pilot-result.json",
+      "bytes": 3033,
+      "sha256": "f64529e506e6d717c2419467929816d9ee780dbc30b225b00dad05c08c0e782f",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/reference-adapter-20261012/pilot-result.json",
+      "path": "reference-adapter-20261012/pilot-result.json"
+    },
+    {
+      "source": "outputs/rtmw-investigation-20261008/new_trace_summary.json",
+      "bytes": 2601,
+      "sha256": "7b7318992265749b57570846e4dd98b25a92ac0f34d727b031f80c7adbb32a23",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/rtmw-investigation-20261008/new_trace_summary.json",
+      "path": "rtmw-investigation-20261008/new_trace_summary.json"
+    },
+    {
+      "source": "outputs/rtmw-investigation-20261008/rgbd_summary.json",
+      "bytes": 3280,
+      "sha256": "bfaf45cb7fe9758d6e37891c0ffe0a1636700786fdc186a0c8ab6eac8a0d548a",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/rtmw-investigation-20261008/rgbd_summary.json",
+      "path": "rtmw-investigation-20261008/rgbd_summary.json"
+    },
+    {
+      "source": "outputs/rubik-2x2-20261013/REPORT.md",
+      "bytes": 2617,
+      "sha256": "720d48e67e6edf8ffe2eff111f5682a904c0196a5176b7c387a4c4f51fdf4a41",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/rubik-2x2-20261013/REPORT.md.txt",
+      "path": "rubik-2x2-20261013/REPORT.md.txt"
+    },
+    {
+      "source": "outputs/rubik-2x2-20261013/apk-verification.json",
+      "bytes": 1115,
+      "sha256": "ee3269378a637f9961338856b8569fc02f9f6036f3c43a8077a04ecdd53f6130",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/rubik-2x2-20261013/apk-verification.json",
+      "path": "rubik-2x2-20261013/apk-verification.json"
+    },
+    {
+      "source": "outputs/rubik-2x2-20261013/source-verification.json",
+      "bytes": 508,
+      "sha256": "1b2cc199c1bec15a157ea18ecf5c4fc48c5b703aff6f0d18d3d4b1832dba0155",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/rubik-2x2-20261013/source-verification.json",
+      "path": "rubik-2x2-20261013/source-verification.json"
+    },
+    {
+      "source": "outputs/rubik-2x2-20261013/summary.json",
+      "bytes": 3027,
+      "sha256": "f2335e73276c27f96a805778dcf24f76dd31c580bae6e35e5b82b1f0ed95e1c0",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/rubik-2x2-20261013/summary.json",
+      "path": "rubik-2x2-20261013/summary.json"
+    },
+    {
+      "source": "outputs/rubik-fix-20261015/REPORT.html",
+      "bytes": 5355,
+      "sha256": "4df95ca02e39a6fd34e784729cfb0dbaa0f2026435375ea983951ac9ebb805b8",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/rubik-fix-20261015/REPORT.html",
+      "path": "rubik-fix-20261015/REPORT.html"
+    },
+    {
+      "source": "outputs/rubik-fix-20261015/apk-verification.json",
+      "bytes": 242,
+      "sha256": "1bf834f1e2e558d6f1fb010a4fc02f212b73916039c3a562422bc8c81811dbad",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/rubik-fix-20261015/apk-verification.json",
+      "path": "rubik-fix-20261015/apk-verification.json"
+    },
+    {
+      "source": "outputs/rubik-fix-20261015/summary.json",
+      "bytes": 7029,
+      "sha256": "7be3b94db89028dd5ef296dd0730a4bb174d2ad5a71352e9c2f2effe83b409f0",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/rubik-fix-20261015/summary.json",
+      "path": "rubik-fix-20261015/summary.json"
+    },
+    {
+      "source": "outputs/rubik-grip-guard-20261015/REPORT.html",
+      "bytes": 5260,
+      "sha256": "8f84ee17f62dc3dc9d5923bedafa3ec0d54167f8e79d5c2c96f0617378b34b08",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/rubik-grip-guard-20261015/REPORT.html",
+      "path": "rubik-grip-guard-20261015/REPORT.html"
+    },
+    {
+      "source": "outputs/rubik-grip-guard-20261015/apk-verification.json",
+      "bytes": 1488,
+      "sha256": "e89332797fc4c886245476e8738e7cb55ea8551831666e3e105c124fd716fbc4",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/rubik-grip-guard-20261015/apk-verification.json",
+      "path": "rubik-grip-guard-20261015/apk-verification.json"
+    },
+    {
+      "source": "outputs/rubik-grip-guard-20261015/summary.json",
+      "bytes": 4469,
+      "sha256": "7d8905d9c5dc9202609396ecbdba3327a79225fd2a71a43dcdc0f54c0f0af188",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/rubik-grip-guard-20261015/summary.json",
+      "path": "rubik-grip-guard-20261015/summary.json"
+    },
+    {
+      "source": "outputs/rubik-size-20261014/summary.json",
+      "bytes": 759,
+      "sha256": "5d68ee87d6d948830254efc553382837e75ad1a12695199f8db4ca438da27050",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/rubik-size-20261014/summary.json",
+      "path": "rubik-size-20261014/summary.json"
+    },
+    {
+      "source": "outputs/rubik-table-rest-20261015/REPORT.html",
+      "bytes": 4754,
+      "sha256": "c4b2908f0496595f86bf4ed0bc339ca3b3f449982e31b0ac6505e68707be8f70",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/rubik-table-rest-20261015/REPORT.html",
+      "path": "rubik-table-rest-20261015/REPORT.html"
+    },
+    {
+      "source": "outputs/rubik-table-rest-20261015/apk-verification.json",
+      "bytes": 1870,
+      "sha256": "18ca73d61dc3eb96944517e65c1a2281b98bc7d926343e7dfe1cba019d40b336",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/rubik-table-rest-20261015/apk-verification.json",
+      "path": "rubik-table-rest-20261015/apk-verification.json"
+    },
+    {
+      "source": "outputs/rubik-table-rest-20261015/new-recordings.json",
+      "bytes": 6930,
+      "sha256": "f499e2e0f24fe586eb61d383efc0f1cd1e6b2f4574fe641c0f41b7ce5c0a1422",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/rubik-table-rest-20261015/new-recordings.json",
+      "path": "rubik-table-rest-20261015/new-recordings.json"
+    },
+    {
+      "source": "outputs/rubik-table-rest-20261015/summary.json",
+      "bytes": 3992,
+      "sha256": "e01303b37cd1fe5e8bb3021fb8e3aa21b866d04c9a74812f1abbac2648b2d163",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/rubik-table-rest-20261015/summary.json",
+      "path": "rubik-table-rest-20261015/summary.json"
+    },
+    {
+      "source": "outputs/rubik-teaser-v3-20261016/render.py",
+      "bytes": 3809,
+      "sha256": "469d9b154a1f6dc9aa95a2a1f0c712940b5a0f795152f3e765d6274a4f23c324",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/rubik-teaser-v3-20261016/render.py",
+      "path": "rubik-teaser-v3-20261016/render.py"
+    },
+    {
+      "source": "outputs/rubik-teaser-v3-20261016/timing.json",
+      "bytes": 323,
+      "sha256": "3e64a2b72a2d502a2cc14e721618dbee0e6c8dd349e4f4f847aaf48d839b7291",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/rubik-teaser-v3-20261016/timing.json",
+      "path": "rubik-teaser-v3-20261016/timing.json"
+    },
+    {
+      "source": "outputs/runtime-contract-audit-20261012/joint-contract.json",
+      "bytes": 4313,
+      "sha256": "65a3f374282147cbaffbc7b39e223eeacd608fd2b7b0cb897f7f75346c027ed3",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/runtime-contract-audit-20261012/joint-contract.json",
+      "path": "runtime-contract-audit-20261012/joint-contract.json"
+    },
+    {
+      "source": "outputs/scene-diversity-20261014/apk-verification.json",
+      "bytes": 838,
+      "sha256": "c29e392c5acb9ae5225a5fa99b0aaf1e9065d0ffb46a0a032ef3e0c7161eda12",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/scene-diversity-20261014/apk-verification.json",
+      "path": "scene-diversity-20261014/apk-verification.json"
+    },
+    {
+      "source": "outputs/scene-diversity-20261014/summary.json",
+      "bytes": 3161,
+      "sha256": "16a49413737332233770bab3bed742b2f566c3e4122de78ec5cdd113bc92dc8e",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/scene-diversity-20261014/summary.json",
+      "path": "scene-diversity-20261014/summary.json"
+    },
+    {
+      "source": "outputs/scene-physics-20261014/apk-verification.json",
+      "bytes": 603,
+      "sha256": "5e7880a2de0e117588d73132e456352add7f8450a52a0dd654b8297ffb3b8154",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/scene-physics-20261014/apk-verification.json",
+      "path": "scene-physics-20261014/apk-verification.json"
+    },
+    {
+      "source": "outputs/scene-physics-20261014/summary.json",
+      "bytes": 2848,
+      "sha256": "98cd5dc94e0afb587facf000f7e68b66055bbc6f1b314085850fb5acdc5cf5b2",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/scene-physics-20261014/summary.json",
+      "path": "scene-physics-20261014/summary.json"
+    },
+    {
+      "source": "outputs/scene-regression-20261014/REPORT.html",
+      "bytes": 10719,
+      "sha256": "7115c43468b2561d6ddc734d6122b8608615d3549bf04264fddbd1eae39bb9ef",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/scene-regression-20261014/REPORT.html",
+      "path": "scene-regression-20261014/REPORT.html"
+    },
+    {
+      "source": "outputs/scene-regression-20261014/summary.json",
+      "bytes": 15270,
+      "sha256": "8b0e5ef6dd919af36dd44cb216bbc4006eda529e093b2939d2f02bf0b426f4a8",
+      "reason": "nested final evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/scene-regression-20261014/summary.json",
+      "path": "scene-regression-20261014/summary.json"
+    },
+    {
+      "source": "outputs/scene-selects-20261016/add-171304/concat.txt",
+      "bytes": 481,
+      "sha256": "0819581b45b1f114c3b6e42b6d27f4d0c843ac27e3ec1d07b4a0de9ab7032167",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/scene-selects-20261016/add-171304/concat.txt",
+      "path": "scene-selects-20261016/add-171304/concat.txt"
+    },
+    {
+      "source": "outputs/scene-selects-20261016/add-171304/render.py",
+      "bytes": 1627,
+      "sha256": "5170392d562ff100a286cdca704a7e531f81621f4c19c438c50b4b5676b21474",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/scene-selects-20261016/add-171304/render.py",
+      "path": "scene-selects-20261016/add-171304/render.py"
+    },
+    {
+      "source": "outputs/scene-selects-20261016/add-171304/selection.json",
+      "bytes": 616,
+      "sha256": "a3a01f8ccff495b5b7e1f1091c38e092ecb1c71adbf3316a512c9e4f3f997930",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/scene-selects-20261016/add-171304/selection.json",
+      "path": "scene-selects-20261016/add-171304/selection.json"
+    },
+    {
+      "source": "outputs/scene-selects-20261016/montage-v2.py",
+      "bytes": 3031,
+      "sha256": "0299ca28c9a043c77209ceed36a72cb2743f290676c0f436a4af5f7c8a770b98",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/scene-selects-20261016/montage-v2.py",
+      "path": "scene-selects-20261016/montage-v2.py"
+    },
+    {
+      "source": "outputs/scene-selects-20261016/sources-sixseven.json",
+      "bytes": 124,
+      "sha256": "06f45b8eba47c9dfaf4407c04cf3e26c86576bbf341f19c64cb77807d8975321",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/scene-selects-20261016/sources-sixseven.json",
+      "path": "scene-selects-20261016/sources-sixseven.json"
+    },
+    {
+      "source": "outputs/scene-selects-20261016/sources.json",
+      "bytes": 1139,
+      "sha256": "5cc545951e1c5beb4e89ffc6d444308e20f35308ebd876e7bd77059ab605bfd5",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/scene-selects-20261016/sources.json",
+      "path": "scene-selects-20261016/sources.json"
+    },
+    {
+      "source": "outputs/scenes-autolocomotion-20261013/REPORT.md",
+      "bytes": 5260,
+      "sha256": "1bf98586c84efc05d4fbbc20ab20cdbf2bf2653008a13fe47824a2cbf486242c",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/scenes-autolocomotion-20261013/REPORT.md.txt",
+      "path": "scenes-autolocomotion-20261013/REPORT.md.txt"
+    },
+    {
+      "source": "outputs/scenes-autolocomotion-20261013/apk-verification.json",
+      "bytes": 2706,
+      "sha256": "aa29b9d59be04e0d6157553c214bb13df5e1acc5af46579f6259c49628bafd58",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/scenes-autolocomotion-20261013/apk-verification.json",
+      "path": "scenes-autolocomotion-20261013/apk-verification.json"
+    },
+    {
+      "source": "outputs/scenes-autolocomotion-20261013/summary.json",
+      "bytes": 5033,
+      "sha256": "eef1d475764efa2bcafd9b3307c674e0f10e85b269ef2a5a70b349c0dad5106e",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/scenes-autolocomotion-20261013/summary.json",
+      "path": "scenes-autolocomotion-20261013/summary.json"
+    },
+    {
+      "source": "outputs/stance-checkpoint1000-20261013/provenance.json",
+      "bytes": 1255,
+      "sha256": "0f5cb280379310cd50f2e0cce350805df967638d8860059b5ad5733b1412a571",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/stance-checkpoint1000-20261013/provenance.json",
+      "path": "stance-checkpoint1000-20261013/provenance.json"
+    },
+    {
+      "source": "outputs/stance-checkpoint1000-20261013/results.json",
+      "bytes": 6867,
+      "sha256": "6f75b5d6a193c8f71a7d71b32af2a6a6b7a4b9c27ca396a8477aaf223c195fea",
+      "reason": "nested final evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/stance-checkpoint1000-20261013/results.json",
+      "path": "stance-checkpoint1000-20261013/results.json"
+    },
+    {
+      "source": "outputs/stance-finetune-20261013/README.md",
+      "bytes": 7719,
+      "sha256": "d81a142408db55f058e4bc94719a05a5a2dfb00e3290d004c351a5f0d4245337",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/stance-finetune-20261013/README.md.txt",
+      "path": "stance-finetune-20261013/README.md.txt"
+    },
+    {
+      "source": "outputs/stance-finetune-20261013/baseline-summary.json",
+      "bytes": 12763,
+      "sha256": "8686c150afd4ae4dfb8480f66110f8cfbaff4c583d8b1ed52805e122ca81222f",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/stance-finetune-20261013/baseline-summary.json",
+      "path": "stance-finetune-20261013/baseline-summary.json"
+    },
+    {
+      "source": "outputs/stance-finetune-20261013/final-b11-summary.json",
+      "bytes": 106662,
+      "sha256": "979a21f62849937782aa0272c75a7ba9b34a65845bbc1ecc35d540736fc27c68",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/stance-finetune-20261013/final-b11-summary.json",
+      "path": "stance-finetune-20261013/final-b11-summary.json"
+    },
+    {
+      "source": "outputs/stance-finetune-20261013/fk-velocity-audit.json",
+      "bytes": 66056,
+      "sha256": "d3cf855e4268eeb8a9df6039ce57829405f216011476e3cea71d3140bfd9650e",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/stance-finetune-20261013/fk-velocity-audit.json",
+      "path": "stance-finetune-20261013/fk-velocity-audit.json"
+    },
+    {
+      "source": "outputs/stance-finetune-20261013/pickle-compatibility.json",
+      "bytes": 21211,
+      "sha256": "7e964d683df2f344e3effc09ee02a01d712f4a8e2a5bc1d035e09c12b19a602a",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/stance-finetune-20261013/pickle-compatibility.json",
+      "path": "stance-finetune-20261013/pickle-compatibility.json"
+    },
+    {
+      "source": "outputs/stance-finetune-20261013/source-parity.json",
+      "bytes": 479,
+      "sha256": "41a1da8a82b4120ccca6388793ac87bdb6406198ce9ef9cf3438df77e38efd4e",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/stance-finetune-20261013/source-parity.json",
+      "path": "stance-finetune-20261013/source-parity.json"
+    },
+    {
+      "source": "outputs/stance-finetune-20261013/split-replay-audit.json",
+      "bytes": 17549,
+      "sha256": "9f6344c5273b8746b5537d56bc2a9a68d0fda7a8cbf3f149cf7cd440dd9ac2c1",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/stance-finetune-20261013/split-replay-audit.json",
+      "path": "stance-finetune-20261013/split-replay-audit.json"
+    },
+    {
+      "source": "outputs/stance-knee-audit-20261013/provenance.json",
+      "bytes": 1070,
+      "sha256": "612ecade02c78c41d107f9b1b2ea3b3982764207dc3bc4e4a5dfae94374740b4",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/stance-knee-audit-20261013/provenance.json",
+      "path": "stance-knee-audit-20261013/provenance.json"
+    },
+    {
+      "source": "outputs/stance-knee-audit-20261013/report.html",
+      "bytes": 11243,
+      "sha256": "bd1326e9298d02f3a1c054720f1a595fc15141b3643e9e17859fb55e1a281058",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/stance-knee-audit-20261013/report.html",
+      "path": "stance-knee-audit-20261013/report.html"
+    },
+    {
+      "source": "outputs/stance-lag-20261013/results.json",
+      "bytes": 123222,
+      "sha256": "cae0881422036ec988b22b6e8f4d5fca9dcc3887fac33dcbc927a1cb4bebea5e",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/stance-lag-20261013/results.json",
+      "path": "stance-lag-20261013/results.json"
+    },
+    {
+      "source": "outputs/stance-multivariant-edited-meta-20261013/provenance.json",
+      "bytes": 7003,
+      "sha256": "96559669bdb63b4b7c1e4f82bc37c22a1398ddde0e9ac1b85c3ea0d6bd7db8ed",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/stance-multivariant-edited-meta-20261013/provenance.json",
+      "path": "stance-multivariant-edited-meta-20261013/provenance.json"
+    },
+    {
+      "source": "outputs/stance-multivariant-video-20261013/provenance.json",
+      "bytes": 3640,
+      "sha256": "576b0e759b161e477738081e0555e47ddb24ee41aaca6d62f3f29d4350b77517",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/stance-multivariant-video-20261013/provenance.json",
+      "path": "stance-multivariant-video-20261013/provenance.json"
+    },
+    {
+      "source": "outputs/stance-policy-deploy-20261013/apk-verification.json",
+      "bytes": 1224,
+      "sha256": "0de32b3a8a9972ca394515aded5d5acf377324310e44f0419beb5044d2f11751",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/stance-policy-deploy-20261013/apk-verification.json",
+      "path": "stance-policy-deploy-20261013/apk-verification.json"
+    },
+    {
+      "source": "outputs/stance-policy-deploy-20261013/summary.json",
+      "bytes": 3138,
+      "sha256": "4216f78b6f02d68ddc39247a6e48432da519ff0858f8090a346190047999b550",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/stance-policy-deploy-20261013/summary.json",
+      "path": "stance-policy-deploy-20261013/summary.json"
+    },
+    {
+      "source": "outputs/stance-width-audit-20261013/provenance.json",
+      "bytes": 3051,
+      "sha256": "91d83069ab4311dc73e9ad3e92cdf942cf13d559222ae81d9521156acc8bea19",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/stance-width-audit-20261013/provenance.json",
+      "path": "stance-width-audit-20261013/provenance.json"
+    },
+    {
+      "source": "outputs/stance-width-audit-20261013/report.html",
+      "bytes": 11535,
+      "sha256": "59c81faa3a2f32850c0a2741ad17981e391ab47154e0939bdaf0d2db63fa5333",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/stance-width-audit-20261013/report.html",
+      "path": "stance-width-audit-20261013/report.html"
+    },
+    {
+      "source": "outputs/swing-balanced-clearance-20261008/summary.json",
+      "bytes": 96188,
+      "sha256": "66850908d3229f7d11d0ceaafa41c8397515a91ae03bacfa2a7da30b48c755bb",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/swing-balanced-clearance-20261008/summary.json",
+      "path": "swing-balanced-clearance-20261008/summary.json"
+    },
+    {
+      "source": "outputs/swing-clearance-20261008/summary.json",
+      "bytes": 96828,
+      "sha256": "a0f2067fe8bbd1d6e3b725c79e9a1ee233139336a958e094f06b991504d39ec8",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/swing-clearance-20261008/summary.json",
+      "path": "swing-clearance-20261008/summary.json"
+    },
+    {
+      "source": "outputs/swing-clearance-final-20261008/report.md",
+      "bytes": 7073,
+      "sha256": "bd740e4fab2e4c32449c922092e8eb2bb100ac250634945a29e2f145bb456aed",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/swing-clearance-final-20261008/report.md.txt",
+      "path": "swing-clearance-final-20261008/report.md.txt"
+    },
+    {
+      "source": "outputs/swing-clearance-final-20261008/summary.json",
+      "bytes": 68770,
+      "sha256": "2a9c15400f22b5f5750a9bc9a5888d6229732e1be64e54f7464b1ccb2abb57ec",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/swing-clearance-final-20261008/summary.json",
+      "path": "swing-clearance-final-20261008/summary.json"
+    },
+    {
+      "source": "outputs/swing-target-clearance-20261008/summary.json",
+      "bytes": 96204,
+      "sha256": "044d176e026a5809c2fee851f140ae936fd144c9e708f16ac1810ece4ddc572d",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/swing-target-clearance-20261008/summary.json",
+      "path": "swing-target-clearance-20261008/summary.json"
+    },
+    {
+      "source": "outputs/task-demo-audit-20261015/REPORT.html",
+      "bytes": 6724,
+      "sha256": "63fc7e3c3492b037bebb8514857cd62153777521832ae73a8efec30884ca7303",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/task-demo-audit-20261015/REPORT.html",
+      "path": "task-demo-audit-20261015/REPORT.html"
+    },
+    {
+      "source": "outputs/task-demo-audit-20261015/summary.json",
+      "bytes": 525,
+      "sha256": "2d5f9556b29803cefa18a52c664047dcd66b93257466018432fcc20e548819a7",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/task-demo-audit-20261015/summary.json",
+      "path": "task-demo-audit-20261015/summary.json"
+    },
+    {
+      "source": "outputs/tennis-20261010/summary.json",
+      "bytes": 1853,
+      "sha256": "d880b3fc1921e3428c5da4e13e8b4e1d9665247980e4b5bb64b2d13a6a3326a4",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/tennis-20261010/summary.json",
+      "path": "tennis-20261010/summary.json"
+    },
+    {
+      "source": "outputs/tennis-edit-20261016/concat.txt",
+      "bytes": 85,
+      "sha256": "4d351f46a3709740770c3c4451eaf9cec80c8c74fbacb1896d45444f134a7fc1",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/tennis-edit-20261016/concat.txt",
+      "path": "tennis-edit-20261016/concat.txt"
+    },
+    {
+      "source": "outputs/tennis-edit-20261016/montage-v7.py",
+      "bytes": 3274,
+      "sha256": "7fbe8a6f83a1a22a92fbe90209789ca23b3e13142d5824b227ab9a43d83052e1",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/tennis-edit-20261016/montage-v7.py",
+      "path": "tennis-edit-20261016/montage-v7.py"
+    },
+    {
+      "source": "outputs/tennis-edit-20261016/selection.json",
+      "bytes": 1585,
+      "sha256": "3aedd7c2a9fc4bcc6c47c89b9fa531d6f905fde170c2f25e017fde4551bb1ee4",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/tennis-edit-20261016/selection.json",
+      "path": "tennis-edit-20261016/selection.json"
+    },
+    {
+      "source": "outputs/tennis-edit-20261016/sources.json",
+      "bytes": 6136,
+      "sha256": "f10627a50266de694c6bf05190c27803295f3e85bec2fea0a24e6afffdd3f414",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/tennis-edit-20261016/sources.json",
+      "path": "tennis-edit-20261016/sources.json"
+    },
+    {
+      "source": "outputs/tennis-grip-fix-20261010/summary.json",
+      "bytes": 1557,
+      "sha256": "d0b8257ae00e0bacf7fa5f92987a383e7779c71d14eb6a6f979246876fbc687e",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/tennis-grip-fix-20261010/summary.json",
+      "path": "tennis-grip-fix-20261010/summary.json"
+    },
+    {
+      "source": "outputs/tennis-shakehand-20261010/summary.json",
+      "bytes": 1509,
+      "sha256": "77e1f1b6eb65795bfacafa4f1f3595295a7945af1f36de57415695666eb9bf81",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/tennis-shakehand-20261010/summary.json",
+      "path": "tennis-shakehand-20261010/summary.json"
+    },
+    {
+      "source": "outputs/training-capture-20261015/REPORT.html",
+      "bytes": 4136,
+      "sha256": "dce9c5e1958ebc655e9b8a528084ef82732218f495710d170e1fe377ae356c4f",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/training-capture-20261015/REPORT.html",
+      "path": "training-capture-20261015/REPORT.html"
+    },
+    {
+      "source": "outputs/training-capture-20261015/apk-verification.json",
+      "bytes": 1565,
+      "sha256": "c02a175fe77627586c22204c5a34d25777d00fd5bc2098d16140ce4393233801",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/training-capture-20261015/apk-verification.json",
+      "path": "training-capture-20261015/apk-verification.json"
+    },
+    {
+      "source": "outputs/training-capture-20261015/summary.json",
+      "bytes": 4760,
+      "sha256": "9e57efe43aea006e308f11ebfe87caa062eca5fc61770658ccfb6a0c1f009566",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/training-capture-20261015/summary.json",
+      "path": "training-capture-20261015/summary.json"
+    },
+    {
+      "source": "outputs/twist-author-parity-20261008/report.md",
+      "bytes": 7088,
+      "sha256": "92ce00b25b7b9d0d74073eaf8d55ba0fd1b16c0846ef27a797e9c941f9cb285a",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/twist-author-parity-20261008/report.md.txt",
+      "path": "twist-author-parity-20261008/report.md.txt"
+    },
+    {
+      "source": "outputs/twist-author-parity-20261008/summary.json",
+      "bytes": 114080,
+      "sha256": "6827b21b636e1db3dd4073fd8b8ff5891442f9d20802586572aead249f36af79",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/twist-author-parity-20261008/summary.json",
+      "path": "twist-author-parity-20261008/summary.json"
+    },
+    {
+      "source": "outputs/virtual-legs-width-20261013/provenance.json",
+      "bytes": 1544,
+      "sha256": "6f7ee669a2714488cc0ad61e6c7029828a84f7770f73ca1f646394b3ff70c0d4",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/virtual-legs-width-20261013/provenance.json",
+      "path": "virtual-legs-width-20261013/provenance.json"
+    },
+    {
+      "source": "outputs/virtual-legs-width-20261013/report.html",
+      "bytes": 14150,
+      "sha256": "56785e5ba6633cfbe8db621d46d4bea3f1edfe3131ab5c9f49d557a1384e907d",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/virtual-legs-width-20261013/report.html",
+      "path": "virtual-legs-width-20261013/report.html"
+    },
+    {
+      "source": "outputs/walking-cause-20261012/findings.json",
+      "bytes": 3636,
+      "sha256": "6b79b20a42a36703653970867b7a7a47ad60185a52939f018558eb0ff5588aba",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/walking-cause-20261012/findings.json",
+      "path": "walking-cause-20261012/findings.json"
+    },
+    {
+      "source": "outputs/walking-cause-20261012/leg_intervention_summary.json",
+      "bytes": 3193,
+      "sha256": "fab7276582d47d49cb422de0de848eaee0f7c9caa271a880ca45b88565a81ec5",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/walking-cause-20261012/leg_intervention_summary.json",
+      "path": "walking-cause-20261012/leg_intervention_summary.json"
+    },
+    {
+      "source": "outputs/walking-cause-20261012/reward_counterfactual.json",
+      "bytes": 32458,
+      "sha256": "3a73287d582b729508fe658f943bba67cecc56165df910e319ea58d8b201280d",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/walking-cause-20261012/reward_counterfactual.json",
+      "path": "walking-cause-20261012/reward_counterfactual.json"
+    },
+    {
+      "source": "outputs/walking-cause-20261012/verification.json",
+      "bytes": 3069,
+      "sha256": "7dd749733bbf033cbb64f7d35853114dcd488cbb3e78509e2d20f2b0d9d8af9f",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/walking-cause-20261012/verification.json",
+      "path": "walking-cause-20261012/verification.json"
+    },
+    {
+      "source": "outputs/walking-control-20261012/apk-verification.json",
+      "bytes": 663,
+      "sha256": "0f1de0246ad3fe38854ba715dc85b13d807e313e9d69880248ae6ab37dd9e076",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/walking-control-20261012/apk-verification.json",
+      "path": "walking-control-20261012/apk-verification.json"
+    },
+    {
+      "source": "outputs/walking-diagnosis-20261012/catchup-turn-limits.json",
+      "bytes": 20539,
+      "sha256": "3f1c8081adb0cc733baa421f6591d52f033b9a098522e638af0ad9891e973ebd",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/walking-diagnosis-20261012/catchup-turn-limits.json",
+      "path": "walking-diagnosis-20261012/catchup-turn-limits.json"
+    },
+    {
+      "source": "outputs/walking-diagnosis-20261012/joints_audit.json",
+      "bytes": 4373,
+      "sha256": "89d452c03531e3adf2f3a19a35946a8d2bc1042d483c46df5691c16c0ba7c091",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/walking-diagnosis-20261012/joints_audit.json",
+      "path": "walking-diagnosis-20261012/joints_audit.json"
+    },
+    {
+      "source": "outputs/walking-diagnosis-20261012/probes-summary.json",
+      "bytes": 18898,
+      "sha256": "4b979a4b8d06733dab93d6fc6a70c370c97fe383bbcb035f051b3f7ad89a3647",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/walking-diagnosis-20261012/probes-summary.json",
+      "path": "walking-diagnosis-20261012/probes-summary.json"
+    },
+    {
+      "source": "outputs/walking-diagnosis-20261012/publish-validation.json",
+      "bytes": 1099,
+      "sha256": "3b20bdb04dbbf96803049e1d2214a52c75dfcc5f3fbe8198bb5bfa3679ff3fc3",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/walking-diagnosis-20261012/publish-validation.json",
+      "path": "walking-diagnosis-20261012/publish-validation.json"
+    },
+    {
+      "source": "outputs/walking-diagnosis-20261012/reference-soles.json",
+      "bytes": 2906,
+      "sha256": "886a795bd5cffe7766772d95f4a82e4a0c17a1c7ef50f6aa69af0633b3f4a7e9",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/walking-diagnosis-20261012/reference-soles.json",
+      "path": "walking-diagnosis-20261012/reference-soles.json"
+    },
+    {
+      "source": "outputs/wb-dex-fix-20261015/REPORT.html",
+      "bytes": 5662,
+      "sha256": "162ebdfc7a1f7874d9ba65328baf1bb3578e30e22642ebc40035e0451f2eb591",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/wb-dex-fix-20261015/REPORT.html",
+      "path": "wb-dex-fix-20261015/REPORT.html"
+    },
+    {
+      "source": "outputs/wb-dex-fix-20261015/apk-verification.json",
+      "bytes": 1685,
+      "sha256": "b758ac9e9400b81f36a48f79bc154c6da95d8c41ff919f370f9e22f8323b8b8d",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/wb-dex-fix-20261015/apk-verification.json",
+      "path": "wb-dex-fix-20261015/apk-verification.json"
+    },
+    {
+      "source": "outputs/wb-dex-fix-20261015/native-recordings.json",
+      "bytes": 707,
+      "sha256": "f486e830df1eec171b67a5a7f162a0a5a6422f29611ec0c95cdc1d2320691144",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/wb-dex-fix-20261015/native-recordings.json",
+      "path": "wb-dex-fix-20261015/native-recordings.json"
+    },
+    {
+      "source": "outputs/wb-dex-fix-20261015/physics-ablation.json",
+      "bytes": 3049,
+      "sha256": "5994722d5b1f9b077f602ca8a61355512f0ce10fe1a3295a2f3f001a806573b3",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/wb-dex-fix-20261015/physics-ablation.json",
+      "path": "wb-dex-fix-20261015/physics-ablation.json"
+    },
+    {
+      "source": "outputs/wb-dex-fix-20261015/released-continuation.json",
+      "bytes": 1922,
+      "sha256": "35c0b513d18f43ecc7365f711540a5915ded268479a2598e884114fbea712d53",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/wb-dex-fix-20261015/released-continuation.json",
+      "path": "wb-dex-fix-20261015/released-continuation.json"
+    },
+    {
+      "source": "outputs/wb-dex-fix-20261015/summary.json",
+      "bytes": 3219,
+      "sha256": "4fea990006177284f3b636ea31fe17e63791dba235e8181b3bdcf17ca80a1c6f",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/wb-dex-fix-20261015/summary.json",
+      "path": "wb-dex-fix-20261015/summary.json"
+    },
+    {
+      "source": "outputs/world-skeleton/alignment-1804/report.json",
+      "bytes": 1297,
+      "sha256": "2e8235957f655af8d27c52c094ee9cbd7a3c0bd70461008e15f3e670605e1af5",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/world-skeleton/alignment-1804/report.json",
+      "path": "world-skeleton/alignment-1804/report.json"
+    },
+    {
+      "source": "outputs/wrist-raised-calibration-20261013/REPORT.md",
+      "bytes": 11479,
+      "sha256": "88f66ccd06e91f7effb13ffbb01156cef17c4280bbb629670b92536d68b06e0f",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/wrist-raised-calibration-20261013/REPORT.md.txt",
+      "path": "wrist-raised-calibration-20261013/REPORT.md.txt"
+    },
+    {
+      "source": "outputs/wrist-raised-calibration-20261013/apk-verification.json",
+      "bytes": 485,
+      "sha256": "78e42cec242d544948496b68f1bab69c5f72e011db339a5d6cd34cde70a7d80c",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/wrist-raised-calibration-20261013/apk-verification.json",
+      "path": "wrist-raised-calibration-20261013/apk-verification.json"
+    },
+    {
+      "source": "outputs/wrist-raised-calibration-20261013/summary.json",
+      "bytes": 3194,
+      "sha256": "8a6c00e16f8a6943eb5c67916ce8dc1a794bdf3f2576294706f1de9bc9c5307d",
+      "reason": "compact dated project evidence",
+      "target": "docs/research/project-preservation-20261021/artifacts/wrist-raised-calibration-20261013/summary.json",
+      "path": "wrist-raised-calibration-20261013/summary.json"
+    }
+  ],
+  "counts": {
+    "selected": 215,
+    "selected_bytes": 29456077,
+    "already_preserved": 15
+  },
+  "already_preserved_in_main": [
+    {
+      "source": "outputs/autonomous-modes-apk-20261012/README.md",
+      "bytes": 2079,
+      "sha256": "6342078edac253b71d0e8b82e133f44be63843691ec40076f276df3900fcd393",
+      "reason": "compact dated project evidence",
+      "existing_main_paths": [
+        "docs/research/autonomous-modes-apk-20261012/README.md"
+      ]
+    },
+    {
+      "source": "outputs/catch-up-wrists-20261010/experiment-results.json",
+      "bytes": 1357,
+      "sha256": "2572e4cbc700ef054aa991fa0ce4730e3430435741cf2565daa387e115f12023",
+      "reason": "compact dated project evidence",
+      "existing_main_paths": [
+        "docs/research/quest-tracker-20261010/catch-up-rollouts.json"
+      ]
+    },
+    {
+      "source": "outputs/dataset-audit-20261008/REPORT.md",
+      "bytes": 8108,
+      "sha256": "0d8d715dbbc7b21a7b7cf2fe3bb5a2e2a393eaf548248bee114b7a4655bc022c",
+      "reason": "compact dated project evidence",
+      "existing_main_paths": [
+        "datasets/quest-virtual-legs-v2/2026-10-08/audit/REPORT.md"
+      ]
+    },
+    {
+      "source": "outputs/homie-sonic-comparison-20261012/REPORT.md",
+      "bytes": 3671,
+      "sha256": "c3d54b8f39fb296ad02508961d9aadfd83104481ad2bc3d78bee0f608aba4b9f",
+      "reason": "compact dated project evidence",
+      "existing_main_paths": [
+        "docs/research/homie-sonic-20261012/REPORT.md"
+      ]
+    },
+    {
+      "source": "outputs/homie-sonic-comparison-20261012/results.json",
+      "bytes": 15427,
+      "sha256": "5865baea7b534a7be00dd4f168678981a82b01a4cc3427ddc5aaa1e14af17b6d",
+      "reason": "compact dated project evidence",
+      "existing_main_paths": [
+        "docs/research/homie-sonic-20261012/results.json"
+      ]
+    },
+    {
+      "source": "outputs/quest-capture-apk-20261012/README.md",
+      "bytes": 2332,
+      "sha256": "e59a6f76480745250d07bd1b55c55c03f3cb2eb0e33cf29ab09cc981793c77da",
+      "reason": "compact dated project evidence",
+      "existing_main_paths": [
+        "prototypes/quest_g1/CAPTURE_84.md"
+      ]
+    },
+    {
+      "source": "outputs/quest-finetune-20261008/EXPERIMENT.md",
+      "bytes": 6684,
+      "sha256": "2169380f690681742dc11bcc87b1b229a8f117d20e46fd1183c24cab2f976161",
+      "reason": "compact dated project evidence",
+      "existing_main_paths": [
+        "docs/research/quest-tracker-20261010/initial-experiment.md"
+      ]
+    },
+    {
+      "source": "outputs/quest-finetune-20261008/night-v3/run-summary.json",
+      "bytes": 21768,
+      "sha256": "dabb93783680b7f936b20f4374fbb7ae71f7585ca46280e9d85b27836be2663f",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "existing_main_paths": [
+        "docs/research/quest-tracker-20261010/night-v3.json"
+      ]
+    },
+    {
+      "source": "outputs/quest-locomotion-ablations-20261010/gait-gate-test.json",
+      "bytes": 177,
+      "sha256": "44db11a3bc903cb62948a607b51e4db16deb64c30296f091cecaabe2b325e68c",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "existing_main_paths": [
+        "docs/research/quest-locomotion-20261012/gait-gate-test.json"
+      ]
+    },
+    {
+      "source": "outputs/quest-locomotion-ablations-20261010/results-summary-20261012.json",
+      "bytes": 140629,
+      "sha256": "8e748c7e467418c8c2eebb8b0d1995475388749af9303caea2762a7e64f21fd7",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "existing_main_paths": [
+        "docs/research/quest-locomotion-20261012/results-summary.json"
+      ]
+    },
+    {
+      "source": "outputs/reference-adapter-20261012/continuation-final-results.json",
+      "bytes": 7621,
+      "sha256": "2af019aa6516168071e8e3c707626f29434f9b6aa7738cd855c05abd8c17b30d",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "existing_main_paths": [
+        "docs/research/project-integration-20261013/adapter-continuation-results.json"
+      ]
+    },
+    {
+      "source": "outputs/reference-adapter-20261012/intent-v1/experiment.json",
+      "bytes": 2750,
+      "sha256": "c2438d8114331527573064a417185fbfa56055622221611d7b6959e57afa5173",
+      "reason": "selected diagnostic or final-demo reproducibility evidence",
+      "existing_main_paths": [
+        "docs/research/walking-control-20261012/reference-adapter/INTENT_EXPERIMENT.json"
+      ]
+    },
+    {
+      "source": "outputs/virtual-leg-lift10-20261012/REPORT.md",
+      "bytes": 6349,
+      "sha256": "fd32b3a92980bdedc3b7ec442a8f24de0046bc8d646b1c4131b9c958b20645b6",
+      "reason": "compact dated project evidence",
+      "existing_main_paths": [
+        "docs/research/virtual-leg-lift10-20261012/REPORT.md"
+      ]
+    },
+    {
+      "source": "outputs/virtual-leg-lift10-20261012/metrics.json",
+      "bytes": 6404,
+      "sha256": "56eeaf7b35df6e53913ef1ff7c641724216ed6421b500b9a7719f2a04d5c6496",
+      "reason": "compact dated project evidence",
+      "existing_main_paths": [
+        "docs/research/virtual-leg-lift10-20261012/metrics.json"
+      ]
+    },
+    {
+      "source": "outputs/virtual-leg-lift10-20261012/provenance.json",
+      "bytes": 536,
+      "sha256": "112d7d7bf81fb1d4adb0f3e342045c0501fe79a096f5de15bb5b97a4435b880c",
+      "reason": "compact dated project evidence",
+      "existing_main_paths": [
+        "docs/research/virtual-leg-lift10-20261012/provenance.json"
+      ]
+    }
+  ],
+  "omissions": {
+    "training_owned_elsewhere": [
+      "ablation",
+      "ablation-audit",
+      "act-cup-eval-20261015",
+      "chat-export-20261012",
+      "cup-dp-eval-20261015",
+      "cup-dp-training-20261015",
+      "cup-fast-check-20261015",
+      "cup-homie-finetune-20261015",
+      "cup-native50-20261015",
+      "cup-pipeline-check-20261015",
+      "cup-state-il-20261015",
+      "cup-training-plan-20261015",
+      "cup-workspace-20261015",
+      "dexweave-cup-box-20261015",
+      "dexweave-gpu-migration-20261015",
+      "dexweave-quality-20261015",
+      "main-audit-20261021",
+      "rubik-canonical-20261015",
+      "rubik-feedback-20261015",
+      "rubik-policy-20261015",
+      "rubik-regrasp-20261015",
+      "rubik-sequences-20261015",
+      "rubik-stable-20261015",
+      "share"
+    ],
+    "builds_and_backups": "APKs, compiler outputs, vendor trees, caches and device backups omitted; original local files untouched.",
+    "raw_intermediates": "Repeated rollout arrays, raw recordings already in datasets, intermediate videos and montage drafts omitted.",
+    "presentation": "The only valid old local PPTX predates later edits. A fresh complete Google Slides export was subsequently retrieved on 2026-10-21 and is preserved separately in docs/demo/2026-10-16/furry-presentation.pptx."
+  },
+  "verification": "Each archived file is byte-identical to its local source; SHA256 checked after copying. No experiment rerun or headset check.",
+  "verification_results": {
+    "originals_sha256": "215/215 matched",
+    "eight_policy_metric_recalculation": "8/8, maximum absolute error 0.0, published metrics identical",
+    "runtime_tested": false,
+    "headset_tested": false
+  },
+  "generated_files": [
+    {
+      "path": "README.md",
+      "bytes": 3908,
+      "sha256": "f5056d5c962f652d8f6ed4f3d74420e11fccbaf77273f76bea2acac30e97734e"
+    },
+    {
+      "path": "verify.py",
+      "bytes": 2480,
+      "sha256": "60ed6d227c688231a916c970aac464678c6cb4562742929cc0aec4f6b2b8c509"
+    }
+  ]
+}

@@ -1,0 +1,299 @@
+[
+  {
+    "episode": "episode-1792017908117165",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 6.999999999999999
+  },
+  {
+    "episode": "episode-1792017537461911",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 8.933333333333334
+  },
+  {
+    "episode": "episode-1792017878569899",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 8.733333333333333
+  },
+  {
+    "episode": "episode-1792018134901046",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 8.266666666666667
+  },
+  {
+    "episode": "episode-1792017705390355",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 6.6
+  },
+  {
+    "episode": "episode-1792018077505935",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 14.133333333333333
+  },
+  {
+    "episode": "episode-1792018040655033",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 5.633333333333334
+  },
+  {
+    "episode": "episode-1792017938734606",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 6.633333333333333
+  },
+  {
+    "episode": "episode-1792018100025806",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 10.2
+  },
+  {
+    "episode": "episode-1792017864400932",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 8.4
+  },
+  {
+    "episode": "episode-1792017962672976",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": false,
+    "rejection": "Recording starts after the task ended"
+  },
+  {
+    "episode": "episode-1792017754724360",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 7.1
+  },
+  {
+    "episode": "episode-1792018119637009",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 8.3
+  },
+  {
+    "episode": "episode-1792018156140205",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 12.866666666666667
+  },
+  {
+    "episode": "episode-1792017968182398",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 7.066666666666666
+  },
+  {
+    "episode": "episode-1792017569016630",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": false,
+    "rejection": "Recording starts after the task ended"
+  },
+  {
+    "episode": "episode-1792017851338484",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": false,
+    "rejection": "Recording starts after the task ended"
+  },
+  {
+    "episode": "episode-1792018052834170",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 15.533333333333333
+  },
+  {
+    "episode": "episode-1792017649706316",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 6.699999999999999
+  },
+  {
+    "episode": "episode-1792017894435317",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 7.7
+  },
+  {
+    "episode": "episode-1792017999001122",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 28.333333333333332
+  },
+  {
+    "episode": "episode-1792017720071909",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 25.266666666666666
+  },
+  {
+    "episode": "episode-1792017825573877",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 8.5
+  },
+  {
+    "episode": "episode-1792017663018563",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 5.4
+  },
+  {
+    "episode": "episode-1792017984280227",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 7.333333333333333
+  },
+  {
+    "episode": "episode-1792017922026723",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 9.3
+  },
+  {
+    "episode": "episode-1792017588221195",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 21.133333333333333
+  },
+  {
+    "episode": "episode-1792017575505329",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 6.366666666666666
+  },
+  {
+    "episode": "episode-1792017633764131",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 6.166666666666668
+  },
+  {
+    "episode": "episode-1792017620154459",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 6.499999999999999
+  },
+  {
+    "episode": "episode-1792017810790744",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 8.033333333333333
+  },
+  {
+    "episode": "episode-1792017769365411",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 23.866666666666667
+  },
+  {
+    "episode": "episode-1792017691086572",
+    "scene": "cup",
+    "policy": "homie-standing",
+    "outcome": 1,
+    "files_verified": 20,
+    "accepted": true,
+    "training_seconds": 7.5666666666666655
+  }
+]

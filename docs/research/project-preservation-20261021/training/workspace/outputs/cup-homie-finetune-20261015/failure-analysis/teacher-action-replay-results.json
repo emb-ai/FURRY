@@ -1,0 +1,194 @@
+[
+  {
+    "episode": "episode-1792058834151648",
+    "mode": "recorded30",
+    "success": true,
+    "outcome": 1,
+    "error": null,
+    "final_distance_m": 0.05362589529283253
+  },
+  {
+    "episode": "episode-1792058834151648",
+    "mode": "teacher_ACT",
+    "success": false,
+    "outcome": 0,
+    "error": null,
+    "final_distance_m": 0.16661529633150185
+  },
+  {
+    "episode": "episode-1792058834151648",
+    "mode": "half_error",
+    "success": false,
+    "outcome": 0,
+    "error": null,
+    "final_distance_m": 0.10332329951901371
+  },
+  {
+    "episode": "episode-1792058974761240",
+    "mode": "recorded30",
+    "success": false,
+    "outcome": 0,
+    "error": null,
+    "final_distance_m": 0.04554416074190289
+  },
+  {
+    "episode": "episode-1792058974761240",
+    "mode": "teacher_ACT",
+    "success": false,
+    "outcome": 0,
+    "error": null,
+    "final_distance_m": 0.13233357658568232
+  },
+  {
+    "episode": "episode-1792058974761240",
+    "mode": "half_error",
+    "success": false,
+    "outcome": 0,
+    "error": null,
+    "final_distance_m": 0.08081232578493754
+  },
+  {
+    "episode": "episode-1792059112053736",
+    "mode": "recorded30",
+    "success": false,
+    "outcome": 0,
+    "error": null,
+    "final_distance_m": 0.18554794991271156
+  },
+  {
+    "episode": "episode-1792059112053736",
+    "mode": "teacher_ACT",
+    "success": false,
+    "outcome": 0,
+    "error": null,
+    "final_distance_m": 0.06829982553092649
+  },
+  {
+    "episode": "episode-1792059112053736",
+    "mode": "half_error",
+    "success": false,
+    "outcome": 0,
+    "error": null,
+    "final_distance_m": 0.08470702375946453
+  },
+  {
+    "episode": "episode-1792059256525492",
+    "mode": "recorded30",
+    "success": false,
+    "outcome": 0,
+    "error": null,
+    "final_distance_m": 0.07219288775202139
+  },
+  {
+    "episode": "episode-1792059256525492",
+    "mode": "teacher_ACT",
+    "success": false,
+    "outcome": 0,
+    "error": null,
+    "final_distance_m": 0.13405806514116161
+  },
+  {
+    "episode": "episode-1792059256525492",
+    "mode": "half_error",
+    "success": true,
+    "outcome": 1,
+    "error": null,
+    "final_distance_m": 0.02804114882660787
+  },
+  {
+    "episode": "episode-1792059418003475",
+    "mode": "recorded30",
+    "success": true,
+    "outcome": 1,
+    "error": null,
+    "final_distance_m": 0.03754659690516103
+  },
+  {
+    "episode": "episode-1792059418003475",
+    "mode": "teacher_ACT",
+    "success": false,
+    "outcome": 0,
+    "error": null,
+    "final_distance_m": 0.19739159724976615
+  },
+  {
+    "episode": "episode-1792059418003475",
+    "mode": "half_error",
+    "success": false,
+    "outcome": 0,
+    "error": null,
+    "final_distance_m": 0.052924258997577654
+  },
+  {
+    "episode": "episode-1792059590200464",
+    "mode": "recorded30",
+    "success": true,
+    "outcome": 1,
+    "error": null,
+    "final_distance_m": 0.04368620431610279
+  },
+  {
+    "episode": "episode-1792059590200464",
+    "mode": "teacher_ACT",
+    "success": true,
+    "outcome": 1,
+    "error": null,
+    "final_distance_m": 0.012259729251188282
+  },
+  {
+    "episode": "episode-1792059590200464",
+    "mode": "half_error",
+    "success": true,
+    "outcome": 1,
+    "error": null,
+    "final_distance_m": 0.030607499573916598
+  },
+  {
+    "episode": "episode-1792059694167464",
+    "mode": "recorded30",
+    "success": true,
+    "outcome": 1,
+    "error": null,
+    "final_distance_m": 0.02649755494084293
+  },
+  {
+    "episode": "episode-1792059694167464",
+    "mode": "teacher_ACT",
+    "success": false,
+    "outcome": 0,
+    "error": null,
+    "final_distance_m": 0.010518993301495158
+  },
+  {
+    "episode": "episode-1792059694167464",
+    "mode": "half_error",
+    "success": true,
+    "outcome": 1,
+    "error": null,
+    "final_distance_m": 0.04947833684008407
+  },
+  {
+    "episode": "episode-1792059849292471",
+    "mode": "recorded30",
+    "success": true,
+    "outcome": 1,
+    "error": null,
+    "final_distance_m": 0.03864720548343672
+  },
+  {
+    "episode": "episode-1792059849292471",
+    "mode": "teacher_ACT",
+    "success": false,
+    "outcome": 0,
+    "error": null,
+    "final_distance_m": 0.20475787703400805
+  },
+  {
+    "episode": "episode-1792059849292471",
+    "mode": "half_error",
+    "success": false,
+    "outcome": 0,
+    "error": null,
+    "final_distance_m": 0.2246488606882928
+  }
+]

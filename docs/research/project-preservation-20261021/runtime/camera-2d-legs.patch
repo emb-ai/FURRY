@@ -1,0 +1,2635 @@
+diff --git a/docs/Camera-2D-Legs.md b/docs/Camera-2D-Legs.md
+new file mode 100644
+index 0000000..4630259
+--- /dev/null
++++ b/docs/Camera-2D-Legs.md
+@@ -0,0 +1,156 @@
++# Camera Legs From 2D Keypoints
++
++[Home](Home.md) | [Camera stream](../prototypes/quest_g1/android/CAMERA_STREAM.md) | [DexWeave](https://github.com/emb-ai/FURRY/pull/20)
++
++Status: **proposed** method with **locally reproduced** synthetic checks
++(2026-10-14). No headset or operator measurement backs it yet.
++
++## Question
++
++Quest 3 with hand controllers observes no leg joints. TWIST2 adds two ankle
++trackers to its PICO input; FURRY uses one external RealSense D435i instead.
++D435i depth on legs is noisy (4–5 cm, mostly along the camera axis), and
++lifting 2D keypoints with it gave poor skeletons. Can the robot's legs follow the
++operator's legs from **2D keypoints only**, with the camera's depth axis
++regularised rather than measured?
++
++## Method
++
++Inputs per camera frame:
++
++| Quantity | Source | Status |
++| --- | --- | --- |
++| Raw 2D keypoints `(u, v, conf)` | YOLO11-pose on the colour image, before One-Euro, undistorted | Implemented: `skeleton/keypoints2d.py` |
++| Intrinsics `[fx, fy, cx, cy]` | RealSense colour profile | Implemented: packet field `intr` |
++| Camera to STAGE, 6D, fixed per camera place | AprilTag + controller touch (`skeleton/marker_frame.py`), or the existing shoulder fit when depth is on | Implemented: packet field `stage_from_camera` |
++| Hip position and bone lengths | Meta body tracking, driven by headset and controllers | Existing |
++
++The transform that must be known is **camera to STAGE**, not camera to body.
++Camera to body follows per frame from Meta's pelvis. Leaving the body pose free
++per frame would make a 2D-only fit underdetermined.
++
++Per leg, the headset (`android/native/camera_legs2d.h`) solves thigh and shin
++directions from Meta's hip with Meta's bone lengths, minimising:
++
++- the confidence-weighted **reprojection error** of knee and ankle (6 px sigma);
++- a **depth-axis regulariser**: a weak pull of knee and ankle depth (camera z)
++  toward Meta's time-matched pose (1 m sigma, a tie-breaker only) and toward
++  the previous solution (8 cm sigma);
++- soft **anatomical limits**: no backward knee bend, knee varus/valgus within
++  5°, hip extension within 15°, thigh within 30° of the sagittal plane.
++
++Every bone has two ray–sphere roots for any camera placement. The solver starts
++from both roots of each bone, Meta's pose and the previous solution, and keeps
++the lowest cost. The rejected branch's cost margin is reported (`flipGap`).
++The result enters the existing camera fusion as thigh and shin directions, so
++smoothing, fading, the person gate, recording, GMR retargeting and the TWIST2
++policy are unchanged.
++
++GMR is not given the pixel residual directly. Robot and human leg proportions
++differ, so fitting robot links to human camera rays would bend the joint angles.
++The 2D residual is solved against human bone lengths and GMR tracks the result.
++
++## Synthetic Results
++
++`tests/check_camera_legs2d.cpp`, camera 3 m away, 1.2 m high, operator
++facing it (frontal) or rotated 40° (oblique). Locally reproduced on Linux.
++
++| Case | Frontal | Oblique 40° |
++| --- | --- | --- |
++| Exact pixels, standing and knee lifts to 90° | Recovered (< 2 cm) | Recovered (< 2 cm) |
++| Exact pixels, backward swing (hip −15°, knee 30°) | Wrong branch | Recovered |
++| 5 px noise, random poses, mean worst-joint error | 13.5 cm | 5.9 cm |
++
++A frontal camera sees a backward leg swing purely along its depth axis, so no
++2D method can recover it from that view alone. Placing the camera 30–45° off
++frontal is the single largest improvement. AprilTag registration allows that.
++The shoulder fit does not: it accepts only frames facing the camera.
++
++## Evaluating Without Ground Truth
++
++There is no motion capture. Recorded sessions (`camera.jsonl` on the headset
++with `kp2d`, and the PC `--log` with downlink and HMD/controller uplink) make
++every method run on the same frames:
++
++1. **Controller probes** (cheap ground truth): touch a knee or ankle with a
++   controller and hold it; touch floor marks, then step on them; stand straight.
++2. **Held-out evidence**: predict a keypoint the solve did not use; reproject
++   onto the RGB video.
++3. **Physical plausibility**: foot sliding in stance, floor penetration, jitter,
++   knee flips (`flipGap` near zero marks frames decided by the regulariser).
++4. **Downstream**: replay through GMR and TWIST2 (`replay_gmr`) against Meta's
++   generated legs as the baseline.
++
++Agreement between methods shows ambiguity, not truth; rank on the probes.
++
++## Alternatives Considered
++
++| Option | Verdict |
++| --- | --- |
++| D435i depth per leg joint | Existing path; kept for A/B (`use2d=false`, or server `--no-kp2d`). Too noisy along the axis that matters. |
++| Heavy monocular 3D (RTMW3D-X, HybrIK, CLIFF, HMR2) | Not lightweight; RTMW3D depth is model-relative ([experiments](../skeleton/EXPERIMENTS.md)). |
++| Temporal 2D→3D lifter (VideoPose3D, MotionAGFormer-XS class) | Proposed follow-up: only the sign of each bone's depth is needed, as an extra regulariser. |
++| Second RGB camera, triangulation | Rejected for setup weight. |
++| Pixel residual inside GMR's robot IK | Rejected: robot proportions differ from the human's. |
++
++From [DexWeave](https://github.com/emb-ai/FURRY/pull/20): infer stance from foot
++motion and pin the stance foot to the floor. That constrains exactly the depth
++axis 2D leaves open. Proposed follow-up, not implemented.
++
++## Running It
++
++On the PC with the RealSense (`skeleton/`):
++
++```sh
++python pose_yolo.py s --ws --no-depth --session session.json --log logs/run.jsonl
++```
++
++Press `c` with the right controller touching the printed AprilTag to lock the
++camera in STAGE. Without `--no-depth`, packets carry both 3D and 2D, and the
++shoulder fit can register the camera too. On the headset the leg row reads
++`Ноги: камера 2D` when 2D keypoints drive the legs, and `нужна связка
++AprilTag` when RGB-only packets arrive without a registration.
++
++## Desktop Viewer Without The Headset
++
++`skeleton/gmr_view.py` shows the same idea on a Mac or PC alone: the
++RealSense colour frame with the YOLO keypoints and the solved body on the
++left, and the G1 after GMR on the right, rendered from the same camera
++viewpoint so both panels show one pose from one place.
++
++Without Meta there is no hip anchor, so `skeleton/body2d.py` solves the whole
++body from the 2D keypoints:
++
++- Bone lengths come from `--height` (anthropometric ratios).
++- The pelvis, heading and torso are solved, and the floor fixes the depth axis:
++  the lower ankle stands on the floor, located by the D435i accelerometer
++  (gravity) and `--camera-height`, or by an AprilTag `--session`.
++- Limbs use the same ray-sphere branches and anatomical limits as the headset,
++  plus no backward elbow bend. The branch is chosen on data and anatomy only,
++  never on the temporal prior: tracked limbs must not lock onto the wrong
++  branch. Limbs decided by the regulariser alone show as "front/back unsure".
++
++`skeleton/gmr_live.py` feeds the pinned upstream GMR/Mink solver (the one the
++native port is checked against) with targets aligned to the robot's T pose, as
++`meta_retarget.cpp` does on the headset.
++
++```sh
++pip install -r skeleton/requirements-gmr-view.txt
++sudo python skeleton/gmr_view.py s --camera-height 1.20 --height 1.78   # macOS needs sudo for the camera
++python skeleton/gmr_view.py --source synthetic                          # no camera
++```
++
++Synthetic checks (`skeleton/test_body2d.py`, `skeleton/test_gmr_live.py`,
++locally reproduced): exact keypoints recover standing, tracked knee lifts to
++90° and back on frontal and 40° oblique cameras (median leg error under 3 cm),
++and GMR maps them to the expected G1 hip and knee angles (knee lift 60°/70° to
++hip pitch −60°, knee 70°, within 4°). With 3 px keypoint noise the frontal
++leg error is bounded at a 12 cm median. Near standing, the two ray-sphere
++roots of a frontal leg are close and both anatomical, so small lifts can lag.
++
++## Limitations
++
++- Synthetic checks only; no live operator session yet.
++- Hip anchor is Meta's: a pelvis error shifts both legs.
++- COCO hips, knees and ankles are visual landmarks, not joint centres.
++- Foot pitch and yaw stay Meta's; the camera has no toe or heel keypoints.
+diff --git a/docs/Home.md b/docs/Home.md
+index 9e9d4aa..6de4957 100644
+--- a/docs/Home.md
++++ b/docs/Home.md
+@@ -74,6 +74,7 @@ unset until participants agree to a bounded task.
+ | [Common Ground](Common-Ground.md) | What do our terms, transforms, clocks and representations mean? |
+ | [Data And Evaluation](Data-and-Evaluation.md) | What makes a trajectory auditable and a comparison fair? |
+ | [Policy Learning](Policy-Learning.md) | How would a state-based Diffusion Policy plug into the simulator loop? |
++| [Camera Legs From 2D Keypoints](Camera-2D-Legs.md) | How can one RGB camera drive the robot's legs without trusting D435i depth? |
+ | [Quest Tracker Research](Quest-Tracker-Research.md) | What was tried in low-level tracker finetuning, how were data and losses handled, and what reached Quest? |
+ | [Quest Wi-Fi Deployment](Quest-WiFi-Deploy.md) | How can teammates authorise their computers and update the shared headset over Wi-Fi? |
+ | [Contributing](Contributing.md) | How do I turn an investigation into a reviewed contribution? |
+diff --git a/prototypes/quest_g1/android/CAMERA_STREAM.md b/prototypes/quest_g1/android/CAMERA_STREAM.md
+index f9e75b0..704d0eb 100644
+--- a/prototypes/quest_g1/android/CAMERA_STREAM.md
++++ b/prototypes/quest_g1/android/CAMERA_STREAM.md
+@@ -152,6 +152,38 @@ input sequence, alongside unmodified Meta body/input streams and applied mimic
+ commands. View switches are recorded as events. Participant recordings remain
+ local and excluded from Git.
+ 
++## 2D keypoint legs (no camera depth)
++
++Packets may carry `kp2d` (raw detector pixels per joint, `[u, v, conf]`,
++undistorted, before One-Euro), `intr` (`[fx, fy, cx, cy]`) and, after the PC
++AprilTag lock, `stage_from_camera` (`R` row-major, `t`; `p_stage = R p_camera +
++t`). Malformed values reject the packet; an absent joint means not detected.
++
++When `kp2d` is present and the camera is registered (AprilTag pose in the
++packet, or the shoulder fit), the legs come from reprojection instead of depth
++(`native/camera_legs2d.h`). Per leg, thigh and shin directions from Meta's hip
++with Meta's bone lengths are solved so that knee and ankle reproject onto the
++keypoints. The camera's depth axis is only regularised: a 1 m tie-breaker
++toward Meta's time-matched depth, 8 cm toward the previous solution, and soft
++limits on knee bend, varus, hip extension and thigh abduction. Every bone has
++two ray–sphere roots; the solver starts from both, Meta and the previous frame
++and keeps the cheapest. The result enters the same direction transfer,
++hinge, smoothing and fading as the depth path. Unlike the depth path, an
++accepted 2D leg drives at full weight: keypoint confidence already weighs the
++pixels, and scaling by YOLO's typical 0.9 shrank lifts by 10%.
++
++A person gate projects Meta's hip midpoint into the image: detected hips more
++than 35 cm away at that depth are another person. A solution that cannot
++reproject within 25 px drives nothing. The overlay shows the solved knees and
++ankles from Meta's hips, never invented shoulders.
++
++`pose_yolo.py --no-depth` opens the RealSense as a colour camera only. Then
++only the AprilTag can register the camera; the HUD says `нужна связка
++AprilTag`. `--no-kp2d` keeps the depth path for A/B; `CameraFusion::use2d`
++does the same on the headset. The status row reads `Ноги: камера 2D` and the
++debug line appends `2D`. Synthetic results, the frontal-camera limit and the
++evaluation protocol are in [Camera Legs From 2D Keypoints](../../../docs/Camera-2D-Legs.md).
++
+ ## First-person world and robot feedback
+ 
+ The scene-to-STAGE transform is computed from the A-calibration camera pose,
+diff --git a/prototypes/quest_g1/android/native/camera_fusion.cpp b/prototypes/quest_g1/android/native/camera_fusion.cpp
+index acdc4dd..dc6b833 100644
+--- a/prototypes/quest_g1/android/native/camera_fusion.cpp
++++ b/prototypes/quest_g1/android/native/camera_fusion.cpp
+@@ -1,4 +1,5 @@
+ #include "camera_fusion.h"
++#include "camera_legs2d.h"
+ #include <algorithm>
+ #include <cerrno>
+ #include <cmath>
+@@ -115,7 +116,7 @@ void Mix(const std::array<double,9>&Ra,const V&ta,const std::array<double,9>&Rb,
+ constexpr int windowSize=300,maxWindows=9,checkSize=100;constexpr size_t minVerify=20;
+ constexpr double inlierM=.15,minConsistent=.2,maxStoredDeg=12,maxStoredM=.25;
+ }
+-void CameraFusion::Reset(){history.clear();lastSequence=~0ull;lastApplyMs=0;target={};halfway={};correction={};weights={};activeWeights={};lastGoodMs={};stats.state=stats.legs=stats.ready=0;stats.ageMs=-1;stats.weight=0;}
++void CameraFusion::Reset(){history.clear();lastSequence=~0ull;lastApplyMs=0;target={};halfway={};correction={};weights={};activeWeights={};lastGoodMs={};solvedMs={};stats.state=stats.legs=stats.ready=stats.legs2d=0;stats.ageMs=-1;stats.weight=0;stats.reprojPx=stats.flipGap=-1;}
+ void CameraFusion::ForgetRegistration(){
+  fitBuffer.clear();fitRandom=1;fitCountdown=0;aligned=false;checks.clear();
+  rotation=storedRotation=windowRotation={1,0,0,0,1,0,0,0,1};translation=storedTranslation=windowTranslation={};
+@@ -292,51 +293,91 @@ TrackingFrame CameraFusion::Apply(const TrackingFrame&raw,const CameraSkeleton*c
+  bool usableAge=c && stats.ageMs>=0 && stats.ageMs<500 && now-c->sourceMs>=-100;
+  bool newPacket=c && c->sequence!=lastSequence;
+  if(newPacket){
+-  lastSequence=c->sequence;weights={};
++  lastSequence=c->sequence;weights={};stats.legs2d=0;stats.reprojPx=stats.flipGap=-1;
+   // Registration compares timestamp-matched historical poses. Its latency
+   // limit need not be the strict limit for driving the current physical legs.
+   bool registrationFresh=c && stats.ageMs>=0 && stats.ageMs<1000 && now-c->sourceMs>=-100;
+   if(!history.empty() && registrationFresh){auto it=std::min_element(history.begin(),history.end(),[&](const Sample&a,const Sample&b){return std::abs(a.ms-c->sourceMs)<std::abs(b.ms-c->sourceMs);});
+    if(std::abs(it->ms-c->sourceMs)<60){
+     Fit(*c,it->frame);if(moved && !aligned && stats.fitHint>=3)stats.fitHint=5;
++    // RGB-only packets carry no 3D shoulders: only the AprilTag can register.
++    if(!aligned && c->hasKeypoints && !c->hasStagePose && !Good(c->joints[7]) && !Good(c->joints[8]))stats.fitHint=6;
+     bool usable=aligned && verified && c->frame=="camera";
+     // pelvis-relative packets already use STAGE axes and need no camera R.
+     bool stage=c->frame=="pelvis-relative";
+-    if(usableAge && (usable || stage) && Good(c->pelvis)){
++    const auto& meta=it->frame.body.joints;
++    // Operator's left, horizontal: the knee hinge axis up to thigh roll.
++    V lateral=Sub(meta[2].position,meta[3].position);lateral[1]=0;
++    // Lay thigh and shin directions out from Meta's hip with Meta's bone
++    // lengths. Camera positions put knees 5-7 cm and ankles 10-14 cm high
++    // (hip-midpoint pelvis, short 2D shins): that would bend standing legs.
++    // Large lifts are valid, so there is no correction-size limit.
++    auto drive=[&](int side,V thigh,V shin,double conf){
++     V metaThigh=Sub(meta[4+side].position,meta[2+side].position),metaShin=Sub(meta[6+side].position,meta[4+side].position);
++     double upper=Norm(metaThigh),lower=Norm(metaShin);
++     Hinge(thigh,shin,lateral,Unit(metaThigh),Unit(metaShin),upper,lower);
++     V knee=Add(meta[2+side].position,Mul(thigh,upper));
++     V ankle=Add(knee,Mul(shin,lower));
++     std::array<V,3> delta{V{},Sub(knee,meta[4+side].position),Sub(ankle,meta[6+side].position)};
++     // A leg that is not being driven starts from this packet, not from an
++     // old correction swept in by the smoother.
++     bool idle=activeWeights[side]<.01;
++     for(int k=0;k<3;k++){target[2*k+side]=delta[k];if(idle)halfway[2*k+side]=correction[2*k+side]=delta[k];}
++     weights[side]=conf;lastGoodMs[side]=c->sourceMs;
++    };
++    bool rays=use2d && c->hasKeypoints && (c->hasStagePose || usable);
++    if(usableAge && rays){
++     // 2D keypoints: knee and ankle must reproject onto the detector's pixels.
++     // Camera depth is not used; the depth axis is regularised (legs2d).
++     legs2d::Camera cam;
++     cam.R=c->hasStagePose?c->stageRotation:rotation;cam.t=c->hasStagePose?c->stageTranslation:translation;
++     cam.fx=c->intrinsics[0];cam.fy=c->intrinsics[1];cam.cx=c->intrinsics[2];cam.cy=c->intrinsics[3];
++     auto pixel=[&](int i){legs2d::Pixel p;const auto&k=c->keypoints[i];p.valid=k.valid && k.confidence>=.55;p.u=k.u;p.v=k.v;p.confidence=k.confidence;return p;};
++     // Another person (or a broken registration): Meta's hips must project
++     // near the detected hips, within 35 cm at Meta's hip depth.
++     auto lh=pixel(0),rh=pixel(1);bool person=false;
++     if(lh.valid && rh.valid){
++      V mid=Mul(Add(meta[2].position,meta[3].position),.5);double u,v;
++      if(cam.Project(mid,u,v)){double depth=cam.Depth(mid);person=std::hypot(u-.5*(lh.u+rh.u),v-.5*(lh.v+rh.v))*depth/std::max(1.,.5*(cam.fx+cam.fy))<=.35;}
++     }
++     for(int side=0;side<2 && person;side++){
++      legs2d::LegInput in;in.hip=meta[2+side].position;in.metaKnee=meta[4+side].position;in.metaAnkle=meta[6+side].position;
++      in.thigh=Norm(Sub(in.metaKnee,in.hip));in.shin=Norm(Sub(in.metaAnkle,in.metaKnee));in.lateral=lateral;
++      in.knee=pixel(2+side);in.ankle=pixel(4+side);
++      // Temporal depth prior: the previous solution, moved with Meta's hip.
++      if(solvedMs[side] && c->sourceMs-solvedMs[side]<300){in.hasPrevious=true;in.previousKnee=Add(in.hip,solvedKnee[side]);in.previousAnkle=Add(in.hip,solvedAnkle[side]);}
++      auto leg=legs2d::SolveLeg(cam,in);
++      // A solution that cannot reproject within 25 px fits no leg pose
++      // (keypoint swapped or on another person): drive nothing.
++      if(!leg.ok || leg.kneePx>25 || leg.anklePx>25)continue;
++      solvedKnee[side]=Sub(leg.knee,in.hip);solvedAnkle[side]=Sub(leg.ankle,in.hip);solvedMs[side]=c->sourceMs;
++      stats.legs2d++;stats.reprojPx=std::max({stats.reprojPx,leg.kneePx,leg.anklePx});
++      if(leg.flipGap>=0)stats.flipGap=stats.flipGap<0?leg.flipGap:std::min(stats.flipGap,leg.flipGap);
++      // Full weight: confidence already weighs the pixels inside the solve.
++      // Scaling the correction by it (as the depth path does) would shrink
++      // every lift by ~10% at YOLO's typical 0.9.
++      drive(side,leg.thighDir,leg.shinDir,1);
++     }
++    }
++    else if(usableAge && (usable || stage) && Good(c->pelvis)){
+      for(int side=0;side<2;side++){
+       bool good=Good(c->joints[side]) && Good(c->joints[2+side]) && Good(c->joints[4+side]);
+       if(!good){weights[side]=0;continue;}
+       double conf=1;for(int k=0;k<3;k++)conf=std::min(conf,c->joints[2*k+side].confidence);
+-      const auto& meta=it->frame.body.joints;
+       // A registered camera pelvis far from Meta's is another person (or a
+       // broken registration), not a leg pose. STAGE packets carry no position.
+       if(!stage && Norm(Sub(Add(Rotate(rotation,c->pelvis.p),translation),meta[0].position))>.35){weights[side]=0;continue;}
+-      // Transfer thigh and shin directions only, from Meta's hip with Meta's
+-      // bone lengths. Camera positions put knees 5-7 cm and ankles 10-14 cm
+-      // high (hip-midpoint pelvis, short 2D shins): that would bend standing
+-      // legs. Large lifts are valid, so there is no correction-size limit.
++      // Transfer thigh and shin directions only.
+       auto direction=[&](int from,int to){V d=Sub(c->joints[to].p,c->joints[from].p);return Unit(stage?d:Rotate(rotation,d));};
+-      V thigh=direction(side,2+side),shin=direction(2+side,4+side);
+-      // Operator's left, horizontal: the knee hinge axis up to thigh roll.
+-      V lateral=Sub(meta[2].position,meta[3].position);lateral[1]=0;
+-      V metaThigh=Sub(meta[4+side].position,meta[2+side].position),metaShin=Sub(meta[6+side].position,meta[4+side].position);
+-      double upper=Norm(metaThigh),lower=Norm(metaShin);
+-      Hinge(thigh,shin,lateral,Unit(metaThigh),Unit(metaShin),upper,lower);
+-      V knee=Add(meta[2+side].position,Mul(thigh,upper));
+-      V ankle=Add(knee,Mul(shin,lower));
+-      std::array<V,3> delta{V{},Sub(knee,meta[4+side].position),Sub(ankle,meta[6+side].position)};
+-      // A leg that is not being driven starts from this packet, not from an
+-      // old correction swept in by the smoother.
+-      bool idle=activeWeights[side]<.01;
+-      for(int k=0;k<3;k++){target[2*k+side]=delta[k];if(idle)halfway[2*k+side]=correction[2*k+side]=delta[k];}
+-      weights[side]=conf;lastGoodMs[side]=c->sourceMs;
++      drive(side,direction(side,2+side),direction(2+side,4+side),conf);
+      }
+     }
+    }
+   }
+  }
+  
+- stats.state=(!(aligned && verified) && c && c->frame=="camera")?1:fresh?2:stats.ageMs<500 && c?3:0;
++ bool registered=c && (c->hasStagePose || c->frame=="pelvis-relative" || (aligned && verified));
++ stats.state=(c && !registered && c->frame=="camera")?1:fresh?2:stats.ageMs<500 && c?3:0;
+  // Packets arrive at ~12 Hz with 4-5 cm of depth noise; holding each target
+  // fed the policy a 12 Hz staircase (fused knee/ankle 2nd difference 12x
+  // Meta's). Two 40 ms stages still left the live reference 2-2.5x Meta's
+@@ -386,12 +427,20 @@ CameraOverlay CameraFusion::MapForDisplay(const CameraSkeleton*c,const TrackingF
+  out.ageMs=std::max(now-c->sourceMs,now-c->receivedMs);
+  bool relative=c->frame=="pelvis-relative";
+  out.aligned=(aligned && c->frame=="camera") || (relative && Good(c->pelvis));
+- if(!out.aligned || out.ageMs<0 || out.ageMs>=500)return out;
+- for(int i=0;i<14;i++){
++ if(out.ageMs<0 || out.ageMs>=500)return out;
++ if(out.aligned)for(int i=0;i<14;i++){
+   const auto&j=i==13?c->pelvis:c->joints[i];if(!Good(j))continue;
+   out.points[i]=relative?Add(c->pelvis.p,i==13?V{}:j.p):Add(Rotate(rotation,j.p),translation);
+   out.valid[i]=true;
+  }
++ // 2D-solved legs replace measured ones: they are what drives the robot.
++ // Hips are Meta's (the anchor of the solve), knees and ankles the solution.
++ if(use2d && c->hasKeypoints)for(int side=0;side<2;side++){
++  if(!solvedMs[side] || c->sourceMs-solvedMs[side]>=500)continue;
++  V hip=raw.body.joints[2+side].position;
++  out.points[side]=hip;out.points[2+side]=Add(hip,solvedKnee[side]);out.points[4+side]=Add(hip,solvedAnkle[side]);
++  out.valid[side]=out.valid[2+side]=out.valid[4+side]=true;out.aligned=true;
++ }
+  return out;
+ }
+ 
+diff --git a/prototypes/quest_g1/android/native/camera_fusion.h b/prototypes/quest_g1/android/native/camera_fusion.h
+index f19a787..52f5f5e 100644
+--- a/prototypes/quest_g1/android/native/camera_fusion.h
++++ b/prototypes/quest_g1/android/native/camera_fusion.h
+@@ -3,10 +3,16 @@
+ #include <deque>
+ #include <string>
+ struct CameraJoint {std::array<double,3> p{};double confidence=0;bool measured=false;};
++// Raw detector keypoint: undistorted colour-image pixels before smoothing.
++struct CameraKeypoint {double u=0,v=0,confidence=0;bool valid=false;};
+ struct CameraSkeleton {
+  // hips L/R, knees L/R, ankles L/R, nose, shoulders L/R, wrists L/R, elbows L/R
+  std::array<CameraJoint,13> joints{};CameraJoint pelvis;
+  uint64_t sequence=0;double sourceMs=0,receivedMs=0;std::string frame;
++ // Optional 2D stream: same joint order, pinhole intrinsics fx, fy, cx, cy.
++ std::array<CameraKeypoint,13> keypoints{};std::array<double,4> intrinsics{};bool hasKeypoints=false;
++ // Optional PC-side AprilTag registration: p_stage = R p_camera + t.
++ std::array<double,9> stageRotation{1,0,0,0,1,0,0,0,1};std::array<double,3> stageTranslation{};bool hasStagePose=false;
+ };
+ struct CameraOverlay {
+  std::array<std::array<double,3>,14> points{}; // camera joints, then pelvis
+@@ -25,9 +31,13 @@ public:
+ };
+ // Registration progress for the HUD. hint: 0 ok, 1 no person/shoulders,
+ // 2 operator side-on, 3 needs more walking, 4 inconsistent (other person?),
+-// 5 the stored registration stopped matching (camera moved): walk again.
++// 5 the stored registration stopped matching (camera moved): walk again,
++// 6 2D-only packets and no AprilTag registration (press c on the PC).
+ // ready: legs the camera could drive now, also while legsEnabled is off.
+-struct CameraFusionStats {int state=0,legs=0,ready=0,fitPackets=0,fitHint=1;double ageMs=-1,fitMm=-1,weight=0,fitProgress=0,fitSplitDeg=-1,fitSpreadCm=0,fitInliers=0;};
++// legs2d: legs of the last packet solved from 2D keypoints (no camera depth);
++// reprojPx: their worst knee/ankle reprojection error; flipGap: the smallest
++// cost margin to the mirrored knee branch (small = the view was ambiguous).
++struct CameraFusionStats {int state=0,legs=0,ready=0,fitPackets=0,fitHint=1,legs2d=0;double ageMs=-1,fitMm=-1,weight=0,fitProgress=0,fitSplitDeg=-1,fitSpreadCm=0,fitInliers=0,reprojPx=-1,flipGap=-1;};
+ class CameraFusion {
+  struct Sample{double ms;TrackingFrame frame;};
+  std::deque<Sample> history;
+@@ -52,12 +62,18 @@ class CameraFusion {
+  std::array<std::array<double,3>,6> target{},halfway{},correction{};
+  std::array<double,2> weights{},activeWeights{},lastGoodMs{};
+  bool aligned=false;uint64_t lastSequence=~0ull;double lastApplyMs=0;
++ // Last 2D leg solution per side, knee and ankle relative to Meta's hip:
++ // the temporal depth prior and the overlay.
++ std::array<std::array<double,3>,2> solvedKnee{},solvedAnkle{};std::array<double,2> solvedMs{};
+  void Fit(const CameraSkeleton&,const TrackingFrame&);
+ public:
+  CameraFusionStats stats;
+  // Off: legs fade back to Meta's estimate over ~100 ms; registration keeps
+  // running, so switching back to the camera needs no recalibration.
+  bool legsEnabled=true;
++ // Packets with 2D keypoints drive the legs by reprojection (camera depth
++ // unused). Off: the depth-fused 3D path, for A/B on the same stream.
++ bool use2d=true;
+  // Operator-side state only (A calibration, robot reset, policy change).
+  void Reset();
+  // Camera moved: register from scratch.
+diff --git a/prototypes/quest_g1/android/native/camera_legs2d.h b/prototypes/quest_g1/android/native/camera_legs2d.h
+new file mode 100644
+index 0000000..a166a32
+--- /dev/null
++++ b/prototypes/quest_g1/android/native/camera_legs2d.h
+@@ -0,0 +1,204 @@
++#pragma once
++// Leg directions from 2D camera keypoints, without camera depth.
++//
++// The hip is anchored by Meta (headset/controllers) and the bone lengths are
++// Meta's. Knee and ankle must reproject onto the detector's pixels; that
++// fixes each bone up to a forward/backward flip and leaves the camera's depth
++// axis weakly observed. The depth axis is regularised, never fitted: a weak
++// pull to Meta's time-matched knee/ankle depth and to the previous solution,
++// plus a soft knee hinge (no backward bend) and a soft hip-extension limit. Candidates start from both
++// ray-sphere roots of each bone, Meta and the previous frame; the lowest
++// cost wins, so a lift toward the camera is not locked into the wrong branch
++// by the first frame's initialisation.
++#include <array>
++#include <algorithm>
++#include <cmath>
++#include <vector>
++
++namespace legs2d {
++using V=std::array<double,3>;
++inline V Sub(V a,const V&b){for(int i=0;i<3;i++)a[i]-=b[i];return a;}
++inline V Add(V a,const V&b){for(int i=0;i<3;i++)a[i]+=b[i];return a;}
++inline V Mul(V a,double s){for(auto&x:a)x*=s;return a;}
++inline double Dot(const V&a,const V&b){return a[0]*b[0]+a[1]*b[1]+a[2]*b[2];}
++inline V Cross(const V&a,const V&b){return {a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]};}
++inline double Norm(const V&a){return std::sqrt(Dot(a,a));}
++inline V Unit(const V&a){return Mul(a,1/std::max(1e-12,Norm(a)));}
++
++// Pinhole camera placed in STAGE: p_stage = R p_camera + t (R row-major).
++// Camera axes are OpenCV: x right, y down, z forward.
++struct Camera{
++ std::array<double,9> R{1,0,0,0,1,0,0,0,1};V t{};
++ double fx=1,fy=1,cx=0,cy=0;
++ V ToCamera(const V&p)const{V d=Sub(p,t);return {R[0]*d[0]+R[3]*d[1]+R[6]*d[2],R[1]*d[0]+R[4]*d[1]+R[7]*d[2],R[2]*d[0]+R[5]*d[1]+R[8]*d[2]};}
++ V ToStage(const V&c)const{return Add({R[0]*c[0]+R[1]*c[1]+R[2]*c[2],R[3]*c[0]+R[4]*c[1]+R[5]*c[2],R[6]*c[0]+R[7]*c[1]+R[8]*c[2]},t);}
++ // Unit STAGE direction of the ray through pixel (u, v).
++ V Ray(double u,double v)const{return Unit(Sub(ToStage({(u-cx)/fx,(v-cy)/fy,1}),t));}
++ bool Project(const V&p,double&u,double&v)const{V c=ToCamera(p);if(c[2]<.05)return false;u=fx*c[0]/c[2]+cx;v=fy*c[1]/c[2]+cy;return true;}
++ double Depth(const V&p)const{return ToCamera(p)[2];}
++};
++
++struct Pixel{double u=0,v=0,confidence=0;bool valid=false;};
++
++struct Options{
++ double pixelSigma=6;      // detector keypoint noise, px at confidence 1
++ double metaDepthSigma=1;  // tie-breaker toward Meta's depth along the camera axis, m
++ double previousDepthSigma=.08; // temporal pull of the depth axis, m
++ double hingeSigmaDeg=4;   // soft penalty on backward knee bend
++ // Thigh behind vertical beyond this is anatomically rare: it is the mirror
++ // of a frontal knee lift, which the 2D view alone cannot tell apart.
++ double maxHipExtensionDeg=15,hipExtensionSigmaDeg=3;
++ // Each bone has two ray-sphere roots for any camera placement; the wrong
++ // root of an oblique view leaves the sagittal plane. The knee is a hinge
++ // (varus/valgus within a few degrees) and the thigh rarely leaves the
++ // sagittal plane by more than ~30 deg during teleoperation.
++ double maxVarusDeg=5,varusSigmaDeg=3,maxThighOutDeg=30,thighOutSigmaDeg=5;
++ int iterations=12;
++};
++
++struct LegInput{
++ V hip{},metaKnee{},metaAnkle{};
++ double thigh=.4,shin=.4;  // Meta bone lengths, m
++ V lateral{1,0,0};         // operator's left, horizontal (knee hinge axis)
++ Pixel knee,ankle;
++ bool hasPrevious=false;V previousKnee{},previousAnkle{};
++};
++
++struct LegResult{
++ bool ok=false;
++ V thighDir{},shinDir{},knee{},ankle{};
++ double cost=0,kneePx=-1,anklePx=-1;
++ // Cost of the best solution whose knee lies on the other ray-sphere branch
++ // (or -1 when the knee ray has a single root). A small gap means the 2D
++ // view could not tell forward from backward; only the regulariser decided.
++ double flipGap=-1;
++};
++
++namespace detail{
++// Knee flexion angle (positive bends the shin back) about the hinge axis.
++inline double Flexion(const V&thigh,const V&shin,const V&lateral){
++ V axis=Sub(lateral,Mul(thigh,Dot(lateral,thigh)));if(Norm(axis)<1e-6)return 0;axis=Unit(axis);
++ V back=Cross(axis,thigh);return std::atan2(Dot(shin,back),Dot(shin,thigh));
++}
++// Shin angle out of the knee's hinge plane.
++inline double Varus(const V&thigh,const V&shin,const V&lateral){
++ V axis=Sub(lateral,Mul(thigh,Dot(lateral,thigh)));if(Norm(axis)<1e-6)return 0;axis=Unit(axis);
++ return std::asin(std::clamp(Dot(shin,axis),-1.,1.));
++}
++// Thigh angle behind vertical in the sagittal plane (STAGE Y up).
++inline double HipExtension(const V&thigh,const V&lateral){
++ V up{0,1,0},forward=Cross(lateral,up);if(Norm(forward)<1e-6)return 0;forward=Unit(forward);
++ return std::atan2(-Dot(thigh,forward),-Dot(thigh,up));
++}
++// Residual vector for directions (thigh, shin).
++inline int Residuals(const Camera&cam,const LegInput&in,const Options&o,const V&d1,const V&d2,double*r){
++ V knee=Add(in.hip,Mul(d1,in.thigh)),ankle=Add(knee,Mul(d2,in.shin));int n=0;
++ auto pixel=[&](const V&p,const Pixel&px){
++  if(!px.valid){r[n++]=0;r[n++]=0;return;}
++  double u,v,w=std::sqrt(std::max(px.confidence,1e-3))/o.pixelSigma;
++  if(!cam.Project(p,u,v)){r[n++]=1e3;r[n++]=1e3;return;}
++  r[n++]=w*(u-px.u);r[n++]=w*(v-px.v);
++ };
++ pixel(knee,in.knee);pixel(ankle,in.ankle);
++ r[n++]=(cam.Depth(knee)-cam.Depth(in.metaKnee))/o.metaDepthSigma;
++ r[n++]=(cam.Depth(ankle)-cam.Depth(in.metaAnkle))/o.metaDepthSigma;
++ if(in.hasPrevious){
++  r[n++]=(cam.Depth(knee)-cam.Depth(in.previousKnee))/o.previousDepthSigma;
++  r[n++]=(cam.Depth(ankle)-cam.Depth(in.previousAnkle))/o.previousDepthSigma;
++ }else{r[n++]=0;r[n++]=0;}
++ double flex=Flexion(d1,d2,in.lateral)*180/M_PI;
++ r[n++]=flex<0?flex/o.hingeSigmaDeg:0;
++ r[n++]=std::max(0.,HipExtension(d1,in.lateral)*180/M_PI-o.maxHipExtensionDeg)/o.hipExtensionSigmaDeg;
++ r[n++]=std::max(0.,std::abs(Varus(d1,d2,in.lateral))*180/M_PI-o.maxVarusDeg)/o.varusSigmaDeg;
++ V lateral=Unit(in.lateral);
++ r[n++]=std::max(0.,std::abs(std::asin(std::clamp(Dot(d1,lateral),-1.,1.)))*180/M_PI-o.maxThighOutDeg)/o.thighOutSigmaDeg;
++ return n;
++}
++constexpr int kResiduals=12;
++inline double Cost(const double*r){double s=0;for(int i=0;i<kResiduals;i++)s+=r[i]*r[i];return s;}
++// Tangent basis of a unit vector.
++inline void Basis(const V&d,V&a,V&b){V helper=std::abs(d[0])<.9?V{1,0,0}:V{0,1,0};a=Unit(Cross(d,helper));b=Cross(d,a);}
++inline V Rotate(const V&d,const V&a,const V&b,double x,double y){return Unit(Add(d,Add(Mul(a,x),Mul(b,y))));}
++// Levenberg-Marquardt over the two bone directions (4 tangent parameters).
++inline double Solve(const Camera&cam,const LegInput&in,const Options&o,V&d1,V&d2){
++ double r[kResiduals],trial[kResiduals],lambda=1e-3;Residuals(cam,in,o,d1,d2,r);double cost=Cost(r);
++ for(int iter=0;iter<o.iterations;iter++){
++  V a1,b1,a2,b2;Basis(d1,a1,b1);Basis(d2,a2,b2);
++  double J[kResiduals][4];const double h=1e-6;
++  for(int k=0;k<4;k++){
++   V e1=d1,e2=d2;
++   if(k<2)e1=Rotate(d1,a1,b1,k==0?h:0,k==1?h:0);else e2=Rotate(d2,a2,b2,k==2?h:0,k==3?h:0);
++   Residuals(cam,in,o,e1,e2,trial);for(int i=0;i<kResiduals;i++)J[i][k]=(trial[i]-r[i])/h;
++  }
++  double A[16]={},g[4]={};
++  for(int i=0;i<kResiduals;i++)for(int p=0;p<4;p++){g[p]+=J[i][p]*r[i];for(int q=0;q<4;q++)A[4*p+q]+=J[i][p]*J[i][q];}
++  bool improved=false;
++  for(int attempt=0;attempt<6 && !improved;attempt++){
++   double M[16];std::copy_n(A,16,M);for(int p=0;p<4;p++)M[5*p]+=lambda*(1+A[5*p]);
++   // 4x4 Gaussian elimination with partial pivoting.
++   double x[4],b[4];for(int p=0;p<4;p++)b[p]=-g[p];bool singular=false;
++   for(int c=0;c<4;c++){
++    int piv=c;for(int k=c+1;k<4;k++)if(std::abs(M[4*k+c])>std::abs(M[4*piv+c]))piv=k;
++    if(std::abs(M[4*piv+c])<1e-15){singular=true;break;}
++    if(piv!=c){for(int k=0;k<4;k++)std::swap(M[4*c+k],M[4*piv+k]);std::swap(b[c],b[piv]);}
++    for(int k=c+1;k<4;k++){double f=M[4*k+c]/M[4*c+c];for(int m=c;m<4;m++)M[4*k+m]-=f*M[4*c+m];b[k]-=f*b[c];}
++   }
++   if(singular){lambda*=10;continue;}
++   for(int c=3;c>=0;c--){double s=b[c];for(int k=c+1;k<4;k++)s-=M[4*c+k]*x[k];x[c]=s/M[4*c+c];}
++   V n1=Rotate(d1,a1,b1,x[0],x[1]),n2=Rotate(d2,a2,b2,x[2],x[3]);
++   Residuals(cam,in,o,n1,n2,trial);double next=Cost(trial);
++   if(next<cost){d1=n1;d2=n2;std::copy_n(trial,kResiduals,r);
++    bool small=cost-next<1e-9*(1+cost);cost=next;lambda=std::max(1e-7,lambda/10);improved=true;if(small)return cost;}
++   else lambda*=10;
++  }
++  if(!improved)break;
++ }
++ return cost;
++}
++// Points where the ray from origin along dir is at distance radius from
++// centre; without an intersection, the ray point closest to the centre.
++inline std::vector<V> RaySphere(const V&origin,const V&dir,const V&centre,double radius){
++ V oc=Sub(origin,centre);double b=Dot(oc,dir),c=Dot(oc,oc)-radius*radius,disc=b*b-c;
++ if(disc<0)return {Add(origin,Mul(dir,std::max(0.,-b)))};
++ double s=std::sqrt(disc);std::vector<V> out;
++ for(double l:{-b-s,-b+s})if(l>0)out.push_back(Add(origin,Mul(dir,l)));
++ if(out.empty())out.push_back(Add(origin,Mul(dir,std::max(0.,-b))));
++ return out;
++}
++}
++
++// Solve one leg. Needs both knee and ankle pixels; returns ok=false otherwise.
++inline LegResult SolveLeg(const Camera&cam,const LegInput&in,const Options&o={}){
++ LegResult best;
++ if(!in.knee.valid || !in.ankle.valid || !(in.thigh>.05) || !(in.shin>.05))return best;
++ for(const V*p:{&in.hip,&in.metaKnee,&in.metaAnkle})for(double x:*p)if(!std::isfinite(x))return best;
++ // Candidate initial directions: ray-sphere roots, Meta, previous solution.
++ std::vector<std::pair<V,V>> starts;
++ auto kneeRoots=detail::RaySphere(cam.t,cam.Ray(in.knee.u,in.knee.v),in.hip,in.thigh);
++ for(const V&k:kneeRoots){
++  V d1=Unit(Sub(k,in.hip));
++  for(const V&a:detail::RaySphere(cam.t,cam.Ray(in.ankle.u,in.ankle.v),k,in.shin))starts.push_back({d1,Unit(Sub(a,k))});
++ }
++ starts.push_back({Unit(Sub(in.metaKnee,in.hip)),Unit(Sub(in.metaAnkle,in.metaKnee))});
++ if(in.hasPrevious)starts.push_back({Unit(Sub(in.previousKnee,in.hip)),Unit(Sub(in.previousAnkle,in.previousKnee))});
++ // Branch of a knee: which side of the hip's closest ray point it lies on.
++ V kneeRay=cam.Ray(in.knee.u,in.knee.v);double split=Dot(Sub(in.hip,cam.t),kneeRay);
++ auto branch=[&](const V&knee){return Dot(Sub(knee,cam.t),kneeRay)<split;};
++ double bestCost=INFINITY,otherCost[2]={INFINITY,INFINITY};
++ for(auto[d1,d2]:starts){
++  double cost=detail::Solve(cam,in,o,d1,d2);
++  V knee=Add(in.hip,Mul(d1,in.thigh));bool side=branch(knee);
++  otherCost[side]=std::min(otherCost[side],cost);
++  if(cost<bestCost){bestCost=cost;best.thighDir=d1;best.shinDir=d2;}
++ }
++ if(!std::isfinite(bestCost))return best;
++ best.ok=true;best.cost=bestCost;
++ best.knee=Add(in.hip,Mul(best.thighDir,in.thigh));best.ankle=Add(best.knee,Mul(best.shinDir,in.shin));
++ bool side=branch(best.knee);
++ if(kneeRoots.size()==2 && std::isfinite(otherCost[!side]))best.flipGap=otherCost[!side]-bestCost;
++ double u,v;
++ if(cam.Project(best.knee,u,v))best.kneePx=std::hypot(u-in.knee.u,v-in.knee.v);
++ if(cam.Project(best.ankle,u,v))best.anklePx=std::hypot(u-in.ankle.u,v-in.ankle.v);
++ return best;
++}
++}
+diff --git a/prototypes/quest_g1/android/native/camera_stream.cpp b/prototypes/quest_g1/android/native/camera_stream.cpp
+index a423069..7c46f88 100644
+--- a/prototypes/quest_g1/android/native/camera_stream.cpp
++++ b/prototypes/quest_g1/android/native/camera_stream.cpp
+@@ -2,6 +2,7 @@
+ #include <ixwebsocket/IXWebSocket.h>
+ #include <json/json.h>
+ #include <chrono>
++#include <algorithm>
+ #include <cmath>
+ #include <sstream>
+ namespace {
+@@ -24,6 +25,38 @@ bool CameraStream::Parse(const std::string&s,double received,CameraSkeleton&out)
+  if(!Joint(v["pelvis"],c.pelvis))return false;
+  const char*names[]={"lhip","rhip","lknee","rknee","lankle","rankle","nose","lshoulder","rshoulder","lwrist","rwrist","lelbow","relbow"};
+  for(int i=0;i<13;i++){if(i>=9 && !v["joints"].isMember(names[i]))continue;if(!Joint(v["joints"][names[i]],c.joints[i]))return false;}
++ // Optional raw 2D keypoints with pinhole intrinsics. Malformed values
++ // reject the packet; an absent name means "not detected".
++ if(v.isMember("kp2d") || v.isMember("intr")){
++  const auto&intr=v["intr"];const auto&kp=v["kp2d"];
++  if(!intr.isArray() || intr.size()!=4 || !kp.isObject())return false;
++  for(int i=0;i<4;i++){if(!intr[i].isNumeric())return false;c.intrinsics[i]=intr[i].asDouble();}
++  if(!(c.intrinsics[0]>50 && c.intrinsics[0]<1e4 && c.intrinsics[1]>50 && c.intrinsics[1]<1e4) ||
++     !(std::abs(c.intrinsics[2])<1e4 && std::abs(c.intrinsics[3])<1e4))return false;
++  for(const auto&name:kp.getMemberNames()){
++   int i=int(std::find_if(std::begin(names),std::end(names),[&](const char*n){return name==n;})-std::begin(names));
++   if(i>=13)return false;
++   const auto&k=kp[name];if(!k.isArray() || k.size()!=3)return false;
++   for(int a=0;a<3;a++)if(!k[a].isNumeric())return false;
++   auto&p=c.keypoints[i];p.u=k[0].asDouble();p.v=k[1].asDouble();p.confidence=k[2].asDouble();
++   if(!std::isfinite(p.u) || !std::isfinite(p.v) || std::abs(p.u)>1e5 || std::abs(p.v)>1e5 ||
++      !std::isfinite(p.confidence) || p.confidence<0 || p.confidence>1)return false;
++   p.valid=true;
++  }
++  c.hasKeypoints=true;
++ }
++ // Optional PC-side AprilTag registration; must be a proper rotation.
++ if(v.isMember("stage_from_camera")){
++  const auto&f=v["stage_from_camera"];
++  if(!f.isObject() || !f["R"].isArray() || f["R"].size()!=9 || !f["t"].isArray() || f["t"].size()!=3)return false;
++  for(int i=0;i<9;i++){if(!f["R"][i].isNumeric())return false;c.stageRotation[i]=f["R"][i].asDouble();}
++  for(int i=0;i<3;i++){if(!f["t"][i].isNumeric())return false;c.stageTranslation[i]=f["t"][i].asDouble();if(!std::isfinite(c.stageTranslation[i]) || std::abs(c.stageTranslation[i])>30)return false;}
++  const auto&R=c.stageRotation;
++  for(int r=0;r<3;r++)for(int k=0;k<3;k++){double d=R[3*r]*R[3*k]+R[3*r+1]*R[3*k+1]+R[3*r+2]*R[3*k+2];if(!std::isfinite(d) || std::abs(d-(r==k))>1e-3)return false;}
++  double det=R[0]*(R[4]*R[8]-R[5]*R[7])-R[1]*(R[3]*R[8]-R[5]*R[6])+R[2]*(R[3]*R[7]-R[4]*R[6]);
++  if(det<.99)return false;
++  c.hasStagePose=true;
++ }
+  out=c;return true;
+ }
+ CameraStream::CameraStream(const std::string&url):socket(std::make_unique<ix::WebSocket>()){
+diff --git a/prototypes/quest_g1/android/native/quest_runtime.cpp b/prototypes/quest_g1/android/native/quest_runtime.cpp
+index 5973fcb..e78e517 100644
+--- a/prototypes/quest_g1/android/native/quest_runtime.cpp
++++ b/prototypes/quest_g1/android/native/quest_runtime.cpp
+@@ -95,16 +95,17 @@ std::string CameraLegStatus(const RuntimeStats& s,bool connected,bool synced,boo
+     // Registration and fusion run in the robot loop only.
+     if(paused || s.published<=0){level=1;menu="Подключена";return "Ноги: Meta. Камера подключена, симуляция на паузе";}
+     if(s.cameraState==1){
+-        const char* hints[]={"","встаньте в кадр","повернитесь к камере","походите лицом к камере","один человек в кадре","камера сдвинута, походите лицом к ней"};
++        const char* hints[]={"","встаньте в кадр","повернитесь к камере","походите лицом к камере","один человек в кадре","камера сдвинута, походите лицом к ней","нужна связка AprilTag (клавиша c на ПК)"};
+         int percent=int(std::lround(100*std::clamp(s.cameraFitProgress,0.,1.)));
+         std::snprintf(text,sizeof(text),"Калибровка %d%%",percent);menu=text;
+-        std::snprintf(text,sizeof(text),"Ноги: Meta. Калибровка %d%%: %s",percent,hints[std::clamp(s.cameraFitHint,0,5)]);
++        std::snprintf(text,sizeof(text),"Ноги: Meta. Калибровка %d%%: %s",percent,hints[std::clamp(s.cameraFitHint,0,6)]);
+         level=2;return text;
+     }
+     if(s.cameraLegs>0){
+         const char* side=s.cameraLegs>1?"обе":"одна";
+-        if(s.cameraState==3)std::snprintf(text,sizeof(text),"Ноги: камера (%s), задержка %.0f мс",side,s.cameraAgeMs);
+-        else std::snprintf(text,sizeof(text),"Ноги: камера (%s)",side);
++        const char* source=s.cameraLegs2d>0?"камера 2D":"камера";
++        if(s.cameraState==3)std::snprintf(text,sizeof(text),"Ноги: %s (%s), задержка %.0f мс",source,side,s.cameraAgeMs);
++        else std::snprintf(text,sizeof(text),"Ноги: %s (%s)",source,side);
+         level=3;menu="Ноги с камеры";return text;
+     }
+     level=2;
+@@ -910,7 +911,7 @@ void G1Initialize(android_app* app){
+                 for(int a=0;a<2;a++){sample.targetXY[a]=retarget->solver().data()->qpos[a];sample.actualXY[a]=sim->data->qpos[a];sample.commandXY[a]=sim->WholeBodyReference()[a];sample.velocityXY[a]=sim->data->qvel[a];}
+                 CameraSkeleton displayCamera;bool haveDisplayCamera=cameraStream->Latest(displayCamera);
+                 sample.cameraOverlay=cameraFusion.MapForDisplay(haveDisplayCamera?&displayCamera:nullptr,input,CameraEpochMs());
+-                sample.cameraState=cameraFusion.stats.state;sample.cameraLegs=cameraFusion.stats.legs;sample.cameraReady=cameraFusion.stats.ready;sample.cameraLegsEnabled=cameraFusion.legsEnabled;
++                sample.cameraState=cameraFusion.stats.state;sample.cameraLegs=cameraFusion.stats.legs;sample.cameraLegs2d=cameraFusion.stats.legs2d;sample.cameraReady=cameraFusion.stats.ready;sample.cameraLegsEnabled=cameraFusion.legsEnabled;
+                 sample.cameraAgeMs=cameraFusion.stats.ageMs;sample.cameraFitMm=cameraFusion.stats.fitMm;
+                 sample.cameraFitProgress=cameraFusion.stats.fitProgress;sample.cameraFitHint=cameraFusion.stats.fitHint;
+                 sample.cameraWeight=cameraFusion.stats.weight;sample.cameraConnected=cameraStream->connected;
+diff --git a/prototypes/quest_g1/android/native/runtime_stats.h b/prototypes/quest_g1/android/native/runtime_stats.h
+index 93a3bae..3e6d654 100644
+--- a/prototypes/quest_g1/android/native/runtime_stats.h
++++ b/prototypes/quest_g1/android/native/runtime_stats.h
+@@ -6,7 +6,7 @@ struct RuntimeStats {
+     CameraOverlay cameraOverlay;
+     double ikPositionCm=0,ikOrientationDeg=0;
+     int physicsWorkers=0;
+-    int cameraState=0,cameraLegs=0,cameraReady=0;bool cameraConnected=false,cameraClockSynced=false,cameraLegsEnabled=true;
++    int cameraState=0,cameraLegs=0,cameraLegs2d=0,cameraReady=0;bool cameraConnected=false,cameraClockSynced=false,cameraLegsEnabled=true;
+     double cameraClockOffsetMs=0,cameraClockRttMs=-1;
+     double cameraAgeMs=-1,cameraFitMm=-1,cameraWeight=0,cameraFitProgress=0;int cameraFitHint=1;
+     double cameraPositionError=-1,cameraOrientationError=-1,visualScale=1;
+diff --git a/prototypes/quest_g1/android/native/stats_hud.h b/prototypes/quest_g1/android/native/stats_hud.h
+index 5de2d6e..c83204f 100644
+--- a/prototypes/quest_g1/android/native/stats_hud.h
++++ b/prototypes/quest_g1/android/native/stats_hud.h
+@@ -44,7 +44,7 @@ void main(){color=vec4(tint.rgb,tint.a*texture(atlas,tex).r);})");
+     else if(recording==2)std::snprintf(recordText,sizeof(recordText),"RECORD FAILED / DATA KEPT");
+     else std::snprintf(recordText,sizeof(recordText),"%s",exports[std::clamp(exportStatus,0,3)]);
+     const char* opticalStates[]={"META","ALIGN","FUSE","STALE"};
+-    std::snprintf(opticalText,sizeof(opticalText),"CAM %s %.0f%% %.0fms FIT %.0fmm %dL",s.cameraConnected?(s.cameraClockSynced?opticalStates[std::clamp(s.cameraState,0,3)]:"SYNC"):"OFF",100*s.cameraFitProgress,s.cameraAgeMs,s.cameraFitMm,s.cameraLegs);
++    std::snprintf(opticalText,sizeof(opticalText),"CAM %s %.0f%% %.0fms FIT %.0fmm %dL%s",s.cameraConnected?(s.cameraClockSynced?opticalStates[std::clamp(s.cameraState,0,3)]:"SYNC"):"OFF",100*s.cameraFitProgress,s.cameraAgeMs,s.cameraFitMm,s.cameraLegs,s.cameraLegs2d?" 2D":"");
+     if(s.cameraPositionError>=0)std::snprintf(cameraText,sizeof(cameraText),"HEAD %.1f cm / %.1f deg",100*s.cameraPositionError,s.cameraOrientationError);
+     else std::snprintf(cameraText,sizeof(cameraText),"HEAD target: OFF");
+     std::snprintf(text,sizeof(text),
+diff --git a/prototypes/quest_g1/scripts/check_camera_fusion.py b/prototypes/quest_g1/scripts/check_camera_fusion.py
+index c2b76e9..1a8508c 100644
+--- a/prototypes/quest_g1/scripts/check_camera_fusion.py
++++ b/prototypes/quest_g1/scripts/check_camera_fusion.py
+@@ -12,7 +12,7 @@ build.mkdir(parents=True, exist_ok=True)
+ env = dict(os.environ)
+ if sys.platform == 'darwin':
+     env['DYLD_LIBRARY_PATH'] = str(package)+':'+env.get('DYLD_LIBRARY_PATH', '')
+-for name, sources in [('camera_fusion', ['android/native/camera_fusion.cpp']), ('world_skeleton', ['android/native/camera_fusion.cpp']), ('operator_skeleton', []), ('camera_servo', []), ('button_latch', [])]:
++for name, sources in [('camera_fusion', ['android/native/camera_fusion.cpp']), ('camera_legs2d', []), ('world_skeleton', ['android/native/camera_fusion.cpp']), ('operator_skeleton', []), ('camera_servo', []), ('button_latch', [])]:
+     target = build/f'check_{name}'
+     subprocess.run([os.environ.get('CXX', 'c++'), '-O2', '-std=c++17',
+         '-I'+str(root/'android/native'), '-I'+str(package/'include'),
+diff --git a/prototypes/quest_g1/scripts/prepare_android.py b/prototypes/quest_g1/scripts/prepare_android.py
+index b18e3f7..d542b60 100644
+--- a/prototypes/quest_g1/scripts/prepare_android.py
++++ b/prototypes/quest_g1/scripts/prepare_android.py
+@@ -325,7 +325,7 @@ for file in ['gmr_model.xml','gmr_config.txt']:
+     metadata['sha256'][file]=hashlib.sha256((assets/file).read_bytes()).hexdigest()
+ for file in ['gmr.cpp','gmr.h','meta_retarget.cpp','meta_retarget.h','foot_floor.h','swing_clearance.h','body_tracking.h','quest_runtime.cpp','runtime_stats.h','stats_hud.h','recording_export.h','guided_capture.h','capture_hud.h','retarget.h','recording.h','full_body_io.h']:
+     metadata['sha256']['android/native/'+file]=hashlib.sha256((ROOT/'android/native'/file).read_bytes()).hexdigest()
+-for file in ['world_skeleton.h', 'world_skeleton_gl.h', 'operator_skeleton.h', 'operator_skeleton_draw.h', 'camera_fusion.cpp', 'camera_fusion.h', 'camera_stream.cpp', 'quest_menu.h', 'quest_menu_gl.h', 'policy_catalog.h', 'policy_backend.h', 'groot_decoupled.h', 'dexweave.h', 'sonic.h', 'sonic_constants.h', 'virtual_leg_lift.h', 'body_motor_profile.h', 'body_motor_model.h', 'recording.h', 'learning_capture.h', 'episode_manifest.h', 'simulation.h', 'standing_arms.h', 'file_sha256.h', 'camera_pose_servo.h', 'tennis_task.h', 'collection_task.h', 'render_geom.h', 'cup_lab_shaders.h', 'cup_placement_cue.h', 'rubik_task.h', 'camera_fade.h', 'graphics_epoch.h', 'graphics.cpp']:
++for file in ['world_skeleton.h', 'world_skeleton_gl.h', 'operator_skeleton.h', 'operator_skeleton_draw.h', 'camera_fusion.cpp', 'camera_fusion.h', 'camera_legs2d.h', 'camera_stream.cpp', 'quest_menu.h', 'quest_menu_gl.h', 'policy_catalog.h', 'policy_backend.h', 'groot_decoupled.h', 'dexweave.h', 'sonic.h', 'sonic_constants.h', 'virtual_leg_lift.h', 'body_motor_profile.h', 'body_motor_model.h', 'recording.h', 'learning_capture.h', 'episode_manifest.h', 'simulation.h', 'standing_arms.h', 'file_sha256.h', 'camera_pose_servo.h', 'tennis_task.h', 'collection_task.h', 'render_geom.h', 'cup_lab_shaders.h', 'cup_placement_cue.h', 'rubik_task.h', 'camera_fade.h', 'graphics_epoch.h', 'graphics.cpp']:
+     metadata['sha256']['android/native/'+file]=hashlib.sha256((ROOT/'android/native'/file).read_bytes()).hexdigest()
+ metadata['camera_fade'] = dict(schema_version=1, enabled=True, render_only=True,
+     invisible_distance_m=.08, opaque_distance_m=.22, segments='robot visual/collision geometry only',
+diff --git a/prototypes/quest_g1/tests/check_camera_fusion.cpp b/prototypes/quest_g1/tests/check_camera_fusion.cpp
+index e2d029d..9935f4b 100644
+--- a/prototypes/quest_g1/tests/check_camera_fusion.cpp
++++ b/prototypes/quest_g1/tests/check_camera_fusion.cpp
+@@ -228,5 +228,46 @@ int main(){
+   overlay.valid[5]=false;Require(!smoother.Smooth(overlay,182/72.).valid[5],"Dropped overlay point still drawn");
+   overlay.valid[5]=true;overlay.points[5][1]+=.3;Require(smoother.Smooth(overlay,183/72.).points[5]==overlay.points[5],"Reappearing overlay point does not snap");
+  }
+- puts("Camera rigid fit, delayed correction, bone projection, stale, expiry, invalid heartbeat, degeneracy, second person, knee lift, knee hinge, leg-source switch, registration persistence, STAGE re-verification and overlay smoothing checks passed");
++ // RGB-only 2D keypoints with an AprilTag registration: a knee lift that
++ // Meta does not generate reaches the legs from reprojection alone.
++ {
++  auto body=frames.back();auto H=body.body.joints[2].position;
++  std::array<double,3> pos{2,1.2,2.5},aim{body.body.joints[0].position[0],1,0},f,d,r;
++  for(int a=0;a<3;a++)f[a]=aim[a]-pos[a];mju_normalize3(f.data());
++  d={0,-1,0};double fd=mju_dot3(d.data(),f.data());for(int a=0;a<3;a++)d[a]-=fd*f[a];mju_normalize3(d.data());mju_cross(r.data(),d.data(),f.data());
++  CameraSkeleton packet;packet.frame="camera";packet.hasStagePose=packet.hasKeypoints=true;
++  packet.stageRotation={r[0],d[0],f[0],r[1],d[1],f[1],r[2],d[2],f[2]};packet.stageTranslation=pos;packet.intrinsics={910,905,640,360};
++  auto project=[&](std::array<double,3> p,int i,std::array<double,2> shift={0,0}){
++   double q[3],c[3];mju_sub3(q,p.data(),pos.data());mju_mulMatTVec(c,packet.stageRotation.data(),q,3,3);
++   auto&k=packet.keypoints[i];k.u=910*c[0]/c[2]+640+shift[0];k.v=905*c[1]/c[2]+360+shift[1];k.confidence=.9;k.valid=true;
++  };
++  double thigh=0,shin=0;{double a[3],b[3];mju_sub3(a,body.body.joints[4].position.data(),H.data());mju_sub3(b,body.body.joints[6].position.data(),body.body.joints[4].position.data());thigh=mju_norm3(a);shin=mju_norm3(b);}
++  std::array<double,3> knee{H[0],H[1]-.5*thigh,H[2]+.866*thigh},ankle{knee[0],knee[1]-shin,knee[2]};
++  auto fill=[&](std::array<double,2> shift){
++   project(body.body.joints[2].position,0,shift);project(body.body.joints[3].position,1,shift);
++   project(knee,2,shift);project(ankle,4,shift);project(body.body.joints[5].position,3,shift);project(body.body.joints[7].position,5,shift);
++  };
++  fill({0,0});
++  auto run=[&](CameraFusion& f,double start){TrackingFrame out;
++   for(int n=0;n<=40;n++){double ms=start+20*n;body.xr_time_ns=body.body.time_ns=int64_t(ms*1e6);f.Observe(body,ms);
++    if(n%4==0){packet.sequence++;packet.sourceMs=packet.receivedMs=ms;}out=f.Apply(body,&packet,ms);}
++   return out;};
++  CameraFusion rays;auto out=run(rays,700000);
++  double e[3];mju_sub3(e,out.body.joints[4].position.data(),knee.data());
++  Require(rays.stats.legs==2 && rays.stats.legs2d==2,"2D keypoints did not drive the legs");
++  Require(mju_norm3(e)<.03,"2D knee lift not recovered");
++  mju_sub3(e,out.body.joints[6].position.data(),ankle.data());Require(mju_norm3(e)<.03,"2D ankle not recovered");
++  Require(rays.stats.reprojPx>=0 && rays.stats.reprojPx<2,"2D solution does not reproject");
++  auto shown=rays.MapForDisplay(&packet,body,packet.sourceMs);mju_sub3(e,shown.points[2].data(),knee.data());
++  Require(shown.aligned && shown.valid[2] && mju_norm3(e)<.03 && !shown.valid[7],"2D legs not shown, or shoulders invented");
++  // Off: the depth path, which RGB-only packets cannot feed.
++  CameraFusion off;off.use2d=false;run(off,710000);Require(off.stats.legs==0,"2D keypoints drive the legs with 2D off");
++  // Another person: detected hips 60 px (~0.2 m per 60 px at 3 m) away is
++  // within the gate; 300 px is not the operator.
++  fill({300,0});CameraFusion crowd;run(crowd,720000);Require(crowd.stats.legs2d==0,"Keypoints of another person drive the legs");
++  // RGB-only without the AprilTag: no legs, and the HUD asks for the tag.
++  fill({0,0});packet.hasStagePose=false;CameraFusion unregistered;run(unregistered,730000);
++  Require(unregistered.stats.legs==0 && unregistered.stats.state==1 && unregistered.stats.fitHint==6,"RGB-only packets without registration");
++ }
++ puts("Camera rigid fit, delayed correction, bone projection, stale, expiry, invalid heartbeat, degeneracy, second person, knee lift, knee hinge, leg-source switch, registration persistence, STAGE re-verification and overlay smoothing, 2D keypoint legs checks passed");
+ }
+diff --git a/prototypes/quest_g1/tests/check_camera_legs2d.cpp b/prototypes/quest_g1/tests/check_camera_legs2d.cpp
+new file mode 100644
+index 0000000..3e19d94
+--- /dev/null
++++ b/prototypes/quest_g1/tests/check_camera_legs2d.cpp
+@@ -0,0 +1,75 @@
++#include "camera_legs2d.h"
++#include <cmath>
++#include <cstdio>
++#include <random>
++#include <stdexcept>
++using namespace legs2d;
++void Require(bool v,const char*s){if(!v)throw std::runtime_error(s);}
++// Camera 3 m in front of an operator who faces it (+Z), 1.2 m high, looking
++// along STAGE -Z. Columns of R are the camera axes x right, y down, z forward.
++Camera MakeCamera(double yawDeg=0){
++ Camera c;double a=yawDeg*M_PI/180;
++ // Rotate the camera about the operator (origin) by yaw.
++ V forward{-std::sin(a),0,-std::cos(a)},down{0,-1,0},right=Cross(down,forward);
++ c.R={right[0],down[0],forward[0],right[1],down[1],forward[1],right[2],down[2],forward[2]};
++ c.t={3*std::sin(a),1.2,3*std::cos(a)};c.fx=910;c.fy=905;c.cx=640;c.cy=360;return c;
++}
++Pixel Observe(const Camera&c,const V&p,double noise=0,std::mt19937*rng=nullptr){
++ Pixel px;px.valid=c.Project(p,px.u,px.v);px.confidence=.9;
++ if(rng){std::normal_distribution<double> n(0,noise);px.u+=n(*rng);px.v+=n(*rng);}
++ return px;
++}
++// Leg from hip flexion (forward, deg) and knee flexion (deg), left leg.
++void Pose(double hipDeg,double kneeDeg,V&hip,V&knee,V&ankle){
++ hip={.1,1.0,0};double h=hipDeg*M_PI/180,k=(hipDeg-kneeDeg)*M_PI/180;
++ knee=Add(hip,Mul(V{0,-std::cos(h),std::sin(h)},.42));
++ ankle=Add(knee,Mul(V{0,-std::cos(k),std::sin(k)},.40));
++}
++LegInput Input(const Camera&c,double hipDeg,double kneeDeg,double noise=0,std::mt19937*rng=nullptr){
++ LegInput in;V knee,ankle;Pose(hipDeg,kneeDeg,in.hip,knee,ankle);
++ in.thigh=.42;in.shin=.40;in.lateral={1,0,0};
++ // Meta's generated legs: standing straight, whatever the operator does.
++ in.metaKnee=Add(in.hip,V{0,-.42,0});in.metaAnkle=Add(in.hip,V{0,-.82,0});
++ in.knee=Observe(c,knee,noise,rng);in.ankle=Observe(c,ankle,noise,rng);return in;
++}
++double Error(const LegResult&r,double hipDeg,double kneeDeg){
++ V hip,knee,ankle;Pose(hipDeg,kneeDeg,hip,knee,ankle);
++ return std::max(Norm(Sub(r.knee,knee)),Norm(Sub(r.ankle,ankle)));
++}
++int main(){
++ auto frontal=MakeCamera(),oblique=MakeCamera(40);
++ // Exact pixels recover standing and lifted legs although Meta stands still.
++ // Every bone has two ray-sphere roots; an oblique camera lets the anatomical
++ // limits pick the right one for backward swings too. A frontal camera sees
++ // a backward swing purely along its depth axis: only lifts are required.
++ auto check=[](const Camera&c,double h,double k){
++  auto r=SolveLeg(c,Input(c,h,k));Require(r.ok,"Leg solve failed");
++  if(Error(r,h,k)>.02){std::fprintf(stderr,"hip %.0f knee %.0f camera x %.1f: error %.3f m\n",h,k,c.t[0],Error(r,h,k));throw std::runtime_error("Exact 2D keypoints did not recover the leg");}
++  Require(r.kneePx<1 && r.anklePx<1,"Solution does not reproject onto the keypoints");
++ };
++ for(auto[h,k]:{std::pair{0.,0.},{30.,40.},{70.,80.},{90.,90.},{-15.,30.}})check(oblique,h,k);
++ for(auto[h,k]:{std::pair{0.,0.},{30.,40.},{70.,80.},{90.,90.}})check(frontal,h,k);
++ // Missing ankle: no leg, never a guess.
++ {auto in=Input(frontal,30,40);in.ankle.valid=false;Require(!SolveLeg(frontal,in).ok,"Missing ankle must not drive a leg");}
++ // Invalid geometry is rejected.
++ {auto in=Input(frontal,0,0);in.hip[0]=NAN;Require(!SolveLeg(frontal,in).ok,"Invalid hip accepted");}
++ // A frontal knee lift is the hard case: forward and backward thighs
++ // foreshorten alike. The hip-extension limit must pick the anatomical
++ // branch even when Meta says "standing straight".
++ {auto r=SolveLeg(frontal,Input(frontal,50,60));Require(Error(r,50,60)<.02,"Frontal knee lift resolved to the wrong branch");
++  Require(r.flipGap>0,"Flip gap must report the rejected branch");}
++ // Noisy keypoints (5 px): bounded error, worse on the frontal camera's depth axis.
++ std::mt19937 rng(7);double worst[2]={0,0};int n=0;
++ for(int trial=0;trial<200;trial++){
++  double h=std::uniform_real_distribution<double>(0,80)(rng),k=std::uniform_real_distribution<double>(0,90)(rng);
++  for(int i=0;i<2;i++){const Camera&c=i?oblique:frontal;auto in=Input(c,h,k,5,&rng);auto r=SolveLeg(c,in);Require(r.ok,"Noisy solve failed");worst[i]+=Error(r,h,k);}n++;
++ }
++ std::printf("mean max-joint error at 5 px: frontal %.1f cm, oblique %.1f cm\n",100*worst[0]/n,100*worst[1]/n);
++ // Regression bounds from the synthetic fixture, not accuracy claims.
++ Require(worst[1]/n<.08,"Oblique camera error too large");
++ Require(worst[0]/n<.16,"Frontal camera error too large");
++ // Temporal prior: a previous solution keeps a nearly ambiguous leg on its branch.
++ {auto in=Input(frontal,20,30);V hip,knee,ankle;Pose(20,30,hip,knee,ankle);in.hasPrevious=true;in.previousKnee=knee;in.previousAnkle=ankle;
++  auto r=SolveLeg(frontal,in);Require(Error(r,20,30)<.02,"Previous solution did not hold the branch");}
++ std::puts("camera 2D legs: ok");
++}
+diff --git a/prototypes/quest_g1/tests/check_camera_stream.cpp b/prototypes/quest_g1/tests/check_camera_stream.cpp
+index 678d756..ee93c4e 100644
+--- a/prototypes/quest_g1/tests/check_camera_stream.cpp
++++ b/prototypes/quest_g1/tests/check_camera_stream.cpp
+@@ -4,10 +4,27 @@
+ #include <thread>
+ #include <stdexcept>
+ #include <cmath>
++#include <string>
+ int main(int argc,char**argv){
+  if(argc!=2)return 2;
+  CameraSkeleton c;
+  for(const char* bad:{"{}","not json","{\"t\":1,\"seq\":1,\"frame\":\"unknown\"}"})if(CameraStream::Parse(bad,2,c))throw std::runtime_error("Malformed packet accepted");
++ {
++  // 2D keypoints, intrinsics and the AprilTag registration are optional.
++  std::string joints="\"joints\":{";const char*names[]={"lhip","rhip","lknee","rknee","lankle","rankle","nose","lshoulder","rshoulder"};
++  for(int i=0;i<9;i++)joints+=std::string(i?",":"")+"\""+names[i]+"\":{\"p\":[0,0,0],\"conf\":0,\"src\":\"missing\"}";
++  joints+="}";
++  std::string head="{\"t\":1,\"seq\":1,\"frame\":\"camera\",\"pelvis\":{\"p\":[0,0,0],\"conf\":0,\"src\":\"missing\"},"+joints;
++  auto parse=[&](const std::string&tail){return CameraStream::Parse(head+tail+"}",2,c);};
++  if(!parse("") || c.hasKeypoints || c.hasStagePose)throw std::runtime_error("Plain packet changed");
++  if(!parse(",\"intr\":[910,905,640,360],\"kp2d\":{\"lknee\":[600.5,400,0.9]},\"stage_from_camera\":{\"R\":[1,0,0,0,-1,0,0,0,-1],\"t\":[0,1.2,3]}"))throw std::runtime_error("2D packet rejected");
++  if(!c.hasKeypoints || !c.keypoints[2].valid || c.keypoints[2].u!=600.5 || c.keypoints[0].valid || c.intrinsics[3]!=360)throw std::runtime_error("2D keypoints not parsed");
++  if(!c.hasStagePose || c.stageRotation[4]!=-1 || c.stageTranslation[2]!=3)throw std::runtime_error("Stage pose not parsed");
++  for(const char* bad:{",\"kp2d\":{\"lknee\":[1,2,0.5]}",",\"intr\":[910,905,640,360],\"kp2d\":{\"tail\":[1,2,0.5]}",
++    ",\"intr\":[910,905,640,360],\"kp2d\":{\"lknee\":[1,2,1.5]}",",\"intr\":[0,905,640,360],\"kp2d\":{}",
++    ",\"stage_from_camera\":{\"R\":[2,0,0,0,1,0,0,0,1],\"t\":[0,0,0]}",",\"stage_from_camera\":{\"R\":[1,0,0,0,1,0,0,0,-1],\"t\":[0,0,0]}"})
++   if(parse(bad))throw std::runtime_error("Malformed 2D packet accepted");
++ }
+  CameraStream stream(argv[1]);TrackingFrame frame;frame.valid=true;frame.location_flags={3,3,3};
+  for(int i=0;i<100;i++){
+   stream.Submit(frame);
+diff --git a/skeleton/body2d.py b/skeleton/body2d.py
+new file mode 100644
+index 0000000..632ee62
+--- /dev/null
++++ b/skeleton/body2d.py
+@@ -0,0 +1,519 @@
++"""Whole-body 3D pose from one camera's 2D keypoints, without depth or a headset.
++
++Standalone counterpart of the headset's ray-based leg solve
++(prototypes/quest_g1/android/native/camera_legs2d.h) for the desktop GMR
++viewer (gmr_view.py). There is no Meta hip anchor here, so the pelvis is
++solved too:
++
++- Bone lengths are fixed from the operator's height (anthropometric ratios).
++- Hips, shoulders, elbows, wrists, knees, ankles, nose and ears must reproject
++  onto the detector's pixels (confidence-weighted, robust loss).
++- The camera's depth axis is regularised, never measured: the lower ankle
++  stands on the floor (the floor plane is known from the camera calibration),
++  the torso's camera depth is pulled toward the previous frame, and each bone
++  weakly toward a neutral standing pose as a tie-breaker.
++- Soft anatomical limits as on the headset: no backward knee bend, knee varus
++  within 5 deg, hip extension within 15 deg, thigh within 30 deg of the
++  sagittal plane; the upper arm within 5 deg behind the torso and no
++  backward elbow bend.
++
++The solve alternates between the root (pelvis, heading, torso; limbs held)
++and each limb (two bone directions; root held). Each bone has two ray-sphere
++roots, so every limb starts from every root combination, the neutral pose and
++the previous frame. The limb's forward/backward branch is chosen on the data
++and anatomy alone, never on the temporal prior: a tracked limb must not stay
++locked on the wrong branch because leaving it costs a depth jump. A small
++hysteresis keeps the previous branch on near ties; the margin is flip_gap.
++
++World frame: metres, Y up, floor at y = 0 (STAGE convention). Camera: OpenCV
++axes, p_world = R p_camera + t.
++"""
++from dataclasses import dataclass, field
++
++import numpy as np
++
++UP = np.array([0., 1., 0.])
++
++# Point order of the model. COCO indices observed for each point, if any.
++NAMES = ["pelvis", "lhip", "rhip", "lknee", "rknee", "lankle", "rankle", "chest",
++         "lshoulder", "rshoulder", "lelbow", "relbow", "lwrist", "rwrist", "nose", "lear", "rear"]
++INDEX = {n: i for i, n in enumerate(NAMES)}
++COCO = {"nose": 0, "lear": 3, "rear": 4, "lshoulder": 5, "rshoulder": 6, "lelbow": 7, "relbow": 8,
++        "lwrist": 9, "rwrist": 10, "lhip": 11, "rhip": 12, "lknee": 13, "rknee": 14, "lankle": 15, "rankle": 16}
++OBSERVED = [INDEX[n] for n in COCO]
++OBSERVED_COCO = [COCO[n] for n in COCO]
++# Face points only fix the heading: weaker than the limbs.
++POINT_WEIGHT = np.array([.5 if n in ("nose", "lear", "rear") else 1. for n in COCO])
++# Limbs: (proximal point, middle point, distal point, bone keys).
++LIMBS = [("lhip", "lknee", "lankle", "thigh", "shin"), ("rhip", "rknee", "rankle", "thigh", "shin"),
++         ("lshoulder", "lelbow", "lwrist", "upper_arm", "forearm"),
++         ("rshoulder", "relbow", "rwrist", "upper_arm", "forearm")]
++NEUTRAL = np.array([[0, -1, 0]] * 8, float)  # standing, arms hanging
++LIMB_POINTS = [[INDEX[m], INDEX[d]] for _, m, d, _, _ in LIMBS]
++LIMB_OBSERVED = [[OBSERVED.index(i) for i in pts] for pts in LIMB_POINTS]
++ROOT_POINTS = [INDEX[n] for n in ("pelvis", "lhip", "rhip", "chest", "lshoulder", "rshoulder")]
++ROBUST_SCALE = 3.    # residuals beyond 3 sigma (outlier keypoints) grow linearly
++
++
++@dataclass
++class Body:
++    """Segment lengths, m. Ratios of standing height (Drillis & Contini; Winter)."""
++    height: float = 1.75
++
++    def __post_init__(self):
++        h = self.height
++        self.thigh, self.shin = .245 * h, .246 * h
++        self.upper_arm, self.forearm = .186 * h, .146 * h
++        self.hip_half = .055 * h          # COCO hip keypoints, wider than joint centres
++        self.shoulder_half = .115 * h     # COCO shoulder keypoints
++        self.torso = .288 * h             # hip line to shoulder line
++        self.pelvis_height = .530 * h
++        self.ankle_height = .039 * h
++        self.nose_up, self.nose_forward = .11 * h, .05 * h
++        self.ear_up, self.ear_half = .10 * h, .04 * h
++
++    def lengths(self):
++        return np.array([self.thigh, self.shin] * 2 + [self.upper_arm, self.forearm] * 2)
++
++
++@dataclass
++class Camera:
++    """Pinhole camera placed in the world: p_world = R p_camera + t."""
++    R: np.ndarray
++    t: np.ndarray
++    fx: float
++    fy: float
++    cx: float
++    cy: float
++
++    def to_camera(self, p):
++        return (np.asarray(p, float) - self.t) @ self.R
++
++    def project(self, p):
++        """Pixels (N, 2) and camera depths (N,) of world points (N, 3)."""
++        c = self.to_camera(p)
++        z = c[..., 2]
++        safe = np.maximum(z, 1e-3)
++        return np.stack([self.fx * c[..., 0] / safe + self.cx, self.fy * c[..., 1] / safe + self.cy], -1), z
++
++    def ray(self, u, v):
++        d = self.R @ np.array([(u - self.cx) / self.fx, (v - self.cy) / self.fy, 1.])
++        return d / np.linalg.norm(d)
++
++    @property
++    def forward(self):
++        return self.R[:, 2]
++
++
++@dataclass
++class Options:
++    pixel_sigma: float = 6.          # detector noise at confidence 1, px
++    min_conf: float = .3             # keypoints below this are not used
++    floor_sigma: float = .03         # lower ankle on the floor, m
++    previous_depth_sigma: float = .08  # temporal pull along the camera axis, m
++    neutral_sigma: float = 2.        # tie-breaker toward the standing pose (unit-vector distance)
++    lean_sigma_deg: float = 20.
++    twist_sigma_deg: float = 15.
++    previous_turn_sigma_deg: float = 10.  # heading and torso twist per frame
++    hinge_sigma_deg: float = 4.
++    max_hip_extension_deg: float = 15.
++    hip_extension_sigma_deg: float = 3.
++    max_varus_deg: float = 5.
++    varus_sigma_deg: float = 3.
++    max_thigh_out_deg: float = 30.
++    thigh_out_sigma_deg: float = 5.
++    max_arm_extension_deg: float = 5.
++    arm_extension_sigma_deg: float = 5.
++    max_elbow_back_deg: float = 10.
++    elbow_sigma_deg: float = 4.
++    previous_max_age_s: float = .3
++    reacquire_px: float = 20.        # start fresh next frame when the fit is this far off
++    branch_hysteresis: float = .2    # keep the previous limb branch unless the other wins by this
++    rounds: int = 2                  # root/limb alternations on a fresh start (1 while tracking)
++
++
++@dataclass
++class Pose:
++    points: dict
++    pelvis_forward: np.ndarray
++    pelvis_left: np.ndarray
++    torso_up: np.ndarray
++    torso_forward: np.ndarray
++    torso_left: np.ndarray
++    reprojection_px: float          # median over used keypoints
++    flip_gap: list = field(default_factory=list)  # per limb; -1 when unknown
++    cost: float = 0.
++
++
++def _unit(v):
++    return v / np.maximum(np.linalg.norm(v, axis=-1, keepdims=True), 1e-12)
++
++
++def _dot(a, b):
++    return np.sum(a * b, axis=-1)
++
++
++def _tangent(d):
++    """Two unit vectors orthogonal to unit d (..., 3)."""
++    helper = np.where(np.abs(d[..., :1]) < .9, [1., 0, 0], [0., 1, 0])
++    a = _unit(np.cross(d, helper))
++    return a, np.cross(d, a)
++
++
++def _robust(r, c=ROBUST_SCALE):
++    """Residual whose square is the soft-L1 loss of r (outlier keypoints)."""
++    return np.sign(r) * c * np.sqrt(2 * (np.sqrt(1 + (r / c) ** 2) - 1))
++
++
++def _frames(X):
++    """Pelvis forward/left and torso up/forward/left for root parameters (..., 7)."""
++    psi, lean_f, lean_l, twist = X[..., 3], X[..., 4], X[..., 5], X[..., 6]
++    zero = np.zeros_like(psi)
++    forward = np.stack([np.sin(psi), zero, np.cos(psi)], -1)
++    left = np.stack([np.cos(psi), zero, -np.sin(psi)], -1)  # up x forward
++    torso_up = _unit(UP + lean_f[..., None] * forward + lean_l[..., None] * left)
++    f0 = np.stack([np.sin(psi + twist), zero, np.cos(psi + twist)], -1)
++    torso_forward = _unit(f0 - _dot(f0, torso_up)[..., None] * torso_up)
++    return forward, left, torso_up, torso_forward, np.cross(torso_up, torso_forward)
++
++
++def _deg(y, x):
++    return np.degrees(np.arctan2(y, x))
++
++
++def _lm(f, X, iterations=10, h=1e-6):
++    """Batched Levenberg-Marquardt: f maps (B, n) to residuals (B, m).
++
++    Every row is an independent start; rows never mix. Returns X, residuals.
++    """
++    B, n = X.shape
++    r = f(X)
++    cost = np.sum(r * r, -1)
++    lam = np.full(B, 1e-3)
++    eye = np.eye(n)
++    for _ in range(iterations):
++        before = cost.copy()
++        Xp = (X[:, None, :] + h * eye[None]).reshape(B * n, n)
++        J = (f(Xp).reshape(B, n, -1) - r[:, None, :]) / h      # (B, n, m): J transposed
++        A = J @ np.swapaxes(J, 1, 2)
++        g = np.einsum("bnm,bm->bn", J, r)
++        diag = np.diagonal(A, axis1=1, axis2=2)
++        improved = np.zeros(B, bool)
++        for _ in range(3):
++            M = A + (lam[:, None] * (1 + diag))[:, :, None] * eye[None]
++            try:
++                step = np.linalg.solve(M, -g[..., None])[..., 0]
++            except np.linalg.LinAlgError:
++                step = np.zeros_like(X)
++            Xn = X + step
++            rn = f(Xn)
++            cn = np.sum(rn * rn, -1)
++            accept = (cn < cost) & ~improved
++            X = np.where(accept[:, None], Xn, X)
++            r = np.where(accept[:, None], rn, r)
++            cost = np.where(accept, cn, cost)
++            improved |= accept
++            lam = np.where(accept, np.maximum(lam / 10, 1e-7), np.where(improved, lam, lam * 10))
++            if improved.all():
++                break
++        if np.all(before - cost <= 1e-4 * (1 + before)):
++            break  # every start has converged (or stalled)
++    return X, r
++
++
++class BodySolver:
++    def __init__(self, camera, body=None, options=None):
++        self.camera, self.body, self.o = camera, body or Body(), options or Options()
++        self.lengths = self.body.lengths()
++        self.reset()
++
++    def reset(self):
++        self.previous = None  # dict: x, directions, depth (per point), branch (per limb), time
++
++    # ---- model --------------------------------------------------------------
++    def points(self, X, directions):
++        """Model points (..., 17, 3) for root parameters (..., 7) and bones (..., 8, 3)."""
++        b = self.body
++        X = np.asarray(X, float)
++        _, left, up, tf, tl = _frames(X)
++        pelvis = X[..., :3]
++        chest = pelvis + up * b.torso
++        head = chest + up * b.ear_up
++        p = [None] * len(NAMES)
++        p[0], p[7] = pelvis, chest
++        p[1], p[2] = pelvis + left * b.hip_half, pelvis - left * b.hip_half
++        p[8], p[9] = chest + tl * b.shoulder_half, chest - tl * b.shoulder_half
++        p[14] = chest + up * b.nose_up + tf * b.nose_forward
++        p[15], p[16] = head + tl * b.ear_half, head - tl * b.ear_half
++        for k, (a, m, d, _, _) in enumerate(LIMBS):
++            p[INDEX[m]] = p[INDEX[a]] + directions[..., 2 * k, :] * self.lengths[2 * k]
++            p[INDEX[d]] = p[INDEX[m]] + directions[..., 2 * k + 1, :] * self.lengths[2 * k + 1]
++        return np.stack(p, -2)
++
++    def _pixels(self, P, observed):
++        uv, z = self.camera.project(P)
++        r = observed[:, 2:3] * (uv - observed[:, :2]) / self.o.pixel_sigma
++        return _robust(r.reshape(*r.shape[:-2], -1)), np.where(z < .1, 1e2, 0.)
++
++    def _floor(self, left_y, right_y):
++        b, o = self.body, self.o
++        return np.stack([(np.minimum(left_y, right_y) - b.ankle_height) / o.floor_sigma,
++                         np.maximum(0., b.ankle_height - .01 - left_y) / .01,
++                         np.maximum(0., b.ankle_height - .01 - right_y) / .01], -1)
++
++    def _limits(self, k, frames, d1, d2):
++        o = self.o
++        forward, left, tu, tf, _ = frames
++        if k < 2:
++            axis = _unit(left - _dot(d1, left)[..., None] * d1)
++            back = np.cross(axis, d1)
++            flex = _deg(_dot(d2, back), _dot(d2, d1))
++            ext = _deg(-_dot(d1, forward), -d1[..., 1])
++            varus = np.degrees(np.arcsin(np.clip(_dot(d2, axis), -1, 1)))
++            out = np.degrees(np.arcsin(np.clip(_dot(d1, left), -1, 1)))
++            return np.stack([np.minimum(0., flex) / o.hinge_sigma_deg,
++                             np.maximum(0., ext - o.max_hip_extension_deg) / o.hip_extension_sigma_deg,
++                             np.maximum(0., np.abs(varus) - o.max_varus_deg) / o.varus_sigma_deg,
++                             np.maximum(0., np.abs(out) - o.max_thigh_out_deg) / o.thigh_out_sigma_deg], -1)
++        ext = _deg(-_dot(d1, tf), -_dot(d1, tu))
++        # Elbow: flexes toward the front of the upper arm (forward when it
++        # hangs, up when it points forward), never backward. Vanishes when
++        # the upper arm points sideways along the hinge axis.
++        _, tl = frames[3], frames[4]
++        axis = tl - _dot(d1, tl)[..., None] * d1
++        weight = np.linalg.norm(axis, axis=-1)
++        back = np.cross(_unit(axis), d1)
++        bend = _deg(_dot(d2, back), _dot(d2, d1))
++        return np.stack([np.maximum(0., ext - o.max_arm_extension_deg) / o.arm_extension_sigma_deg,
++                         weight * np.maximum(0., bend - o.max_elbow_back_deg) / o.elbow_sigma_deg], -1)
++
++    # ---- root: pelvis, heading, torso with the limbs held --------------------
++    def _root_residuals(self, X, directions, observed):
++        o = self.o
++        P = self.points(X, directions)
++        pixels, behind = self._pixels(P[..., OBSERVED, :], observed)
++        out = [pixels, behind, self._floor(P[..., 5, 1], P[..., 6, 1]),
++               np.degrees(X[..., 4:6]) / o.lean_sigma_deg, np.degrees(X[..., 6:7]) / o.twist_sigma_deg]
++        if self.previous is not None:
++            z = self.camera.to_camera(P[..., ROOT_POINTS, :])[..., 2]
++            out.append((z - self.previous["depth"][ROOT_POINTS]) / o.previous_depth_sigma)
++        return np.concatenate(out, -1)
++
++    def _fit_root(self, X, directions, observed):
++        X, r = _lm(lambda v: self._root_residuals(v, directions, observed), np.atleast_2d(X), 12)
++        return X, np.sum(r * r, -1)
++
++    # ---- joint polish: root and every bone together, within the chosen branches
++    def _joint_residuals(self, V, base, observed):
++        """V (B, 7 + 16): root parameters and tangent steps from base (8, 3, 3)."""
++        o = self.o
++        X, T = V[:, :7], V[:, 7:].reshape(-1, 8, 2)
++        D = _unit(base[:, 0] + T[..., :1] * base[:, 1] + T[..., 1:] * base[:, 2])
++        P = self.points(X, D)
++        pixels, behind = self._pixels(P[:, OBSERVED], observed)
++        frames = _frames(X)
++        out = [pixels, behind, self._floor(P[:, 5, 1], P[:, 6, 1]),
++               np.degrees(X[:, 4:6]) / o.lean_sigma_deg, np.degrees(X[:, 6:7]) / o.twist_sigma_deg,
++               (D - NEUTRAL).reshape(len(V), -1) / o.neutral_sigma]
++        for k in range(4):
++            out.append(self._limits(k, frames, D[:, 2 * k], D[:, 2 * k + 1]))
++        if self.previous is not None:
++            # Root only: on the limbs the pull would drag a bone back across
++            # to the previous frame's branch.
++            z = self.camera.to_camera(P[:, ROOT_POINTS])[..., 2]
++            out.append((z - self.previous["depth"][ROOT_POINTS]) / o.previous_depth_sigma)
++            turn = np.degrees(X[:, 3:7:3] - self.previous["x"][3:7:3])
++            out.append((turn + 180) % 360 - 180)
++            out[-1] = out[-1] / o.previous_turn_sigma_deg
++        return np.concatenate(out, -1)
++
++    def _fit_joint(self, x, directions, observed):
++        a, b = _tangent(directions)
++        base = np.stack([directions, a, b], 1)
++        V, r = _lm(lambda v: self._joint_residuals(v, base, observed), np.r_[x, np.zeros(16)][None], 10)
++        T = V[0, 7:].reshape(8, 2)
++        return V[0, :7], _unit(directions + T[:, :1] * a + T[:, 1:] * b), float(np.sum(r * r))
++
++    # ---- limbs: two bone directions with the root held -----------------------
++    def _limb_residuals(self, T, k, base, start, frames, other_y, observed):
++        """T (B, 4) tangent steps from base (B, 6, 3): start dirs and tangents."""
++        d1 = _unit(base[:, 0] + T[:, :1] * base[:, 2] + T[:, 1:2] * base[:, 3])
++        d2 = _unit(base[:, 1] + T[:, 2:3] * base[:, 4] + T[:, 3:4] * base[:, 5])
++        mid = start + d1 * self.lengths[2 * k]
++        end = mid + d2 * self.lengths[2 * k + 1]
++        pixels, behind = self._pixels(np.stack([mid, end], 1), observed[LIMB_OBSERVED[k]])
++        out = [pixels, behind,
++               np.concatenate([d1 - NEUTRAL[2 * k], d2 - NEUTRAL[2 * k + 1]], -1) / self.o.neutral_sigma,
++               self._limits(k, frames, d1, d2)]
++        if k == 0:
++            out.append(self._floor(end[:, 1], np.full(len(T), other_y)))
++        elif k == 1:
++            out.append(self._floor(np.full(len(T), other_y), end[:, 1]))
++        return np.concatenate(out, -1), d1, d2
++
++    def _fit_limb(self, k, x, directions, observed, kp):
++        """Directions of limb k with the root held, its branch and the flip gap.
++
++        Fits use data and anatomy only. The temporal prior never decides the
++        branch: leaving a wrong branch would cost a depth jump, so it would
++        lock in. It only keeps the previous branch on near ties (hysteresis).
++        """
++        p = self.points(x, directions)
++        frames = _frames(x)
++        a, m, d, _, _ = LIMBS[k]
++        start = p[INDEX[a]]
++        other = p[6, 1] if k == 0 else p[5, 1]
++        starts = [directions[2 * k:2 * k + 2], NEUTRAL[2 * k:2 * k + 2]]
++        if self.previous is not None:
++            starts.append(self.previous["directions"][2 * k:2 * k + 2])
++        cm, cd = kp[COCO[m]], kp[COCO[d]]
++        ray = None
++        if cm[2] >= self.o.min_conf:
++            ray = self.camera.ray(cm[0], cm[1])
++            mids = _ray_sphere(self.camera.t, ray, start, self.lengths[2 * k])
++            for mid in mids:
++                ends = ([mid + NEUTRAL[2 * k + 1] * self.lengths[2 * k + 1]] if cd[2] < self.o.min_conf else
++                        _ray_sphere(self.camera.t, self.camera.ray(cd[0], cd[1]), mid, self.lengths[2 * k + 1]))
++                for end in ends:
++                    starts.append(np.stack([_unit(mid - start), _unit(end - mid)]))
++        S = np.stack(starts)
++        a1, b1 = _tangent(S[:, 0])
++        a2, b2 = _tangent(S[:, 1])
++        base = np.stack([S[:, 0], S[:, 1], a1, b1, a2, b2], 1)
++        args = (k, base, start, frames, other, observed)
++
++        def f(T):
++            rows = len(T) // len(base)
++            return self._limb_residuals(T, k, np.repeat(base, rows, 0), start, frames, other, observed)[0]
++        T, r = _lm(f, np.zeros((len(base), 4)), 8)
++        _, d1, d2 = self._limb_residuals(T, *args)
++        cost = np.sum(r * r, -1)
++        if ray is None:
++            branch = np.zeros(len(T), int)
++        else:
++            split = (start - self.camera.t) @ ray
++            branch = (((start + d1 * self.lengths[2 * k]) - self.camera.t) @ ray < split).astype(int)
++        best = {}
++        for i in np.argsort(cost):
++            best.setdefault(int(branch[i]), i)
++        chosen = min(best, key=lambda b: cost[best[b]])
++        if self.previous is not None and ray is not None:
++            kept = self.previous["branch"][k]
++            if kept in best and cost[best[kept]] <= cost[best[chosen]] + self.o.branch_hysteresis:
++                chosen = kept
++        gap = float(cost[best[1 - chosen]] - cost[best[chosen]]) if len(best) == 2 else -1.
++        i = best[chosen]
++        return np.stack([d1[i], d2[i]]), chosen, gap
++
++    # ---- initialisation -----------------------------------------------------
++    def _root_guess(self, kp):
++        """Pelvis and heading from the hips, ankles on the floor and the face."""
++        b, cam = self.body, self.camera
++        mid = (kp[11][:2] + kp[12][:2]) / 2
++        depth = None
++        feet = []
++        for i in (15, 16):
++            if kp[i][2] >= self.o.min_conf:
++                d = cam.ray(kp[i][0], kp[i][1])
++                if d[1] < -1e-3:
++                    feet.append(cam.t + (b.ankle_height - cam.t[1]) / d[1] * d)
++        if feet:
++            depth = float(np.mean([cam.to_camera(f)[2] for f in feet]))
++        elif min(kp[5][2], kp[6][2]) >= self.o.min_conf:
++            torso_px = np.linalg.norm((kp[5][:2] + kp[6][:2]) / 2 - mid)
++            if torso_px > 5:
++                depth = cam.fy * b.torso / torso_px
++        if depth is None or not np.isfinite(depth) or depth < .3:
++            depth = 3.
++        ray_camera = np.array([(mid[0] - cam.cx) / cam.fx, (mid[1] - cam.cy) / cam.fy, 1.])
++        pelvis = cam.t + cam.R @ (ray_camera * depth)
++        to_camera = cam.t - pelvis
++        to_camera[1] = 0
++        to_camera = _unit(to_camera)
++        # Facing the camera when the nose is seen.
++        f = to_camera if kp[0][2] >= self.o.min_conf else -to_camera
++        return np.r_[pelvis, np.arctan2(f[0], f[2]), 0., 0., 0.]
++
++    # ---- solve --------------------------------------------------------------
++    def solve(self, keypoints, now):
++        """keypoints: {coco index: (u, v, conf)} undistorted pixels. Pose or None."""
++        kp = np.zeros((17, 3))
++        for i, value in keypoints.items():
++            if 0 <= int(i) < 17:
++                kp[int(i)] = value
++        if self.previous is not None and now - self.previous["time"] > self.o.previous_max_age_s:
++            self.reset()
++        observed = kp[OBSERVED_COCO].copy()
++        used = observed[:, 2] >= self.o.min_conf
++        observed[:, 2] = np.where(used, np.sqrt(np.clip(observed[:, 2], 1e-3, 1)) * POINT_WEIGHT, 0.)
++        if not (kp[11][2] >= self.o.min_conf and kp[12][2] >= self.o.min_conf) or used.sum() < 6:
++            return None
++        if self.previous is not None:
++            starts = [(self.previous["x"].copy(), self.previous["directions"].copy())]
++        else:
++            guess = self._root_guess(kp)
++            mirrored = guess.copy()
++            mirrored[3] += np.pi  # front/back when the face is not decisive
++            starts = [(guess, NEUTRAL.copy()), (mirrored, NEUTRAL.copy())]
++        best = None
++        for x, directions in starts:
++            branches, gaps = [0] * 4, [-1.] * 4
++            for _ in range(self.o.rounds if self.previous is None else 1):
++                X, _ = self._fit_root(x, directions, observed)
++                x = X[0]
++                for k in range(4):
++                    pair, branches[k], gaps[k] = self._fit_limb(k, x, directions, observed, kp)
++                    directions[2 * k:2 * k + 2] = pair
++            x, directions, cost = self._fit_joint(x, directions, observed)
++            if best is None or cost < best[0]:
++                best = (cost, x, directions, list(branches), list(gaps))
++        cost, x, directions, branches, gaps = best
++        p = self.points(x, directions)
++        uv, _ = self.camera.project(p[OBSERVED])
++        err = np.linalg.norm(uv - kp[OBSERVED_COCO, :2], axis=1)[used]
++        median = float(np.median(err))
++        if median > self.o.reacquire_px:
++            self.reset()  # lost: start fresh next frame
++        else:
++            self.previous = dict(x=x.copy(), directions=directions.copy(), branch=branches,
++                                 depth=self.camera.to_camera(p)[:, 2], time=now)
++        forward, left, tu, tf, tl = _frames(x)
++        return Pose({n: p[i] for i, n in enumerate(NAMES)}, forward, left, tu, tf, tl, median, gaps, cost)
++
++
++def _ray_sphere(origin, direction, centre, radius):
++    oc = origin - centre
++    b = oc @ direction
++    c = oc @ oc - radius * radius
++    disc = b * b - c
++    if disc < 0:
++        return [origin + direction * max(0., -b)]
++    s = np.sqrt(disc)
++    out = [origin + direction * t for t in (-b - s, -b + s) if t > 0]
++    return out or [origin + direction * max(0., -b)]
++
++
++def camera_from_gravity(up_camera, height, fx, fy, cx, cy):
++    """Camera at `height` m above the floor, levelled by gravity.
++
++    up_camera: the world's up direction in camera axes (e.g. the D435i
++    accelerometer at rest). World heading follows the camera: world -Z is
++    the camera's forward direction projected on the floor.
++    """
++    up = _unit(np.asarray(up_camera, float))
++    forward = np.array([0., 0., 1.]) - up[2] * up
++    if np.linalg.norm(forward) < 1e-3:
++        raise ValueError("Camera looks straight up or down")
++    forward = _unit(forward)
++    back = -forward
++    right = np.cross(up, back)
++    # Rows: world axes in camera coordinates; R maps camera to world.
++    R = np.stack([right, up, back])
++    return Camera(R, np.array([0., height, 0.]), fx, fy, cx, cy)
++
++
++def camera_from_pitch(pitch_deg, height, fx, fy, cx, cy):
++    """Camera with no roll, tilted down by pitch_deg, at height m."""
++    a = np.radians(pitch_deg)
++    # Up in camera axes (y down, z forward): a downward tilt sees up partly along -z.
++    return camera_from_gravity([0., -np.cos(a), -np.sin(a)], height, fx, fy, cx, cy)
+diff --git a/skeleton/gmr_live.py b/skeleton/gmr_live.py
+new file mode 100644
+index 0000000..ebe9682
+--- /dev/null
++++ b/skeleton/gmr_live.py
+@@ -0,0 +1,314 @@
++"""GMR retargeting of a camera-only body pose (body2d.Pose) onto the G1, and its render.
++
++Uses the pinned upstream GMR/Mink solver in prototypes/quest_g1/vendor/GMR
++(the APK runs a native port checked against it by check_gmr_parity.py), with
++its xrobot -> G1 task tables. Like the headset adapter (meta_retarget.cpp),
++targets are aligned to the robot's own rest pose instead of the xrobot frame
++conventions: each segment's frame is built from joint positions, and a task
++target is the segment's rotation from a T pose applied to the robot link's
++orientation in the same T pose (the headset's calibration pose: shoulder roll
+++-90 deg, elbows 90 deg). Both T-pose frames are built by the same function,
++so no frame convention has to match a human skeleton's.
++
++Positions are the human's, scaled by robot/human limb length (legs and torso
++by leg length, arms by arm length), with the floors aligned. World mapping:
++human world (Y up, body2d) -> robot world (Z up) by HUMAN_TO_ROBOT, then that
++scale. The camera that saw the operator maps the same way, so the robot can be
++rendered from the same viewpoint.
++"""
++import importlib.util
++import sys
++import types
++from pathlib import Path
++
++import mujoco
++import numpy as np
++
++GMR_ROOT = Path(__file__).resolve().parents[1] / "prototypes/quest_g1/vendor/GMR"
++HUMAN_TO_ROBOT = np.array([[0., 0., -1.], [-1., 0., 0.], [0., 1., 0.]])  # (x, y, z)_W -> (-z, -x, y)
++Z = np.array([0., 0., 1.])
++
++# xrobot human body -> (robot task body, segment, human point).
++TASKS = {
++    "Pelvis": ("pelvis", "pelvis", "pelvis"),
++    "Spine3": ("torso_link", "torso", "chest"),
++    "Left_Hip": ("left_hip_yaw_link", "lthigh", "lhip"),
++    "Right_Hip": ("right_hip_yaw_link", "rthigh", "rhip"),
++    "Left_Knee": ("left_knee_link", "lshin", "lknee"),
++    "Right_Knee": ("right_knee_link", "rshin", "rknee"),
++    "Left_Foot": ("left_toe_link", "lfoot", "lankle"),
++    "Right_Foot": ("right_toe_link", "rfoot", "rankle"),
++    "Left_Shoulder": ("left_shoulder_yaw_link", "lupper", "lshoulder"),
++    "Right_Shoulder": ("right_shoulder_yaw_link", "rupper", "rshoulder"),
++    "Left_Elbow": ("left_elbow_link", "lfore", "lelbow"),
++    "Right_Elbow": ("right_elbow_link", "rfore", "relbow"),
++    "Left_Wrist": ("left_wrist_yaw_link", "lfore", "lwrist"),
++    "Right_Wrist": ("right_wrist_yaw_link", "rfore", "rwrist"),
++}
++# Robot bodies standing in for the human joints at rest.
++ROBOT_POINTS = {
++    "pelvis": "pelvis", "lhip": "left_hip_pitch_link", "rhip": "right_hip_pitch_link",
++    "lknee": "left_knee_link", "rknee": "right_knee_link",
++    "lankle": "left_ankle_roll_link", "rankle": "right_ankle_roll_link",
++    "lshoulder": "left_shoulder_pitch_link", "rshoulder": "right_shoulder_pitch_link",
++    "lelbow": "left_elbow_link", "relbow": "right_elbow_link",
++    "lwrist": "left_wrist_yaw_link", "rwrist": "right_wrist_yaw_link",
++}
++STANDING_PELVIS_Z = .793  # G1 pelvis above the floor, legs straight
++
++
++def _unit(v):
++    return v / max(np.linalg.norm(v), 1e-12)
++
++
++def _orthogonal(v, axis):
++    return v - (v @ axis) * axis
++
++
++def _frame(x, y, z):
++    return np.stack([x, y, z], 1)
++
++
++def _hinge(proximal, distal, natural):
++    """Hinge axis cross(proximal, distal), signed like `natural`.
++
++    A straight limb has no bend plane: it takes `natural`, the axis of a
++    slight flexion in its usual direction, so the twist about the bone stays
++    continuous. A slightly overextended joint keeps the flexion sign.
++    """
++    natural = _unit(_orthogonal(natural, proximal))
++    normal = np.cross(proximal, distal)
++    size = np.linalg.norm(normal)
++    if size < 1e-9:
++        return natural
++    normal = normal / size
++    if normal @ natural < 0:
++        normal = -normal
++    w = min(1., size / np.sin(np.radians(20)))
++    return _unit(w * normal + (1 - w) * natural)
++
++
++def _arm_natural(upper, left, up, side):
++    """Elbow axis of a slight flexion, continuous over the arm's range.
++
++    In the sagittal plane it is the torso's lateral axis (pointing right for
++    either arm); an arm raised sideways carries it about the forward axis to
++    down (left arm) or up (right arm) in the T pose, where the lateral axis
++    runs along the arm.
++    """
++    lateral = _orthogonal(-left, upper)
++    w = min(1., np.linalg.norm(lateral) ** 2)
++    vertical = _orthogonal(-up if side == "l" else up, upper)
++    if np.linalg.norm(vertical) < 1e-9:
++        return _unit(lateral)
++    if w < 1e-12:
++        return _unit(vertical)
++    return _unit(w * _unit(lateral) + (1 - w) * _unit(vertical))
++
++
++def segment_frames(p):
++    """Rotation (columns x, y, z) of every segment from joint positions (Z up)."""
++    out = {}
++    up = _unit(p["chest"] - p["pelvis"])
++    left = _unit(p["lhip"] - p["rhip"])
++    pz = _unit(_orthogonal(Z, left))
++    out["pelvis"] = _frame(np.cross(left, pz), left, pz)
++    sl = _unit(p["lshoulder"] - p["rshoulder"])
++    tz = _unit(_orthogonal(up, sl))
++    out["torso"] = _frame(np.cross(sl, tz), sl, tz)
++    foot_y = _unit(_orthogonal(left, Z))
++    out["lfoot"] = out["rfoot"] = _frame(np.cross(foot_y, Z), foot_y, Z)
++    for side in "lr":
++        thigh = _unit(p[side + "knee"] - p[side + "hip"])
++        shin = _unit(p[side + "ankle"] - p[side + "knee"])
++        # The knee hinge is the pelvis's lateral axis (flexion moves the shin back).
++        hinge = _hinge(thigh, shin, left)
++        for name, a in ((side + "thigh", thigh), (side + "shin", shin)):
++            y = _unit(_orthogonal(hinge, a))
++            out[name] = _frame(np.cross(y, -a), y, -a)
++        upper = _unit(p[side + "elbow"] - p[side + "shoulder"])
++        fore = _unit(p[side + "wrist"] - p[side + "elbow"])
++        hinge = _hinge(upper, fore, _arm_natural(upper, sl, tz, side))
++        for name, a in ((side + "upper", upper), (side + "fore", fore)):
++            y = _unit(_orthogonal(hinge, a))
++            out[name] = _frame(np.cross(y, -a), y, -a)
++    return out
++
++
++def canonical_t_pose(body):
++    """Human T pose with the operator's lengths, facing +X (Z up), pelvis at 0."""
++    p = {"pelvis": np.zeros(3), "chest": Z * body.torso}
++    for side, y in (("l", 1.), ("r", -1.)):
++        p[side + "hip"] = np.array([0., body.hip_half * y, 0.])
++        p[side + "knee"] = p[side + "hip"] - Z * body.thigh
++        p[side + "ankle"] = p[side + "knee"] - Z * body.shin
++        p[side + "shoulder"] = p["chest"] + np.array([0., body.shoulder_half * y, 0.])
++        p[side + "elbow"] = p[side + "shoulder"] + np.array([0., body.upper_arm * y, 0.])
++        p[side + "wrist"] = p[side + "elbow"] + np.array([0., body.forearm * y, 0.])
++    return p
++
++
++def load_gmr(height):
++    """Upstream GeneralMotionRetargeting('xrobot', 'unitree_g1'), imported like check_gmr_parity.py."""
++    name = "gmr_live_upstream"
++    if name + ".motion_retarget" not in sys.modules:
++        package = types.ModuleType(name)
++        package.__path__ = [str(GMR_ROOT / "general_motion_retargeting")]
++        sys.modules[name] = package
++        spec = importlib.util.spec_from_file_location(name + ".motion_retarget",
++                                                      Path(package.__path__[0]) / "motion_retarget.py")
++        module = importlib.util.module_from_spec(spec)
++        sys.modules[spec.name] = module
++        spec.loader.exec_module(module)
++    module = sys.modules[name + ".motion_retarget"]
++
++    class AlignedTargets(module.GeneralMotionRetargeting):
++        # Targets arrive already aligned to the robot links (task body -> (pos, R)):
++        # upstream scaling and xrobot frame offsets are bypassed, the IK is not.
++        def update_targets(self, targets, offset_to_ground=False):
++            for table in (self.human_body_to_task1, self.human_body_to_task2):
++                for human, task in table.items():
++                    position, rotation = targets[human]
++                    task.set_target(module.mink.SE3.from_rotation_and_translation(
++                        module.mink.SO3.from_matrix(rotation), position))
++
++    return AlignedTargets("xrobot", "unitree_g1", actual_human_height=height, verbose=False)
++
++
++class Retargeter:
++    def __init__(self, body, height=None):
++        """body: body2d.Body (bone lengths); the robot is driven in its proportions."""
++        import contextlib
++        import io
++        with contextlib.redirect_stdout(io.StringIO()):  # upstream prints its tables
++            self.gmr = load_gmr(height or body.height)
++        self.model = self.gmr.model
++        self.data = mujoco.MjData(self.model)
++        self.body = body
++        self._calibrate()
++
++    def _fk(self, qpos):
++        self.data.qpos[:] = qpos
++        mujoco.mj_kinematics(self.model, self.data)
++        return ({k: self.data.body(v).xpos.copy() for k, v in ROBOT_POINTS.items()},
++                {h: (self.data.body(t).xpos.copy(), self.data.body(t).xmat.reshape(3, 3).copy())
++                 for h, (t, _, _) in TASKS.items()})
++
++    def _calibrate(self):
++        m = self.model
++        q = np.zeros(m.nq)
++        q[2], q[3] = STANDING_PELVIS_Z, 1.
++        points, _ = self._fk(q)
++        b = self.body
++        leg = np.linalg.norm(points["lknee"] - points["lhip"]) + np.linalg.norm(points["lankle"] - points["lknee"])
++        arm = (np.linalg.norm(points["lelbow"] - points["lshoulder"])
++               + np.linalg.norm(points["lwrist"] - points["lelbow"]))
++        self.leg_scale = leg / (b.thigh + b.shin)
++        self.arm_scale = arm / (b.upper_arm + b.forearm)
++        # Robot hip centre height for the human pelvis (hip line) on the floor.
++        self.floor_offset = (points["lhip"][2] + points["rhip"][2]) / 2 - self.leg_scale * b.pelvis_height
++        # Rest: arms out sideways, elbows bent (the headset's calibration pose).
++        for side, sign in (("left", 1), ("right", -1)):
++            q[m.jnt_qposadr[m.joint(side + "_shoulder_roll_joint").id]] = sign * np.pi / 2
++            q[m.jnt_qposadr[m.joint(side + "_elbow_joint").id]] = np.pi / 2
++        points, tasks = self._fk(q)
++        # Segment frames of the matching human T pose: legs straight down, arms
++        # straight out sideways, facing +X. Not the robot's own link points:
++        # G1 links have offsets (the hip-to-knee line leans 9 deg outward).
++        human = canonical_t_pose(self.body)
++        rest = segment_frames(human)
++        human = self._scaled(human)
++        self.rest_q = q.copy()
++        # Per task: rest link rotation, rest segment frame, and the link origin
++        # in its own frame relative to the scaled human point, as on the headset
++        # (meta_retarget.cpp): the difference between robot and human geometry
++        # rides with the link.
++        hips = (points["lhip"] + points["rhip"]) / 2
++        self.rest = {}
++        for name, (_, segment, point) in TASKS.items():
++            position, rotation = tasks[name]
++            self.rest[name] = (rotation, rest[segment], rotation.T @ (position - hips - human[point]))
++        self.gmr.configuration.update(q)
++
++    def _scaled(self, p):
++        """Points relative to the pelvis, in robot proportions: legs and torso by
++        leg length, arms by arm length about their shoulders."""
++        out = {n: self.leg_scale * (v - p["pelvis"]) for n, v in p.items()}
++        for side in "lr":
++            shoulder = p[side + "shoulder"]
++            for joint in ("elbow", "wrist"):
++                out[side + joint] = out[side + "shoulder"] + self.arm_scale * (p[side + joint] - shoulder)
++        return out
++
++    def reset(self):
++        self.gmr.configuration.update(self.rest_q.copy())
++
++    def to_robot(self, p_world):
++        """Human world point (Y up) to the scaled robot world."""
++        r = self.leg_scale * (HUMAN_TO_ROBOT @ p_world)
++        r[2] += self.floor_offset
++        return r
++
++    def targets(self, pose):
++        """Task targets {xrobot body: (position, rotation)} for a body2d.Pose."""
++        world = {n: HUMAN_TO_ROBOT @ v for n, v in pose.points.items()}
++        frames = segment_frames(world)
++        relative = self._scaled(world)
++        root = self.to_robot(pose.points["pelvis"])
++        out = {}
++        for name, (_, segment, point) in TASKS.items():
++            link_rest, segment_rest, local = self.rest[name]
++            rotation = frames[segment] @ segment_rest.T @ link_rest
++            out[name] = (root + relative[point] + rotation @ local, rotation)
++        return out
++
++    def solve(self, pose):
++        """Robot qpos for a body2d.Pose (the solver warm-starts from the last one)."""
++        targets = self.targets(pose)
++        q = self.gmr.configuration.q
++        position, rotation = targets["Pelvis"]
++        current = np.zeros(9)
++        mujoco.mju_quat2Mat(current, q[3:7])
++        turn = rotation @ current.reshape(3, 3).T
++        # The IK is local: a large turn (first frame, re-acquired operator)
++        # starts from the rest pose at the target heading instead.
++        if np.degrees(np.arccos(np.clip((np.trace(turn) - 1) / 2, -1, 1))) > 60:
++            start = self.rest_q.copy()
++            start[:3] = position
++            mujoco.mju_mat2Quat(start[3:7], rotation.ravel())
++            self.gmr.configuration.update(start)
++        return self.gmr.retarget(targets)
++
++    def camera_view(self, camera):
++        """MuJoCo free-camera parameters matching a body2d.Camera."""
++        position = self.to_robot(camera.t)
++        forward = HUMAN_TO_ROBOT @ camera.forward
++        distance = 3. * self.leg_scale
++        return dict(lookat=position + forward * distance, distance=distance,
++                    azimuth=float(np.degrees(np.arctan2(forward[1], forward[0]))),
++                    elevation=float(np.degrees(np.arcsin(np.clip(forward[2], -1, 1)))),
++                    fovy=float(np.degrees(2 * np.arctan(camera.cy / camera.fy))))
++
++
++class RobotView:
++    """Offscreen MuJoCo render of the retargeted robot from the operator's camera."""
++
++    def __init__(self, model, width=640, height=360):
++        self.model, self.data = model, mujoco.MjData(model)
++        self.renderer = mujoco.Renderer(model, height, width)
++        self.camera = mujoco.MjvCamera()
++        self.camera.type = mujoco.mjtCamera.mjCAMERA_FREE
++
++    def render(self, qpos, view):
++        self.data.qpos[:] = qpos
++        mujoco.mj_forward(self.model, self.data)
++        self.model.vis.global_.fovy = view["fovy"]
++        self.camera.lookat[:] = view["lookat"]
++        self.camera.distance = view["distance"]
++        self.camera.azimuth = view["azimuth"]
++        self.camera.elevation = view["elevation"]
++        self.renderer.update_scene(self.data, self.camera)
++        return self.renderer.render()
++
++    def close(self):
++        self.renderer.close()
+diff --git a/skeleton/gmr_view.py b/skeleton/gmr_view.py
+new file mode 100644
+index 0000000..56ef16e
+--- /dev/null
++++ b/skeleton/gmr_view.py
+@@ -0,0 +1,360 @@
++"""Live viewer: GMR driven by one RGB camera's 2D keypoints, no depth, no headset.
++
++Left: the colour frame with YOLO keypoints (dots) and the solved body
++reprojected (lines). Right: the G1 after GMR, rendered from the same camera
++viewpoint, so both panels show the same pose from the same place.
++
++Pipeline per frame: YOLO11-pose -> person track -> undistorted 2D keypoints
++-> body2d.BodySolver (bones from --height, depth axis regularised, floor from
++the camera calibration) -> One-Euro -> gmr_live.Retargeter (upstream GMR/Mink)
++-> MuJoCo render.
++
++Camera placement (the floor is what fixes the depth axis):
++  - default: D435i accelerometer for gravity, plus --camera-height (lens
++    above the floor, m). Without an IMU reading, --pitch (deg down) is used.
++  - --session session.json: the AprilTag camera->STAGE lock from pose_yolo.py.
++
++Run on macOS (RealSense needs sudo there):
++  sudo python gmr_view.py s --camera-height 1.20 --height 1.78
++Without a camera, a synthetic operator checks the robot side:
++  python gmr_view.py --source synthetic
++
++Keys: q quit, r reset the solve, [ ] camera height -/+ 2 cm,
++; ' pitch -/+ 1 deg (when not from the IMU or a session).
++Stand 2.5-4 m away, whole body in view, nobody else in frame. A camera
++30-45 deg off your front resolves forward/backward leg motion far better.
++"""
++import argparse
++import json
++import os
++import sys
++import time
++from pathlib import Path
++
++import cv2
++import numpy as np
++
++from body2d import COCO, INDEX, NAMES, Body, BodySolver, Camera, camera_from_gravity, camera_from_pitch
++from keypoints2d import wire_keypoints
++
++WINDOW = "GMR from 2D keypoints"
++BONES = [("lhip", "rhip"), ("lshoulder", "rshoulder"), ("lhip", "lshoulder"), ("rhip", "rshoulder"),
++         ("lhip", "lknee"), ("lknee", "lankle"), ("rhip", "rknee"), ("rknee", "rankle"),
++         ("lshoulder", "lelbow"), ("lelbow", "lwrist"), ("rshoulder", "relbow"), ("relbow", "rwrist")]
++LEFT, RIGHT, CENTRE = (80, 200, 60), (60, 120, 255), (235, 235, 235)  # BGR, as pose_yolo.py
++LIMB_NAMES = ["L leg", "R leg", "L arm", "R arm"]
++
++
++class OneEuro:
++    """fusion.OneEuro without its pyrealsense2 import (the synthetic source runs without the SDK)."""
++
++    def __init__(self, mincutoff, beta, dcutoff=1.):
++        self.mc, self.beta, self.dc = mincutoff, beta, dcutoff
++        self.x = self.t = None
++        self.dx = np.zeros(3)
++
++    @staticmethod
++    def _alpha(cutoff, dt):
++        return 1 / (1 + 1 / (2 * np.pi * cutoff * dt))
++
++    def __call__(self, x, t):
++        if self.x is None or not 0 < t - self.t <= .5:
++            self.x, self.t, self.dx = x.copy(), t, np.zeros(3)
++            return x.copy()
++        dt = t - self.t
++        self.dx = self.dx + self._alpha(self.dc, dt) * ((x - self.x) / dt - self.dx)
++        cutoff = self.mc + self.beta * np.linalg.norm(self.dx)
++        self.x, self.t = self.x + self._alpha(cutoff, dt) * (x - self.x), t
++        return self.x.copy()
++
++
++def colour(a, b):
++    return LEFT if a[0] == "l" and b[0] == "l" else RIGHT if a[0] == "r" and b[0] == "r" else CENTRE
++
++
++def draw_overlay(image, keypoints, pose, camera, min_conf):
++    """Detected keypoints as dots, the solved body reprojected as lines."""
++    if pose is not None:
++        uv, z = camera.project(np.array([pose.points[n] for n in NAMES]))
++        for a, b in BONES:
++            if z[INDEX[a]] > .1 and z[INDEX[b]] > .1:
++                cv2.line(image, tuple(np.int32(uv[INDEX[a]])), tuple(np.int32(uv[INDEX[b]])), colour(a, b), 3,
++                         cv2.LINE_AA)
++    for i, (u, v, c) in keypoints.items():
++        if c >= min_conf:
++            cv2.circle(image, (int(u), int(v)), 6, (0, 0, 0), -1, cv2.LINE_AA)
++            cv2.circle(image, (int(u), int(v)), 4, (255, 255, 255), -1, cv2.LINE_AA)
++
++
++def text(image, lines, origin=(12, 24), scale=.5, colour_=(60, 255, 60)):
++    """Lines on a dark band (an outline stroke would widen Hershey glyph spacing)."""
++    step = int(24 * scale / .5)
++    width = max(cv2.getTextSize(line, cv2.FONT_HERSHEY_SIMPLEX, scale, 1)[0][0] for line in lines)
++    top = origin[1] - step + 6
++    band = image[max(0, top):origin[1] + step * (len(lines) - 1) + 8, max(0, origin[0] - 6):origin[0] + width + 6]
++    band[:] = (band * .35).astype(np.uint8)
++    for n, line in enumerate(lines):
++        cv2.putText(image, line, (origin[0], origin[1] + n * step), cv2.FONT_HERSHEY_SIMPLEX, scale, colour_, 1,
++                    cv2.LINE_AA)
++
++
++class Placement:
++    """Camera in the world: gravity or pitch plus height, or a saved STAGE lock."""
++
++    def __init__(self, args, intrinsics):
++        self.args, self.intrinsics = args, intrinsics
++        self.height, self.pitch, self.up = args.camera_height, args.pitch, None
++        self.session = None
++        if args.session:
++            data = json.loads(Path(args.session).read_text(encoding="utf-8"))
++            self.session = (np.asarray(data["R"], float), np.asarray(data["t"], float))
++
++    def camera(self):
++        fx, fy, cx, cy = self.intrinsics
++        if self.session is not None:
++            return Camera(self.session[0], self.session[1], fx, fy, cx, cy)
++        if self.up is not None:
++            return camera_from_gravity(self.up, self.height, fx, fy, cx, cy)
++        return camera_from_pitch(self.pitch, self.height, fx, fy, cx, cy)
++
++    def describe(self):
++        if self.session is not None:
++            return "camera: AprilTag STAGE lock"
++        cam = self.camera()
++        tilt = np.degrees(np.arcsin(-cam.forward[1]))
++        source = "IMU" if self.up is not None else "--pitch"
++        return f"camera: {self.height:.2f} m high, {tilt:.1f} deg down ({source})"
++
++
++# ---- sources ------------------------------------------------------------------
++class RealSense:
++    def __init__(self, args):
++        import pyrealsense2 as rs
++        from camera_open import open_pipeline
++        self.rs = rs
++        self.accel = None
++        for imu in (True, False):
++            config = rs.config()
++            config.enable_stream(rs.stream.color, 1280, 720, rs.format.bgr8, 30)
++            if imu:
++                config.enable_stream(rs.stream.accel)
++            try:
++                self.pipeline, profile = open_pipeline(rs, config)
++                self.imu = imu
++                break
++            except Exception as exc:
++                if not imu:
++                    raise
++                print(f"No accelerometer stream ({exc}); using --pitch for the camera tilt", flush=True)
++        intr = profile.get_stream(rs.stream.color).as_video_stream_profile().get_intrinsics()
++        self.intrinsics = [intr.fx, intr.fy, intr.ppx, intr.ppy]
++        self.dist = np.asarray(intr.coeffs, float)
++        self.size = (intr.width, intr.height)
++        self.samples = []
++        print(f"USB: {profile.get_device().get_info(rs.camera_info.usb_type_descriptor)}, "
++              f"colour {intr.width}x{intr.height}, fx {intr.fx:.0f}", flush=True)
++
++    def read(self):
++        from camera_open import latest_frames
++        frames, _ = latest_frames(self.pipeline)
++        if self.imu:
++            for f in frames:
++                if f.is_motion_frame():
++                    a = f.as_motion_frame().get_motion_data()
++                    self.samples = (self.samples + [(a.x, a.y, a.z)])[-60:]
++        colour_frame = frames.get_color_frame()
++        return None if not colour_frame else np.asanyarray(colour_frame.get_data()).copy()
++
++    def gravity(self):
++        """Up in camera axes from the accelerometer (it reads the reaction to gravity)."""
++        if len(self.samples) < 10:
++            return None
++        a = np.mean(self.samples, 0)
++        if not 8 < np.linalg.norm(a) < 11.5:
++            return None  # moving, or a bogus reading
++        up = a / np.linalg.norm(a)
++        return -up if up[1] > 0 else up  # image y points down; the camera is not upside down
++
++    def close(self):
++        self.pipeline.stop()
++
++
++class Detector:
++    def __init__(self, args, dist):
++        from person_track import PersonTrack
++        from pose_yolo import load_model
++        self.model, self.device = load_model(args.size, args.backend)
++        self.track, self.args, self.dist = PersonTrack(), args, dist
++
++    def __call__(self, image, intrinsics):
++        res = self.model.predict(image, imgsz=self.args.imgsz, conf=.3, classes=0, verbose=False,
++                                 **({"device": self.device} if self.device else {}))[0]
++        if res.keypoints is None or not len(res.keypoints):
++            return {}, None
++        xy = res.keypoints.xy.cpu().numpy().reshape(-1, 17, 2)
++        conf = (res.keypoints.conf.cpu().numpy().reshape(-1, 17) if res.keypoints.conf is not None
++                else np.ones(xy.shape[:-1]))
++        boxes = res.boxes.xyxy.cpu().numpy()
++        pick = self.track.select(boxes, time.monotonic())
++        if pick is None:
++            return {}, (boxes, None)
++        return wire_keypoints(xy[pick], conf[pick], intrinsics, self.dist), (boxes, pick)
++
++
++class Synthetic:
++    """An operator 3 m away lifting knees and arms, seen by a virtual camera."""
++
++    def __init__(self, args):
++        self.intrinsics = [910., 905., 640., 360.]
++        self.size = (1280, 720)
++        self.t0 = time.monotonic()
++        self.solver = None
++
++    def read(self):
++        return np.full((self.size[1], self.size[0], 3), 40, np.uint8)
++
++    def keypoints(self, camera, body):
++        from test_body2d import directions
++        t = time.monotonic() - self.t0
++        lift = 45 * (1 - np.cos(t * 1.6)) * (np.sin(t * .4) > 0)
++        right = 45 * (1 - np.cos(t * 1.6)) * (np.sin(t * .4) <= 0)
++        arm = 60 * (1 - np.cos(t * .9))
++        psi = np.radians(20 * np.sin(t * .3))
++        d = directions(psi, (lift, lift * 1.2), arm)
++        d[2], d[3] = directions(psi, (right, right * 1.2))[0:2]
++        if self.solver is None or self.solver.camera is not camera:
++            self.solver = BodySolver(camera, body)
++        x = np.r_[0., 0., -3., psi, 0., 0., 0.]
++        p = self.solver.points(x, d)
++        x[1] = body.ankle_height - min(p[5, 1], p[6, 1])
++        uv, _ = camera.project(self.solver.points(x, d))
++        rng = np.random.default_rng(int(t * 30))
++        uv = uv + rng.normal(0, 1.5, uv.shape)
++        return {c: (uv[INDEX[n]][0], uv[INDEX[n]][1], .9) for n, c in COCO.items()}
++
++    def close(self):
++        pass
++
++
++# ---- main ---------------------------------------------------------------------
++def main():
++    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
++    parser.add_argument("size", nargs="?", choices=["n", "s", "m", "l", "x"], default="s", help="YOLO11-pose size")
++    parser.add_argument("--source", choices=["realsense", "synthetic"], default="realsense")
++    parser.add_argument("--height", type=float, default=1.75, help="operator standing height, m (sets bone lengths)")
++    parser.add_argument("--camera-height", type=float, default=1.2, help="lens above the floor, m")
++    parser.add_argument("--pitch", type=float, default=0., help="camera tilt down, deg, when the IMU is unavailable")
++    parser.add_argument("--no-imu", action="store_true", help="ignore the accelerometer; use --pitch")
++    parser.add_argument("--session", help="camera->STAGE lock (session.json from pose_yolo.py) instead of height/tilt")
++    parser.add_argument("--backend", choices=["auto", "torch", "cpu", "openvino"], default="torch")
++    parser.add_argument("--imgsz", type=int, default=640)
++    parser.add_argument("--panel", type=int, default=640, help="width of each panel, px")
++    parser.add_argument("--no-smooth", action="store_true", help="no One-Euro on the solved body")
++    parser.add_argument("--headless", action="store_true")
++    parser.add_argument("--seconds", type=float, default=0)
++    parser.add_argument("--save", help="write the last composite frame to this image file")
++    args = parser.parse_args()
++    if sys.platform == "darwin" and args.source == "realsense" and hasattr(os, "geteuid") and os.geteuid() != 0:
++        print("macOS opens the RealSense only under sudo: sudo <python> gmr_view.py ...", flush=True)
++
++    from gmr_live import Retargeter, RobotView
++    body = Body(args.height)
++    source = Synthetic(args) if args.source == "synthetic" else RealSense(args)
++    detector = None if args.source == "synthetic" else Detector(args, source.dist)
++    placement = Placement(args, source.intrinsics)
++    retargeter = Retargeter(body)
++    width = args.panel
++    height = int(round(width * source.size[1] / source.size[0]))
++    view = RobotView(retargeter.model, width, height)
++    camera = placement.camera()
++    solver = BodySolver(camera, body)
++    filters = {}
++    timing, frames, fps, t_fps = {}, 0, 0., time.monotonic()
++    started = time.monotonic()
++    composite = None
++    if not args.headless:
++        cv2.namedWindow(WINDOW, cv2.WINDOW_NORMAL)
++    try:
++        while not args.seconds or time.monotonic() - started < args.seconds:
++            t = time.perf_counter()
++            image = source.read()
++            if image is None:
++                continue
++            if isinstance(source, RealSense) and not args.no_imu and placement.session is None:
++                up = source.gravity()
++                if up is not None and (placement.up is None or np.degrees(np.arccos(np.clip(up @ placement.up, -1, 1))) > .5):
++                    placement.up = up
++            new_camera = placement.camera()
++            if not (np.allclose(new_camera.R, camera.R, atol=1e-4) and np.allclose(new_camera.t, camera.t)):
++                camera = new_camera
++                solver = BodySolver(camera, body)
++            timing["camera"] = time.perf_counter() - t
++            t = time.perf_counter()
++            boxes = None
++            if detector is None:
++                keypoints = source.keypoints(camera, body)
++            else:
++                keypoints, boxes = detector(image, source.intrinsics)
++            timing["yolo"] = time.perf_counter() - t
++            t = time.perf_counter()
++            now = time.monotonic()
++            pose = solver.solve(keypoints, now) if keypoints else None
++            timing["body"] = time.perf_counter() - t
++            t = time.perf_counter()
++            qpos = None
++            if pose is not None:
++                if not args.no_smooth:
++                    for n, p in pose.points.items():
++                        pose.points[n] = filters.setdefault(n, OneEuro(2., .8))(p, now)
++                qpos = retargeter.solve(pose)
++            timing["gmr"] = time.perf_counter() - t
++            t = time.perf_counter()
++            robot = view.render(qpos if qpos is not None else retargeter.gmr.configuration.q,
++                                retargeter.camera_view(camera))[:, :, ::-1].copy()
++            timing["render"] = time.perf_counter() - t
++
++            left = image
++            if boxes is not None:
++                for i, b in enumerate(boxes[0]):
++                    cv2.rectangle(left, tuple(np.int32(b[:2])), tuple(np.int32(b[2:])),
++                                  (60, 220, 60) if i == boxes[1] else (60, 60, 220), 2)
++            draw_overlay(left, keypoints, pose, camera, solver.o.min_conf)
++            left = cv2.resize(left, (width, height))
++            frames += 1
++            if now - t_fps >= 1:
++                fps, frames, t_fps = frames / (now - t_fps), 0, now
++            status = ("no person" if not keypoints else "need both hips + 6 keypoints" if pose is None else
++                      f"reproj {pose.reprojection_px:.1f} px")
++            ambiguous = [LIMB_NAMES[k] for k, g in enumerate(pose.flip_gap) if 0 <= g < 1] if pose else []
++            text(left, [f"{fps:4.1f} fps | {status}",
++                        " ".join(f"{k} {1000 * v:.0f}" for k, v in timing.items()) + " ms",
++                        placement.describe()], scale=.5)
++            if ambiguous:
++                text(left, ["front/back unsure: " + ", ".join(ambiguous)], (12, height - 14), .5, (60, 200, 255))
++            text(robot, ["G1 after GMR, camera view", f"operator {args.height:.2f} m"], scale=.5)
++            composite = np.hstack([left, robot])
++            if args.headless:
++                continue
++            cv2.imshow(WINDOW, composite)
++            key = cv2.waitKey(1) & 0xFF
++            if key in (ord("q"), 27) or cv2.getWindowProperty(WINDOW, cv2.WND_PROP_VISIBLE) < 1:
++                break
++            if key == ord("r"):
++                solver.reset()
++                retargeter.reset()
++                filters.clear()
++            elif key in (ord("["), ord("]")):
++                placement.height += .02 if key == ord("]") else -.02
++            elif key in (ord(";"), ord("'")) and placement.up is None:
++                placement.pitch += 1 if key == ord("'") else -1
++    finally:
++        if args.save and composite is not None:
++            cv2.imwrite(args.save, composite)
++        source.close()
++        view.close()
++        if not args.headless:
++            cv2.destroyAllWindows()
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/skeleton/keypoints2d.py b/skeleton/keypoints2d.py
+new file mode 100644
+index 0000000..fcb934d
+--- /dev/null
++++ b/skeleton/keypoints2d.py
+@@ -0,0 +1,32 @@
++"""Raw 2D keypoints for the headset's ray-based leg solve.
++
++The headset reprojects knees and ankles onto these pixels instead of using
++D435 depth. Points are sent before One-Euro smoothing (the headset smooths
++its own leg targets) and without lens distortion, so a pinhole model with
++intr = [fx, fy, cx, cy] maps them to camera rays exactly.
++"""
++import cv2
++import numpy as np
++
++MIN_CONF = 0.05
++
++
++def wire_keypoints(xy, conf, intrinsics, dist=None, min_conf=MIN_CONF):
++    """{coco index: (u, v, conf)} for detected keypoints, undistorted pixels.
++
++    xy: (17, 2) detector pixels; conf: (17,) scores; intrinsics: [fx, fy, cx, cy];
++    dist: OpenCV-order distortion coefficients or None. Scores below min_conf
++    are dropped, not zeroed: an absent key means "not detected".
++    """
++    xy = np.asarray(xy, np.float64).reshape(-1, 2)
++    conf = np.asarray(conf, np.float64).reshape(-1)
++    keep = [i for i in range(min(len(xy), len(conf)))
++            if np.isfinite(conf[i]) and conf[i] >= min_conf and np.isfinite(xy[i]).all()]
++    if not keep:
++        return {}
++    points = xy[keep]
++    if dist is not None and np.any(np.abs(np.asarray(dist, np.float64)) > 1e-9):
++        fx, fy, cx, cy = intrinsics
++        K = np.array([[fx, 0, cx], [0, fy, cy], [0, 0, 1]], np.float64)
++        points = cv2.undistortPoints(points.reshape(-1, 1, 2), K, np.asarray(dist, np.float64), P=K).reshape(-1, 2)
++    return {i: (float(u), float(v), float(conf[i])) for i, (u, v) in zip(keep, points)}
+diff --git a/skeleton/pose_yolo.py b/skeleton/pose_yolo.py
+index 0e26b4f..8b67277 100644
+--- a/skeleton/pose_yolo.py
++++ b/skeleton/pose_yolo.py
+@@ -24,6 +24,11 @@ c — зафиксировать камеру по AprilTag и позе конт
+   --imgsz — для A/B скорости на конкретной машине; infer и age видны в [тайминг].
+   --euro-mincutoff/--euro-beta — One-Euro (лаг в покое 1/(2π·mincutoff)).
+   --bone-sigma-depth — колени/лодыжки: глубина против длины кости (fusion.constrain_legs).
++  --no-depth — только RGB-поток RealSense: в пакетах лишь 2D-кейпоинты (kp2d) и
++  интринсики; шлем строит ноги по лучам камеры. Связка камера→STAGE тогда
++  только по AprilTag (клавиша c), плечевой регистрации нужны 3D-точки.
++Каждый пакет (кроме --no-kp2d) несёт kp2d/intr (сырые 2D до One-Euro, без дисторсии), после
++фиксации маркера — и stage_from_camera.
+ Превью — в полразмера панелей (экономия ~15 мс/кадр на imshow).
+ """
+ import argparse
+@@ -39,6 +44,7 @@ from ultralytics import YOLO
+ 
+ from camera_open import latest_frames
+ from fusion import BoneLengths, OneEuro, constrain_legs, fuse_joints
++from keypoints2d import wire_keypoints
+ from person_track import PersonTrack
+ from marker_frame import MarkerSession, to_stage_relative
+ 
+@@ -182,7 +188,15 @@ def main():
+     parser.add_argument("--marker-id", type=int, default=0)
+     parser.add_argument("--marker-hand", choices=["right", "left"], default="right")
+     parser.add_argument("--session", help="JSON связки камера→STAGE: загрузить, если файл есть, и писать сюда по клавише c")
++    parser.add_argument("--no-depth", action="store_true",
++                        help="только цвет: 2D-кейпоинты без глубины; связка камеры по AprilTag")
++    parser.add_argument("--no-kp2d", action="store_true",
++                        help="не слать 2D-кейпоинты: шлем строит ноги по глубине (A/B со старым путём)")
+     args = parser.parse_args()
++    if args.no_depth and args.no_kp2d:
++        parser.error("--no-depth без kp2d не даёт шлему ни одной точки ног")
++    if args.no_depth and args.record_rgbd:
++        parser.error("--record-rgbd пишет глубину; с --no-depth используйте --log")
+     size, filt = args.size, args.filters
+     server = None
+     rgbd_recorder = None
+@@ -194,7 +208,8 @@ def main():
+ 
+     cfg = rs.config()
+     cfg.enable_stream(rs.stream.color, 1280, 720, rs.format.bgr8, 30)
+-    cfg.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
++    if not args.no_depth:
++        cfg.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
+ 
+     # depth-фильтры SDK (stateful, создаём один раз)
+     spatial = rs.spatial_filter()
+@@ -272,14 +287,15 @@ def main():
+             if pipeline is None:
+                 filters.clear()
+                 pipeline, profile = open_camera()
+-                align = rs.align(rs.stream.color)
+-                depth_scale = profile.get_device().first_depth_sensor().get_depth_scale()
++                align = None if args.no_depth else rs.align(rs.stream.color)
++                depth_scale = None if args.no_depth else profile.get_device().first_depth_sensor().get_depth_scale()
+                 color_intr = (profile.get_stream(rs.stream.color)
+                               .as_video_stream_profile().get_intrinsics())
+                 marker_K = np.array([[color_intr.fx, 0, color_intr.ppx],
+                                      [0, color_intr.fy, color_intr.ppy],
+                                      [0, 0, 1]], np.float64)
+                 marker_dist = np.asarray(color_intr.coeffs, np.float64)
++                intrinsics = [color_intr.fx, color_intr.fy, color_intr.ppx, color_intr.ppy]
+                 print(f"USB: {profile.get_device().get_info(rs.camera_info.usb_type_descriptor)}", flush=True)
+             t = time.perf_counter()
+             try:
+@@ -305,10 +321,12 @@ def main():
+             age_sum += timing["frame_age_ms"]
+             dropped_sum += dropped
+             t = tic("wait", t)
+-            fs = align.process(fs)
++            if align is not None:
++                fs = align.process(fs)
+             t = tic("align", t)
+-            color_f, depth_f = fs.get_color_frame(), fs.get_depth_frame()
+-            if not color_f or not depth_f:
++            color_f = fs.get_color_frame()
++            depth_f = None if args.no_depth else fs.get_depth_frame()
++            if not color_f or (not args.no_depth and not depth_f):
+                 continue
+             # при --ws отсчёт задержки идёт от подключения шлема, а не от запуска:
+             # 10-13 запись 120 с закончилась раньше, чем шлем подключился
+@@ -321,11 +339,12 @@ def main():
+                      "distortion_coeffs": np.array(color_intr.coeffs),
+                      "timestamp_domain": str(color_f.get_frame_timestamp_domain())})
+             # depth-фильтры SDK по выбранному режиму
+-            for flt in chain:
+-                depth_f = flt.process(depth_f)
++            if depth_f is not None:
++                for flt in chain:
++                    depth_f = flt.process(depth_f)
+             t = tic("filters", t)
+             color = np.asanyarray(color_f.get_data())
+-            depth_m = np.asanyarray(depth_f.get_data()).astype(np.float32) * depth_scale
++            depth_m = None if depth_f is None else np.asanyarray(depth_f.get_data()).astype(np.float32) * depth_scale
+             # AprilTag (~4+ мс на 720p) нужен только для фиксации клавишей c.
+             if marker_K is not None and not args.headless and not session.locked:
+                 session.observe(color, marker_K, marker_dist)
+@@ -334,7 +353,7 @@ def main():
+             res = model.predict(color, imgsz=args.imgsz, conf=0.3, classes=0,
+                                 **({"device": device} if device else {}), verbose=False)[0]
+             t = tic("infer", t)
+-            raw, pts2d, sources, confidence = {}, {}, {}, {}
++            raw, pts2d, sources, confidence, kp2d = {}, {}, {}, {}, {}
+             pick = None
+             if res.keypoints is not None and len(res.keypoints):
+                 kxy = res.keypoints.xy.cpu().numpy().reshape(-1, 17, 2)
+@@ -345,16 +364,18 @@ def main():
+                 skipped += pick is None
+             if pick is not None:
+                 xy, conf = kxy[pick], kconf[pick]
++                kp2d = wire_keypoints(xy, conf, intrinsics, marker_dist)
+                 for i in range(min(17, len(xy))):
+                     if conf[i] > 0.5:
+                         confidence[i] = float(conf[i])
+                         pts2d[i] = (float(xy[i][0]), float(xy[i][1]))
+ 
+-                # 3D: фьюжн общий с analyze_bag.py (fusion.py)
+-                raw = fuse_joints(depth_m, pts2d, color_intr, sources=sources)
+-                bone_lengths.update(raw)
+-                if args.bone_sigma_depth > 0:
+-                    raw = constrain_legs(raw, pts2d, color_intr, bone_lengths, args.bone_sigma_depth)
++                # 3D: фьюжн общий с analyze_bag.py (fusion.py); без глубины — только 2D
++                if depth_m is not None:
++                    raw = fuse_joints(depth_m, pts2d, color_intr, sources=sources)
++                    bone_lengths.update(raw)
++                    if args.bone_sigma_depth > 0:
++                        raw = constrain_legs(raw, pts2d, color_intr, bone_lengths, args.bone_sigma_depth)
+                 t = tic("fuse", t)
+ 
+                 # отрисовка 2D
+@@ -377,9 +398,11 @@ def main():
+             sequence += 1
+             if server:
+                 wire, wire_frame, pelvis = smoothed, "camera", None
++                flat = dict(kp2d=None if args.no_kp2d else kp2d, intrinsics=intrinsics,
++                            stage_from_camera=(session.R, session.t) if session.locked else None)
+                 if session.locked:
+                     server.record("camera", packet(smoothed, confidence, sources, frame_timestamp,
+-                                                   sequence, fps, backend, timing=timing, session_id=session_id))
++                                                   sequence, fps, backend, timing=timing, session_id=session_id, **flat))
+                     converted = to_stage_relative(smoothed, session.R, session.t)
+                     wire_frame = "pelvis-relative"
+                     if converted:
+@@ -388,7 +411,7 @@ def main():
+                     else:
+                         wire, pelvis = {}, {"p": [0, 0, 0], "conf": 0}
+                 server.publish(packet(wire, confidence, sources, frame_timestamp,
+-                                      sequence, fps, backend, wire_frame, pelvis, timing, session_id))
++                                      sequence, fps, backend, wire_frame, pelvis, timing, session_id, **flat))
+             frames += 1
+             dt = time.monotonic() - t0
+             if dt > 1:
+@@ -407,9 +430,10 @@ def main():
+                 quad = session.corners.astype(np.int32).reshape(-1, 1, 2)
+                 cv2.polylines(color, [quad], True, (0, 220, 255), 2, cv2.LINE_AA)
+             pelvis = smoothed.get(11)
++            depth_info = "RGB only" if args.no_depth else f"pelvis {'-' if pelvis is None else f'{pelvis[2]:.2f} m'}"
+             marker = "STAGE" if session.locked else ("маркер" if session.corners is not None else "нет маркера")
+             info = (f"fps {fps:4.1f} | joints {len(smoothed)}/17 | "
+-                    f"pelvis {'-' if pelvis is None else f'{pelvis[2]:.2f} m'} | {marker}")
++                    f"{depth_info} | {marker}")
+             cv2.putText(color, info, (12, 30), 6, 0.7, (60, 255, 60), 2)
+             cv2.putText(color, "c — зафиксировать камеру контроллером", (12, 86),
+                         6, 0.55, (200, 200, 200), 1)
+diff --git a/skeleton/requirements-gmr-view.txt b/skeleton/requirements-gmr-view.txt
+new file mode 100644
+index 0000000..2c23ea4
+--- /dev/null
++++ b/skeleton/requirements-gmr-view.txt
+@@ -0,0 +1,4 @@
++# Live GMR viewer (gmr_view.py), on top of requirements.txt.
++# Same pins as the desktop GMR oracle and the APK's MuJoCo.
++mujoco==3.3.7
++-r ../prototypes/quest_g1/android/requirements-gmr-test.txt
+diff --git a/skeleton/skeleton_server.py b/skeleton/skeleton_server.py
+index a718ff8..f73beb0 100644
+--- a/skeleton/skeleton_server.py
++++ b/skeleton/skeleton_server.py
+@@ -13,7 +13,8 @@ JOINTS = {"lhip": 11, "lknee": 13, "lankle": 15, "rhip": 12,
+ 
+ 
+ def packet(points, confidence, sources, timestamp, seq, fps, backend,
+-           frame="camera", pelvis=None, timing=None, session_id=None):
++           frame="camera", pelvis=None, timing=None, session_id=None,
++           kp2d=None, intrinsics=None, stage_from_camera=None):
+     def joint(i):
+         p = points.get(i)
+         if p is None or not all(math.isfinite(float(x)) for x in p):
+@@ -39,6 +40,19 @@ def packet(points, confidence, sources, timestamp, seq, fps, backend,
+     # хранит payload целиком) с логом и RGB-D этой сессии без сверки по времени
+     if session_id:
+         value["session_id"] = session_id
++    # kp2d: сырые 2D-кейпоинты детектора до One-Euro, пиксели цветного кадра
++    # без дисторсии (pinhole intr = [fx, fy, cx, cy]), по имени сустава
++    # [u, v, conf]. Шлем строит ноги по лучам камеры, без глубины.
++    if kp2d is not None and intrinsics is not None:
++        value["intr"] = [float(x) for x in intrinsics]
++        value["kp2d"] = {name: [float(kp2d[i][0]), float(kp2d[i][1]), float(kp2d[i][2])]
++                         for name, i in JOINTS.items() if i in kp2d
++                         and all(math.isfinite(float(x)) for x in kp2d[i])}
++    # stage_from_camera: связка AprilTag, p_stage = R @ p_camera + t (R по строкам).
++    if stage_from_camera is not None:
++        rotation, translation = stage_from_camera
++        value["stage_from_camera"] = {"R": [float(x) for row in rotation for x in row],
++                                      "t": [float(x) for x in translation]}
+     return value
+ 
+ 
+diff --git a/skeleton/test_body2d.py b/skeleton/test_body2d.py
+new file mode 100644
+index 0000000..984bca2
+--- /dev/null
++++ b/skeleton/test_body2d.py
+@@ -0,0 +1,95 @@
++"""Synthetic checks of the headset-free 2D body solve (body2d.py)."""
++import unittest
++
++import numpy as np
++
++from body2d import COCO, INDEX, NAMES, Body, BodySolver, camera_from_gravity, camera_from_pitch
++
++LEGS = [INDEX[n] for n in ("lknee", "rknee", "lankle", "rankle")]
++
++
++def bone(hip_deg, knee_deg):
++    h, k = np.radians(hip_deg), np.radians(hip_deg - knee_deg)
++    return np.array([0, -np.cos(h), np.sin(h)]), np.array([0, -np.cos(k), np.sin(k)])
++
++
++def directions(psi, lift=(0, 0), arm=0):
++    """Left knee lift (hip, knee flexion) and both arms raised forward, facing heading psi."""
++    c, s = np.cos(psi), np.sin(psi)
++    turn = np.array([[c, 0, s], [0, 1, 0], [-s, 0, c]])
++    a = np.radians(arm)
++    raised = np.array([0, -np.cos(a), np.sin(a)])
++    d = [*bone(*lift), *bone(0, 0), raised, raised, raised, raised]
++    return np.array([turn @ v for v in d])
++
++
++def observe(solver, psi, d, rng=None, noise=0.):
++    """Pixels of a standing operator 3 m in front of the camera."""
++    x = np.r_[0., 0., -3., psi, 0., 0., 0.]
++    p = solver.points(x, d)
++    x[1] = solver.body.ankle_height - min(p[5, 1], p[6, 1])
++    p = solver.points(x, d)
++    uv, _ = solver.camera.project(p)
++    if rng is not None:
++        uv = uv + rng.normal(0, noise, uv.shape)
++    return {c: (uv[INDEX[n]][0], uv[INDEX[n]][1], .9) for n, c in COCO.items()}, p
++
++
++class BodySolveTest(unittest.TestCase):
++    def setUp(self):
++        self.camera = camera_from_pitch(12, 1.2, 910, 905, 640, 360)
++
++    def track(self, psi, poses, rng=None, noise=0.):
++        solver = BodySolver(self.camera, Body(1.75))
++        errors = []
++        for n, (lift, arm) in enumerate(poses):
++            kp, truth = observe(solver, psi, directions(psi, lift, arm), rng, noise)
++            pose = solver.solve(kp, n / 30)
++            self.assertIsNotNone(pose)
++            got = np.array([pose.points[name] for name in NAMES])
++            errors.append(np.linalg.norm(got - truth, axis=1))
++        return np.array(errors)
++
++    def test_standing_is_exact(self):
++        for psi in (0., np.radians(40)):
++            e = self.track(psi, [((0, 0), 0)] * 5)
++            self.assertLess(e.max(), .02)
++
++    def test_tracked_knee_lift_recovers_on_both_views(self):
++        # Up to 90 deg and back down. Near standing the two ray-sphere roots
++        # are close and both anatomical, so small lifts may lag; the branch
++        # must not stay locked once the limits rule the wrong one out.
++        lifts = [((a, a), 0) for a in np.linspace(0, 90, 20)] + [((a, a), 0) for a in np.linspace(90, 0, 20)]
++        for psi in (0., np.radians(40)):
++            e = self.track(psi, [((0, 0), 0)] * 3 + lifts)[:, LEGS].max(1)
++            self.assertLess(np.median(e), .03, f"heading {np.degrees(psi):.0f}")
++            self.assertLess(e[-15:].max(), .06, f"heading {np.degrees(psi):.0f}: stuck after lowering the leg")
++
++    def test_frontal_forward_arm_raise(self):
++        e = self.track(0., [((0, 0), a) for a in np.linspace(0, 120, 20)])
++        self.assertLess(np.median(e.max(1)), .05)
++
++    def test_noisy_keypoints_stay_bounded(self):
++        # Regression bound of this fixture, not an accuracy claim.
++        rng = np.random.default_rng(3)
++        poses = [((a, a), 0) for a in np.linspace(0, 80, 15)] + [((a, a), 0) for a in np.linspace(80, 0, 15)]
++        e = self.track(0., poses, rng, 3.)[:, LEGS]
++        self.assertLess(np.median(e), .12)
++
++    def test_missing_hips_gives_no_pose(self):
++        solver = BodySolver(self.camera)
++        kp, _ = observe(solver, 0., directions(0.))
++        del kp[11]
++        self.assertIsNone(solver.solve(kp, 0.))
++
++    def test_gravity_camera_is_level(self):
++        cam = camera_from_gravity([0, -9.8, 0], 1.3, 900, 900, 640, 360)
++        np.testing.assert_allclose(cam.R @ [0, -1, 0], [0, 1, 0], atol=1e-9)  # camera up is world up
++        np.testing.assert_allclose(cam.R @ [0, 0, 1], [0, 0, -1], atol=1e-9)  # looks along world -Z
++        self.assertAlmostEqual(np.linalg.det(cam.R), 1.)
++        tilted = camera_from_pitch(20, 1.3, 900, 900, 640, 360)
++        self.assertAlmostEqual(tilted.forward[1], -np.sin(np.radians(20)))
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/skeleton/test_gmr_live.py b/skeleton/test_gmr_live.py
+new file mode 100644
+index 0000000..89e919d
+--- /dev/null
++++ b/skeleton/test_gmr_live.py
+@@ -0,0 +1,71 @@
++"""GMR retargeting of a camera-only body pose: joint angles follow the human's.
++
++Needs MuJoCo, Mink and daqp (prototypes/quest_g1/android/requirements-gmr-test.txt);
++skipped without them.
++"""
++import unittest
++
++import numpy as np
++
++try:
++    import mink  # noqa: F401
++    import mujoco  # noqa: F401
++except ImportError:
++    mink = None
++
++from body2d import Body, BodySolver, camera_from_pitch
++from test_body2d import directions, observe
++
++
++@unittest.skipIf(mink is None, "MuJoCo/Mink not installed")
++class RetargetTest(unittest.TestCase):
++    @classmethod
++    def setUpClass(cls):
++        from gmr_live import Retargeter
++        cls.body = Body(1.75)
++        cls.retargeter = Retargeter(cls.body)
++        cls.camera = camera_from_pitch(12, 1.2, 910, 905, 640, 360)
++
++    def angles(self, lift=(0, 0), arm=0, heading=0.):
++        solver = BodySolver(self.camera, self.body)
++        kp, _ = observe(solver, heading, directions(heading, lift, arm))
++        pose = solver.solve(kp, 0.)
++        self.retargeter.reset()
++        for _ in range(3):
++            q = self.retargeter.solve(pose)
++        m = self.retargeter.model
++        return {j: np.degrees(q[m.jnt_qposadr[m.joint(j).id]]) for j in
++                ("left_hip_pitch_joint", "left_knee_joint", "right_hip_pitch_joint", "right_knee_joint",
++                 "left_shoulder_pitch_joint", "right_shoulder_pitch_joint", "left_elbow_joint")}, q
++
++    def test_standing_is_the_zero_pose(self):
++        a, q = self.angles()
++        for j in ("left_hip_pitch_joint", "left_knee_joint", "right_hip_pitch_joint", "right_knee_joint",
++                  "left_shoulder_pitch_joint"):
++            self.assertLess(abs(a[j]), 3, j)
++        self.assertAlmostEqual(a["left_elbow_joint"], 90, delta=5)  # G1: 90 deg is a straight arm
++        self.assertAlmostEqual(q[2], .793, delta=.03)  # pelvis at standing height
++
++    def test_knee_lift_maps_to_hip_and_knee(self):
++        for heading in (0., np.radians(40)):
++            a, _ = self.angles((60, 70), heading=heading)
++            self.assertAlmostEqual(a["left_hip_pitch_joint"], -60, delta=4)
++            self.assertAlmostEqual(a["left_knee_joint"], 70, delta=4)
++            self.assertLess(abs(a["right_knee_joint"]), 3)
++
++    def test_high_knee_and_forward_arms(self):
++        a, _ = self.angles((90, 90))
++        self.assertAlmostEqual(a["left_hip_pitch_joint"], -90, delta=4)
++        self.assertAlmostEqual(a["left_knee_joint"], 90, delta=4)
++        a, _ = self.angles(arm=90)
++        self.assertAlmostEqual(a["left_shoulder_pitch_joint"], -90, delta=5)
++        self.assertAlmostEqual(a["right_shoulder_pitch_joint"], -90, delta=5)
++
++    def test_render_camera_matches_operator_camera(self):
++        view = self.retargeter.camera_view(self.camera)
++        self.assertAlmostEqual(view["elevation"], -12, delta=1e-6)
++        self.assertAlmostEqual(view["fovy"], np.degrees(2 * np.arctan(360 / 905)), delta=1e-6)
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/skeleton/test_keypoints2d.py b/skeleton/test_keypoints2d.py
+new file mode 100644
+index 0000000..906807a
+--- /dev/null
++++ b/skeleton/test_keypoints2d.py
+@@ -0,0 +1,49 @@
++import json
++import unittest
++
++import cv2
++import numpy as np
++
++from keypoints2d import wire_keypoints
++from skeleton_server import packet
++
++INTR = [910.0, 905.0, 640.0, 360.0]
++
++
++class Keypoints2DTest(unittest.TestCase):
++    def test_drops_low_confidence_and_keeps_pixels(self):
++        xy = np.tile([[100.0, 200.0]], (17, 1))
++        conf = np.full(17, .9)
++        conf[13] = .01
++        conf[14] = np.nan
++        out = wire_keypoints(xy, conf, INTR)
++        self.assertNotIn(13, out)
++        self.assertNotIn(14, out)
++        self.assertEqual(out[15], (100.0, 200.0, .9))
++
++    def test_undistorts_with_opencv_model(self):
++        K = np.array([[INTR[0], 0, INTR[2]], [0, INTR[1], INTR[3]], [0, 0, 1]])
++        dist = np.array([.1, -.05, 0, 0, 0])
++        ray = np.array([[[.3, -.2, 1.0]]])
++        distorted, _ = cv2.projectPoints(ray, np.zeros(3), np.zeros(3), K, dist)
++        out = wire_keypoints(distorted.reshape(1, 2), [.9], INTR, dist)
++        self.assertAlmostEqual(out[0][0], INTR[0] * .3 + INTR[2], places=2)
++        self.assertAlmostEqual(out[0][1], INTR[1] * -.2 + INTR[3], places=2)
++
++    def test_packet_fields(self):
++        kp = {11: (1, 2, .9), 13: (3, 4, .8), 9: (5, 6, .7)}
++        R = np.eye(3)
++        p = packet({}, {}, {}, 1, 1, 30, "test", kp2d=kp, intrinsics=INTR,
++                   stage_from_camera=(R, [1, 2, 3]))
++        self.assertEqual(p["intr"], INTR)
++        self.assertEqual(p["kp2d"], {"lhip": [1.0, 2.0, .9], "lknee": [3.0, 4.0, .8]})
++        self.assertEqual(p["stage_from_camera"]["R"], [1, 0, 0, 0, 1, 0, 0, 0, 1])
++        self.assertEqual(p["stage_from_camera"]["t"], [1.0, 2.0, 3.0])
++        json.dumps(p, allow_nan=False)
++        plain = packet({}, {}, {}, 1, 1, 30, "test")
++        self.assertNotIn("kp2d", plain)
++        self.assertNotIn("stage_from_camera", plain)
++
++
++if __name__ == "__main__":
++    unittest.main()

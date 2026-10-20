@@ -1,0 +1,7 @@
+{
+  "android/native/rubik_task.h": "40d58b1a8550295c24a524251424170a4eb74979a19e0b870999a9a13af3743f",
+  "android/native/meta_retarget.cpp": "93addc439d57a94888bbf1d9c3f7d24a4a7bb76284e25e31415b17cf40aa95ba",
+  "android/native/simulation.cpp": "8def09f1d23d63ab8f33aa3f3313831db2ebbf560270df7e9b838b9c4a08bc22",
+  "android/native/quest_runtime.cpp": "7dab3ecafe04bf35ade20ec1b29bbb5e79204a68bae9063fd3f12f7caa626282",
+  "g1_sim/rubik.py": "3d47572b39e95eec48f8e2d4f9a9e3c2c249908c770572cd2e77f37a2632a282"
+}

@@ -1,0 +1,226 @@
+[
+  {
+    "execution_steps": 8,
+    "label": "confirm-d10",
+    "episode": "episode-1792015107773946",
+    "mode": "policy",
+    "seed": 1,
+    "success": true,
+    "outcome": 1,
+    "elapsed_sim_s": 12.699999999999996,
+    "wall_s": 19.70918297767639,
+    "lift_m": 0.07710881367065825,
+    "contact_frames": 99,
+    "final_goal_xy_error_m": 0.01041583320756597,
+    "initial_distance_m": 0.2459814878239907,
+    "min_pelvis_z": 0.7569394394296988,
+    "final_cup": [
+      0.4404156308517626,
+      -6.492586268055337e-05,
+      0.7499985640446878
+    ],
+    "goal": [
+      0.43,
+      0.0,
+      0.75
+    ],
+    "error": null,
+    "inference_mean_s": 0.29820017516613007
+  },
+  {
+    "execution_steps": 8,
+    "label": "confirm-d10",
+    "episode": "episode-1792015107773946",
+    "mode": "policy",
+    "seed": 2,
+    "success": true,
+    "outcome": 1,
+    "elapsed_sim_s": 5.867000000000002,
+    "wall_s": 7.957147836685181,
+    "lift_m": 0.05257616308114488,
+    "contact_frames": 72,
+    "final_goal_xy_error_m": 0.04388377653735423,
+    "initial_distance_m": 0.2459814878239907,
+    "min_pelvis_z": 0.7583808108095723,
+    "final_cup": [
+      0.4387521246006425,
+      -0.04300216457523121,
+      0.7499962678663906
+    ],
+    "goal": [
+      0.43,
+      0.0,
+      0.75
+    ],
+    "error": null,
+    "inference_mean_s": 0.2601852091875943
+  },
+  {
+    "execution_steps": 8,
+    "label": "confirm-d10",
+    "episode": "episode-1792017633764131",
+    "mode": "policy",
+    "seed": 1,
+    "success": false,
+    "outcome": 3,
+    "elapsed_sim_s": 90.00000000000287,
+    "wall_s": 212.74072408676147,
+    "lift_m": 0.05217567899679654,
+    "contact_frames": 17,
+    "final_goal_xy_error_m": 0.31368302874365045,
+    "initial_distance_m": 0.32413819231674706,
+    "min_pelvis_z": 0.7557849118249161,
+    "final_cup": [
+      0.4465047478159909,
+      -0.07941310331621398,
+      0.7830527566352646
+    ],
+    "goal": [
+      0.45824597113998605,
+      0.23405011015012864,
+      0.75
+    ],
+    "error": null,
+    "inference_mean_s": 0.44234289149560874
+  },
+  {
+    "execution_steps": 8,
+    "label": "confirm-d10",
+    "episode": "episode-1792017633764131",
+    "mode": "policy",
+    "seed": 2,
+    "success": false,
+    "outcome": 3,
+    "elapsed_sim_s": 90.00000000000287,
+    "wall_s": 217.65030598640442,
+    "lift_m": 0.12189565610670983,
+    "contact_frames": 383,
+    "final_goal_xy_error_m": 0.16096997948367875,
+    "initial_distance_m": 0.32413819231674706,
+    "min_pelvis_z": 0.7556629266564716,
+    "final_cup": [
+      0.5294573618388989,
+      0.08968850815810742,
+      0.7830523339559338
+    ],
+    "goal": [
+      0.45824597113998605,
+      0.23405011015012864,
+      0.75
+    ],
+    "error": null,
+    "inference_mean_s": 0.46036936404437
+  },
+  {
+    "execution_steps": 8,
+    "label": "confirm-d10",
+    "episode": "episode-1792017999001122",
+    "mode": "policy",
+    "seed": 1,
+    "success": false,
+    "outcome": 3,
+    "elapsed_sim_s": 90.00000000000287,
+    "wall_s": 160.448979139328,
+    "lift_m": 0.15671513355366584,
+    "contact_frames": 1691,
+    "final_goal_xy_error_m": 0.06780764905480259,
+    "initial_distance_m": 0.3344510123001047,
+    "min_pelvis_z": 0.7483223710860527,
+    "final_cup": [
+      0.4522007525723589,
+      0.1212612595242474,
+      0.7830515705518233
+    ],
+    "goal": [
+      0.4467791395820677,
+      0.18885181643068794,
+      0.75
+    ],
+    "error": null,
+    "inference_mean_s": 0.3030620566486607
+  },
+  {
+    "execution_steps": 8,
+    "label": "confirm-d10",
+    "episode": "episode-1792017999001122",
+    "mode": "policy",
+    "seed": 2,
+    "success": false,
+    "outcome": 3,
+    "elapsed_sim_s": 90.00000000000287,
+    "wall_s": 174.4546320438385,
+    "lift_m": 0.16151039704867176,
+    "contact_frames": 439,
+    "final_goal_xy_error_m": 0.1492167031604386,
+    "initial_distance_m": 0.3344510123001047,
+    "min_pelvis_z": 0.7481175116846901,
+    "final_cup": [
+      0.5538400583587253,
+      0.08491152504775798,
+      0.7830534017498149
+    ],
+    "goal": [
+      0.4467791395820677,
+      0.18885181643068794,
+      0.75
+    ],
+    "error": null,
+    "inference_mean_s": 0.3634296225372856
+  },
+  {
+    "execution_steps": 8,
+    "label": "confirm-d10",
+    "episode": "episode-1792018134901046",
+    "mode": "policy",
+    "seed": 1,
+    "success": false,
+    "outcome": 3,
+    "elapsed_sim_s": 90.00000000000287,
+    "wall_s": 151.3986098766327,
+    "lift_m": 0.008177434231579128,
+    "contact_frames": 1,
+    "final_goal_xy_error_m": 0.24441990596226712,
+    "initial_distance_m": 0.24224438177974833,
+    "min_pelvis_z": 0.7494102663233042,
+    "final_cup": [
+      0.468822271629321,
+      0.26623753549831775,
+      0.7499946472495219
+    ],
+    "goal": [
+      0.45089916689787063,
+      0.022475658357143404,
+      0.75
+    ],
+    "error": null,
+    "inference_mean_s": 0.31248989613098505
+  },
+  {
+    "execution_steps": 8,
+    "label": "confirm-d10",
+    "episode": "episode-1792018134901046",
+    "mode": "policy",
+    "seed": 2,
+    "success": false,
+    "outcome": 3,
+    "elapsed_sim_s": 90.00000000000287,
+    "wall_s": 201.99104595184326,
+    "lift_m": 0.07620630283751262,
+    "contact_frames": 101,
+    "final_goal_xy_error_m": 0.05569726212686001,
+    "initial_distance_m": 0.24224438177974833,
+    "min_pelvis_z": 0.7501677716538494,
+    "final_cup": [
+      0.4717683226534449,
+      -0.02916408744468772,
+      0.7830527319583467
+    ],
+    "goal": [
+      0.45089916689787063,
+      0.022475658357143404,
+      0.75
+    ],
+    "error": null,
+    "inference_mean_s": 0.4087769569024532
+  }
+]

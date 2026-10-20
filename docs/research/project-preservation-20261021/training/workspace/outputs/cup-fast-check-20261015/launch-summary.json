@@ -1,0 +1,210 @@
+{
+  "updated_utc": "2026-10-15T08:05:32.666692+00:00",
+  "local_evaluation": {
+    "runner_pid": 70110,
+    "status_file": "status.json",
+    "screening": [
+      [
+        4,
+        10
+      ],
+      [
+        16,
+        10
+      ],
+      [
+        8,
+        20
+      ]
+    ],
+    "confirmation_seeds": [
+      1,
+      2
+    ],
+    "original_weights_unchanged": true,
+    "first_result": {
+      "episode": "episode-1792015107773946",
+      "execution": 4,
+      "denoise": 10,
+      "seed": 0,
+      "success": false,
+      "wall_s": 245.11549711227417
+    },
+    "screening_results": [
+      {
+        "execution": 4,
+        "denoise": 10,
+        "successes": 0,
+        "n": 4
+      },
+      {
+        "execution": 16,
+        "denoise": 10,
+        "successes": 1,
+        "n": 4,
+        "successful_rollout_seconds": 6.867
+      }
+    ]
+  },
+  "remote": {
+    "host": "andrei_gpu",
+    "intended_root": "/home/jovyan/vlad/FURRY/cup-fast-check-20261015",
+    "new_training_started": true,
+    "dataset_uploaded": true,
+    "blockers": [],
+    "gpu_3_5_6_free_at_last_successful_inventory": true,
+    "ssh_restored": true,
+    "upload_authorized_44": true,
+    "gpu_assignment": {
+      "epsilon": 6,
+      "sample": 6,
+      "act": 2
+    },
+    "verified_transfer": true,
+    "jobs": {
+      "epsilon": {
+        "status": "training",
+        "pid": 1282520
+      },
+      "sample": {
+        "status": "training",
+        "pid": 1349698
+      },
+      "act": {
+        "status": "training",
+        "pid": 1282522
+      }
+    },
+    "epsilon_output": "/home/jovyan/vlad/FURRY/cup-fast-check-20261015/dp-epsilon-gpu6-resume-20261015",
+    "epsilon_resume_from_step": 31031,
+    "epsilon_resume_preserves": [
+      "model",
+      "EMA",
+      "optimizer",
+      "scheduler",
+      "normalizer",
+      "CPU/CUDA/NumPy/Python RNG"
+    ],
+    "epsilon_migration_reason": "free dedicated GPU3 for deadline-critical DexWeave"
+  },
+  "dp": {
+    "adapter": "train_dp.py",
+    "objective_checks": "dp-objective-check.json",
+    "epochs": 301,
+    "difference_between_arms": "prediction_type epsilon vs sample",
+    "checkpoint_interval_epochs": 10,
+    "same_data_architecture_normalization_augmentations_lr_schedule_seed": true
+  },
+  "dexweave_last_observation": {
+    "checked_at": 1792051415.7664118,
+    "runs": {
+      "train-episode-1792020014648126": {
+        "status": "running",
+        "pid": 3077791,
+        "iteration": 3187,
+        "seconds": 7.231443806085736,
+        "elapsed_s": 22851.388140120078,
+        "reward_mean": 0.16819088036815324,
+        "failed": 180,
+        "completed_segments": 32,
+        "object_error_m": 0.04920725462337335,
+        "learning_rate": 3.3750000000000014e-05,
+        "losses": {
+          "value_function": 0.14487563967704772,
+          "surrogate": -0.0077654208066405776,
+          "entropy": 7.291993570327759
+        },
+        "actor_changed": true
+      },
+      "train-episode-1792020055691156": {
+        "status": "running",
+        "pid": 703179,
+        "iteration": 560,
+        "seconds": 74.83041880792007,
+        "elapsed_s": 6588.59120792523,
+        "reward_mean": 0.13853022269904613,
+        "failed": 280,
+        "completed_segments": 14,
+        "object_error_m": 0.03396212961524725,
+        "learning_rate": 5.0625000000000024e-05,
+        "losses": {
+          "value_function": 0.10955078452825547,
+          "surrogate": -0.00853311698010657,
+          "entropy": 30.244795036315917
+        },
+        "actor_changed": true
+      },
+      "train-episode-1792020126135729": {
+        "status": "running",
+        "pid": 703180,
+        "iteration": 903,
+        "seconds": 7.353814932983369,
+        "elapsed_s": 6621.3617110410705,
+        "reward_mean": 0.14235052652657032,
+        "failed": 146,
+        "completed_segments": 32,
+        "object_error_m": 0.008290980166445175,
+        "learning_rate": 2.2500000000000008e-05,
+        "losses": {
+          "value_function": 0.1429509673267603,
+          "surrogate": -0.007597262901253998,
+          "entropy": 22.545100021362305
+        },
+        "actor_changed": true
+      },
+      "train-episode-1792020208393189": {
+        "status": "running",
+        "pid": 703182,
+        "iteration": 910,
+        "seconds": 7.196352863218635,
+        "elapsed_s": 6618.4874947937205,
+        "reward_mean": 0.12339977671702702,
+        "failed": 160,
+        "completed_segments": 23,
+        "object_error_m": 0.02385278216873606,
+        "learning_rate": 3.3750000000000014e-05,
+        "losses": {
+          "value_function": 0.0875426847487688,
+          "surrogate": -0.007426962518366054,
+          "entropy": 16.241572761535643
+        },
+        "actor_changed": true
+      }
+    },
+    "task_success_not_evaluated": true,
+    "gpu1_contention": "three unrelated evaluate_scribble_model.py processes from dudko/tetris; same jovyan user; not modified"
+  },
+  "code_sha256": {
+    "run_sweep.py": "7f803625a59c98613169d577e628c722d29509bf8a3d33ef2784261780daf979",
+    "evaluate.py": "e81e652a7b98fce304de799dfef5d6d6a131188669704380498109856efad905",
+    "train_dp.py": "49133ea5edc4ae24936cbcbac2e221d6eb11ff7165a4334896c8f2d60804a8f9"
+  },
+  "groot": {
+    "source_commit": "d2b7e75b937e3ec9aa5dbc798f08b89692c49734",
+    "environment_installed": true,
+    "cli_import_passed": true,
+    "cosmos_full_download": "403 gated",
+    "processor_check": "403 server / 401 local",
+    "status": "blocked_model_access",
+    "training_started": false,
+    "data_conversion_complete": true,
+    "train_episodes": 40,
+    "validation_episodes": 4
+  },
+  "act": {
+    "source_commit": "53feaef37b67e8f4c23b6953e880ff535e39d6fe",
+    "environment_installed": true
+  },
+  "eta_estimate": {
+    "dp_hours": [
+      1,
+      1.5
+    ],
+    "act_hours": [
+      1,
+      1.5
+    ],
+    "basis": "initial 24/28 optimizer updates per second; excludes closed-loop evaluation; contention can change ETA",
+    "superseded_by_gpu_sharing": true
+  }
+}

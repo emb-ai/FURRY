@@ -1,0 +1,53 @@
+{
+  "protocol": "mean policy, frozen normalization, frame-zero physical initialization, no automatic resets, full reference horizon",
+  "randomize": false,
+  "device": "cpu",
+  "num_envs": 1,
+  "reference_sha256": "bbf1ae5c8d669355ac2ce850bb856a7c36b97a18c496bad0150c57a28ba23499",
+  "results": [
+    {
+      "checkpoint": "/home/jovyan/vlad/FURRY/dexweave-cup-box-20261015/train-episode-1792020055691156-gpu3-resume-20261015/checkpoint-00502.pt",
+      "sha256": "fb37e3a8f2dbe534bdba489b3239978f5fea7463b778d1387a4d1d3fe15a92ae",
+      "iteration": 502,
+      "duration_s": 22.32,
+      "elapsed_s": 23.42916818195954,
+      "initial_fk_error_m": 2.425733214295178e-07,
+      "first_tracking_failure_s": [
+        10.34
+      ],
+      "full_reference_tracking_pass": [
+        false
+      ],
+      "final_cup_error_m": [
+        0.695986807346344
+      ],
+      "mean_cup_error_m": [
+        0.43642370684785003
+      ],
+      "max_cup_lift_m": [
+        0.037713050842285156
+      ],
+      "reference_max_lift_m": [
+        0.22380119562149048
+      ],
+      "final_cup_xyz": [
+        [
+          1.1811634302139282,
+          -0.233117014169693,
+          0.03646707162261009
+        ]
+      ],
+      "final_reference_xyz": [
+        [
+          0.673679769039154,
+          -0.7093783020973206,
+          0.042222760617733
+        ]
+      ],
+      "min_root_z_m": [
+        0.22000016272068024
+      ],
+      "task_success_evaluated": false
+    }
+  ]
+}

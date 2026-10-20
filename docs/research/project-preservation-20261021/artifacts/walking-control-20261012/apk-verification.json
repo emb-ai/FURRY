@@ -1,0 +1,13 @@
+{
+  "apk": "/Users/vlad/Documents/ChatGPT/VR-\u0442\u0435\u043b\u0435\u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0433\u0443\u043c\u0430\u043d\u043e\u0438\u0434\u043e\u043c/outputs/walking-control-20261012/g1-quest-autonomous-walking.apk",
+  "bytes": 48223126,
+  "sha256": "8fa10f6610cf1f6692bb8ca523ab11ac0e876746f58713c303639adfafc4e143",
+  "zip_crc": "pass",
+  "modes": 8,
+  "onnx_count": 9,
+  "metadata_count": 36,
+  "verified_source_asset_digests": 106,
+  "body_motor_profile": "homie_teleop_b042411f_body_motors_v1",
+  "body_motor_profile_sha256": "131fa5aae01c557238d24e2af0a2682f14e45286784b2605b35c4284526703ca",
+  "installed": false
+}

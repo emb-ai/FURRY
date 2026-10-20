@@ -3,6 +3,15 @@
 Research foundation, reviewed **2026-10-05**. Start with this page, then
 [Common Ground](Common-Ground.md) and the [TWIST2 audit](TWIST2-Baseline.md).
 
+## Current Implementation And Preserved Work
+
+For the implemented standalone Quest runtime and published demonstrations, start
+with the [repository status](../README.md#status). The foundational questions and
+milestones below retain their original scope; they are not a current inventory of
+missing software. The [21 October audit](research/project-preservation-20261021/README.md)
+records work recovered from branches and local experiments, along with its limits.
+See also the [DexWeave comparison and implementation status](DexWeave.md).
+
 ## Research Question
 
 How much useful, faithful, physically executed humanoid behavior can we collect
@@ -84,7 +93,9 @@ the contribution template. Do not start by installing every upstream project.
 
 ## What Is Not Decided
 
-The Quest engine, desktop transport, storage format, reconstruction model and
-RGB-D estimator are not selected. See the [decision register](Architecture-and-Decisions.md#decision-register).
-No runtime API is introduced by these docs. No performance target, novelty
-claim, or paper result should be presented as an achieved FURRY capability.
+The original decision register records the foundation-stage questions. The
+implemented prototype uses native Android/OpenXR, MuJoCo, ONNX and a WebSocket
+camera path; see the [runtime documentation](../prototypes/quest_g1/README.md).
+Research acceptance, reliable unseen motion and general task success remain
+separate from implementation. See the
+[decision register](Architecture-and-Decisions.md#decision-register) for the historical rationale.

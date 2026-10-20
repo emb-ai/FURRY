@@ -1,0 +1,59 @@
+{
+  "method": "FK of all 29 reference joint angles and commanded root height/roll/pitch in the physical model; yaw omitted because floor clearance is yaw invariant; 8 actual spherical sole contacts; first second excluded",
+  "on": "exact saved commands",
+  "off": "counterfactual legacy foot commands regenerated on saved input and physical states",
+  "limitations": "This measures kinematic command sole clearance, not actual physical penetration, swing clearance, trips, or causal gait improvement. Two recordings only.",
+  "policy_hz": 50,
+  "command_sample_hz": 100,
+  "physical_geometry": "Four radius-0.005m spheres per foot; centers ankle-local (-0.05,+/-0.025,-0.03) and (0.12,+/-0.03,-0.03). Sphere bottom = world center z - radius. Self-contact foot box excluded.",
+  "asset_sha256": {
+    "scene-stand.xml": "06a70fa9bae1895e57037818d186a93beb781922b5d601e79af34ed94dc64a37",
+    "gmr_model.xml": "58c04b6b9c28c15bbfd29113ab44b0104a17cb1ba3dbc86331c7a680623949dc"
+  },
+  "results": [
+    {
+      "episode": "episode-1791652593739690",
+      "mode": "on",
+      "samples": 3351,
+      "command_row_interval_s_median": 0.010000000000047748,
+      "command_sha256": "0593cc81d7dbf6c5357374c851a25d4dc125ae76d7d4e4565781bb456275c26d",
+      "maximum_reference_penetration_mm": 0.7983872151999761,
+      "reference_penetration_p95_mm": 0.5172525635278061,
+      "reference_below_1mm_frames_pct": 0.0,
+      "reference_below_5mm_frames_pct": 0.0
+    },
+    {
+      "episode": "episode-1791652593739690",
+      "mode": "off",
+      "samples": 3351,
+      "command_row_interval_s_median": 0.010000000000047748,
+      "command_sha256": "a2b54094987a1faf48d0d05bf308b41f0b81f35b50fecbec97c591ec6ff5500e",
+      "maximum_reference_penetration_mm": 7.172173213519313,
+      "reference_penetration_p95_mm": 5.511692378942517,
+      "reference_below_1mm_frames_pct": 28.081169800059687,
+      "reference_below_5mm_frames_pct": 7.758877946881528
+    },
+    {
+      "episode": "episode-1791652646384286",
+      "mode": "on",
+      "samples": 2495,
+      "command_row_interval_s_median": 0.01000000000000334,
+      "command_sha256": "0c6307fc4ebe5628c54542c3615ba874b8e93e74d9988a826a88b22e71657bf7",
+      "maximum_reference_penetration_mm": 0.6599193756620892,
+      "reference_penetration_p95_mm": 0.32568192970923016,
+      "reference_below_1mm_frames_pct": 0.0,
+      "reference_below_5mm_frames_pct": 0.0
+    },
+    {
+      "episode": "episode-1791652646384286",
+      "mode": "off",
+      "samples": 2495,
+      "command_row_interval_s_median": 0.01000000000000334,
+      "command_sha256": "b3e7d3fe0a3d9b284efeeb6ef560caf41593dcd9a1e95a1e761ba5f3b2356a05",
+      "maximum_reference_penetration_mm": 7.057225480592215,
+      "reference_penetration_p95_mm": 5.351241056918999,
+      "reference_below_1mm_frames_pct": 26.93386773547094,
+      "reference_below_5mm_frames_pct": 6.933867735470941
+    }
+  ]
+}

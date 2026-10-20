@@ -16,6 +16,20 @@ image observations remain open. The [desktop NPZ contract](#desktop-recording-co
 and the [state contract](#state-contract) below are locally reproduced. Statements about TWIST2 are author-reported
 or inspected at the [pinned revision](TWIST2-Baseline.md).
 
+## Status Update — 21 October 2026
+
+The proposal and original reach measurements below are historical. Main now
+contains Quest cup and bimanual demonstrations, visual Diffusion Policy training,
+and closed-loop simulation evaluation. The [cup report](../training/quest_cup_pi_high/report.md)
+records 23/50 successes on fresh layouts for its best reported mixed-dataset model;
+the [bimanual report](../training/quest_bimanual_pi_high/report.md) records 82/200.
+These are separate protocols and do not establish headset inference performance.
+
+Additional ACT, state-only and Rubik experiments, including negative results and
+control-rate diagnostics, are preserved in the
+[21 October audit](research/project-preservation-20261021/README.md).
+They do not replace the deployed low-level controller or the published dataset splits.
+
 ## What TWIST2 Does
 
 TWIST2 is hierarchical. The low-level policy is an RL motion tracker that turns

@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "checks": [
+    "walking HOMIE backend, standing=false",
+    "all full-reset flags=63",
+    "task userdata does not enter observation",
+    "goal motion changes only relative goal channels",
+    "repeatable exact native reset",
+    "no train-validation frame overlap",
+    "causal history and current-time action alignment",
+    "finite dataset tensors",
+    "previous commands independently verified for every row"
+  ],
+  "obs_dim": 169
+}

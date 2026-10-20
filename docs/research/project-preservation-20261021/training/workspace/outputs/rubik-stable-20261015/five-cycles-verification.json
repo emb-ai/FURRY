@@ -1,0 +1,105 @@
+{
+  "run": "wrist-closed-servo",
+  "cycles": [
+    {
+      "start_s": 40.5,
+      "end_s": 59.32,
+      "expected_rotation_deg": 90,
+      "corner_position_max_mm": 0.038956635982120895,
+      "corner_orientation_max_deg": 2.002460677844001,
+      "common_rotation_deg": 1.6501391570953263,
+      "cube_center_drift_mm": 1.7859330630798538,
+      "other_support_frames": 0,
+      "open_contact_free_longest_s": 2.31,
+      "right_max_clearance_m_10hz": 0.07469112791889893,
+      "corners_rotated": [
+        0,
+        4,
+        6,
+        7
+      ]
+    },
+    {
+      "start_s": 59.32,
+      "end_s": 78.17,
+      "expected_rotation_deg": 90,
+      "corner_position_max_mm": 0.01580846569184484,
+      "corner_orientation_max_deg": 1.8529466506470798,
+      "common_rotation_deg": 3.0459956417694576,
+      "cube_center_drift_mm": 3.6270575010663295,
+      "other_support_frames": 0,
+      "open_contact_free_longest_s": 3.15,
+      "right_max_clearance_m_10hz": 0.08943509667378981,
+      "corners_rotated": [
+        6,
+        0,
+        7,
+        4
+      ]
+    },
+    {
+      "start_s": 78.17,
+      "end_s": 93.02,
+      "expected_rotation_deg": 90,
+      "corner_position_max_mm": 0.019074810372566278,
+      "corner_orientation_max_deg": 1.756817027927372,
+      "common_rotation_deg": 0.4688341879297155,
+      "cube_center_drift_mm": 1.065500290756502,
+      "other_support_frames": 0,
+      "open_contact_free_longest_s": 3.15,
+      "right_max_clearance_m_10hz": 0.10759204928965437,
+      "corners_rotated": [
+        6,
+        7,
+        0,
+        4
+      ]
+    },
+    {
+      "start_s": 93.02,
+      "end_s": 117.01,
+      "expected_rotation_deg": 90,
+      "corner_position_max_mm": 0.03496975939926128,
+      "corner_orientation_max_deg": 1.8116556009933533,
+      "common_rotation_deg": 4.347040048801959,
+      "cube_center_drift_mm": 2.3342485175313636,
+      "other_support_frames": 0,
+      "open_contact_free_longest_s": 2.16,
+      "right_max_clearance_m_10hz": 0.06922486502541061,
+      "corners_rotated": [
+        7,
+        4,
+        6,
+        0
+      ]
+    },
+    {
+      "start_s": 117.01,
+      "end_s": 139.59,
+      "expected_rotation_deg": 90,
+      "corner_position_max_mm": 0.04672065796070921,
+      "corner_orientation_max_deg": 1.6749824511407683,
+      "common_rotation_deg": 23.115399475583736,
+      "cube_center_drift_mm": 39.71255300622424,
+      "other_support_frames": 0,
+      "open_contact_free_longest_s": 8.35,
+      "right_max_clearance_m_10hz": 0.07289656553801778,
+      "corners_rotated": [
+        4,
+        0,
+        7,
+        6
+      ]
+    }
+  ],
+  "continuous": true,
+  "initial_warmup_s": 2.5,
+  "policy": "homie-standing",
+  "physics_modified": false,
+  "complete_basis_of_moves": false,
+  "limitations": [
+    "Repeated turns of the same physical face only",
+    "Complete move basis and robustness not established",
+    "Desktop native simulation; no new headset installation"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "pid": 70110,
+  "started": 1792049936.092198,
+  "phase": "completed",
+  "completed": [
+    {
+      "phase": "screen",
+      "execution": 4,
+      "denoise": 10,
+      "successes": 0,
+      "n": 4
+    },
+    {
+      "phase": "screen",
+      "execution": 16,
+      "denoise": 10,
+      "successes": 1,
+      "n": 4
+    },
+    {
+      "phase": "screen",
+      "execution": 8,
+      "denoise": 20,
+      "successes": 0,
+      "n": 4
+    },
+    {
+      "phase": "confirm",
+      "execution": 8,
+      "denoise": 10,
+      "successes": 2,
+      "n": 8
+    },
+    {
+      "phase": "confirm",
+      "execution": 16,
+      "denoise": 10,
+      "successes": 4,
+      "n": 8
+    }
+  ],
+  "selected": {
+    "execution": 16,
+    "denoise": 10
+  }
+}
