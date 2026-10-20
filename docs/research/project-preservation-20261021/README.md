@@ -52,6 +52,9 @@ Each subarchive has a SHA256 manifest. Original local workspaces were retained.
   ACT full-reset evaluations were 0/10 at the older rate, 2/10 after 50 Hz
   alignment, and 0/10 for the measured-state variant. They are not general task
   acceptance.
+- The completed state-only BC-RNN and diffusion cup evaluations both scored
+  0/10 from full resets. The final diffusion server receipt was recovered during
+  publication and supersedes the earlier pending local snapshot.
 - The Rubik archive contains a verified deterministic sequence and replay
   evidence, but curriculum training stopped at stage 0 with no accepted policy.
   It does not demonstrate arbitrary scramble solving.

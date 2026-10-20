@@ -10,7 +10,7 @@ their original timestamps and sometimes describe an earlier running state.
 | Experiment | Latest evidence included | Result and limits |
 | --- | --- | --- |
 | Cup ACT and visual diffusion | Native 50 Hz experiment, data export, native bridges, trainers, evaluation protocols and summaries | In the same eight recorded-command continuations: 100 Hz 8/8, 30 Hz 5/8, aligned 50 Hz 8/8. Three separate Linux full-reset evaluations: old ACT at 30 Hz 0/10, ACT at 50 Hz 2/10, ACT with measured state 0/10. The new variants also received more updates and have different temporal horizons, so this does not isolate frequency alone. |
-| Cup state imitation | 59-episode 50 Hz dataset, BC-RNN and diffusion source and best checkpoints | Both completed 12,000 updates. BC-RNN full-reset evaluation was 0/10; diffusion evaluation has no completed local receipt. Checkpoints are preserved for analysis, not deployment. |
+| Cup state imitation | 59-episode 50 Hz dataset, BC-RNN and diffusion source and best checkpoints | Both completed 12,000 updates. BC-RNN and diffusion full-reset evaluations were both 0/10 (ten 90-second timeouts for diffusion). The latter was recovered from the server on 21 October; see [final receipts](remote-final/verification.json). Checkpoints are preserved for analysis, not deployment. |
 | DexWeave cup-to-box | Four reference exports, exact physical asset/URDF conversion, manipulation trainer, full-reset evaluator and results | Checkpoint 3500 failed its own reference rollout. A later checkpoint 5900 was evaluated from ten full resets: five falls and five timeouts; no candidate goal-settle event. The evaluator does not implement the complete native success detector (`task_success_evaluated=false`). |
 | Rubik physical sequences | Original native snapshot code, wrist/Grip planners and verifiers, full `second-other-face.npz` and earlier dependencies | Nine turns of one face, whole-cube X rotation and two turns of the adjacent face were replayed continuously: 28,367 frames, exact qpos/userdata, no warnings. The adjacent-face return exceeds the fixed grasp tolerances. This is one deterministic offline trajectory, not a general R/U/F controller or a Quest test. |
 | Rubik curriculum | Environment, trainer, demonstrations, BC initializer, stage validation and final status | Stopped at stage 0 after 65,536 PPO steps, no completed curriculum stages and no accepted policy. The short warm-start grasp completions are not complete turns. |
@@ -105,3 +105,13 @@ archive; the manifest is authoritative about available files.
   part of the archive.
 
 No new task-performance or hardware acceptance follows from the archive checks.
+
+## Final server receipt recovered during publication
+
+The [diffusion summary](remote-final/run-diffusion/fresh-evaluation/summary.json),
+[training completion](remote-final/run-diffusion/complete.json) and
+[pipeline completion](remote-final/pipeline-diffusion.json) were downloaded
+read-only on 21 October and independently checked against remote sizes and
+SHA256. The evaluated checkpoint digest matches the archived `best.pt`.
+These final receipts supersede the earlier pending status in immutable local
+snapshots; no training or evaluation process was restarted.

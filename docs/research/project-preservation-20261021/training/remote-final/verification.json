@@ -1,0 +1,41 @@
+{
+  "fetched_on": "2026-10-21",
+  "remote_host": "andrei_gpu",
+  "files": [
+    {
+      "path": "/home/jovyan/vlad/FURRY/cup-state-il-20261015/pipeline-diffusion.json",
+      "sha256": "fdd1b6b7f1262453143b214d5b365aa72cdc36c051a0629fb405dd7c546629c8",
+      "bytes": 5143,
+      "mtime": 1792074433.2611415
+    },
+    {
+      "path": "/home/jovyan/vlad/FURRY/cup-state-il-20261015/run-diffusion/fresh-evaluation/summary.json",
+      "sha256": "aee1e4b7120fd758da5edbfe1b73279712c65288b4ca887d049e278fa0d2f7a0",
+      "bytes": 4666,
+      "mtime": 1792074430.4694972
+    },
+    {
+      "path": "/home/jovyan/vlad/FURRY/cup-state-il-20261015/run-diffusion/complete.json",
+      "sha256": "79b5f0aa8ec930ad5ecc5c395db4e8972ff8559ef649c2ab5603893b6e159271",
+      "bytes": 330,
+      "mtime": 1792072298.9492736
+    }
+  ],
+  "local_bytes_match_remote": true,
+  "checkpoint_matches_archived_best": true,
+  "checkpoint_sha256": "05dddc517852dad8fc867332bc6bb0f19ee65af5e092f6c33c07f3b2002f11b7",
+  "result": {
+    "status": "completed",
+    "successes": 0,
+    "trials": 10,
+    "timeouts": 10,
+    "errors": [],
+    "full_reset": "Native NewSceneTrial(seed), complete reset/history=0/grips=0/velocities=0; first predicted action from first step; no demonstration pose/prefix",
+    "fps": 50,
+    "execution": 4,
+    "single_training_seed": true,
+    "latency": "Simulation pauses during inference; not live Quest timing"
+  },
+  "remote_files_changed": false,
+  "processes_launched_or_stopped": false
+}
